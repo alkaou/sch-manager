@@ -1,10 +1,6 @@
 import React from "react";
-import HomePage from "./pages/HomePage.jsx"
+import RoutesManager from "./routes/RoutesManager.jsx";
 
 export default function App() {
-  return (
-    <>
-      <HomePage />
-    </>
-  );
+  return <RoutesManager />;
 }

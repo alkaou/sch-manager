@@ -3,6 +3,10 @@ const path = require("path");
 module.exports = [
   // Add support for native node modules
   {
+    test: /\.(png|jpe?g|gif|svg)$/i, // Tous les types d'images supportés
+    type: 'asset/resource', // Utilisation de Webpack 5+ (alternative à file-loader)
+  },
+  {
     // We're specifying native_modules in the test because the asset relocator loader generates a
     // "fake" .node file which is really a cjs file.
     test: /native_modules[/\\].+\.node$/,
