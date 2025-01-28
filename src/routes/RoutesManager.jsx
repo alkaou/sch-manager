@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 
 import HomePage from "../pages/HomePage.jsx";
 import StartedPage from "../pages/StartedPage.jsx";
 
 import { ThemeContext } from "../components/contexts";
-
 
 const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState("light");
@@ -31,17 +30,14 @@ const ThemeProvider = ({ children }) => {
 
 const RoutesManager = () => {
   return (
-    // <HomePage></HomePage>
-    <ThemeProvider>
-      <div style={{background:"#000"}}>
-        <Router>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/started" element={<StartedPage />} />
-          </Routes>
-        </Router>
-      </div>
-    </ThemeProvider>
+    <Router>
+      <ThemeProvider>
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route exact path="/started" element={<StartedPage />} />
+        </Routes>
+      </ThemeProvider>
+    </Router>
   );
 };
 
