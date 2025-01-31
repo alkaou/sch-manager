@@ -1,24 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // import { FaGlobe } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+import secureLocalStorage from "react-secure-storage";
+
 import maliIcon from "../assets/images/mali.png";
 import franceIcon from "../assets/images/france.png";
 import angletterIcon from "../assets/images/angletter.png";
 
-const LanguageSelector = () => {
+const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }) => {
     const [language, setLanguage] = useState("Français");
-    const [showPanel, setShowPanel] = useState(false);
     const Languages = ["Français", "Bambara", "Anglais"]
+
+    useEffect(()=> {
+        let applanguage = secureLocalStorage.getItem("language");
+        if (applanguage !== undefined){
+            setLanguage(applanguage);
+        }
+    }, [language]);
 
     const changeLanguage = (lang) => {
         setLanguage(lang);
         setShowPanel(false)
+        secureLocalStorage.setItem("language", lang);
         // localStorage.setItem("preferredLanguage", lang); // Sauvegarde la langue choisie
     };
-
-    const showLangPanel = () => {
-        setShowPanel(!showPanel)
-    }
 
     return (
         <div className="relative">
@@ -26,8 +31,10 @@ const LanguageSelector = () => {
                 {/* <FaGlobe className="text-2xl" /> */}
                 <img
                     src={language === Languages[0] ? franceIcon : language === Languages[1] ? maliIcon : angletterIcon}
-                    className="w-7 h-7 rounded-full transition-all duration-300 hover:w-8 hover:h-8"
+                    className="w-7 h-7 border-2 border-white rounded-full transition-all duration-300"
                     alt="Lang"
+                    onMouseMove={() => { setOnHover(true) }}
+                    onMouseOut={() => { setOnHover(false) }}
                 />
             </button>
             {/* Dropdown */}
