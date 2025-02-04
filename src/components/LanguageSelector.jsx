@@ -13,8 +13,9 @@ const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }
 
     useEffect(()=> {
         let applanguage = secureLocalStorage.getItem("language");
-        if (applanguage !== undefined){
+        if (applanguage !== undefined && applanguage !== null){
             setLanguage(applanguage);
+            // console.log(applanguage);
         }
     }, [language]);
 
@@ -31,7 +32,7 @@ const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }
                 {/* <FaGlobe className="text-2xl" /> */}
                 <img
                     src={language === Languages[0] ? franceIcon : language === Languages[1] ? maliIcon : angletterIcon}
-                    className="w-7 h-7 border-2 border-white rounded-full transition-all duration-300"
+                    className="w-8 h-8 hover:border-2 border-white rounded-full transition-all hover:scale-110"
                     alt="Lang"
                     onMouseMove={() => { setOnHover(true) }}
                     onMouseOut={() => { setOnHover(false) }}

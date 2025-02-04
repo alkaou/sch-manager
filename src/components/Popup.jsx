@@ -1,31 +1,40 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-// import { X } from "lucide-react";
-// import { Button } from "@/components/ui/button";
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
 
-export default function Popup(isOpenPopup, setIsOpenPopup) {
+const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
+  return (
+    <AnimatePresence>
+      {isOpenPopup && (
+        <motion.div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setIsOpenPopup(false)}
+        >
+          <motion.div
+            className="relative bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-2xl max-w-xl w-full max-h-[80vh] overflow-auto"
+            initial={{ scale: 0.5, opacity: 0, y: -50 }}
+            animate={{ scale: 1, opacity: 1, y: 0, transition: { type: "spring", stiffness: 200, damping: 20 } }}
+            exit={{ scale: 0.5, opacity: 0, y: 50, transition: { duration: 0.3 } }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Bouton de fermeture */}
+            <button
+              className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-800 rounded-full shadow-md hover:scale-110 transition-all duration-300"
+              onClick={() => setIsOpenPopup(false)}
+            >
+              <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+            </button>
 
-    return (
-        <div className="flex items-center justify-center h-screen">
-            <Button onClick={() => setIsOpenPopup(true)}>Ouvrir la popup</Button>
+            {/* Contenu dynamique */}
+            <div className="overflow-hidden">{children}</div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
 
-            {isOpenPopup && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.3, ease: "easeOut" }}
-                        className="bg-white rounded-2xl shadow-lg p-6 w-96 relative"
-                    >
-                        <button onClick={() => setIsOpenPopup(false)} className="absolute top-3 right-3 text-gray-500 hover:text-gray-800">
-                            {/* <X size={20} /> */}
-                        </button>
-                        <h2 className="text-xl font-semibold mb-4">Titre de la Popup</h2>
-                        <p className="text-gray-600">Ceci est une belle popup animée avec Framer Motion et Tailwind CSS.</p>
-                    </motion.div>
-                </div>
-            )}
-        </div>
-    );
-}
+export default Popup;

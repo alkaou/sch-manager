@@ -1,6 +1,6 @@
 {
-  "name": "school-manager",
-  "productName": "school-manager",
+  "name": "School-Manager",
+  "productName": "School-Manager",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
@@ -29,6 +29,7 @@
     "css-loader": "^6.0.0",
     "electron": "31.1.0",
     "file-loader": "^6.2.0",
+    "lucide-react": "^0.474.0",
     "node-loader": "^2.0.0",
     "postcss": "^8.4.39",
     "postcss-loader": "^8.1.1",
