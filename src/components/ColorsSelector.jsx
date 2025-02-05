@@ -2,13 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import secureLocalStorage from "react-secure-storage";
 import { Check } from "lucide-react";
 
-import { ThemeContext } from "./contexts";
+import { ThemeContext, LanguageContext } from "./contexts";
 import { gradients } from "../utils/colors";
+import { Translator } from "../utils/Translator";
 
 const ColorsSelector = ({ OpenThePopup }) => {
     const [selectedColor, setSelectedColor] = useState(gradients[0]);
 
     const { setThemeColor } = useContext(ThemeContext);
+    const { language } = useContext(LanguageContext);
     
     useEffect(() => {
         let BgColorSelected = secureLocalStorage.getItem("ThemeColorSelect");
@@ -43,7 +45,7 @@ const ColorsSelector = ({ OpenThePopup }) => {
             </button>
 
             {/* Sélecteur de couleurs */}
-            <h2 className="text-lg font-semibold text-center mb-2">Choisir une couleur</h2>
+            <h2 className="text-lg font-semibold text-gray-800 text-bold italic text-center mb-2">{Translator[language].select_color_text}</h2>
             <div className="grid grid-cols-4 gap-3 overflow-y-auto max-h-60 custom-scrollbar p-2">
                 {gradients.map((gradient, index) => (
                     <button

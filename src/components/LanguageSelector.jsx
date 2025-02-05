@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 // import { FaGlobe } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import secureLocalStorage from "react-secure-storage";
@@ -7,13 +7,23 @@ import maliIcon from "../assets/images/mali.png";
 import franceIcon from "../assets/images/france.png";
 import angletterIcon from "../assets/images/angletter.png";
 
-const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }) => {
-    const [language, setLanguage] = useState("Français");
-    const Languages = ["Français", "Bambara", "Anglais"]
+import { ThemeContext, LanguageContext } from "./contexts";
+import { checkThemeForBgColor } from "../utils/colors";
 
-    useEffect(()=> {
+const useTheme = () => useContext(ThemeContext);
+const useLanguage = () => useContext(LanguageContext);
+
+const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }) => {
+    // const [language, setLanguage] = useState("Français");
+    const Languages = ["Français", "Bambara", "Anglais"];
+
+    const { theme } = useTheme();
+    const { language, setLanguage } = useLanguage();
+    const bg_colors = checkThemeForBgColor();
+
+    useEffect(() => {
         let applanguage = secureLocalStorage.getItem("language");
-        if (applanguage !== undefined && applanguage !== null){
+        if (applanguage !== undefined && applanguage !== null) {
             setLanguage(applanguage);
             // console.log(applanguage);
         }
@@ -46,14 +56,14 @@ const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -10 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="absolute left-0 mt-2 w-32 bg-white dark:bg-gray-800 shadow-md rounded-md"
+                        className={`absolute left-0 mt-2 w-32 ${bg_colors[theme]} text-white dark:bg-gray-800 shadow-md rounded-md`}
                     >
                         {Languages.map((lang) => (
                             <button
                                 key={lang}
                                 onClick={() => changeLanguage(lang)}
-                                className={`block w-full px-4 py-2 text-left hover:bg-gray-200 dark:hover:bg-gray-700 
-                        ${language === lang ? "font-bold text-blue-600" : ""}`}
+                                className={`block w-full px-4 py-2 text-left hover:bg-blue-500 dark:hover:bg-blue-700 
+                        ${language === lang ? "font-bold bg-white text-blue-600" : ""}`}
                             >
                                 {lang}
                             </button>
