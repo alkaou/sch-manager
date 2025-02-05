@@ -18,14 +18,6 @@ const useTheme = () => useContext(ThemeContext);
 const useLanguage = () => useContext(LanguageContext);
 
 
-const createNewDatabase = ({ name }) => {
-    // create new database
-    // Hide popup
-    // Set Loader
-    // Navigate to Start page
-}
-
-
 const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, OpenThePopup }) => {
     const { theme } = useTheme();
 
