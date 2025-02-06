@@ -140,7 +140,7 @@ const HomePage = () => {
                 isOpenPopup={isOpenPopup}
                 setIsOpenPopup={setIsOpenPopup}
                 children={
-                    isOpenPopup === "DB_CREATOR" ? <DatabaseCreator /> : <ColorsSelector OpenThePopup={OpenThePopup} />
+                    isOpenPopup === "DB_CREATOR" ? <DatabaseCreator setIsOpenPopup={setIsOpenPopup} /> : <ColorsSelector OpenThePopup={OpenThePopup} />
                 }
             />
         </div>

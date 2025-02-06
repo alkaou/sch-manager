@@ -1,16 +1,15 @@
 import React, { useEffect, useContext, useState } from 'react';
-// const fs = require('fs');
-// const path = require('path');
 
 import TextInput from './TextInput.jsx';
 import { ThemeContext, LanguageContext } from "./contexts";
 import Error from './Error.jsx';
+import { getFormattedDateTime } from '../utils/helpers.js';
 
 const useTheme = () => useContext(ThemeContext);
 const useLang = () => useContext(LanguageContext);
 
-function DatabaseCreator() {
-	const [dbName, setDbName] = useState("");
+function DatabaseCreator({setIsOpenPopup}) {
+	const [dbName, setDbName] = useState("Compexe-Scolaire-Dembele");
 	const [error, setError] = useState("");
 	const { app_bg_color } = useTheme();
 	const { live_language } = useLang();
@@ -58,23 +57,23 @@ function DatabaseCreator() {
 
 		// Si tout est valide, suppression de l'erreur et exécution de la création
 		setError("");
-		// const newField = {
-		// 	db_name: name,
-		// 	version: "1.0.0",
-		// 	classes: [],
-		// 	professors: [],
-		// 	students: [],
-		// 	years: [],
-		// 	bulletins: [],
-		// 	months_payment: []
-		// };
 
-		const updatedDb = { ...db, newField: 'value' }; // Modifie tes données ici
+		const {date, hour} = getFormattedDateTime();
+
+		const updatedDb = {
+			...db, 
+			name: name,
+			version: "1.0.0",
+			created_at: date,
+			created_time: hour,
+		 }; // Modifie tes données ici
+
 		window.electron.saveDatabase(updatedDb).then(() => {
-			alert('Database saved!');
+			setIsOpenPopup(false);
+			// alert('Database saved!');
+			// console.log("✅ Base de données créée avec succès :", name);
+			// console.log(db);
 		});
-		console.log(db);
-		console.log("✅ Base de données créée avec succès :", name);
 	};
 
 
