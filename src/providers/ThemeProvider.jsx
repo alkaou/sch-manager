@@ -33,9 +33,10 @@ const ThemeProvider = ({ children }) => {
     };
 
     const app_bg_color = themeColorSelect[theme];
+    const text_color = app_bg_color === "bg-gray-100 text-gray-600" ? "text-gray-600" : "text-white";
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, setThemeColor, app_bg_color }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme, setThemeColor, app_bg_color, text_color }}>
             <div
                 className={`min-h-screen flex flex-col transition-all duration-500 ${app_bg_color}`}
             >

@@ -7,9 +7,11 @@ import { useTheme } from "./contexts";
 
 const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
 
-    const { theme } = useTheme();
+    const { theme, app_bg_color } = useTheme();
 
-    const popup_bg_color = theme === "light" ? "bg-white" : BG_COLORS.dark;
+    const color = theme === "light" ? "bg-white text-black" : BG_COLORS.dark;
+
+    const popup_bg_color = app_bg_color === "bg-gray-100 text-gray-600" ? app_bg_color : color;
 
 
     return (

@@ -17,9 +17,8 @@ const useTheme = () => useContext(ThemeContext);
 const useLanguage = () => useContext(LanguageContext);
 
 
-const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, OpenThePopup }) => {
-    const { theme } = useTheme();
-
+const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, OpenThePopup, theme }) => {
+    
     const bg_colors = checkThemeForBgColor();
 
     const hide_all_panel = () => {
@@ -28,7 +27,7 @@ const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, O
         }
     }
     return (
-        <nav onClick={hide_all_panel} className={`fixed top-0 left-0 w-full bg-white border-b border-b-2 border-white flex items-center justify-between px-6 py-3 dark:border-white/70
+        <nav onClick={hide_all_panel} className={`fixed top-0 left-0 w-full border-b border-b-2 border-white flex items-center justify-between px-6 py-3 dark:border-white/70
             ${bg_colors[theme]}`
         }>
             {/* Icône de langue à gauche */}
@@ -61,6 +60,8 @@ const HomePage = () => {
 
     const navigate = useNavigate()
 
+    const { theme, text_color } = useTheme();
+
     useEffect(() => {
         window.electron.getDatabase().then((data) => {
             if (data.name !== undefined) { navigate("/started_page"); }
@@ -86,6 +87,7 @@ const HomePage = () => {
                 onHover={onHover}
                 setOnHover={setOnHover}
                 OpenThePopup={OpenThePopup}
+                theme={theme}
             />
 
             <div className="grid place-items-center min-h-screen p-4 text-white">
@@ -112,7 +114,7 @@ const HomePage = () => {
 
                     {/* Sous-titre avec effet de fondu */}
                     <motion.p
-                        className="text-lg mt-10 font-bold text-white text-center"
+                        className={`text-lg mt-10 font-bold ${text_color} text-center`}
                         style={{
                             textShadow: "0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5)"
                         }}
@@ -129,7 +131,7 @@ const HomePage = () => {
                     </motion.p>
 
                     <div className="mt-10 flex flex-col items-center space-y-4">
-                        <p className="text-2xl italic font-extrabold tracking-wider">
+                        <p className={`text-2xl italic ${text_color} font-extrabold tracking-wider`}>
                             {Translator[language].create_db_text}
                         </p>
                         {/* https://codepen.io/yuhomyan/pen/OJMejWJ */}
@@ -139,7 +141,7 @@ const HomePage = () => {
                                 setIsOpenPopup("DB_CREATOR");
                             }}
                         >
-                            <span>{Translator[language].create_btn_text}</span>
+                            <span className={`${text_color}`}>{Translator[language].create_btn_text}</span>
                         </button>
                     </div>
                 </motion.div>

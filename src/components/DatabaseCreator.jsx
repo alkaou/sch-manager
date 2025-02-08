@@ -11,7 +11,7 @@ import { getFormattedDateTime } from '../utils/helpers.js';
 function DatabaseCreator({ setIsOpenPopup }) {
 	const [dbName, setDbName] = useState("Compexe-Scolaire-Dembele");
 	const [error, setError] = useState("");
-	const { app_bg_color } = useTheme();
+	const { app_bg_color, text_color } = useTheme();
 	const { live_language } = useLang();
 	const [db, setDb] = useState(null);
 
@@ -110,7 +110,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 
 
 	return (
-		<div className="flex flex-col justify-center items-center w-full gap-4">
+		<div className={`flex flex-col justify-center items-center w-full gap-4`}>
 			{/* Conteneur pour le champ de texte */}
 			<div className="w-64">
 				<TextInput
@@ -127,7 +127,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 
 			{/* Bouton stylisé avec animation */}
 			<button
-				className={`px-6 py-2 ${app_bg_color} text-white border-2 font-medium rounded-lg shadow-lg transition-all duration-300 ease-in-out hover:bg-blue-700 hover:scale-105 active:scale-95`}
+				className={`px-6 py-2 ${app_bg_color} ${text_color} border-2 font-medium rounded-lg shadow-lg transition-all duration-300 ease-in-out hover:bg-gray-500 hover:text-white hover:scale-105 active:scale-95`}
 				onClick={createNewDatabase}
 			>
 				{live_language.create_btn_text_2}

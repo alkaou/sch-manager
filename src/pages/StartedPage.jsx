@@ -1,31 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useTheme } from "../components/contexts";
 
 import SideBar from "../components/SideBar.jsx";
+import ColorsSelector from "../components/ColorsSelector.jsx";
+import Popup from "../components/Popup.jsx";
 
 
 const StartedPage = () => {
 
-	const { theme } = useTheme();
+	const [isOpenPopup, setIsOpenPopup] = useState(false);
+	const [school_name, setSchool_name] = useState("School");
+
+	const { app_bg_color, text_color } = useTheme();
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		window.electron.getDatabase().then((data) => {
 			if (data.name === undefined) { navigate("/"); }
-			// console.log(data.name);
+			setSchool_name(data.name);
 			// console.log(data.version);
 		});
 	}, []);
 
+	const OpenThePopup = () => {
+		// console.log(isOpenPopup);
+		const popup_bool = isOpenPopup === true ? false : isOpenPopup === false ? true : false;
+		setIsOpenPopup(popup_bool);
+	};
+
 	return (
 		<div
-			className={`min-h-screen flex items-center justify-center transition-all duration-500 ${theme === "light" ? "bg-gray-100 text-gray-800" : "bg-gray-900 text-white"
-				}`}
+			className={`min-h-screen ${app_bg_color} flex items-center justify-center transition-all duration-500`}
 		>
-			<SideBar />
+			<Popup
+				isOpenPopup={isOpenPopup}
+				setIsOpenPopup={setIsOpenPopup}
+				children={
+					<ColorsSelector OpenThePopup={OpenThePopup} />
+				}
+			/>
+			<SideBar
+				school_name={school_name}
+				text_color={text_color}
+			/>
 		</div>
 	);
 };
