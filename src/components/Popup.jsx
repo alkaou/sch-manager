@@ -1,11 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
 import { BG_COLORS } from "../utils/colors";
-import { ThemeContext } from "./contexts";
-
-const useTheme = () => useContext(ThemeContext);
+import { useTheme } from "./contexts";
 
 const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
 
@@ -18,7 +16,7 @@ const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
         <AnimatePresence>
             {isOpenPopup && (
                 <motion.div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

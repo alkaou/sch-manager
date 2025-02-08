@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import secureLocalStorage from "react-secure-storage";
 import { Check } from "lucide-react";
 
-import { ThemeContext, LanguageContext } from "./contexts";
+import { useLanguage, useTheme } from "./contexts";
 import { gradients } from "../utils/colors";
 import { Translator } from "../utils/Translator";
 
 const ColorsSelector = ({ OpenThePopup }) => {
     const [selectedColor, setSelectedColor] = useState(gradients[0]);
 
-    const { setThemeColor } = useContext(ThemeContext);
-    const { language } = useContext(LanguageContext);
+    const { setThemeColor } = useTheme();
+    const { language } = useLanguage();
     
     useEffect(() => {
         let BgColorSelected = secureLocalStorage.getItem("ThemeColorSelect");

@@ -9,7 +9,11 @@ const Translator = {
         error_empty: "⛔ A ka dugulen ko labɛn !",
         error_minLength: "⚠️ A ka dugulen ko bɛ taa kelen ni saba !",
         error_maxLength: "⚠️ A ka dugulen ko ka taa bɛ taa talan ni tɔɔrɔ !",
-        error_invalidChars: "⚠️ A ka dugulen ko kɛ bɛ yeɲin, baara, ni bɔ-joona bɛɛ kɛ !"
+        error_invalidChars: "⚠️ A ka dugulen ko kɛ bɛ yeɲin, baara, ni bɔ-joona bɛɛ kɛ !",
+        creating_db_message: "Bambara : Création de votre base de données en cours...",
+        loading_message: "Bambara : Veuillez patienter, chargement en cours...",
+        loading_patient_message: "Bambara : Veuillez patienter un instant, s'il vous plaît...",
+        created_db_message: "Bambara : Finalisation de la création de votre base de données...",
     },
     Français: {
         welcome_text: "Gérez votre établissement sans aucune compétence en informatique !",
@@ -21,7 +25,12 @@ const Translator = {
         error_empty: "⛔ Le nom de la base de données est requis.",
         error_minLength: "⚠️ Le nom doit contenir au moins 3 caractères.",
         error_maxLength: "⚠️ Le nom ne peut pas dépasser 30 caractères.",
-        error_invalidChars: "⚠️ Le nom ne doit contenir que des lettres, chiffres, tirets ou underscores."
+        error_invalidChars: "⚠️ Le nom ne doit contenir que des lettres, chiffres, tirets ou underscores.",
+        creating_db_message: "Création de votre base de données en cours...",
+        loading_message: "Veuillez patienter, chargement en cours...",
+        loading_patient_message: "Veuillez patienter un instant, s'il vous plaît...",
+        created_db_message: "Finalisation de la création de votre base de données...",
+
     },
     Anglais: {
         welcome_text: "Manage your institution with no IT skills required!",
@@ -33,7 +42,11 @@ const Translator = {
         error_empty: "⛔ Database name is required.",
         error_minLength: "⚠️ The name must be at least 3 characters long.",
         error_maxLength: "⚠️ The name cannot exceed 30 characters.",
-        error_invalidChars: "⚠️ The name must only contain letters, numbers, hyphens, or underscores."
+        error_invalidChars: "⚠️ The name must only contain letters, numbers, hyphens, or underscores.",
+        creating_db_message: "Creating your database...",
+        loading_message: "Please wait, loading in progress...",
+        loading_patient_message: "Please wait a moment, please...",
+        created_db_message: "Finalizing the creation of your database...",
     }
 };
 

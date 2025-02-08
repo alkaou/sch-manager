@@ -17,7 +17,7 @@ const RoutesManager = () => {
                     <LanguageProvider>
                         <Routes>
                             <Route exact path="/" element={<HomePage />} />
-                            <Route exact path="/started" element={<StartedPage />} />
+                            <Route exact path="/started_page" element={<StartedPage />} />
                         </Routes>
                     </LanguageProvider>
                 </LoaderPageProvider>

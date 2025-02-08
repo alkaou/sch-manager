@@ -1,24 +1,28 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { useNavigate } from "react-router";
 
 import TextInput from './TextInput.jsx';
-import { ThemeContext, LanguageContext } from "./contexts";
+import { useLanguage as useLang, useTheme, usePageLoader } from "./contexts";
 import Error from './Error.jsx';
 import { getFormattedDateTime } from '../utils/helpers.js';
 
-const useTheme = () => useContext(ThemeContext);
-const useLang = () => useContext(LanguageContext);
 
-function DatabaseCreator({setIsOpenPopup}) {
+function DatabaseCreator({ setIsOpenPopup }) {
 	const [dbName, setDbName] = useState("Compexe-Scolaire-Dembele");
 	const [error, setError] = useState("");
 	const { app_bg_color } = useTheme();
 	const { live_language } = useLang();
 	const [db, setDb] = useState(null);
 
+	const navigate = useNavigate();
+	const { setIsLoading, setTypeLoader, setText } = usePageLoader();
+
 	useEffect(() => {
 		window.electron.getDatabase().then((data) => {
 			setDb(data);
 		});
+		console.log(db);
 	}, []);
 
 	const changeInputVal = (e) => {
@@ -58,18 +62,40 @@ function DatabaseCreator({setIsOpenPopup}) {
 		// Si tout est valide, suppression de l'erreur et exécution de la création
 		setError("");
 
-		const {date, hour} = getFormattedDateTime();
+		const { date, hour } = getFormattedDateTime();
 
 		const updatedDb = {
-			...db, 
+			...db,
 			name: name,
 			version: "1.0.0",
 			created_at: date,
 			created_time: hour,
-		 }; // Modifie tes données ici
+		}; // Modifie tes données ici
 
 		window.electron.saveDatabase(updatedDb).then(() => {
-			setIsOpenPopup(false);
+
+			setText(live_language.creating_db_message);
+			setTypeLoader(2);
+			setIsLoading(true);
+
+			setTimeout(() => {
+				setText(live_language.loading_patient_message);
+
+				setTimeout(() => {
+					setText(live_language.created_db_message);
+
+					setTimeout(() => {
+						setIsOpenPopup(false);
+						setIsLoading(false);
+						setText("");
+						setTypeLoader(0);
+						navigate("/started_page");
+					}, 5000); // Attends encore 2s avant de masquer le loader
+
+				}, 5000); // Change le texte après 2s
+
+			}, 5000); // Change le texte après 2s
+
 			// alert('Database saved!');
 			// console.log("✅ Base de données créée avec succès :", name);
 			// console.log(db);

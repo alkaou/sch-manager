@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import { motion } from "framer-motion";
 
-// import { useNavigate } from "react-router";
-
 import { ThemeContext, LanguageContext } from "../components/contexts";
 import ThemeSwitcher from "../components/ThemeSwitcher.jsx";
 import LanguageSelector from "../components/LanguageSelector.jsx";

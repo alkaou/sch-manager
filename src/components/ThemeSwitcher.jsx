@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
-import { ThemeContext } from "./contexts";
+import React from "react";
+import { useTheme } from "./contexts";
 
 const ThemeSwitcher = () => {
-    const { theme, toggleTheme } = useContext(ThemeContext);
+    
+    const { theme, toggleTheme } = useTheme();
     const isDarkmode = theme === "dark";
 
     return (

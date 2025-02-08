@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 // import { FaGlobe } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import secureLocalStorage from "react-secure-storage";
@@ -7,11 +7,9 @@ import maliIcon from "../assets/images/mali.png";
 import franceIcon from "../assets/images/france.png";
 import angletterIcon from "../assets/images/angletter.png";
 
-import { ThemeContext, LanguageContext } from "./contexts";
+import { useLanguage, useTheme } from "./contexts";
 import { checkThemeForBgColor } from "../utils/colors";
 
-const useTheme = () => useContext(ThemeContext);
-const useLanguage = () => useContext(LanguageContext);
 
 const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }) => {
     // const [language, setLanguage] = useState("Français");
