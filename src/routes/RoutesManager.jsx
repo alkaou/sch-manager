@@ -1,5 +1,5 @@
 import React from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import ThemeProvider from "../providers/ThemeProvider.jsx";
 import LanguageProvider from "../providers/LanguageProvider.jsx";
@@ -10,6 +10,7 @@ import StartedPage from "../pages/StartedPage.jsx";
 
 
 const RoutesManager = () => {
+
     return (
         <Router>
             <ThemeProvider>
@@ -18,6 +19,7 @@ const RoutesManager = () => {
                         <Routes>
                             <Route exact path="/" element={<HomePage />} />
                             <Route exact path="/started_page" element={<StartedPage />} />
+                            <Route path="*" element={<Navigate to="/" />} /> {/* Redirige vers la home */}
                         </Routes>
                     </LanguageProvider>
                 </LoaderPageProvider>

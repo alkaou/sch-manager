@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import { ThemeContext, LanguageContext } from "../components/contexts";
@@ -11,6 +11,7 @@ import { checkThemeForBgColor } from "../utils/colors.js";
 import DatabaseCreator from "../components/DatabaseCreator.jsx";
 
 import { Translator } from "../utils/Translator.js";
+import { useNavigate } from "react-router";
 
 const useTheme = () => useContext(ThemeContext);
 const useLanguage = () => useContext(LanguageContext);
@@ -54,9 +55,19 @@ const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, O
 const HomePage = () => {
     const [showPanel, setShowPanel] = useState(false);
     const [onHover, setOnHover] = useState(false);
-    const [isOpenPopup, setIsOpenPopup] = useState("DB_CREATOR"); // On doit passer par defaut le bool : false
+    const [isOpenPopup, setIsOpenPopup] = useState(false); // On doit passer par defaut le bool : false
 
     const { language } = useLanguage();
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        window.electron.getDatabase().then((data) => {
+            if (data.name !== undefined) { navigate("/started_page"); }
+            // console.log(data.name);
+            // console.log(data.version);
+        });
+    }, []);
 
     const showLangPanel = () => setShowPanel(!showPanel);
 

@@ -21,8 +21,10 @@ function DatabaseCreator({ setIsOpenPopup }) {
 	useEffect(() => {
 		window.electron.getDatabase().then((data) => {
 			setDb(data);
+			if (data.name !== undefined) { navigate("/started_page"); }
+			// console.log(data.name);
+			// console.log(data.version);
 		});
-		console.log(db);
 	}, []);
 
 	const changeInputVal = (e) => {
@@ -62,7 +64,11 @@ function DatabaseCreator({ setIsOpenPopup }) {
 		// Si tout est valide, suppression de l'erreur et exécution de la création
 		setError("");
 
-		const { date, hour } = getFormattedDateTime();
+		const date_and_hour = getFormattedDateTime();
+
+		const date = date_and_hour.formattedDate;
+		const hour = date_and_hour.formattedTime;
+		// console.log(date, hour);
 
 		const updatedDb = {
 			...db,

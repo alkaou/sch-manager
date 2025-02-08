@@ -1,21 +1,33 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router";
 
-import { ThemeContext } from "../components/contexts";
+import { useTheme } from "../components/contexts";
 
-const useTheme = () => useContext(ThemeContext);
+import SideBar from "../components/SideBar.jsx";
+
 
 const StartedPage = () => {
-  const { theme } = useTheme();
 
-  return (
-    <div
-      className={`min-h-screen flex items-center justify-center transition-all duration-500 ${
-        theme === "light" ? "bg-gray-100 text-gray-800" : "bg-gray-900 text-white"
-      }`}
-    >
-      <h1 className="text-2xl font-bold">Page de démarrage</h1>
-    </div>
-  );
+	const { theme } = useTheme();
+
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		window.electron.getDatabase().then((data) => {
+			if (data.name === undefined) { navigate("/"); }
+			// console.log(data.name);
+			// console.log(data.version);
+		});
+	}, []);
+
+	return (
+		<div
+			className={`min-h-screen flex items-center justify-center transition-all duration-500 ${theme === "light" ? "bg-gray-100 text-gray-800" : "bg-gray-900 text-white"
+				}`}
+		>
+			<SideBar />
+		</div>
+	);
 };
 
 
