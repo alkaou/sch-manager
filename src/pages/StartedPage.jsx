@@ -6,12 +6,13 @@ import { useTheme } from "../components/contexts";
 import SideBar from "../components/SideBar.jsx";
 import ColorsSelector from "../components/ColorsSelector.jsx";
 import Popup from "../components/Popup.jsx";
+import Navbar from "../components/NavBar.jsx";
 
 
 const StartedPage = () => {
 
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
-	const [school_name, setSchool_name] = useState("School");
+	const [school_name, setSchool_name] = useState("S");
 
 	const { app_bg_color, text_color } = useTheme();
 
@@ -33,8 +34,24 @@ const StartedPage = () => {
 
 	return (
 		<div
-			className={`min-h-screen ${app_bg_color} flex items-center justify-center transition-all duration-500`}
+			className={`${app_bg_color} transition-all duration-500`}
 		>
+
+			{/* La Navbar s'affiche en haut du contenu restant */}
+			<Navbar />
+
+			<SideBar
+				setIsOpenPopup={setIsOpenPopup}
+				school_name={school_name}
+				text_color={text_color}
+			/>
+
+			{/* Zone de contenu principale */}
+			<div style={{ marginLeft: "250px", padding: "1rem" }}>
+				{/* Vos autres composants ou contenu */}
+				<h1 className="text-2xl">Bienvenue dans l'application !</h1>
+			</div>
+
 			<Popup
 				isOpenPopup={isOpenPopup}
 				setIsOpenPopup={setIsOpenPopup}
@@ -42,10 +59,7 @@ const StartedPage = () => {
 					<ColorsSelector OpenThePopup={OpenThePopup} />
 				}
 			/>
-			<SideBar
-				school_name={school_name}
-				text_color={text_color}
-			/>
+
 		</div>
 	);
 };

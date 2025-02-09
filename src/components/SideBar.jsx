@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Home, Settings, User, ChevronDown, LogOut, Menu } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Home, Settings, Palette, ChevronDown, Menu } from "lucide-react";
 
-import { useTheme } from "./contexts";
+import { useTheme, useLanguage } from "./contexts";
+import ThemeSwitcher from "./ThemeSwitcher.jsx";
 
-const SideBar = ({ school_name, text_color }) => {
+const SideBar = ({ setIsOpenPopup, school_name, text_color }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [showOptionsNames, setShowOptionsNames] = useState(false);
+    const [activeBtn, setActiveBtn] = useState(1);
 
     const { app_bg_color } = useTheme();
+    const { live_language } = useLanguage();
 
 
     const toggleSidebar = () => {
@@ -21,17 +23,21 @@ const SideBar = ({ school_name, text_color }) => {
     };
     const toggleSettings = () => setIsSettingsOpen(!isSettingsOpen);
 
+    const make_active_btn = (number) => {
+        setActiveBtn(number);
+    };
+
     return (
         <div className="flex">
             {/* Bouton pour ouvrir/fermer */}
-            <button onClick={toggleSidebar} className="fixed top-4 left-4 z-50 p-2 bg-blue-500 text-white rounded-lg shadow-lg">
+            <button onClick={toggleSidebar} className="fixed top-4 left-4 z-40 p-2 bg-blue-500 text-white rounded-lg shadow-lg">
                 <Menu size={24} />
             </button>
 
             {/* Sidebar */}
             <motion.aside
                 animate={{ width: isOpen ? 250 : 80 }}
-                className={`fixed left-0 top-0 h-screen ${app_bg_color} ${text_color} shadow-lg flex flex-col p-4 transition-all duration-300`}
+                className={`border-r-2 fixed left-0 top-0 h-screen ${app_bg_color} ${text_color} shadow-lg flex flex-col p-4 transition-all duration-300`}
             >
                 {/* Logo */}
                 <motion.div
@@ -43,8 +49,29 @@ const SideBar = ({ school_name, text_color }) => {
 
                 {/* Menu principal */}
                 <nav className="flex flex-col space-y-4">
-                    <SidebarItem icon={<Home size={24} />} text={showOptionsNames ? "Dashboard" : ""} isOpen={isOpen} to="/" />
-                    <SidebarItem icon={<User size={24} />} text={showOptionsNames ? "Profile" : ""} isOpen={isOpen} to="/profile" />
+                    <SidebarItem
+                        icon={<Home size={24} />}
+                        text={showOptionsNames ? "Dashboard" : ""}
+                        isOpen={isOpen}
+                        // to="/"
+                        active_class={activeBtn === 1 ? "text-white bg-gray-800" : ""}
+                    />
+
+                    <SidebarItem
+                        icon={<Palette size={24} />}
+                        text={showOptionsNames ? live_language.color_text : ""}
+                        isOpen={isOpen}
+                        onClick={() => {
+                            setIsOpenPopup("colors");
+                        }}
+                        active_class={activeBtn === 2 ? "text-white bg-gray-800" : ""}
+                    />
+
+                    {/* Theme Switcher */}
+                    <div className={`${showOptionsNames ? "flex" : ""} items-center p-2 rounded-lg hover:text-white hover:bg-gray-800 transition-all`}>
+                        <ThemeSwitcher />
+                        {showOptionsNames && <span className="ml-1">{live_language.theme_text}</span>}
+                    </div>
 
                     {/* Sous-menu paramètre */}
                     <div>
@@ -54,25 +81,24 @@ const SideBar = ({ school_name, text_color }) => {
                         >
                             <Settings size={24} />
                             {showOptionsNames && <span className={`ml-4 flex-1 hover:text-white ${text_color}`}>Settings</span>}
-                            <ChevronDown size={18} className={`transition-transform ${isSettingsOpen ? "rotate-180" : ""}`} />
+                            <ChevronDown size={18} className={`transition-transform hover:text-white ${isSettingsOpen ? "rotate-180" : ""}`} />
                         </button>
                     </div>
 
-                    <SidebarItem icon={<LogOut size={24} />} text={showOptionsNames ? "Logout" : ""} isOpen={isOpen} to="/logout" />
                 </nav>
             </motion.aside>
         </div>
     );
 };
 
-const SidebarItem = ({ icon, text, isOpen, to }) => (
-    <Link
-        to={to}
-        className="flex items-center p-2 rounded-lg hover:text-white hover:bg-gray-800 transition-all"
+const SidebarItem = ({ icon, text, isOpen, onClick, active_class }) => (
+    <button
+        onClick={onClick}
+        className={`flex ${active_class} items-center p-2 rounded-lg hover:text-white hover:bg-gray-800 transition-all`}
     >
         {icon}
         {isOpen && <span className="ml-4">{text}</span>}
-    </Link>
+    </button>
 );
 
 export default SideBar;

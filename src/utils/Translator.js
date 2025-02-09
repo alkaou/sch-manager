@@ -14,6 +14,8 @@ const Translator = {
         loading_message: "Bambara : Veuillez patienter, chargement en cours...",
         loading_patient_message: "Bambara : Veuillez patienter un instant, s'il vous plaît...",
         created_db_message: "Bambara : Finalisation de la création de votre base de données...",
+        color_text: "Kulɛriw",
+        theme_text: "Tɛmu",
     },
     Français: {
         welcome_text: "Gérez votre établissement sans aucune compétence en informatique !",
@@ -30,7 +32,8 @@ const Translator = {
         loading_message: "Veuillez patienter, chargement en cours...",
         loading_patient_message: "Veuillez patienter un instant, s'il vous plaît...",
         created_db_message: "Finalisation de la création de votre base de données...",
-
+        color_text: "Couleurs",
+        theme_text: "Thème",
     },
     Anglais: {
         welcome_text: "Manage your institution with no IT skills required!",
@@ -47,7 +50,9 @@ const Translator = {
         loading_message: "Please wait, loading in progress...",
         loading_patient_message: "Please wait a moment, please...",
         created_db_message: "Finalizing the creation of your database...",
-    }
+        color_text: "Colors",
+        theme_text: "Theme",
+    },
 };
 
 export { Translator };
