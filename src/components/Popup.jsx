@@ -2,8 +2,9 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
-import { BG_COLORS } from "../utils/colors";
+import { BG_COLORS, gradients } from "../utils/colors";
 import { useTheme } from "./contexts";
+
 
 const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
 
@@ -11,7 +12,7 @@ const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
 
     const color = theme === "light" ? "bg-white text-black" : BG_COLORS.dark;
 
-    const popup_bg_color = app_bg_color === "bg-gray-100 text-gray-600" ? app_bg_color : color;
+    const popup_bg_color = app_bg_color === gradients[1] ? app_bg_color : color;
 
 
     return (

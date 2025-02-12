@@ -16,6 +16,12 @@ const Translator = {
         created_db_message: "Bambara : Finalisation de la création de votre base de données...",
         color_text: "Kulɛriw",
         theme_text: "Tɛmu",
+        add_new_text: "Farali",
+        filter_text: "Wolomali",
+        recherche_text: "ɲininin teliman...",
+        calsse_text: "Kilasiw",
+        refresh_text: "Kurayali",
+        all_text: "Bɛɛ",
     },
     Français: {
         welcome_text: "Gérez votre établissement sans aucune compétence en informatique !",
@@ -34,6 +40,12 @@ const Translator = {
         created_db_message: "Finalisation de la création de votre base de données...",
         color_text: "Couleurs",
         theme_text: "Thème",
+        add_new_text: "Ajout",
+        filter_text: "Filtre",
+        recherche_text: "Recherche en direct...",
+        calsse_text: "Classes",
+        refresh_text: "Rafraîchir",
+        all_text: "Toutes",
     },
     Anglais: {
         welcome_text: "Manage your institution with no IT skills required!",
@@ -52,6 +64,12 @@ const Translator = {
         created_db_message: "Finalizing the creation of your database...",
         color_text: "Colors",
         theme_text: "Theme",
+        add_new_text: "Add",
+        filter_text: "Filter",
+        recherche_text: "Live search...",
+        calsse_text: "Classes",
+        refresh_text: "Refresh",
+        all_text: "All",
     },
 };
 

@@ -1,68 +1,83 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
-import { useTheme } from "../components/contexts";
-
+import { useTheme, useLanguage } from "../components/contexts";
 import SideBar from "../components/SideBar.jsx";
 import ColorsSelector from "../components/ColorsSelector.jsx";
 import Popup from "../components/Popup.jsx";
 import Navbar from "../components/NavBar.jsx";
-
+import StudentsTable from "../components/StudentsTable.jsx";
 
 const StartedPage = () => {
-
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
 	const [school_name, setSchool_name] = useState("S");
+	const [students, setStudents] = useState([]);
+	const [database, setDatabase] = useState(null);
 
 	const { app_bg_color, text_color } = useTheme();
-
+	const { language } = useLanguage();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		window.electron.getDatabase().then((data) => {
-			if (data.name === undefined) { navigate("/"); }
+			if (data.name === undefined) {
+				navigate("/");
+			}
 			setSchool_name(data.name);
-			// console.log(data.version);
+			setDatabase(data);
+			setStudents(data.students);
 		});
 	}, []);
 
 	const OpenThePopup = () => {
-		// console.log(isOpenPopup);
-		const popup_bool = isOpenPopup === true ? false : isOpenPopup === false ? true : false;
-		setIsOpenPopup(popup_bool);
+		setIsOpenPopup(!isOpenPopup);
 	};
 
 	return (
-		<div
-			className={`${app_bg_color} transition-all duration-500`}
-		>
+		<div className={`${app_bg_color} transition-all duration-500`}>
 
-			{/* La Navbar s'affiche en haut du contenu restant */}
+			{/* Navbar toujours fixée en haut */}
 			<Navbar />
 
+			{/* Sidebar */}
 			<SideBar
 				setIsOpenPopup={setIsOpenPopup}
 				school_name={school_name}
 				text_color={text_color}
 			/>
 
-			{/* Zone de contenu principale */}
-			<div style={{ marginLeft: "250px", padding: "1rem" }}>
-				{/* Vos autres composants ou contenu */}
-				<h1 className="text-2xl">Bienvenue dans l'application !</h1>
+			{/* Zone de contenu principale avec hauteur définie et overflow caché pour le scroll global */}
+			<div
+				style={{
+					overflow: "hidden",
+					marginTop: "4%",
+					marginLeft: "5%",
+					width: "95%",
+					maxWidth: "95%",
+					minWidth: "95%",
+					height: "92vh" // Ajustez 80px en fonction de la hauteur de votre Navbar
+				}}
+			>
+				{/* Conteneur scrollable pour le tableau */}
+				<div
+					style={{
+						width: "100%",
+						maxWidth: "100%",
+						minWidth: "100%",
+						height: "100%",
+					}}
+				>
+					<StudentsTable students={students} />
+				</div>
 			</div>
 
 			<Popup
 				isOpenPopup={isOpenPopup}
 				setIsOpenPopup={setIsOpenPopup}
-				children={
-					<ColorsSelector OpenThePopup={OpenThePopup} />
-				}
+				children={<ColorsSelector OpenThePopup={OpenThePopup} />}
 			/>
-
 		</div>
 	);
 };
-
 
 export default StartedPage;
