@@ -28,9 +28,9 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color }) => {
     };
 
     return (
-        <div className="flex">
+        <div className="flex fixed z-30">
             {/* Bouton pour ouvrir/fermer */}
-            <button onClick={toggleSidebar} className="fixed top-4 left-4 z-40 p-2 bg-blue-500 text-white rounded-lg shadow-lg">
+            <button onClick={toggleSidebar} className="fixed top-4 left-4 z-30 p-2 bg-blue-500 text-white rounded-lg shadow-lg">
                 <Menu size={24} />
             </button>
 

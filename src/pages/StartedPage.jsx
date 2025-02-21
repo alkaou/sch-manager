@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 
 import { useTheme, useLanguage } from "../components/contexts";
@@ -14,9 +14,25 @@ const StartedPage = () => {
 	const [students, setStudents] = useState([]);
 	const [database, setDatabase] = useState(null);
 
-	const { app_bg_color, text_color } = useTheme();
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
+	const [isClassesOpen, setIsClassesOpen] = useState(false);
+	const [openDropdown, setOpenDropdown] = useState(null);
+
+	const dropdownRef = useRef(null);
+
+	const { app_bg_color, text_color, theme } = useTheme();
 	const { language } = useLanguage();
 	const navigate = useNavigate();
+
+	const handleClickOutside = (event) => {
+		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+			setIsClassesOpen(false);
+			setIsFilterOpen(false);
+			setOpenDropdown(null);
+			// console.log("clicked !!!");
+		}
+	};
+
 
 	useEffect(() => {
 		window.electron.getDatabase().then((data) => {
@@ -25,8 +41,19 @@ const StartedPage = () => {
 			}
 			setSchool_name(data.name);
 			setDatabase(data);
-			setStudents(data.students);
+			if(data.students !== undefined && data.students !== null){
+				setStudents(data.students);
+			}
+			// console.log(data.students);
 		});
+
+		// Ajoute l'écouteur lors du montage
+		document.addEventListener("mousedown", handleClickOutside);
+		// Nettoyage lors du démontage
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+
 	}, []);
 
 	const OpenThePopup = () => {
@@ -35,9 +62,15 @@ const StartedPage = () => {
 
 	return (
 		<div className={`${app_bg_color} transition-all duration-500`}>
+			<div ref={dropdownRef} />
 
 			{/* Navbar toujours fixée en haut */}
-			<Navbar />
+			<Navbar
+				isFilterOpen={isFilterOpen}
+				setIsFilterOpen={setIsFilterOpen}
+				isClassesOpen={isClassesOpen}
+				setIsClassesOpen={setIsClassesOpen}
+			/>
 
 			{/* Sidebar */}
 			<SideBar
@@ -65,9 +98,17 @@ const StartedPage = () => {
 						maxWidth: "100%",
 						minWidth: "100%",
 						height: "100%",
+						overflow: "hidden",
 					}}
 				>
-					<StudentsTable students={students} />
+					<StudentsTable
+						students={students}
+						openDropdown={openDropdown}
+						setOpenDropdown={setOpenDropdown}
+						app_bg_color={app_bg_color}
+						text_color={text_color}
+						theme={theme}
+					/>
 				</div>
 			</div>
 

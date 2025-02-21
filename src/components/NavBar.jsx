@@ -5,9 +5,7 @@ import { PlusCircle, Filter, List, Search, RefreshCw } from "lucide-react";
 import { useTheme, useLanguage } from "./contexts";
 import { gradients } from "../utils/colors";
 
-const Navbar = () => {
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isClassesOpen, setIsClassesOpen] = useState(false);
+const Navbar = ({ isFilterOpen, setIsFilterOpen, isClassesOpen, setIsClassesOpen }) => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const { app_bg_color, text_color } = useTheme();
@@ -34,7 +32,7 @@ const Navbar = () => {
 
     return (
         <nav
-            className={`fixed top-0 left-[80px] border-b-2 ${app_bg_color} ${text_color} p-4 flex items-center justify-center space-x-6 shadow-md z-50`}
+            className={`fixed top-0 left-[80px] border-b-2 ${app_bg_color} ${text_color} p-4 flex items-center justify-center space-x-6 shadow-md z-30`}
             style={{ width: "calc(100% - 80px)" }}
         >
             {/* Option 1 : Ajouter (Add) */}
