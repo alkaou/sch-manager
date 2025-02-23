@@ -5,7 +5,7 @@ import { Home, Settings, Palette, ChevronDown, Menu } from "lucide-react";
 import { useTheme, useLanguage } from "./contexts";
 import ThemeSwitcher from "./ThemeSwitcher.jsx";
 
-const SideBar = ({ setIsOpenPopup, school_name, text_color }) => {
+const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters, setisShowBgColorSelector }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [showOptionsNames, setShowOptionsNames] = useState(false);
@@ -21,11 +21,12 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color }) => {
             setShowOptionsNames(!isOpen);
         }, 500);
     };
-    const toggleSettings = () => setIsSettingsOpen(!isSettingsOpen);
-
-    const make_active_btn = (number) => {
-        setActiveBtn(number);
+    const toggleSettings = () => {
+        setIsSettingsOpen(!isSettingsOpen);
+        setIsOpenPopup(true);
+        setIsShowParameters(true);
     };
+
 
     return (
         <div className="flex fixed z-30">
@@ -62,7 +63,8 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color }) => {
                         text={showOptionsNames ? live_language.color_text : ""}
                         isOpen={isOpen}
                         onClick={() => {
-                            setIsOpenPopup("colors");
+                            setisShowBgColorSelector(true);
+                            setIsOpenPopup(true);
                         }}
                         active_class={activeBtn === 2 ? "text-white bg-gray-800" : ""}
                     />

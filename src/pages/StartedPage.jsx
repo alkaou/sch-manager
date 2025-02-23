@@ -8,6 +8,7 @@ import ColorsSelector from "../components/ColorsSelector.jsx";
 import Popup from "../components/Popup.jsx";
 import Navbar from "../components/NavBar.jsx";
 import StudentsTable from "../components/StudentsTable.jsx";
+import AppParameters from "../components/AppParameters.jsx";
 
 const StartedPage = () => {
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
@@ -18,6 +19,9 @@ const StartedPage = () => {
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
 	const [isClassesOpen, setIsClassesOpen] = useState(false);
 	const [openDropdown, setOpenDropdown] = useState(null);
+
+	const [isShowParameters, setIsShowParameters] = useState(false);
+	const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
 
 	const dropdownRef = useRef(null);
 
@@ -30,6 +34,12 @@ const StartedPage = () => {
 			setIsClassesOpen(false);
 			setIsFilterOpen(false);
 			setOpenDropdown(null);
+			if(isOpenPopup === false){
+				setTimeout(() => {
+					setIsShowParameters(false);
+					setisShowBgColorSelector(false);
+				}, 1000)
+			}
 			// console.log("clicked !!!");
 		}
 	};
@@ -42,7 +52,7 @@ const StartedPage = () => {
 			}
 			setSchool_name(data.name);
 			setDatabase(data);
-			if(data.students !== undefined && data.students !== null){
+			if (data.students !== undefined && data.students !== null) {
 				setStudents(data.students);
 			}
 			// console.log(data.students);
@@ -76,6 +86,8 @@ const StartedPage = () => {
 			{/* Sidebar */}
 			<SideBar
 				setIsOpenPopup={setIsOpenPopup}
+				setIsShowParameters={setIsShowParameters}
+				setisShowBgColorSelector={setisShowBgColorSelector}
 				school_name={school_name}
 				text_color={text_color}
 			/>
@@ -118,7 +130,15 @@ const StartedPage = () => {
 			<Popup
 				isOpenPopup={isOpenPopup}
 				setIsOpenPopup={setIsOpenPopup}
-				children={<ColorsSelector OpenThePopup={OpenThePopup} />}
+				children={
+					isShowParameters ?
+						<AppParameters />
+						:
+						isShowBgColorSelector ?
+							<ColorsSelector OpenThePopup={OpenThePopup} />
+							:
+							null
+				}
 			/>
 		</div>
 	);
