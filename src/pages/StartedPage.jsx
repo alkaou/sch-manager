@@ -11,7 +11,7 @@ import StudentsTable from "../components/StudentsTable.jsx";
 import AppParameters from "../components/AppParameters.jsx";
 
 const StartedPage = () => {
-	const [isOpenPopup, setIsOpenPopup] = useState(false);
+	const [isOpenPopup, setIsOpenPopup] = useState(true);
 	const [school_name, setSchool_name] = useState("S");
 	const [students, setStudents] = useState([]);
 	const [database, setDatabase] = useState(null);
@@ -20,7 +20,7 @@ const StartedPage = () => {
 	const [isClassesOpen, setIsClassesOpen] = useState(false);
 	const [openDropdown, setOpenDropdown] = useState(null);
 
-	const [isShowParameters, setIsShowParameters] = useState(false);
+	const [isShowParameters, setIsShowParameters] = useState(true);
 	const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
 
 	const dropdownRef = useRef(null);
@@ -34,12 +34,6 @@ const StartedPage = () => {
 			setIsClassesOpen(false);
 			setIsFilterOpen(false);
 			setOpenDropdown(null);
-			if(isOpenPopup === false){
-				setTimeout(() => {
-					setIsShowParameters(false);
-					setisShowBgColorSelector(false);
-				}, 1000)
-			}
 			// console.log("clicked !!!");
 		}
 	};
@@ -68,6 +62,10 @@ const StartedPage = () => {
 	}, []);
 
 	const OpenThePopup = () => {
+		if (isOpenPopup === true) {
+			setIsShowParameters(false);
+			setisShowBgColorSelector(false);
+		}
 		setIsOpenPopup(!isOpenPopup);
 	};
 
@@ -85,7 +83,7 @@ const StartedPage = () => {
 
 			{/* Sidebar */}
 			<SideBar
-				setIsOpenPopup={setIsOpenPopup}
+				setIsOpenPopup={OpenThePopup}
 				setIsShowParameters={setIsShowParameters}
 				setisShowBgColorSelector={setisShowBgColorSelector}
 				school_name={school_name}
@@ -131,10 +129,10 @@ const StartedPage = () => {
 				isOpenPopup={isOpenPopup}
 				setIsOpenPopup={setIsOpenPopup}
 				children={
-					isShowParameters ?
+					isShowParameters === true ?
 						<AppParameters />
 						:
-						isShowBgColorSelector ?
+						isShowBgColorSelector === true ?
 							<ColorsSelector OpenThePopup={OpenThePopup} />
 							:
 							null

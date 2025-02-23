@@ -8,10 +8,10 @@ import franceIcon from "../assets/images/france.png";
 import angletterIcon from "../assets/images/angletter.png";
 
 import { useLanguage, useTheme } from "./contexts";
-import { checkThemeForBgColor } from "../utils/colors";
+import { checkThemeForBgColor, gradients } from "../utils/colors";
 
 
-const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }) => {
+const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover, isParams = false }) => {
     // const [language, setLanguage] = useState("Français");
     const Languages = ["Français", "Bambara", "Anglais"];
 
@@ -34,9 +34,11 @@ const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }
         // localStorage.setItem("preferredLanguage", lang); // Sauvegarde la langue choisie
     };
 
+    const panel_bg_color = gradients[1] === bg_colors[theme] ? "bg-gray-500" : bg_colors[theme];
+
     return (
         <div className="relative">
-            <button onClick={showLangPanel} className="text-gray-700 dark:text-white flex items-center">
+            <button onClick={() => { showLangPanel(); }} className="text-gray-700 dark:text-white flex items-center">
                 {/* <FaGlobe className="text-2xl" /> */}
                 <img
                     src={language === Languages[0] ? franceIcon : language === Languages[1] ? maliIcon : angletterIcon}
@@ -54,7 +56,7 @@ const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover }
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: -10 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={`absolute left-0 mt-2 w-32 ${bg_colors[theme]} text-white dark:bg-gray-800 shadow-md rounded-md`}
+                        className={`absolute ${isParams ? '-left-20' : 'left-0'} mt-2 w-32 ${panel_bg_color} text-white dark:bg-gray-800 shadow-md rounded-md`}
                     >
                         {Languages.map((lang) => (
                             <button

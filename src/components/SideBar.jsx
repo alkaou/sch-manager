@@ -23,8 +23,9 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
     };
     const toggleSettings = () => {
         setIsSettingsOpen(!isSettingsOpen);
-        setIsOpenPopup(true);
         setIsShowParameters(true);
+        setisShowBgColorSelector(false);
+        setIsOpenPopup(true);
     };
 
 
@@ -63,6 +64,7 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
                         text={showOptionsNames ? live_language.color_text : ""}
                         isOpen={isOpen}
                         onClick={() => {
+                            setIsShowParameters(false);
                             setisShowBgColorSelector(true);
                             setIsOpenPopup(true);
                         }}

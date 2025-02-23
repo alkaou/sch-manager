@@ -22,6 +22,7 @@ const Translator = {
         calsse_text: "Kilasiw",
         refresh_text: "Kurayali",
         all_text: "Bɛɛ",
+        lang_name_text: "Kan",
     },
     Français: {
         welcome_text: "Gérez votre établissement sans aucune compétence en informatique !",
@@ -46,6 +47,7 @@ const Translator = {
         calsse_text: "Classes",
         refresh_text: "Rafraîchir",
         all_text: "Toutes",
+        lang_name_text: "Langue",
     },
     Anglais: {
         welcome_text: "Manage your institution with no IT skills required!",
@@ -70,6 +72,7 @@ const Translator = {
         calsse_text: "Classes",
         refresh_text: "Refresh",
         all_text: "All",
+        lang_name_text: "Language",
     },
 };
 

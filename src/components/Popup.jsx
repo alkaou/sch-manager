@@ -10,7 +10,7 @@ const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
 
     const { theme, app_bg_color } = useTheme();
 
-    const color = theme === "light" ? "bg-white text-black" : BG_COLORS.dark;
+    const color = theme === "light" ? "bg-gray-100 text-black" : BG_COLORS.dark;
 
     const popup_bg_color = app_bg_color === gradients[1] ? app_bg_color : color;
 
