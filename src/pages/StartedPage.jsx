@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 
 import { useTheme, useLanguage } from "../components/contexts";
 import SideBar from "../components/SideBar.jsx";
+// import FloatingMenu from "../components/MenuFloatting.jsx";
 import ColorsSelector from "../components/ColorsSelector.jsx";
 import Popup from "../components/Popup.jsx";
 import Navbar from "../components/NavBar.jsx";
@@ -111,6 +112,8 @@ const StartedPage = () => {
 					/>
 				</div>
 			</div>
+
+			{/* <FloatingMenu/> */}
 
 			<Popup
 				isOpenPopup={isOpenPopup}
