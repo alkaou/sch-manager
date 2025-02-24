@@ -60,9 +60,9 @@ const Navbar = ({ isFilterOpen, setIsFilterOpen, isClassesOpen, setIsClassesOpen
                             className="absolute left-0 mt-2 bg-white text-gray-800 rounded-lg shadow-lg z-10"
                         >
                             <ul>
-                                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Par Classe</li>
-                                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">A à Z</li>
-                                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Date d'inscription</li>
+                                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">{live_language.filter_by_classe_text}</li>
+                                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">{live_language.filter_A_to_Z_text}</li>
+                                <li className="px-4 py-2 hover:bg-gray-200 cursor-pointer">{live_language.filter_date_insc_text}</li>
                             </ul>
                         </motion.div>
                     )}

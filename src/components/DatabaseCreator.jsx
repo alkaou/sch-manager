@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import TextInput from './TextInput.jsx';
 import { useLanguage as useLang, useTheme, usePageLoader } from "./contexts";
 import Error from './Error.jsx';
-import { getFormattedDateTime } from '../utils/helpers.js';
+import { getFormattedDateTime, getDateTime } from '../utils/helpers.js';
 
 
 function DatabaseCreator({ setIsOpenPopup }) {
@@ -64,10 +64,11 @@ function DatabaseCreator({ setIsOpenPopup }) {
 		// Si tout est valide, suppression de l'erreur et exécution de la création
 		setError("");
 
-		const date_and_hour = getFormattedDateTime();
+		const created_hour = getFormattedDateTime();
+		const created_date = getDateTime();
 
-		const date = date_and_hour.formattedDate;
-		const hour = date_and_hour.formattedTime;
+		const date = created_date.dateTime;
+		const hour = created_hour.formattedTime;
 		// console.log(date, hour);
 
 		const updatedDb = {

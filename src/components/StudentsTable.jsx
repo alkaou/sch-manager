@@ -2,6 +2,8 @@
 import React from "react";
 import { MoreVertical, User } from "lucide-react";
 import { gradients } from "../utils/colors";
+import { useLanguage } from "./contexts.js";
+import { getAge } from "../utils/helpers.js";
 
 const StudentsTable = ({
     students,
@@ -21,6 +23,8 @@ const StudentsTable = ({
             : "hover:bg-blue-400";
     const head_bg_color = app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
 
+    const { live_language } = useLanguage();
+
     return (
         <div
             className="p-4 overflow-y-auto overflow-x-auto"
@@ -32,10 +36,10 @@ const StudentsTable = ({
                     className={`flex flex-col items-center justify-center p-6 space-y-4 ${app_bg_color} animate-fadeIn`}
                 >
                     <p className={`${text_color} font-medium text-center`}>
-                        Vous n'avez aucune classe et aucun élève dans votre base de donnée.
+                        {live_language.no_student_in_data_text}
                     </p>
                     <p className={`${text_color} font-medium text-center`}>
-                        Veuillez cliquer sur le bouton ci-dessous pour créer une classe.
+                        {live_language.create_classe_in_data_text}
                     </p>
                     <button className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 transform hover:scale-105">
                         <svg
@@ -52,22 +56,22 @@ const StudentsTable = ({
                                 d="M12 4v16m8-8H4"
                             />
                         </svg>
-                        Créer une classe
+                        {live_language.create_classe_btn_text}
                     </button>
                 </div>
             ) : (
-                <div style={{marginBottom:"40%"}}>
+                <div style={{ marginBottom: "40%" }}>
                     {/* Informations sommaires */}
                     <div style={{ marginLeft: "5%" }} className="mt-2 mb-2 animate-fadeIn">
                         <p
                             className={`${app_bg_color === gradients[1] ? "text-gray-500" : text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
                         >
-                            Le nombre total des élèves : 500
+                            {live_language.students_number_text} : 500
                         </p>
                         <p
                             className={`${app_bg_color === gradients[1] ? "text-gray-500" : text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
                         >
-                            Le nombre total des classes : 12
+                            {live_language.classe_number_text} : 12
                         </p>
                     </div>
 
@@ -92,43 +96,43 @@ const StudentsTable = ({
                             >
                                 <tr className="divide-x divide-white">
                                     <th className="w-20 py-2 px-4 border-b border-gray-300 text-center">
-                                        Profile
+                                        {live_language.profile_text}
                                     </th>
                                     <th className="w-1/6 py-2 px-4 border-b border-gray-300 text-center">
-                                        Full Name
+                                        {live_language.fullname_text}
                                     </th>
                                     <th className="w-1/6 py-2 px-4 border-b border-gray-300 text-center">
-                                        First Name
+                                        {live_language.classe_text}
                                     </th>
                                     <th className="w-1/6 py-2 px-4 border-b border-gray-300 text-center">
-                                        Surname
+                                        {live_language.age_text}
                                     </th>
                                     <th className="w-1/6 py-2 px-4 border-b border-gray-300 text-center">
-                                        Last Name
+                                        {live_language.sexe_text}
                                     </th>
                                     <th className="w-1/6 py-2 px-4 border-b border-gray-300 text-center">
-                                        Sexe
+                                        {live_language.status_text}
                                     </th>
                                     <th className="w-28 py-2 px-4 border-b border-gray-300 text-center">
-                                        Birth Date
+                                        {live_language.birth_text}
                                     </th>
                                     <th className="w-1/6 py-2 px-4 border-b border-gray-300 text-center">
-                                        Father
+                                        {live_language.father_text}
                                     </th>
                                     <th className="w-1/6 py-2 px-4 border-b border-gray-300 text-center">
-                                        Mother
+                                        {live_language.mother_text}
                                     </th>
                                     <th className="w-24 py-2 px-4 border-b border-gray-300 text-center">
-                                        Contact
+                                        {live_language.contact_text}
                                     </th>
                                     <th className="w-28 py-2 px-4 border-b border-gray-300 text-center">
-                                        Added
+                                        {live_language.added_time_text}
                                     </th>
                                     <th className="w-28 py-2 px-4 border-b border-gray-300 text-center">
-                                        Updated
+                                        {live_language.updated_time_text}
                                     </th>
                                     <th className="w-20 py-2 px-4 border-b border-gray-300 text-center">
-                                        Options
+                                        {live_language.option_text}
                                     </th>
                                 </tr>
                             </thead>
@@ -139,18 +143,21 @@ const StudentsTable = ({
                                         key={student.id}
                                         className={`${text_color} divide-x divide-gray-300 ${app_bg_color === gradients[1] ? 'hover:bg-white' : 'hover:bg-gray-50'} hover:text-gray-700 transition-colors duration-300`}
                                     >
-                                        <td className="py-2 px-4 flex justify-center">
-                                            <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                                                <span className="text-gray-500 text-xs">
-                                                    <User />
-                                                </span>
+                                        <td className="py-2 px-4 text-center">
+                                            <div className="w-10 h-10 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center">
+                                                <User className="text-gray-500 text-xs" />
                                             </div>
                                         </td>
                                         <td className="py-2 px-4 text-center">{student.name_complet}</td>
-                                        <td className="py-2 px-4 text-center">{student.first_name}</td>
-                                        <td className="py-2 px-4 text-center">{student.surname}</td>
-                                        <td className="py-2 px-4 text-center">{student.last_name}</td>
+                                        <td className="py-2 px-4 text-center">{student.classe}</td>
+                                        <td className="py-2 px-4 text-center">
+                                            {getAge(student.birth_date)}
+                                            <div className="text-center">
+                                                <b style={{ fontSize: "13px" }}>{live_language.years_text}</b>
+                                            </div>
+                                        </td>
                                         <td className="py-2 px-4 text-center">{student.sexe}</td>
+                                        <td className="py-2 px-4 text-center">{student.last_name}</td>
                                         <td className="py-2 px-4 text-center">
                                             {new Date(student.birth_date).toLocaleDateString()}
                                         </td>
@@ -178,22 +185,22 @@ const StudentsTable = ({
                                                         <li
                                                             className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}
                                                         >
-                                                            Modify
+                                                            {live_language.update_student_text}
                                                         </li>
                                                         <li
                                                             className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}
                                                         >
-                                                            See details
+                                                            {live_language.see_detail_student_text}
                                                         </li>
                                                         <li
                                                             className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}
                                                         >
-                                                            Deactivate
+                                                            {live_language.deactive_student_text}
                                                         </li>
                                                         <li
                                                             className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}
                                                         >
-                                                            Delete
+                                                            {live_language.delete_student_text}
                                                         </li>
                                                     </ul>
                                                 </div>
