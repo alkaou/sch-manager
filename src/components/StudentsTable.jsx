@@ -85,7 +85,7 @@ const StudentsTable = ({
                             }}
                         >
                             <thead
-                                className={`sticky -top-2 ${head_bg_color} ${text_color} shadow-lg`}
+                                className={`sticky -top-5 ${head_bg_color} ${text_color} shadow-lg`}
                                 style={{
                                     borderWidth: "2px",
                                     borderColor: app_bg_color === gradients[1] ? "#e9e9e9" : "white",
