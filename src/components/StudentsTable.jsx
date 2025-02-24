@@ -58,14 +58,14 @@ const StudentsTable = ({
             ) : (
                 <div style={{marginBottom:"40%"}}>
                     {/* Informations sommaires */}
-                    <div style={{ marginLeft: "5%" }} className="mt-5 mb-5 animate-fadeIn">
+                    <div style={{ marginLeft: "5%" }} className="mt-2 mb-2 animate-fadeIn">
                         <p
-                            className={`${text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
+                            className={`${app_bg_color === gradients[1] ? "text-gray-500" : text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
                         >
                             Le nombre total des élèves : 500
                         </p>
                         <p
-                            className={`${text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
+                            className={`${app_bg_color === gradients[1] ? "text-gray-500" : text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
                         >
                             Le nombre total des classes : 12
                         </p>

@@ -1,13 +1,33 @@
 import React, { useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
-import { format, addMonths, subMonths, addYears, subYears } from "date-fns";
+import { format, addMonths, subMonths, addYears, subYears, startOfMonth, endOfMonth, startOfWeek, addDays, isSameDay } from "date-fns";
+import { useTheme } from './contexts.js';
 
 const AdvancedCalendar = ({ onClose }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const today = new Date();
+
+  const { app_bg_color, text_color, theme } = useTheme();
+
+  const monthStart = startOfMonth(currentDate);
+  const monthEnd = endOfMonth(currentDate);
+  const startDate = startOfWeek(monthStart);
+
+  const days = [];
+  let day = startDate;
+
+  while (day <= monthEnd || days.length < 42) {
+    days.push(day);
+    day = addDays(day, 1);
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-xl w-96 animate-slideIn">
+      <div className={`
+          bg-white p-6 rounded-lg shadow-xl w-96 animate-slideIn
+          ${theme === "light" ? "text-gray-600" : app_bg_color}
+          ${theme === "dark" ? text_color : ""}
+      `}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">{format(currentDate, "MMMM yyyy")}</h2>
           <button onClick={onClose} className="text-red-500">
@@ -39,9 +59,14 @@ const AdvancedCalendar = ({ onClose }) => {
           {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
             <span key={day} className="font-semibold">{day}</span>
           ))}
-          {Array.from({ length: 35 }, (_, i) => (
-            <button key={i} className="p-2 rounded hover:bg-gray-200 transition">
-              {i + 1}
+          {days.map((day, index) => (
+            <button
+              key={index}
+              className={`p-2 rounded-full w-10 h-10 flex items-center justify-center transition ${
+                isSameDay(day, today) ? "bg-green-500 text-white" : "hover:bg-gray-200 text-gray-600"
+              }`}
+            >
+              {format(day, "d")}
             </button>
           ))}
         </div>

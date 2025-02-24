@@ -19,7 +19,7 @@ function AppParameters() {
     const { live_language } = useLanguage()
 
     return (
-        <section onClick={hideLangPanel} style={{ minHeight: "70vh" }}>
+        <section onClick={hideLangPanel} style={{ minHeight: "50vh" }}>
             <div style={{ marginTop: "15%" }}>
                 <div className="justify-between flex">
                     <div>

@@ -5,11 +5,10 @@ import { Home, Settings, Palette, ChevronDown, Menu } from "lucide-react";
 import { useTheme, useLanguage } from "./contexts";
 import ThemeSwitcher from "./ThemeSwitcher.jsx";
 
-const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters, setisShowBgColorSelector }) => {
+const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters, setisShowBgColorSelector, activeSideBarBtn, setActiveSideBarBtn }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [showOptionsNames, setShowOptionsNames] = useState(false);
-    const [activeBtn, setActiveBtn] = useState(1);
 
     const { app_bg_color } = useTheme();
     const { live_language } = useLanguage();
@@ -22,6 +21,7 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
         }, 500);
     };
     const toggleSettings = () => {
+        setActiveSideBarBtn(3);
         setIsSettingsOpen(!isSettingsOpen);
         setIsShowParameters(true);
         setisShowBgColorSelector(false);
@@ -55,8 +55,10 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
                         icon={<Home size={24} />}
                         text={showOptionsNames ? "Dashboard" : ""}
                         isOpen={isOpen}
-                        // to="/"
-                        active_class={activeBtn === 1 ? "text-white bg-gray-800" : ""}
+                        onClick={() => {
+                            setActiveSideBarBtn(1);
+                        }}
+                        active_class={activeSideBarBtn === 1 ? "text-white bg-gray-800" : ""}
                     />
 
                     <SidebarItem
@@ -67,8 +69,9 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
                             setIsShowParameters(false);
                             setisShowBgColorSelector(true);
                             setIsOpenPopup(true);
+                            setActiveSideBarBtn(2);
                         }}
-                        active_class={activeBtn === 2 ? "text-white bg-gray-800" : ""}
+                        active_class={activeSideBarBtn === 2 ? "text-white bg-gray-800" : ""}
                     />
 
                     {/* Theme Switcher */}
@@ -81,7 +84,7 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
                     <div>
                         <button
                             onClick={toggleSettings}
-                            className="flex items-center w-full text-left p-2 rounded-lg hover:text-white hover:bg-gray-800 transition"
+                            className={`flex items-center w-full text-left p-2 rounded-lg ${activeSideBarBtn === 3 ? "text-white bg-gray-800" : ""} hover:text-white hover:bg-gray-800 transition`}
                         >
                             <Settings size={24} />
                             {showOptionsNames && <span className={`ml-4 flex-1 hover:text-white ${text_color}`}>Settings</span>}

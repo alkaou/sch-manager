@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 
 import { useTheme, useLanguage } from "../components/contexts";
 import SideBar from "../components/SideBar.jsx";
-// import FloatingMenu from "../components/MenuFloatting.jsx";
+import FloatingMenu from "../components/MenuFloatting.jsx";
 import ColorsSelector from "../components/ColorsSelector.jsx";
 import Popup from "../components/Popup.jsx";
 import Navbar from "../components/NavBar.jsx";
@@ -11,7 +11,7 @@ import StudentsTable from "../components/StudentsTable.jsx";
 import AppParameters from "../components/AppParameters.jsx";
 
 const StartedPage = () => {
-	const [isOpenPopup, setIsOpenPopup] = useState(true);
+	const [isOpenPopup, setIsOpenPopup] = useState(false);
 	const [school_name, setSchool_name] = useState("S");
 	const [students, setStudents] = useState([]);
 	const [database, setDatabase] = useState(null);
@@ -20,8 +20,9 @@ const StartedPage = () => {
 	const [isClassesOpen, setIsClassesOpen] = useState(false);
 	const [openDropdown, setOpenDropdown] = useState(null);
 
-	const [isShowParameters, setIsShowParameters] = useState(true);
+	const [isShowParameters, setIsShowParameters] = useState(false);
 	const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
+	const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
 
 	const dropdownRef = useRef(null);
 
@@ -88,6 +89,8 @@ const StartedPage = () => {
 				setisShowBgColorSelector={setisShowBgColorSelector}
 				school_name={school_name}
 				text_color={text_color}
+				activeSideBarBtn={activeSideBarBtn}
+				setActiveSideBarBtn={setActiveSideBarBtn}
 			/>
 
 			{/* Zone de contenu principale avec hauteur définie et overflow caché pour le scroll global */}
@@ -123,7 +126,7 @@ const StartedPage = () => {
 				</div>
 			</div>
 
-			{/* <FloatingMenu/> */}
+			 <FloatingMenu/> 
 
 			<Popup
 				isOpenPopup={isOpenPopup}
