@@ -12,6 +12,8 @@ const StudentsTable = ({
     app_bg_color,
     text_color,
     theme,
+    setIsAddStudentActive,
+    OpenThePopup,
 }) => {
     const toggleDropdown = (index) => {
         setOpenDropdown(openDropdown === index ? null : index);
@@ -24,6 +26,11 @@ const StudentsTable = ({
     const head_bg_color = app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
 
     const { live_language } = useLanguage();
+
+    const AddStudent = () => {
+        setIsAddStudentActive(true);
+        OpenThePopup();
+    };
 
     return (
         <div
@@ -41,7 +48,10 @@ const StudentsTable = ({
                     <p className={`${text_color} font-medium text-center`}>
                         {live_language.create_classe_in_data_text}
                     </p>
-                    <button className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 transform hover:scale-105">
+                    <button 
+                        className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 transform hover:scale-105"
+                        onClick={AddStudent}
+                    >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             className="w-5 h-5 mr-2"

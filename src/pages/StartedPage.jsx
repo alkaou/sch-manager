@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router";
 
-import { useTheme, useLanguage } from "../components/contexts";
+import { useTheme } from "../components/contexts";
 import SideBar from "../components/SideBar.jsx";
 import FloatingMenu from "../components/MenuFloatting.jsx";
 import ColorsSelector from "../components/ColorsSelector.jsx";
@@ -9,6 +9,7 @@ import Popup from "../components/Popup.jsx";
 import Navbar from "../components/NavBar.jsx";
 import StudentsTable from "../components/StudentsTable.jsx";
 import AppParameters from "../components/AppParameters.jsx";
+import AddStudent from "../components/AddStudent.jsx";
 
 const StartedPage = () => {
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
@@ -22,12 +23,13 @@ const StartedPage = () => {
 
 	const [isShowParameters, setIsShowParameters] = useState(false);
 	const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
+	const [isAddStudentActive, setIsAddStudentActive] = useState(false);
 	const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
 
 	const dropdownRef = useRef(null);
 
 	const { app_bg_color, text_color, theme } = useTheme();
-	const { language } = useLanguage();
+
 	const navigate = useNavigate();
 
 	const handleClickOutside = (event) => {
@@ -66,6 +68,7 @@ const StartedPage = () => {
 		if (isOpenPopup === true) {
 			setIsShowParameters(false);
 			setisShowBgColorSelector(false);
+			setIsAddStudentActive(false);
 		}
 		setIsOpenPopup(!isOpenPopup);
 	};
@@ -122,11 +125,13 @@ const StartedPage = () => {
 						app_bg_color={app_bg_color}
 						text_color={text_color}
 						theme={theme}
+						setIsAddStudentActive={setIsAddStudentActive}
+						OpenThePopup={OpenThePopup}
 					/>
 				</div>
 			</div>
 
-			 <FloatingMenu/> 
+			<FloatingMenu />
 
 			<Popup
 				isOpenPopup={isOpenPopup}
@@ -138,7 +143,10 @@ const StartedPage = () => {
 						isShowBgColorSelector === true ?
 							<ColorsSelector OpenThePopup={OpenThePopup} />
 							:
-							null
+							isAddStudentActive === true ?
+								<AddStudent setIsAddStudentActive={setIsAddStudentActive} />
+								:
+								null
 				}
 			/>
 		</div>
