@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router";
 // On suppose que la méthode addStudent est importée depuis votre module de gestion
 // Elle doit accepter deux paramètres : studentData et db
 import { saveStudent } from '../utils/database_methods';
 
-const AddStudent = () => {
-    const navigate = useNavigate();
+const AddStudent = ({setIsAddStudentActive}) => {
 
     const [db, setDb] = useState(null);
 
@@ -72,8 +70,9 @@ const AddStudent = () => {
             }
             // En cas de succès, redirection ou affichage d'un message
             // navigate('/started_page');
+            setIsAddStudentActive(false);
         } catch (err) {
-            console.error("Erreur lors de l'ajout des élèves :", err.msg);
+            console.error("Erreur lors de l'ajout des élèves :", err);
             setError("Une erreur est survenue lors de l'ajout des élèves.");
         }
         setIsLoading(false);

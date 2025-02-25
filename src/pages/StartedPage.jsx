@@ -97,39 +97,45 @@ const StartedPage = () => {
 			/>
 
 			{/* Zone de contenu principale avec hauteur définie et overflow caché pour le scroll global */}
-			<div
-				style={{
-					overflow: "hidden",
-					marginTop: "4%",
-					marginLeft: "5%",
-					width: "95%",
-					maxWidth: "95%",
-					minWidth: "95%",
-					height: "92vh" // Ajustez 80px en fonction de la hauteur de votre Navbar
-				}}
-			>
-				{/* Conteneur scrollable pour le tableau */}
+			{isAddStudentActive === true ?
+				<AddStudent
+					setIsAddStudentActive={setIsAddStudentActive}
+				/>
+				:
 				<div
 					style={{
-						width: "100%",
-						maxWidth: "100%",
-						minWidth: "100%",
-						height: "100%",
 						overflow: "hidden",
+						marginTop: "4%",
+						marginLeft: "5%",
+						width: "95%",
+						maxWidth: "95%",
+						minWidth: "95%",
+						height: "92vh" // Ajustez 80px en fonction de la hauteur de votre Navbar
 					}}
 				>
-					<StudentsTable
-						students={students}
-						openDropdown={openDropdown}
-						setOpenDropdown={setOpenDropdown}
-						app_bg_color={app_bg_color}
-						text_color={text_color}
-						theme={theme}
-						setIsAddStudentActive={setIsAddStudentActive}
-						OpenThePopup={OpenThePopup}
-					/>
+					{/* Conteneur scrollable pour le tableau */}
+					<div
+						style={{
+							width: "100%",
+							maxWidth: "100%",
+							minWidth: "100%",
+							height: "100%",
+							overflow: "hidden",
+						}}
+					>
+						<StudentsTable
+							students={students}
+							openDropdown={openDropdown}
+							setOpenDropdown={setOpenDropdown}
+							app_bg_color={app_bg_color}
+							text_color={text_color}
+							theme={theme}
+							setIsAddStudentActive={setIsAddStudentActive}
+							OpenThePopup={OpenThePopup}
+						/>
+					</div>
 				</div>
-			</div>
+			}
 
 			<FloatingMenu />
 
@@ -143,10 +149,7 @@ const StartedPage = () => {
 						isShowBgColorSelector === true ?
 							<ColorsSelector OpenThePopup={OpenThePopup} />
 							:
-							isAddStudentActive === true ?
-								<AddStudent setIsAddStudentActive={setIsAddStudentActive} />
-								:
-								null
+							null
 				}
 			/>
 		</div>
