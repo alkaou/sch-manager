@@ -23,13 +23,16 @@ const StudentsTable = ({
         app_bg_color === gradients[1] || theme === "dark"
             ? "hover:bg-gray-500"
             : "hover:bg-blue-400";
-    const head_bg_color = app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
+    const _head_bg_color = app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
+    const head_bg_color = _head_bg_color === gradients[2] ? "bg-gray-500" : _head_bg_color;
+
+    const _text_color = app_bg_color === gradients[2] ? "text-gray-500" : text_color;
 
     const { live_language } = useLanguage();
 
     const AddStudent = () => {
         setIsAddStudentActive(true);
-        OpenThePopup();
+        // OpenThePopup();
     };
 
     return (
@@ -42,10 +45,10 @@ const StudentsTable = ({
                     style={{ marginTop: "20%" }}
                     className={`flex flex-col items-center justify-center p-6 space-y-4 ${app_bg_color} animate-fadeIn`}
                 >
-                    <p className={`${text_color} font-medium text-center`}>
+                    <p className={`${_text_color} font-medium text-center`}>
                         {live_language.no_student_in_data_text}
                     </p>
-                    <p className={`${text_color} font-medium text-center`}>
+                    <p className={`${_text_color} font-medium text-center`}>
                         {live_language.create_classe_in_data_text}
                     </p>
                     <button 
@@ -74,12 +77,12 @@ const StudentsTable = ({
                     {/* Informations sommaires */}
                     <div style={{ marginLeft: "5%" }} className="mt-2 mb-2 animate-fadeIn">
                         <p
-                            className={`${app_bg_color === gradients[1] ? "text-gray-500" : text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
+                            className={`${app_bg_color === gradients[1] ? "text-gray-500" : _text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
                         >
                             {live_language.students_number_text} : 500
                         </p>
                         <p
-                            className={`${app_bg_color === gradients[1] ? "text-gray-500" : text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
+                            className={`${app_bg_color === gradients[1] ? "text-gray-500" : _text_color} font-bold text-lg transition-transform duration-300 transform hover:scale-105`}
                         >
                             {live_language.classe_number_text} : 12
                         </p>
@@ -91,14 +94,14 @@ const StudentsTable = ({
                             className="min-w-full table-fixed border-collapse"
                             style={{
                                 borderWidth: "2px",
-                                borderColor: app_bg_color === gradients[1] ? "#e9e9e9" : "white",
+                                borderColor: app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "#e9e9e9" : "white",
                             }}
                         >
                             <thead
                                 className={`sticky -top-5 ${head_bg_color} ${text_color} shadow-lg`}
                                 style={{
                                     borderWidth: "2px",
-                                    borderColor: app_bg_color === gradients[1] ? "#e9e9e9" : "white",
+                                    borderColor: app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "#e9e9e9" : "white",
                                     zIndex: 10,
                                     margin: 0,
                                     padding: 0,
@@ -151,7 +154,7 @@ const StudentsTable = ({
                                 {students.map((student, index) => (
                                     <tr
                                         key={student.id}
-                                        className={`${text_color} divide-x divide-gray-300 ${app_bg_color === gradients[1] ? 'hover:bg-white' : 'hover:bg-gray-50'} hover:text-gray-700 transition-colors duration-300`}
+                                        className={`${_text_color} divide-x divide-gray-300 ${app_bg_color === gradients[1] ? 'hover:bg-white' : app_bg_color === gradients[2] ? 'hover:bg-gray-100' : 'hover:bg-gray-50'} hover:text-gray-700 transition-colors duration-300`}
                                     >
                                         <td className="py-2 px-4 text-center">
                                             <div className="w-10 h-10 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center">
@@ -189,7 +192,7 @@ const StudentsTable = ({
                                             </button>
                                             {openDropdown === index && (
                                                 <div
-                                                    className={`${app_bg_color} ${text_color} absolute right-0 top-full -mt-10 w-40 border border-gray-200 rounded shadow-lg z-50 animate-fadeIn`}
+                                                    className={`${app_bg_color} ${_text_color} absolute right-0 top-full -mt-10 w-40 border border-gray-200 rounded shadow-lg z-50 animate-fadeIn`}
                                                 >
                                                     <ul>
                                                         <li

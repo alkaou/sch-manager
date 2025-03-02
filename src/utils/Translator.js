@@ -58,6 +58,8 @@ const Translator = {
         no_student_in_data_text: "Kalanso si tɛ i bolo ani kalanden si tɛ i ka database kɔnɔ.",
         create_classe_in_data_text: "Aw ye butɔni digi min bɛ duguma walasa ka kalanso dɔ dabɔ.",
         create_classe_btn_text: "Kalanso dɔ dabɔ",
+        setting_text: "Paramɛtiri",
+        dashboard_text: "Tabulo",
     },
     Français: {
         welcome_text: "Gérez votre établissement sans aucune compétence en informatique !",
@@ -118,6 +120,8 @@ const Translator = {
         no_student_in_data_text: "Vous n'avez aucune classe et aucun élève dans votre base de donnée.",
         create_classe_in_data_text: "Veuillez cliquer sur le bouton ci-dessous pour créer une classe.",
         create_classe_btn_text: "Créer une classe",
+        setting_text: "Paramètre",
+        dashboard_text: "Tableau de bord",
     },
     Anglais: {
         welcome_text: "Manage your institution with no IT skills required!",
@@ -178,6 +182,8 @@ const Translator = {
         no_student_in_data_text: "You have no classes and no students in your database.",
         create_classe_in_data_text: "Please click the button below to create a class.",
         create_classe_btn_text: "Create a class",
+        setting_text: "Settings",
+        dashboard_text: "Dashboard",
     },
 };
 

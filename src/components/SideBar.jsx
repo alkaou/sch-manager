@@ -4,6 +4,7 @@ import { Home, Settings, Palette, ChevronDown, Menu } from "lucide-react";
 
 import { useTheme, useLanguage } from "./contexts";
 import ThemeSwitcher from "./ThemeSwitcher.jsx";
+import { gradients } from "../utils/colors";
 
 const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters, setisShowBgColorSelector, activeSideBarBtn, setActiveSideBarBtn }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -28,6 +29,7 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
         setIsOpenPopup(true);
     };
 
+    const side_bar_text_color = app_bg_color === gradients[2] ? "text-gray-600" : text_color;
 
     return (
         <div className="flex fixed z-30">
@@ -39,7 +41,7 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
             {/* Sidebar */}
             <motion.aside
                 animate={{ width: isOpen ? 250 : 80 }}
-                className={`border-r-2 fixed left-0 top-0 h-screen ${app_bg_color} ${text_color} shadow-lg flex flex-col p-4 transition-all duration-300`}
+                className={`border-r-2 fixed left-0 top-0 h-screen ${app_bg_color} ${side_bar_text_color} shadow-lg flex flex-col p-4 transition-all duration-300`}
             >
                 {/* Logo */}
                 <motion.div
@@ -53,7 +55,7 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
                 <nav className="flex flex-col space-y-4">
                     <SidebarItem
                         icon={<Home size={24} />}
-                        text={showOptionsNames ? "Dashboard" : ""}
+                        text={showOptionsNames ? live_language.dashboard_text : ""}
                         isOpen={isOpen}
                         onClick={() => {
                             setActiveSideBarBtn(1);
@@ -87,7 +89,7 @@ const SideBar = ({ setIsOpenPopup, school_name, text_color, setIsShowParameters,
                             className={`flex items-center w-full text-left p-2 rounded-lg ${activeSideBarBtn === 3 ? "text-white bg-gray-800" : ""} hover:text-white hover:bg-gray-800 transition`}
                         >
                             <Settings size={24} />
-                            {showOptionsNames && <span className={`ml-4 flex-1 hover:text-white ${text_color}`}>Settings</span>}
+                            {showOptionsNames && <span className={`ml-4 flex-1 hover:text-white ${side_bar_text_color}`}>{live_language.setting_text}</span>}
                             <ChevronDown size={18} className={`transition-transform hover:text-white ${isSettingsOpen ? "rotate-180" : ""}`} />
                         </button>
                     </div>

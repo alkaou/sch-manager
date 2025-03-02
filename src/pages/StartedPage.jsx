@@ -10,6 +10,7 @@ import Navbar from "../components/NavBar.jsx";
 import StudentsTable from "../components/StudentsTable.jsx";
 import AppParameters from "../components/AppParameters.jsx";
 import AddStudent from "../components/AddStudent.jsx";
+import ManageClasses from "../components/ManageClasses.jsx";
 
 const StartedPage = () => {
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
@@ -24,6 +25,7 @@ const StartedPage = () => {
 	const [isShowParameters, setIsShowParameters] = useState(false);
 	const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
 	const [isAddStudentActive, setIsAddStudentActive] = useState(false);
+	const [isManageClassesActive, setIsManageClassesActive] = useState(true);
 	const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
 
 	const dropdownRef = useRef(null);
@@ -64,13 +66,26 @@ const StartedPage = () => {
 
 	}, []);
 
-	const OpenThePopup = () => {
+	const OpenThePopup = (closeAddUser=false) => {
 		if (isOpenPopup === true) {
 			setIsShowParameters(false);
 			setisShowBgColorSelector(false);
-			setIsAddStudentActive(false);
+			if(closeAddUser){
+				setIsAddStudentActive(false);
+			}
 		}
 		setIsOpenPopup(!isOpenPopup);
+	};
+
+	const style_1 = {
+		marginLeft: "5%",
+		width: "95%",
+		maxWidth: "95%",
+		minWidth: "95%",
+	};
+	const style_2 = {
+		width: "98%",
+		marginLeft: "1.5%",
 	};
 
 	return (
@@ -83,6 +98,8 @@ const StartedPage = () => {
 				setIsFilterOpen={setIsFilterOpen}
 				isClassesOpen={isClassesOpen}
 				setIsClassesOpen={setIsClassesOpen}
+				setIsAddStudentActive={setIsAddStudentActive}
+				// setIsAddStudentActive={setIsManageClassesActive}
 			/>
 
 			{/* Sidebar */}
@@ -98,9 +115,35 @@ const StartedPage = () => {
 
 			{/* Zone de contenu principale avec hauteur définie et overflow caché pour le scroll global */}
 			{isAddStudentActive === true ?
-				<AddStudent
-					setIsAddStudentActive={setIsAddStudentActive}
-				/>
+				<div
+					style={style_1}
+				>
+					<div
+						style={style_2}
+					>
+						<AddStudent
+							setIsAddStudentActive={setIsAddStudentActive}
+							app_bg_color={app_bg_color}
+							text_color={text_color}
+							theme={theme}
+						/>
+					</div>
+				</div>
+				: isManageClassesActive === true ?
+					<div
+						style={style_1}
+					>
+						<div
+							style={style_2}
+						>
+							<ManageClasses
+								setIsManageClassesActive={setIsManageClassesActive}
+								app_bg_color={app_bg_color}
+								text_color={text_color}
+								theme={theme}
+							/>
+						</div>
+					</div>
 				:
 				<div
 					style={{

@@ -25,6 +25,7 @@ const checkThemeForBgColor = () => {
 const gradients = [
     "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white",
     "bg-gray-100 text-gray-600",
+    "bg-white text-gray-600",
     "bg-gradient-to-r from-green-500 to-blue-600 text-white",
     "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white",
     "bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 text-black",

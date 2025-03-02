@@ -5,7 +5,7 @@ import { PlusCircle, Filter, List, Search, RefreshCw } from "lucide-react";
 import { useTheme, useLanguage } from "./contexts";
 import { gradients } from "../utils/colors";
 
-const Navbar = ({ isFilterOpen, setIsFilterOpen, isClassesOpen, setIsClassesOpen }) => {
+const Navbar = ({ isFilterOpen, setIsFilterOpen, isClassesOpen, setIsClassesOpen, setIsAddStudentActive }) => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const { app_bg_color, text_color } = useTheme();
@@ -30,13 +30,23 @@ const Navbar = ({ isFilterOpen, setIsFilterOpen, isClassesOpen, setIsClassesOpen
 
     const input_color = app_bg_color === gradients[1] ? "text-white" : text_color;
 
+    const nav_text_color = app_bg_color === gradients[2] ? "text-gray-600" : text_color;
+
+    const showAddNewPopup = () =>
+    {
+        setIsAddStudentActive(true);
+    }
+
     return (
         <nav
-            className={`fixed top-0 left-[80px] border-b-2 ${app_bg_color} ${text_color} p-4 flex items-center justify-center space-x-6 shadow-md z-30`}
+            className={`fixed top-0 left-[80px] border-b-2 ${app_bg_color} ${nav_text_color} p-4 flex items-center justify-center space-x-6 shadow-md z-30`}
             style={{ width: "calc(100% - 80px)" }}
         >
             {/* Option 1 : Ajouter (Add) */}
-            <button className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 hover:text-blue-400 transition">
+            <button 
+                className="flex items-center space-x-2 p-2 rounded hover:bg-gray-700 hover:text-blue-400 transition"
+                onClick={showAddNewPopup}
+            >
                 <PlusCircle size={24} />
                 <span>{live_language.add_new_text}</span>
             </button>
