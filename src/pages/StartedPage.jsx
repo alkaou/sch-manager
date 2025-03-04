@@ -25,7 +25,7 @@ const StartedPage = () => {
 	const [isShowParameters, setIsShowParameters] = useState(false);
 	const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
 	const [isAddStudentActive, setIsAddStudentActive] = useState(false);
-	const [isManageClassesActive, setIsManageClassesActive] = useState(true);
+	const [isManageClassesActive, setIsManageClassesActive] = useState(false);
 	const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
 
 	const dropdownRef = useRef(null);
@@ -65,6 +65,16 @@ const StartedPage = () => {
 		};
 
 	}, []);
+
+	const refreshData = () => {
+	    window.electron.getDatabase().then((data) => {
+			setDatabase(data);
+			if (data.students !== undefined && data.students !== null) {
+				setStudents(data.students);
+			}
+			// console.log(data.students);
+		});
+	};
 
 	const OpenThePopup = (closeAddUser=false) => {
 		if (isOpenPopup === true) {
@@ -175,6 +185,7 @@ const StartedPage = () => {
 							theme={theme}
 							setIsAddStudentActive={setIsAddStudentActive}
 							OpenThePopup={OpenThePopup}
+							refreshData={refreshData}
 						/>
 					</div>
 				</div>

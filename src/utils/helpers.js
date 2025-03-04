@@ -49,6 +49,38 @@ function getAge(birthTimestamp) {
   return age;
 }
 
+function getClasseName(chaine, lang = "Français") {
+  const regex = /^(\d+)\s*(.*)$/;
+  const result = chaine.match(regex);
 
-export { getFormattedDateTime, getAge, getDateTime }
+  if (!result) {
+    // Si la chaîne ne correspond pas au format attendu, on la retourne telle quelle ou on gère l'erreur
+    return chaine;
+  }
+
+  const number = result[1];
+  const restText = result[2];
+  let classeName = "";
+
+  if (lang === "Français") {
+    // Utilise "1ère année" pour 1 et "ème année" pour les autres
+    const yearLabel = number === "1" ? "1ère année" : `${number}ème année`;
+    classeName = `${yearLabel} ${restText}`;
+  } else if (lang === "Anglais") {
+    // Définit le suffixe ordinal approprié en anglais
+    const grade = number === "1" ? "st grade" :
+                  number === "2" ? "nd grade" :
+                  number === "3" ? "rd grade" : "th grade";
+    classeName = `${number}${grade} ${restText}`;
+  } else {
+    // Pour toute autre langue, ici exemple avec "Bambara"
+    classeName = `${number} nan ${restText}`;
+  }
+
+  return classeName;
+}
+
+
+
+export { getFormattedDateTime, getAge, getDateTime, getClasseName }
 

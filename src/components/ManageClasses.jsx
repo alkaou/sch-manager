@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gradients } from '../utils/colors';
+import { getClasseName } from '../utils/helpers';
 import { useLanguage } from './contexts.js';
 
 const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, theme }) => {
-  const { live_language } = useLanguage();
+  const { live_language, language } = useLanguage();
   const [db, setDb] = useState(null);
   const [classes, setClasses] = useState([]); // classes existantes dans la DB
   const [newClasses, setNewClasses] = useState([{ level: '', name: '' }]); // classes à ajouter
@@ -14,6 +15,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
   const [editingClassId, setEditingClassId] = useState(null); // id de la classe en édition
   const [editedClass, setEditedClass] = useState({}); // valeurs éditées
   const [classToDelete, setClassToDelete] = useState(null); // classe dont la suppression est demandée
+  const [sortMethod, setSortMethod] = useState("asc"); // default, asc, desc
 
   // Couleurs et styles
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
@@ -35,6 +37,17 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setClasses(data.classes);
     });
   }, []);
+
+  // Disparition automatique des messages de succès et d'erreur après 5 secondes
+  useEffect(() => {
+    if (success || globalError) {
+      const timer = setTimeout(() => {
+        setSuccess(null);
+        setGlobalError(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, globalError]);
 
   // Calculer le nombre d'élèves par classe (supposant que db.students existe)
   const getStudentCount = (className) => {
@@ -83,13 +96,20 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
         newErr[`${index}-name`] = "Le nom de la classe est obligatoire.";
         valid = false;
       } else {
-        const duplicateInDB = classes.find(c => c.name.toLowerCase() === cls.name.trim().toLowerCase());
+        // Vérification dans la DB sur la combinaison niveau + nom
+        const duplicateInDB = classes.find(c =>
+          Number(c.level) === Number(cls.level) &&
+          c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
+        );
         if (duplicateInDB) {
           newErr[`${index}-name`] = "Cette classe existe déjà.";
           valid = false;
         }
+        // Vérification dans la liste des nouvelles classes
         const duplicateInNew = newClasses.filter((c, i) =>
-          i !== index && c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
+          i !== index &&
+          Number(c.level) === Number(cls.level) &&
+          c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
         );
         if (duplicateInNew.length > 0) {
           newErr[`${index}-name`] = "Cette classe a déjà été ajoutée.";
@@ -158,11 +178,14 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setGlobalError("Le nom de la classe est obligatoire.");
       return;
     }
+    // Vérification de la duplication sur la combinaison niveau + nom pour l'édition
     const duplicate = classes.find(
-      cls => cls.id !== editingClassId && cls.name.toLowerCase() === editedClass.name.trim().toLowerCase()
+      cls => cls.id !== editingClassId &&
+      Number(cls.level) === Number(editedClass.level) &&
+      cls.name.trim().toLowerCase() === editedClass.name.trim().toLowerCase()
     );
     if (duplicate) {
-      setGlobalError("Une classe avec ce nom existe déjà.");
+      setGlobalError("Cette classe existe déjà.");
       return;
     }
     const updatedClasses = classes.map((cls) => {
@@ -183,6 +206,14 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setGlobalError("Erreur lors de la mise à jour de la classe.");
     }
   };
+
+  // Tri des classes selon le mode sélectionné
+  const sortedClasses = [...classes];
+  if (sortMethod === "asc") {
+    sortedClasses.sort((a, b) => a.level - b.level);
+  } else if (sortMethod === "desc") {
+    sortedClasses.sort((a, b) => b.level - a.level);
+  }
 
   return (
     <motion.div
@@ -226,9 +257,26 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
         </motion.div>
       )}
 
+      {/* Section de tri des classes */}
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className={`text-xl font-semibold ${textClass}`}>Classes existantes</h3>
+        <div>
+          <label htmlFor="sort" className={`mr-2 ${textClass}`}>Trier par niveau :</label>
+          <select
+            id="sort"
+            value={sortMethod}
+            onChange={(e) => setSortMethod(e.target.value)}
+            className={`px-2 py-1 rounded ${inputBgColor} ${inputBorderColor} ${textClass}`}
+          >
+            <option value="default">Par défaut</option>
+            <option value="asc">Croissant</option>
+            <option value="desc">Décroissant</option>
+          </select>
+        </div>
+      </div>
+
       {/* Liste des classes existantes */}
       <div className="mb-8">
-        <h3 className={`text-xl font-semibold mb-2 ${textClass}`}>Classes existantes</h3>
         {classes.length === 0 ? (
           <p className={textClass}>Aucune classe enregistrée.</p>
         ) : (
@@ -242,8 +290,8 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
               </tr>
             </thead>
             <tbody>
-              {classes.map((cls) => (
-                <tr key={cls.id} className="hover:bg-gray-50">
+              {sortedClasses.map((cls) => (
+                <tr key={cls.id} className={`hover:bg-gray-50 hover:text-gray-500 ${textClass}`}>
                   <td className="px-2 py-1 border text-center">{cls.level}</td>
                   <td className="px-2 py-1 border">
                     {editingClassId === cls.id ? (
@@ -345,7 +393,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
                     value={cls.name}
                     onChange={(e) => handleNewClassChange(index, 'name', e.target.value)}
                     className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${textClass}`}
-                    placeholder="EX : Terminale S"
+                    placeholder="EX : Terminale S || A1"
                   />
                   {errors[`${index}-name`] && (
                     <span className="text-red-500 text-xs">{errors[`${index}-name`]}</span>
@@ -408,7 +456,9 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
               exit={{ scale: 0.8 }}
             >
               <h3 className="text-xl font-semibold mb-4 text-center">Confirmer la suppression</h3>
-              <p className="mb-6 text-center">Voulez-vous vraiment supprimer la classe <span className="font-bold">{classToDelete.level} {classToDelete.name}</span> ?</p>
+              <p className="mb-6 text-center">
+                Voulez-vous vraiment supprimer la classe <span className="font-bold">{getClasseName(`${classToDelete.level} ${classToDelete.name}`, language)}</span> ?
+              </p>
               <div className="flex justify-around">
                 <motion.button
                   type="button"

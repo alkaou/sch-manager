@@ -34,7 +34,7 @@ const LanguageSelector = ({ showLangPanel, showPanel, setShowPanel, setOnHover, 
         // localStorage.setItem("preferredLanguage", lang); // Sauvegarde la langue choisie
     };
 
-    const panel_bg_color = gradients[1] === bg_colors[theme] ? "bg-gray-500" : bg_colors[theme];
+    const panel_bg_color = gradients[1] === bg_colors[theme] || gradients[2] === bg_colors[theme] ? "bg-gray-500" : bg_colors[theme];
 
     return (
         <div className="relative">

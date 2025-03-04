@@ -3,10 +3,11 @@ import { saveStudent } from '../utils/database_methods';
 import { motion } from 'framer-motion';
 import { useLanguage } from './contexts.js';
 import { gradients } from '../utils/colors';
+import { getClasseName } from "../utils/helpers.js";
 
 const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) => {
   const [db, setDb] = useState(null);
-  const { live_language } = useLanguage();
+  const { live_language, language } = useLanguage();
 
   // On charge la DB, qui doit contenir la propriété "classes" avec les classes disponibles
   useEffect(() => {
@@ -16,7 +17,6 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
   }, []);
 
   // Objet initial pour un élève (toutes les infos sont vides)
-  // Le champ "matricule" est ajouté et est non obligatoire
   const initialStudent = {
     first_name: '',
     sure_name: '',
@@ -32,7 +32,7 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
 
   // On démarre avec un seul formulaire d'élève et un objet d'erreurs associé
   const [students, setStudents] = useState([initialStudent]);
-  const [errors, setErrors] = useState([{}]); // Assurez-vous que c'est un tableau !
+  const [errors, setErrors] = useState([{}]); 
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(null);
 
@@ -53,7 +53,7 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
     setStudents(updatedStudents);
 
     // Vérifier et mettre à jour l'état des erreurs pour ce champ
-    const updatedErrors = [...errors]; // errors est bien un tableau
+    const updatedErrors = [...errors];
     if (updatedErrors[index] && updatedErrors[index][field]) {
       updatedErrors[index][field] = "";
       setErrors(updatedErrors);
@@ -123,19 +123,13 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateStudents()) {
-      // Les erreurs locales sont déjà affichées
       return;
     }
     setIsLoading(true);
     setSuccess(null);
-
-    // Pour stocker les erreurs remontées par saveStudent pour chaque élève
     const newErrors = [...errors];
-
-    // On itère sur chaque étudiant pour tenter de l'enregistrer
     for (let i = 0; i < students.length; i++) {
       const student = students[i];
-      // Conversion de la date
       const studentData = {
         ...student,
         birth_date: new Date(student.birth_date).getTime()
@@ -143,21 +137,15 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
 
       try {
         await saveStudent(studentData, db);
-        // Si tout va bien, on efface les erreurs pour cet élève
         newErrors[i] = {};
       } catch (err) {
-        // On met à jour l'erreur pour le champ concerné de l'élève courant
         newErrors[i] = {
           ...newErrors[i],
           [err.field]: err.message
         };
       }
     }
-
-    // Mettre à jour l'état errors pour afficher les messages à côté des inputs concernés
     setErrors(newErrors);
-
-    // Si aucune erreur n'est survenue, on affiche le message de succès
     if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
       setSuccess("Les élèves ont été ajoutés avec succès!");
       setTimeout(() => {
@@ -167,13 +155,17 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
     setIsLoading(false);
   };
 
-  // Pour générer les options du select à partir des classes de la DB.
-  // Chaque option combine le level et le nom, par exemple "7 Terminale".
-  const classOptions = db && db.classes ? db.classes.map(cls => ({
-    id: cls.id,
-    label: `${cls.level} ${cls.name}`,
-    value: `${cls.level} ${cls.name}`
-  })) : [];
+  // Génération des options du select en triant par niveau (ordre croissant)
+  const classOptions =
+    db && db.classes
+      ? [...db.classes]
+          .sort((a, b) => a.level - b.level)
+          .map(cls => ({
+            id: cls.id,
+            label: `${cls.level} ${cls.name}`,
+            value: `${cls.level} ${cls.name}`
+          }))
+      : [];
 
   return (
     <motion.div
@@ -264,7 +256,9 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
                     >
                       <option value="">Sélectionnez</option>
                       {classOptions.map(option => (
-                        <option key={option.id} value={option.value}>{option.label}</option>
+                        <option key={option.id} value={option.value} style={{ fontWeight: "bold" }}>
+                          {getClasseName(option.label, language)}
+                        </option>
                       ))}
                     </select>
                     {errors[index]?.classe && <span className="text-red-500 text-xs">{errors[index].classe}</span>}
@@ -352,7 +346,6 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
           </table>
         </div>
 
-        {/* Bouton pour ajouter un nouvel élève */}
         <div className="flex justify-end mt-4">
           <motion.button
             type="button"
@@ -371,7 +364,6 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
           </motion.button>
         </div>
 
-        {/* Bouton de sauvegarde */}
         <div className="flex justify-center mt-6">
           <motion.button
             type="submit"
