@@ -460,10 +460,10 @@ const StudentsTable = ({
                     {live_language.birth_text}
                   </th>
                   <th className="w-20 py-1 px-2 border-b border-gray-300 text-center">
-                    {live_language.age_text}
+                    &nbsp;&nbsp;&nbsp;{live_language.age_text}&nbsp;&nbsp;&nbsp;
                   </th>
                   <th className="w-16 py-1 px-2 border-b border-gray-300 text-center">
-                    {live_language.sexe_text}
+                    &nbsp;&nbsp;{live_language.sexe_text}&nbsp;&nbsp;
                   </th>
                   <th className="w-24 py-1 px-2 border-b border-gray-300 text-center">
                     Nº matricule
@@ -486,9 +486,11 @@ const StudentsTable = ({
                   <th className="w-28 py-1 px-2 border-b border-gray-300 text-center">
                     {live_language.updated_time_text}
                   </th>
-                  <th className="w-16 py-1 px-2 border-b border-gray-300 text-center">
-                    {live_language.option_text}
-                  </th>
+                  {/*
+                    <th className="w-16 py-1 px-2 border-b border-gray-300 text-center">
+                      {live_language.option_text}
+                    </th>
+                  */}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300">
@@ -502,6 +504,7 @@ const StudentsTable = ({
                         ? "hover:bg-gray-100"
                         : "hover:bg-gray-50"
                     } hover:text-gray-700 transition-colors duration-300`}
+                    onClick={()=> console.log("click")}
                   >
                     <td className="py-1 px-2 text-center">
                       <input
@@ -553,34 +556,42 @@ const StudentsTable = ({
                     <td className="py-1 px-2 text-center">
                       {new Date(student.updated_at).toLocaleDateString()}
                     </td>
-                    <td className="py-1 px-2 relative text-center">
-                      <button
-                        onClick={() => toggleDropdown(index)}
-                        className="p-2 rounded hover:bg-gray-200 transition-colors duration-200"
-                      >
-                        <MoreVertical size={20} />
-                      </button>
-                      {openDropdown === index && (
-                        <div
-                          className={`${app_bg_color} ${_text_color} absolute right-0 top-full -mt-10 w-40 border border-gray-200 rounded shadow-lg z-50 animate-fadeIn`}
+                    {/*
+                      <td className="py-1 px-2 relative text-center">
+                        <button
+                          onClick={() => toggleDropdown(index)}
+                          className="p-2 rounded hover:bg-gray-200 transition-colors duration-200"
                         >
-                          <ul>
-                            <li className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
-                              {live_language.update_student_text}
-                            </li>
-                            <li className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
-                              {live_language.see_detail_student_text}
-                            </li>
-                            <li className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
-                              {live_language.deactive_student_text}
-                            </li>
-                            <li className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
-                              {live_language.delete_student_text}
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </td>
+                          <MoreVertical size={20} />
+                        </button>
+                        {openDropdown === index && (
+                          <div
+                            className={`${app_bg_color} ${_text_color} absolute right-0 top-full -mt-10 w-40 border border-gray-200 rounded shadow-lg z-50 animate-fadeIn`}
+                          >
+                            <ul>
+                              <a
+                                onClick={() => {
+                                  // setStudentsForUpdate(selectedStudentsForEdit);
+                                  // setIsAddStudentActive(true);
+                                  console.log("click!");
+                                }}
+                                className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
+                                {live_language.update_student_text}
+                              </a>
+                              <li className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
+                                {live_language.see_detail_student_text}
+                              </li>
+                              <li className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
+                                {live_language.deactive_student_text}
+                              </li>
+                              <li className={`hover:text-white px-4 py-2 ${popup_bg_hover_color} cursor-pointer transition-colors duration-200`}>
+                                {live_language.delete_student_text}
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </td>
+                    */}
                   </tr>
                 ))}
               </tbody>

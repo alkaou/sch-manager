@@ -306,6 +306,11 @@ const activateStudent = (studentId, db, setFlashMessage) => {
     window.electron.saveDatabase(db)
         .then(() => {
             console.log("Étudiant activé avec succès :", db.students[studentIndex]);
+            setFlashMessage({
+              message: "Étudiant activé avec succès.",
+              type: "success", // peut être 'success', 'error', 'warning' ou 'info'
+              duration: 5000,  // durée d’affichage en ms
+            });
         })
         .catch((err) => {
             console.error("Erreur lors de l'activation de l'étudiant :", err);
@@ -329,6 +334,11 @@ const deactivateStudent = (studentId, db, setFlashMessage) => {
     window.electron.saveDatabase(db)
         .then(() => {
             console.log("Étudiant désactivé avec succès :", db.students[studentIndex]);
+            setFlashMessage({
+              message: "Étudiant désactivé avec succès.",
+              type: "success", // peut être 'success', 'error', 'warning' ou 'info'
+              duration: 5000,  // durée d’affichage en ms
+            });
         })
         .catch((err) => {
             console.error("Erreur lors de la désactivation de l'étudiant :", err);
