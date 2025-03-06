@@ -45,16 +45,16 @@
 /* Animation personnalisée pour la notification */
 @keyframes slideFade {
   0% {
-    opacity: 0;
-    transform: translateY(-20px);
+    opacity: 1;
+    transform: translateY(0px);
   }
   50% {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 0.8;
+    transform: translateY(25px);
   }
   100% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(50px);
   }
 }
 
