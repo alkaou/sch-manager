@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { saveStudent } from '../utils/database_methods';
+import { saveStudent, updateStudent } from '../utils/database_methods';
 import { motion } from 'framer-motion';
 import { useLanguage } from './contexts.js';
 import { gradients } from '../utils/colors';
 import { getClasseName } from "../utils/helpers.js";
 
-const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) => {
+const AddStudent = ({ 
+  setIsAddStudentActive,
+  app_bg_color,
+  text_color,
+  theme,
+  studentsForUpdate,
+  setStudentsForUpdate,
+}) => {
   const [db, setDb] = useState(null);
   const { live_language, language } = useLanguage();
-
-  // On charge la DB, qui doit contenir la propriété "classes" avec les classes disponibles
-  useEffect(() => {
-    window.electron.getDatabase().then((data) => {
-      setDb(data);
-    });
-  }, []);
 
   // Objet initial pour un élève (toutes les infos sont vides)
   const initialStudent = {
@@ -35,6 +35,20 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
   const [errors, setErrors] = useState([{}]); 
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(null);
+
+
+  // On charge la DB, qui doit contenir la propriété "classes" avec les classes disponibles
+  useEffect(() => {
+    window.electron.getDatabase().then((data) => {
+      setDb(data);
+      // console.log(studentsForUpdate.length);
+      if(studentsForUpdate.length > 0){
+        setStudents(studentsForUpdate);
+      }
+    });
+
+  }, []);
+
 
   // Déterminer les couleurs en fonction du thème
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
@@ -128,32 +142,63 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
     setIsLoading(true);
     setSuccess(null);
     const newErrors = [...errors];
-    for (let i = 0; i < students.length; i++) {
-      const student = students[i];
-      const studentData = {
-        ...student,
-        birth_date: new Date(student.birth_date).getTime()
-      };
 
-      try {
-        await saveStudent(studentData, db);
-        newErrors[i] = {};
-      } catch (err) {
-        newErrors[i] = {
-          ...newErrors[i],
-          [err.field]: err.message
+    // Si des élèves sont à mettre à jour
+    if (studentsForUpdate.length > 0) {
+      for (let i = 0; i < students.length; i++) {
+        const student = students[i];
+        // Transformation de la date de naissance en timestamp
+        const updatedData = {
+          ...student,
+          birth_date: new Date(student.birth_date).getTime()
         };
+        try {
+          await updateStudent(student.id, updatedData, db);
+          newErrors[i] = {};
+        } catch (err) {
+          newErrors[i] = {
+            ...newErrors[i],
+            [err.field]: err.message
+          };
+        }
+      }
+      if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
+        setSuccess("Les élèves ont été mis à jour avec succès !");
+        setTimeout(() => {
+          setIsAddStudentActive(false);
+        }, 2000);
+      }
+    } else {
+      // Si aucun élève n'est à mettre à jour, on ajoute de nouveaux élèves
+      for (let i = 0; i < students.length; i++) {
+        const student = students[i];
+        const studentData = {
+          ...student,
+          birth_date: new Date(student.birth_date).getTime()
+        };
+
+        try {
+          await saveStudent(studentData, db);
+          newErrors[i] = {};
+        } catch (err) {
+          newErrors[i] = {
+            ...newErrors[i],
+            [err.field]: err.message
+          };
+        }
+      }
+      if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
+        setSuccess("Les élèves ont été ajoutés avec succès!");
+        setTimeout(() => {
+          setIsAddStudentActive(false);
+        }, 2000);
       }
     }
+
     setErrors(newErrors);
-    if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
-      setSuccess("Les élèves ont été ajoutés avec succès!");
-      setTimeout(() => {
-        setIsAddStudentActive(false);
-      }, 2000);
-    }
     setIsLoading(false);
   };
+
 
   // Génération des options du select en triant par niveau (ordre croissant)
   const classOptions =
@@ -278,7 +323,11 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
                   <td className="px-2 py-1 border">
                     <input
                       type="date"
-                      value={student.birth_date}
+                      value={
+                        student.birth_date
+                          ? new Date(student.birth_date).toISOString().substring(0, 10)
+                          : ""
+                      }
                       onChange={(e) => handleInputChange(index, 'birth_date', e.target.value)}
                       className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
                     />
@@ -346,23 +395,27 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
           </table>
         </div>
 
-        <div className="flex justify-end mt-4">
-          <motion.button
-            type="button"
-            onClick={handleAddForm}
-            className={`text-white px-4 py-2 rounded ${buttonAddColor}`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Ajouter un élève
-            </div>
-          </motion.button>
-        </div>
+        {studentsForUpdate.length > 0 ? 
+        null :
+        (
+          <div className="flex justify-end mt-4">
+            <motion.button
+              type="button"
+              onClick={handleAddForm}
+              className={`text-white px-4 py-2 rounded ${buttonAddColor}`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Ajouter un élève
+              </div>
+            </motion.button>
+          </div>
+        )}
 
         <div className="flex justify-center mt-6">
           <motion.button
@@ -378,14 +431,22 @@ const AddStudent = ({ setIsAddStudentActive, app_bg_color, text_color, theme }) 
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Sauvegarde en cours...
+                { 
+                  studentsForUpdate.length > 0 ? 
+                  "Mis à jour en cours..." :
+                  "Sauvegarde en cours..."
+                }
               </>
             ) : (
               <>
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                 </svg>
-                Sauvegarder tous les élèves
+                { 
+                  studentsForUpdate.length > 0 ? 
+                  "Mettre à jour les informations" :
+                  "Sauvegarder tous les élèves"
+                }
               </>
             )}
           </motion.button>

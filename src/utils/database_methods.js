@@ -12,8 +12,10 @@ const check_names_length = (name) => {
 };
 
 
-const saveStudent = (studentData, db) => {
-    // Vérification de la présence des champs obligatoires
+// Fonction utilitaire pour valider et nettoyer les données d'un élève.
+// Le paramètre requireAllFields indique si tous les champs obligatoires doivent être présents.
+const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
+    const validNameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\-\s]+$/;
     const requiredFields = [
         "first_name",
         "last_name",
@@ -24,158 +26,213 @@ const saveStudent = (studentData, db) => {
         "mother_name",
         "parents_contact"
     ];
-    for (let field of requiredFields) {
-        if (!studentData[field]) {
-            const error = new Error(`Le champ ${field} est obligatoire.`);
-            error.field = field;
-            error.step = "Vérification des champs obligatoires";
-            throw error;
-        }
-    }
+    const cleanedData = {};
 
-    // Vérification de la validité des noms (lettres, espaces et tirets autorisés, y compris les accents)
-    const validNameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\-\s]+$/;
-    if (
-        !validNameRegex.test(studentData.first_name) ||
-        !validNameRegex.test(studentData.last_name)
-    ) {
-        const error = new Error("Les noms doivent contenir uniquement des lettres, espaces ou tirets.");
-        error.field = "first_name/last_name";
-        error.step = "Validation du format des noms";
-        throw error;
-    }
-
-    // Vérification du sexe (autorisé "M" ou "F")
-    if (!["M", "F"].includes(studentData.sexe)) {
-        const error = new Error("Le sexe doit être 'M' ou 'F'.");
-        error.field = "sexe";
-        error.step = "Validation du sexe";
-        throw error;
-    }
-
-    // Vérification du numéro de contact des parents (doit être numérique)
-    if (isNaN(studentData.parents_contact)) {
-        const error = new Error("Le contact des parents doit être un nombre.");
-        error.field = "parents_contact";
-        error.step = "Validation du contact";
-        throw error;
-    }
-
-    // Vérification de la date de naissance (doit être un timestamp valide et pas dans le futur)
-    if (typeof studentData.birth_date !== "number" || studentData.birth_date > Date.now()) {
-        const error = new Error("La date de naissance est invalide.");
-        error.field = "birth_date";
-        error.step = "Validation de la date de naissance";
-        throw error;
-    }
-
-    // Vérification de la taille des noms et du contact
-    let student_first_name = studentData.first_name.trim();
-    let student_last_name = studentData.last_name.trim();
-    let student_sure_name = studentData.sure_name.trim();
-    let student_father_name = studentData.father_name.trim();
-    let student_mother_name = studentData.mother_name.trim();
-    let student_parents_contact = studentData.parents_contact.trim();
-
-    if (!check_names_length(student_first_name)) {
-        const error = new Error("Le prénom doit contenir entre 2 et 20 caractères.");
-        error.field = "first_name";
-        error.step = "Validation de la longueur du prénom";
-        throw error;
-    }
-
-    if (!check_names_length(student_last_name)) {
-        const error = new Error("Le nom de famille doit contenir entre 2 et 20 caractères.");
-        error.field = "last_name";
-        error.step = "Validation de la longueur du nom de famille";
-        throw error;
-    }
-
-    if (!check_names_length(student_father_name)) {
-        const error = new Error("Le nom du père doit contenir entre 2 et 20 caractères.");
-        error.field = "father_name";
-        error.step = "Validation de la longueur du nom du père";
-        throw error;
-    }
-
-    if (!check_names_length(student_mother_name)) {
-        const error = new Error("Le nom de la mère doit contenir entre 2 et 20 caractères.");
-        error.field = "mother_name";
-        error.step = "Validation de la longueur du nom de la mère";
-        throw error;
-    }
-
-    if (!check_names_length(student_parents_contact)) {
-        const error = new Error("Le contact des parents doit contenir entre 2 et 20 caractères.");
-        error.field = "parents_contact";
-        error.step = "Validation de la longueur du contact";
-        throw error;
-    }
-
-    if (student_sure_name.length > 20) {
-        const error = new Error("Le surnom ne doit pas dépasser 20 caractères.");
-        error.field = "sure_name";
-        error.step = "Validation de la longueur du surnom";
-        throw error;
-    }
-
-    // --- Gestion du matricule (champ non obligatoire) ---
-    // S'il est fourni, il doit être composé uniquement de lettres et chiffres,
-    // avoir une longueur comprise entre 6 et 10 caractères, et être unique dans la base.
-    let matricule = "";
-    if (studentData.matricule && studentData.matricule.trim() !== "") {
-        matricule = studentData.matricule.trim();
-        const validMatriculeRegex = /^[A-Za-z0-9]+$/;
-        if (!validMatriculeRegex.test(matricule)) {
-            const error = new Error("Le matricule doit contenir uniquement des chiffres et des lettres.");
-            error.field = "matricule";
-            error.step = "Validation du matricule (format)";
-            throw error;
-        }
-        if (matricule.length < 6 || matricule.length > 10) {
-            const error = new Error("Le matricule doit contenir entre 6 et 10 caractères.");
-            error.field = "matricule";
-            error.step = "Validation de la longueur du matricule";
-            throw error;
-        }
-        // Vérifier l'unicité dans la base
-        if (db.students) {
-            const duplicate = db.students.find(student => student.matricule === matricule);
-            if (duplicate) {
-                const error = new Error("Ce matricule existe déjà.");
-                error.field = "matricule";
-                error.step = "Validation d'unicité du matricule";
+    if (requireAllFields) {
+        for (let field of requiredFields) {
+            if (!studentData[field]) {
+                const error = new Error(`Le champ ${field} est obligatoire.`);
+                error.field = field;
+                error.step = "Vérification des champs obligatoires";
                 throw error;
             }
         }
     }
 
+    // Valider et nettoyer first_name
+    if (studentData.first_name) {
+        const val = studentData.first_name.trim();
+        if (!validNameRegex.test(val)) {
+            const error = new Error("Les noms doivent contenir uniquement des lettres, espaces ou tirets.");
+            error.field = "first_name";
+            error.step = "Validation du format du prénom";
+            throw error;
+        }
+        if (!check_names_length(val)) {
+            const error = new Error("Le prénom doit contenir entre 2 et 20 caractères.");
+            error.field = "first_name";
+            error.step = "Validation de la longueur du prénom";
+            throw error;
+        }
+        cleanedData.first_name = val;
+    }
+
+    // Valider et nettoyer last_name
+    if (studentData.last_name) {
+        const val = studentData.last_name.trim();
+        if (!validNameRegex.test(val)) {
+            const error = new Error("Les noms doivent contenir uniquement des lettres, espaces ou tirets.");
+            error.field = "last_name";
+            error.step = "Validation du format du nom de famille";
+            throw error;
+        }
+        if (!check_names_length(val)) {
+            const error = new Error("Le nom de famille doit contenir entre 2 et 20 caractères.");
+            error.field = "last_name";
+            error.step = "Validation de la longueur du nom de famille";
+            throw error;
+        }
+        cleanedData.last_name = val;
+    }
+
+    // Valider et nettoyer sure_name (optionnel)
+    if (studentData.sure_name) {
+        const val = studentData.sure_name.trim();
+        if (val.length > 20) {
+            const error = new Error("Le surnom ne doit pas dépasser 20 caractères.");
+            error.field = "sure_name";
+            error.step = "Validation de la longueur du surnom";
+            throw error;
+        }
+        cleanedData.sure_name = val;
+    } else if (requireAllFields) {
+        // Pour garder la cohérence lors d'une création complète, on peut définir sure_name comme chaîne vide
+        cleanedData.sure_name = "";
+    }
+
+    // Valider et nettoyer father_name
+    if (studentData.father_name) {
+        const val = studentData.father_name.trim();
+        if (!validNameRegex.test(val)) {
+            const error = new Error("Les noms doivent contenir uniquement des lettres, espaces ou tirets.");
+            error.field = "father_name";
+            error.step = "Validation du format du nom du père";
+            throw error;
+        }
+        if (!check_names_length(val)) {
+            const error = new Error("Le nom du père doit contenir entre 2 et 20 caractères.");
+            error.field = "father_name";
+            error.step = "Validation de la longueur du nom du père";
+            throw error;
+        }
+        cleanedData.father_name = val;
+    }
+
+    // Valider et nettoyer mother_name
+    if (studentData.mother_name) {
+        const val = studentData.mother_name.trim();
+        if (!validNameRegex.test(val)) {
+            const error = new Error("Les noms doivent contenir uniquement des lettres, espaces ou tirets.");
+            error.field = "mother_name";
+            error.step = "Validation du format du nom de la mère";
+            throw error;
+        }
+        if (!check_names_length(val)) {
+            const error = new Error("Le nom de la mère doit contenir entre 2 et 20 caractères.");
+            error.field = "mother_name";
+            error.step = "Validation de la longueur du nom de la mère";
+            throw error;
+        }
+        cleanedData.mother_name = val;
+    }
+
+    // Valider et nettoyer parents_contact
+    if (studentData.parents_contact) {
+        const val = studentData.parents_contact.toString().trim();
+        if (isNaN(val)) {
+            const error = new Error("Le contact des parents doit être un nombre.");
+            error.field = "parents_contact";
+            error.step = "Validation du contact";
+            throw error;
+        }
+        if (!check_names_length(val)) {
+            const error = new Error("Le contact des parents doit contenir entre 2 et 20 caractères.");
+            error.field = "parents_contact";
+            error.step = "Validation de la longueur du contact";
+            throw error;
+        }
+        cleanedData.parents_contact = val;
+    }
+
+    // Récupérer la classe (aucune validation spécifique ici)
+    if (studentData.classe) {
+        cleanedData.classe = studentData.classe;
+    }
+
+    // Valider et nettoyer sexe
+    if (studentData.sexe) {
+        if (!["M", "F"].includes(studentData.sexe)) {
+            const error = new Error("Le sexe doit être 'M' ou 'F'.");
+            error.field = "sexe";
+            error.step = "Validation du sexe";
+            throw error;
+        }
+        cleanedData.sexe = studentData.sexe;
+    }
+
+    // Valider birth_date
+    if (studentData.birth_date) {
+        if (typeof studentData.birth_date !== "number" || studentData.birth_date > Date.now()) {
+            const error = new Error("La date de naissance est invalide.");
+            error.field = "birth_date";
+            error.step = "Validation de la date de naissance";
+            throw error;
+        }
+        cleanedData.birth_date = studentData.birth_date;
+    }
+
+    // Gestion du matricule (optionnel)
+    if (studentData.matricule) {
+        const matricule = studentData.matricule.trim();
+        if (matricule !== "") {
+            const validMatriculeRegex = /^[A-Za-z0-9]+$/;
+            if (!validMatriculeRegex.test(matricule)) {
+                const error = new Error("Le matricule doit contenir uniquement des chiffres et des lettres.");
+                error.field = "matricule";
+                error.step = "Validation du matricule (format)";
+                throw error;
+            }
+            if (matricule.length < 6 || matricule.length > 10) {
+                const error = new Error("Le matricule doit contenir entre 6 et 10 caractères.");
+                error.field = "matricule";
+                error.step = "Validation de la longueur du matricule";
+                throw error;
+            }
+            cleanedData.matricule = matricule;
+        }
+    }
+
+    return cleanedData;
+};
+
+// Méthode pour ajouter un nouvel étudiant
+const saveStudent = (studentData, db) => {
+    // Validation et nettoyage
+    const cleanedData = validateAndCleanStudentData(studentData, true);
+
+    // Vérification de doublon (selon les champs clés)
+    if (db.students) {
+        const duplicate = db.students.find(student =>
+            student.first_name === cleanedData.first_name &&
+            student.last_name === cleanedData.last_name &&
+            student.classe === cleanedData.classe &&
+            student.sexe === cleanedData.sexe &&
+            student.birth_date === cleanedData.birth_date &&
+            student.father_name === cleanedData.father_name &&
+            student.mother_name === cleanedData.mother_name &&
+            student.parents_contact === cleanedData.parents_contact
+        );
+        if (duplicate) {
+            // Doublon détecté : on quitte silencieusement
+            return;
+        }
+    }
+
     // Création de l'objet étudiant
     const timestamp = Date.now();
-    const student_first_name_clean = student_first_name;
-    const student_last_name_clean = student_last_name;
-    const student_sure_name_clean = student_sure_name;
-    const student_name_complete = `${student_first_name_clean} ${student_sure_name_clean} ${student_last_name_clean}`.replace(/\s+/g, " ");
+    // Construction du nom complet en combinant les noms (on inclut sure_name même s'il est vide)
+    const student_name_complete = `${cleanedData.first_name} ${cleanedData.sure_name} ${cleanedData.last_name}`.replace(/\s+/g, " ");
 
     const newStudent = {
         id: generateUniqueId(),
         name_complet: student_name_complete,
-        first_name: student_first_name_clean,
-        sure_name: student_sure_name_clean,
-        last_name: student_last_name_clean,
-        classe: studentData.classe,
-        sexe: studentData.sexe,
-        birth_date: studentData.birth_date,
-        father_name: student_father_name,
-        mother_name: student_mother_name,
-        parents_contact: student_parents_contact,
-        matricule: matricule, // champ matricule ajouté ici (vide si non fourni)
+        ...cleanedData,
         status: "actif",
         added_at: timestamp,
         updated_at: timestamp
     };
 
-    // S'assurer que la propriété "students" existe dans la base de données
+    // Assurer l'existence de la collection students dans la base
     if (!db.students) {
         db.students = [];
     }
@@ -191,7 +248,6 @@ const saveStudent = (studentData, db) => {
         });
 };
 
-
 // Méthode pour modifier un étudiant existant
 const updateStudent = (studentId, updatedData, db) => {
     if (!db.students || db.students.length === 0) {
@@ -204,37 +260,24 @@ const updateStudent = (studentId, updatedData, db) => {
     }
 
     const student = db.students[studentIndex];
+    
+    // Validation des données mises à jour (les champs ne sont validés que s'ils sont présents)
+    const cleanedData = validateAndCleanStudentData(updatedData, true);
 
-    // Exemple de validations sur les champs modifiables
-    if (updatedData.first_name && !/^[a-zA-ZÀ-ÖØ-öø-ÿ\-\s]+$/.test(updatedData.first_name)) {
-        throw new Error("Le prénom est invalide.");
-    }
-    if (updatedData.sure_name && !/^[a-zA-ZÀ-ÖØ-öø-ÿ\-\s]+$/.test(updatedData.sure_name)) {
-        throw new Error("Le nom est invalide.");
-    }
-    if (updatedData.sexe && !["M", "F"].includes(updatedData.sexe)) {
-        throw new Error("Le sexe doit être 'M' ou 'F'.");
-    }
-    if (updatedData.parents_contact && isNaN(updatedData.parents_contact)) {
-        throw new Error("Le contact des parents doit être un nombre.");
-    }
-    if (updatedData.birth_date && (typeof updatedData.birth_date !== "number" || updatedData.birth_date > Date.now())) {
-        throw new Error("La date de naissance est invalide.");
-    }
-
-    // Mise à jour de l'étudiant
+    // Mise à jour de l'étudiant en fusionnant les données existantes et les données mises à jour
     const updatedStudent = {
         ...student,
-        ...updatedData,
+        ...cleanedData,
         updated_at: Date.now()
     };
 
-    // Recalculer le nom complet si l'un des noms a été mis à jour
-    if (updatedData.first_name || updatedData.sure_name) {
-        updatedStudent.name_complet = `${updatedStudent.first_name} ${updatedStudent.sure_name}`;
+    // Recalcul du nom complet si l'un des éléments de nom a été modifié
+    if (cleanedData.first_name || cleanedData.sure_name || cleanedData.last_name) {
+        updatedStudent.name_complet = `${updatedStudent.first_name} ${updatedStudent.sure_name || ""} ${updatedStudent.last_name}`.replace(/\s+/g, " ");
     }
 
     db.students[studentIndex] = updatedStudent;
+
 
     window.electron.saveDatabase(db)
         .then(() => {
@@ -245,8 +288,9 @@ const updateStudent = (studentId, updatedData, db) => {
         });
 };
 
+
 // Méthode pour activer un étudiant (passer son status à "actif")
-const activateStudent = (studentId, db) => {
+const activateStudent = (studentId, db, setFlashMessage) => {
     if (!db.students || db.students.length === 0) {
         throw new Error("Aucun étudiant n'est enregistré.");
     }
@@ -269,7 +313,7 @@ const activateStudent = (studentId, db) => {
 };
 
 // Méthode pour désactiver un étudiant (passer son status à "inactif")
-const deactivateStudent = (studentId) => {
+const deactivateStudent = (studentId, db, setFlashMessage) => {
     if (!db.students || db.students.length === 0) {
         throw new Error("Aucun étudiant n'est enregistré.");
     }
@@ -292,7 +336,7 @@ const deactivateStudent = (studentId) => {
 };
 
 // Méthode pour supprimer un étudiant
-const deleteStudent = (studentId) => {
+const deleteStudent = (studentId, db, setFlashMessage) => {
     if (!db.students || db.students.length === 0) {
         throw new Error("Aucun étudiant n'est enregistré.");
     }
@@ -308,6 +352,12 @@ const deleteStudent = (studentId) => {
     window.electron.saveDatabase(db)
         .then(() => {
             console.log("Étudiant supprimé avec succès :", removedStudent);
+            setFlashMessage({
+              message: "La suppression a été passée avec succès.",
+              type: "success", // peut être 'success', 'error', 'warning' ou 'info'
+              duration: 5000,  // durée d’affichage en ms
+            });
+
         })
         .catch((err) => {
             console.error("Erreur lors de la suppression de l'étudiant :", err);

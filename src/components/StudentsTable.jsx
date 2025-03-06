@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { MoreVertical, User, RefreshCcw, Trash } from "lucide-react";
+import { MoreVertical, User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2 } from "lucide-react";
 import { gradients } from "../utils/colors";
-import { useLanguage } from "./contexts.js";
+import { useLanguage, useFlashNotification } from "./contexts.js";
 import { getAge, getClasseName } from "../utils/helpers.js";
 import { deleteStudent } from "../utils/database_methods";
+
 
 const StudentsTable = ({
   students,
@@ -13,14 +14,19 @@ const StudentsTable = ({
   text_color,
   theme,
   setIsAddStudentActive,
+  setIsManageClassesActive,
   OpenThePopup,
-  refreshData, // Fonction de rafraîchissement des données depuis la DB
+  refreshData, // Fonction de rafraîchissement des données depuis la database
+  database,
+  setStudentsForUpdate,
 }) => {
   const { live_language, language } = useLanguage();
+  const { setFlashMessage } = useFlashNotification();
+
 
   // États de gestion
   const [selected, setSelected] = useState([]);
-  const [sortCriterion, setSortCriterion] = useState("default");
+  const [sortCriterion, setSortCriterion] = useState("last_name"); // last_name, default
   const [filterClass, setFilterClass] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -48,6 +54,7 @@ const StudentsTable = ({
       setSelected([...selected, id]);
     }
   };
+
 
   // Filtrage et tri des élèves
   let processedStudents = [...students];
@@ -81,8 +88,38 @@ const StudentsTable = ({
   };
 
   // Activation du formulaire d'ajout d'élève
-  const AddStudent = () => {
+  const handleAddStudent = () => {
+    setStudentsForUpdate([]);
     setIsAddStudentActive(true);
+  };
+
+  // Activation du formulaire de modification d'élève
+  const handleEditStudentSelected = () => {
+    const selectedStudents = filteredStudents
+      .filter((s) => selected.includes(s.id))
+      .map((s) => ({
+        id: s.id || '',
+        first_name: s.first_name || '',
+        sure_name: s.sure_name || '',
+        last_name: s.last_name || '',
+        classe: s.classe || '',
+        sexe: s.sexe || '',
+        birth_date: s.birth_date || '',
+        matricule: s.matricule || '',
+        father_name: s.father_name || '',
+        mother_name: s.mother_name || '',
+        parents_contact: s.parents_contact || ''
+      }));
+
+    setStudentsForUpdate(selectedStudents);
+    setIsAddStudentActive(true);
+  };
+
+
+  // Activation du formulaire d'ajout d'élève
+  const handleAddClasses = () => {
+    setStudentsForUpdate([]);
+    setIsManageClassesActive(true);
   };
 
   // Gestion du dropdown (menu d'options) sur chaque ligne
@@ -100,7 +137,7 @@ const StudentsTable = ({
     ) {
       for (const id of selected) {
         try {
-          await deleteStudent(id);
+          await deleteStudent(id, database, setFlashMessage);
         } catch (err) {
           console.error("Erreur lors de la suppression de l'étudiant:", err);
         }
@@ -118,6 +155,9 @@ const StudentsTable = ({
   const _head_bg_color = app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
   const head_bg_color = _head_bg_color === gradients[2] ? "bg-gray-500" : _head_bg_color;
   const _text_color = app_bg_color === gradients[2] ? "text-gray-500" : text_color;
+  const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+  const textClass = theme === "dark" ? text_color : "text-gray-600";
+  
 
   return (
     <div
@@ -137,7 +177,7 @@ const StudentsTable = ({
           </p>
           <button
             className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-            onClick={AddStudent}
+            onClick={handleAddClasses}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -152,22 +192,25 @@ const StudentsTable = ({
           </button>
         </div>
       ) : (
-        <div style={{ marginBottom: "40%" }}>
+        <div style={{ marginBottom: "45%" }}>
           {/* Informations sommaires */}
           <div style={{ marginLeft: "1.5%" }} className="flex flex-wrap items-center justify-between mb-2 animate-fadeIn">
             <div className="flex items-center space-x-10">
+              
               <p className={`${_text_color} font-bold text-base transition-transform duration-300 transform hover:scale-105`}>
                 {live_language.students_number_text} : {filteredStudents.length}
               </p>
-              <p> | </p>
+              <span className={`${_text_color}`}>|</span>
               <p className={`${_text_color} font-bold text-base transition-transform duration-300 transform hover:scale-105`}>
                 {live_language.classe_number_text} : {totalClassesAvailable}
               </p>
+
             </div>
             <div className="flex items-center space-x-2">
+              {/* Bouton refresh */}
               <button
                 onClick={handleRefresh}
-                className={`p-2 rounded-full border ${_text_color} ${app_bg_color} border-gray-300 hover:bg-gray-200 transition-colors duration-300`}
+                className={`p-2 rounded-full border ${_text_color} ${app_bg_color} border-gray-300 hover:bg-green-200 transition-colors duration-300`}
               >
                 {isRefreshing ? (
                   <RefreshCcw className="animate-spin" size={20} />
@@ -175,6 +218,8 @@ const StudentsTable = ({
                   <RefreshCcw size={20} />
                 )}
               </button>
+
+              {/* Bouton suppression si des éléments sont sélectionnés */}
               {selected.length > 0 && (
                 <button
                   onClick={handleDeleteSelected}
@@ -183,8 +228,35 @@ const StudentsTable = ({
                   <Trash size={20} className="text-red-600" />
                 </button>
               )}
+
+              {/* Bouton ajouter un élève */}
+              <button
+                onClick={handleAddStudent}
+                className="p-2 rounded-full border border-gray-300 hover:bg-green-200 transition-colors duration-300 transform hover:scale-105"
+              >
+                <UserPlus size={20} className={`${_text_color}`} />
+              </button>
+
+              {/* Bouton ajouter une classe */}
+              <button
+                onClick={handleAddClasses}
+                className="p-2 rounded-full border border-gray-300 hover:bg-green-200 transition-colors duration-300 transform hover:scale-105"
+              >
+                <PlusSquare size={20} className={`${_text_color}`} />
+              </button>
+
+              {/* Bouton modifier des élèves sélectionnés */}
+              {selected.length > 0 && (
+                <button
+                  onClick={handleEditStudentSelected}
+                  className="p-2 rounded-full border border-gray-300 hover:bg-green-200 transition-colors duration-300 transform hover:scale-105"
+                >
+                  <Edit2 size={20} className={`${_text_color}`} />
+                </button>
+              )}
             </div>
           </div>
+
 
           {/* Contrôles de tri, filtrage, recherche et sélection globale */}
           <div className="flex flex-wrap items-center justify-between mb-2 space-y-2 animate-fadeIn">
@@ -195,10 +267,10 @@ const StudentsTable = ({
               <select
                 value={sortCriterion}
                 onChange={(e) => setSortCriterion(e.target.value)}
-                className={`px-2 py-1 rounded border border-gray-300`}
+                className={`px-2 py-1 ${inputBgColor} ${textClass} rounded border border-gray-300`}
               >
-                <option value="default">{/*live_language.default_text*/}Par défaut</option>
-                <option value="last_name">{/*live_language.last_name_text*/}Par nom</option>
+                <option value="default">{/*live_language.default_text*/}Défaut</option>
+                <option value="last_name">{/*live_language.last_name_text*/}Nom</option>
                 <option value="classe">{live_language.classe_text}</option>
                 <option value="added_at">{live_language.added_time_text}</option>
               </select>
@@ -210,7 +282,7 @@ const StudentsTable = ({
               <select
                 value={filterClass}
                 onChange={(e) => setFilterClass(e.target.value)}
-                className={`px-2 py-1 rounded border border-gray-300`}
+                className={`px-2 py-1 rounded ${inputBgColor} ${textClass} border border-gray-300`}
               >
                 <option value="All">{live_language.all_text}</option>
                 {availableClasses.map((cls) => (
@@ -228,8 +300,8 @@ const StudentsTable = ({
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder={live_language.search_placeholder_text}
-                className={`px-2 py-1 rounded ${app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color} ${_text_color} border border-gray-300`}
+                placeholder={live_language.recherche_text}
+                className={`px-2 py-1 rounded ${inputBgColor} ${textClass} border border-gray-300`}
               />
             </div>
             <div className="flex items-center space-x-2">
@@ -354,8 +426,20 @@ const StudentsTable = ({
                       </div>
                     </td>
                     <td className="py-1 px-2 text-center">{student.sexe}</td>
-                    <td className="py-1 px-2 text-center">{student.matricule}</td>
-                    <td className="py-1 px-2 text-center">{student.status}</td>
+                    <td className="py-1 px-2 text-center">{!student.matricule || student.matricule === "" ? "-" : student.matricule}</td>
+                    <td className="py-1 px-2 text-center">
+                      {student.status}
+                      <div className="text-center" style={{
+                        width: "15px",
+                        height: "15px",
+                        borderRadius: "20px",
+                        borderWidth: "2px",
+                        borderColor: "white",
+                        backgroundColor: "green",
+                        alignSelf: "center",
+                        marginLeft: "35%",
+                      }}></div>
+                    </td>
                     <td className="py-1 px-2 text-center">{student.father_name}</td>
                     <td className="py-1 px-2 text-center">{student.mother_name}</td>
                     <td className="py-1 px-2 text-center">{student.parents_contact}</td>
@@ -398,6 +482,17 @@ const StudentsTable = ({
               </tbody>
             </table>
           </div>
+
+          {/* Badge animé affichant le nombre d'élèves sélectionnés */}
+          {selected.length > 0 && (
+            <div className="fixed bottom-8 right-8 z-50">
+              <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
+                              animate-bounce transition-transform duration-300 transform hover:scale-110">
+                {selected.length} élève{selected.length > 1 ? "s" : ""} sélectionné{selected.length > 1 ? "s" : ""}
+              </div>
+            </div>
+          )}
+
         </div>
       )}
     </div>

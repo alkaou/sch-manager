@@ -41,3 +41,41 @@
 .animate-fadeIn {
     animation: fadeIn 0.6s ease-in-out;
 }
+
+/* Animation personnalisée pour la notification */
+@keyframes slideFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+.custom-animation {
+  animation: slideFade 1s ease-in-out;
+}
+
+.floating-button {
+  position: relative;
+}
+
+.floating-button::after {
+  content: "";
+  position: absolute;
+  bottom: -5px; /* ajustez la position verticale */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%; /* largeur du reflet */
+  height: 8px; /* hauteur du reflet */
+  background: rgba(0, 0, 0, 0.2); /* couleur et opacité */
+  filter: blur(4px); /* pour un effet doux */
+  border-radius: 50%;
+  z-index: -1; /* place derrière le bouton */
+}

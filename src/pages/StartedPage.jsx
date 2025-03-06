@@ -16,6 +16,7 @@ const StartedPage = () => {
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
 	const [school_name, setSchool_name] = useState("S");
 	const [students, setStudents] = useState([]);
+	const [studentsForUpdate, setStudentsForUpdate] = useState([]);
 	const [database, setDatabase] = useState(null);
 
 	const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -109,7 +110,7 @@ const StartedPage = () => {
 				isClassesOpen={isClassesOpen}
 				setIsClassesOpen={setIsClassesOpen}
 				setIsAddStudentActive={setIsAddStudentActive}
-				// setIsAddStudentActive={setIsManageClassesActive}
+				setIsManageClassesActive={setIsManageClassesActive}
 			/>
 
 			{/* Sidebar */}
@@ -136,6 +137,8 @@ const StartedPage = () => {
 							app_bg_color={app_bg_color}
 							text_color={text_color}
 							theme={theme}
+							studentsForUpdate={studentsForUpdate}
+							setStudentsForUpdate={setStudentsForUpdate}
 						/>
 					</div>
 				</div>
@@ -184,8 +187,11 @@ const StartedPage = () => {
 							text_color={text_color}
 							theme={theme}
 							setIsAddStudentActive={setIsAddStudentActive}
+							setIsManageClassesActive={setIsManageClassesActive}
 							OpenThePopup={OpenThePopup}
 							refreshData={refreshData}
+							database={database}
+							setStudentsForUpdate={setStudentsForUpdate}
 						/>
 					</div>
 				</div>
