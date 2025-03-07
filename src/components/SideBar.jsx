@@ -86,10 +86,10 @@ const SideBar = ({ setIsOpenPopup, school_name, school_short_name, text_color, s
                     >
                         {showOptionsNames ? `(${editedShortName})` : ""}
                         {showOptionsNames && (
-                            <div className="ml-2 text-center items-center justify-center rounded-full h-8 w-8 border border-gray-300 hover:bg-green-300">
+                            <div className="ml-2 text-center items-center justify-center rounded-full h-8 w-8 border border-gray-300 hover:bg-green-200">
                                 <Edit2
-                                    size={18}
-                                    className={`cursor-pointer ml-1 mt-2 text-center items-center justify-center ${side_bar_text_color} hover:text-white`}
+                                    size={20}
+                                    className={`cursor-pointer ml-1 pb-1 mt-2 text-center items-center justify-center ${side_bar_text_color}`}
                                     onClick={handleEditToggle}
                                 />
                             </div>

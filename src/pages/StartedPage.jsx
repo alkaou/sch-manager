@@ -1,226 +1,115 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router";
-
-import { useTheme } from "../components/contexts";
-import SideBar from "../components/SideBar.jsx";
-import FloatingMenu from "../components/MenuFloatting.jsx";
-import ColorsSelector from "../components/ColorsSelector.jsx";
-import Popup from "../components/Popup.jsx";
-import Navbar from "../components/NavBar.jsx";
+import React from "react";
+import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
 import StudentsTable from "../components/StudentsTable.jsx";
-import AppParameters from "../components/AppParameters.jsx";
 import AddStudent from "../components/AddStudent.jsx";
 import ManageClasses from "../components/ManageClasses.jsx";
 
+const StartedPageContent = ({
+  isAddStudentActive,
+  isManageClassesActive,
+  students,
+  openDropdown,
+  setOpenDropdown,
+  setIsAddStudentActive,
+  setIsManageClassesActive,
+  OpenThePopup,
+  refreshData,
+  database,
+  setStudentsForUpdate,
+  studentsForUpdate,
+  app_bg_color,
+  text_color,
+  theme,
+}) => {
+  // Styles spécifiques au contenu
+  const style_1 = {
+    marginLeft: "5%",
+    width: "95%",
+    maxWidth: "95%",
+    minWidth: "95%",
+  };
+  const style_2 = {
+    width: "98%",
+    marginLeft: "1.5%",
+  };
+
+  // Rendu conditionnel selon l'action sélectionnée dans le sidebar
+  if (isAddStudentActive) {
+    return (
+      <div style={style_1}>
+        <div style={style_2}>
+          <AddStudent
+            setIsAddStudentActive={setIsAddStudentActive}
+            app_bg_color={app_bg_color}
+            text_color={text_color}
+            theme={theme}
+            studentsForUpdate={studentsForUpdate}
+            setStudentsForUpdate={setStudentsForUpdate}
+          />
+        </div>
+      </div>
+    );
+  } else if (isManageClassesActive) {
+    return (
+      <div style={style_1}>
+        <div style={style_2}>
+          <ManageClasses
+            setIsManageClassesActive={setIsManageClassesActive}
+            app_bg_color={app_bg_color}
+            text_color={text_color}
+            theme={theme}
+          />
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div
+        style={{
+          overflow: "hidden",
+          marginTop: "4%",
+          marginLeft: "5%",
+          width: "95%",
+          maxWidth: "95%",
+          minWidth: "95%",
+          height: "92vh"
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "100%",
+            minWidth: "100%",
+            height: "100%",
+            overflow: "hidden"
+          }}
+        >
+          <StudentsTable
+            students={students}
+            openDropdown={openDropdown}
+            setOpenDropdown={setOpenDropdown}
+            app_bg_color={app_bg_color}
+            text_color={text_color}
+            theme={theme}
+            setIsAddStudentActive={setIsAddStudentActive}
+            setIsManageClassesActive={setIsManageClassesActive}
+            OpenThePopup={OpenThePopup}
+            refreshData={refreshData}
+            database={database}
+            setStudentsForUpdate={setStudentsForUpdate}
+          />
+        </div>
+      </div>
+    );
+  }
+};
+
 const StartedPage = () => {
-	const [isOpenPopup, setIsOpenPopup] = useState(false);
-	const [school_name, setSchool_name] = useState("S");
-	const [school_short_name, setSchool_short_name] = useState("GSAD");
-	const [students, setStudents] = useState([]);
-	const [studentsForUpdate, setStudentsForUpdate] = useState([]);
-	const [database, setDatabase] = useState(null);
-
-	const [isFilterOpen, setIsFilterOpen] = useState(false);
-	const [isClassesOpen, setIsClassesOpen] = useState(false);
-	const [openDropdown, setOpenDropdown] = useState(null);
-
-	const [isShowParameters, setIsShowParameters] = useState(false);
-	const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
-	const [isAddStudentActive, setIsAddStudentActive] = useState(false);
-	const [isManageClassesActive, setIsManageClassesActive] = useState(false);
-	const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
-
-	const dropdownRef = useRef(null);
-
-	const { app_bg_color, text_color, theme } = useTheme();
-
-	const navigate = useNavigate();
-
-	const handleClickOutside = (event) => {
-		if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-			setIsClassesOpen(false);
-			setIsFilterOpen(false);
-			setOpenDropdown(null);
-			// console.log("clicked !!!");
-		}
-	};
-
-
-	useEffect(() => {
-		window.electron.getDatabase().then((data) => {
-			if (data.name === undefined) {
-				navigate("/");
-			}
-			setSchool_name(data.name);
-			setSchool_short_name(data.short_name);
-			setDatabase(data);
-			if (data.students !== undefined && data.students !== null) {
-				setStudents(data.students);
-			}
-			// console.log(data.students);
-		});
-
-		// Ajoute l'écouteur lors du montage
-		document.addEventListener("mousedown", handleClickOutside);
-		// Nettoyage lors du démontage
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-
-	}, []);
-
-	const refreshData = () => {
-	    window.electron.getDatabase().then((data) => {
-	    	setSchool_name(data.name);
-			setSchool_short_name(data.short_name);
-			setDatabase(data);
-			if (data.students !== undefined && data.students !== null) {
-				setStudents(data.students);
-			}
-			// console.log(data.students);
-		});
-	};
-
-	const OpenThePopup = (closeAddUser=false) => {
-		if (isOpenPopup === true) {
-			setIsShowParameters(false);
-			setisShowBgColorSelector(false);
-			if(closeAddUser){
-				setIsAddStudentActive(false);
-			}
-		}
-		setIsOpenPopup(!isOpenPopup);
-	};
-
-	const style_1 = {
-		marginLeft: "5%",
-		width: "95%",
-		maxWidth: "95%",
-		minWidth: "95%",
-	};
-	const style_2 = {
-		width: "98%",
-		marginLeft: "1.5%",
-	};
-
-	return (
-		<div className={`${app_bg_color} transition-all duration-500`}>
-			<div ref={dropdownRef} />
-
-			{/* Navbar toujours fixée en haut */}
-			<Navbar
-				isFilterOpen={isFilterOpen}
-				setIsFilterOpen={setIsFilterOpen}
-				isClassesOpen={isClassesOpen}
-				setIsClassesOpen={setIsClassesOpen}
-				setIsAddStudentActive={setIsAddStudentActive}
-				setIsManageClassesActive={setIsManageClassesActive}
-			/>
-
-			{/* Sidebar */}
-			<SideBar
-				setIsOpenPopup={OpenThePopup}
-				setIsShowParameters={setIsShowParameters}
-				setisShowBgColorSelector={setisShowBgColorSelector}
-				school_name={school_name}
-				school_short_name={school_short_name ? school_short_name : "GSAD"}
-				text_color={text_color}
-				activeSideBarBtn={activeSideBarBtn}
-				setActiveSideBarBtn={setActiveSideBarBtn}
-				db={database}
-				refreshData={refreshData}
-			/>
-
-			{/* Zone de contenu principale avec hauteur définie et overflow caché pour le scroll global */}
-			{isAddStudentActive === true ?
-				<div
-					style={style_1}
-				>
-					<div
-						style={style_2}
-					>
-						<AddStudent
-							setIsAddStudentActive={setIsAddStudentActive}
-							app_bg_color={app_bg_color}
-							text_color={text_color}
-							theme={theme}
-							studentsForUpdate={studentsForUpdate}
-							setStudentsForUpdate={setStudentsForUpdate}
-						/>
-					</div>
-				</div>
-				: isManageClassesActive === true ?
-					<div
-						style={style_1}
-					>
-						<div
-							style={style_2}
-						>
-							<ManageClasses
-								setIsManageClassesActive={setIsManageClassesActive}
-								app_bg_color={app_bg_color}
-								text_color={text_color}
-								theme={theme}
-							/>
-						</div>
-					</div>
-				:
-				<div
-					style={{
-						overflow: "hidden",
-						marginTop: "4%",
-						marginLeft: "5%",
-						width: "95%",
-						maxWidth: "95%",
-						minWidth: "95%",
-						height: "92vh" // Ajustez 80px en fonction de la hauteur de votre Navbar
-					}}
-				>
-					{/* Conteneur scrollable pour le tableau */}
-					<div
-						style={{
-							width: "100%",
-							maxWidth: "100%",
-							minWidth: "100%",
-							height: "100%",
-							overflow: "hidden",
-						}}
-					>
-						<StudentsTable
-							students={students}
-							openDropdown={openDropdown}
-							setOpenDropdown={setOpenDropdown}
-							app_bg_color={app_bg_color}
-							text_color={text_color}
-							theme={theme}
-							setIsAddStudentActive={setIsAddStudentActive}
-							setIsManageClassesActive={setIsManageClassesActive}
-							OpenThePopup={OpenThePopup}
-							refreshData={refreshData}
-							database={database}
-							setStudentsForUpdate={setStudentsForUpdate}
-						/>
-					</div>
-				</div>
-			}
-
-			<FloatingMenu />
-
-			<Popup
-				isOpenPopup={isOpenPopup}
-				setIsOpenPopup={setIsOpenPopup}
-				children={
-					isShowParameters === true ?
-						<AppParameters />
-						:
-						isShowBgColorSelector === true ?
-							<ColorsSelector OpenThePopup={OpenThePopup} />
-							:
-							null
-				}
-			/>
-		</div>
-	);
+  return (
+    <AdvancedLayout>
+      <StartedPageContent />
+    </AdvancedLayout>
+  );
 };
 
 export default StartedPage;

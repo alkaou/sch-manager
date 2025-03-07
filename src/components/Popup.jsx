@@ -6,7 +6,7 @@ import { BG_COLORS, gradients } from "../utils/colors";
 import { useTheme } from "./contexts";
 
 
-const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
+const Popup = ({ isOpenPopup, setIsOpenPopup, children, btnActiveVal=1, setActiveSideBarBtn=(()=>{}) }) => {
 
     const { theme, app_bg_color } = useTheme();
 
@@ -23,7 +23,10 @@ const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onClick={() => setIsOpenPopup(false)}
+                    onClick={() => {
+                        setIsOpenPopup(false);
+                        setActiveSideBarBtn(btnActiveVal);
+                    }}
                 >
                     <motion.div
                         className={`relative ${popup_bg_color} dark:bg-gray-900 p-6 rounded-2xl shadow-2xl max-w-xl w-full max-h-[80vh] overflow-auto`}
@@ -35,7 +38,10 @@ const Popup = ({ isOpenPopup, setIsOpenPopup, children }) => {
                         {/* Bouton de fermeture */}
                         <button
                             className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-800 rounded-full shadow-md hover:scale-110 transition-all duration-300"
-                            onClick={() => setIsOpenPopup(false)}
+                            onClick={() => {
+                                setIsOpenPopup(false);
+                                setActiveSideBarBtn(btnActiveVal);
+                            }}
                         >
                             <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
                         </button>
