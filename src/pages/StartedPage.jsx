@@ -15,6 +15,7 @@ import ManageClasses from "../components/ManageClasses.jsx";
 const StartedPage = () => {
 	const [isOpenPopup, setIsOpenPopup] = useState(false);
 	const [school_name, setSchool_name] = useState("S");
+	const [school_short_name, setSchool_short_name] = useState("GSAD");
 	const [students, setStudents] = useState([]);
 	const [studentsForUpdate, setStudentsForUpdate] = useState([]);
 	const [database, setDatabase] = useState(null);
@@ -51,6 +52,7 @@ const StartedPage = () => {
 				navigate("/");
 			}
 			setSchool_name(data.name);
+			setSchool_short_name(data.short_name);
 			setDatabase(data);
 			if (data.students !== undefined && data.students !== null) {
 				setStudents(data.students);
@@ -69,6 +71,8 @@ const StartedPage = () => {
 
 	const refreshData = () => {
 	    window.electron.getDatabase().then((data) => {
+	    	setSchool_name(data.name);
+			setSchool_short_name(data.short_name);
 			setDatabase(data);
 			if (data.students !== undefined && data.students !== null) {
 				setStudents(data.students);
@@ -119,9 +123,12 @@ const StartedPage = () => {
 				setIsShowParameters={setIsShowParameters}
 				setisShowBgColorSelector={setisShowBgColorSelector}
 				school_name={school_name}
+				school_short_name={school_short_name ? school_short_name : "GSAD"}
 				text_color={text_color}
 				activeSideBarBtn={activeSideBarBtn}
 				setActiveSideBarBtn={setActiveSideBarBtn}
+				db={database}
+				refreshData={refreshData}
 			/>
 
 			{/* Zone de contenu principale avec hauteur définie et overflow caché pour le scroll global */}

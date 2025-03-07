@@ -49,7 +49,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 		}
 
 		// Vérification : Longueur maximale
-		if (name.length > 30) {
+		if (name.length > 45) {
 			setError(live_language.error_maxLength);
 			return;
 		}
@@ -77,6 +77,8 @@ function DatabaseCreator({ setIsOpenPopup }) {
 			version: "1.0.0",
 			created_at: date,
 			created_time: hour,
+			updated_at: date,
+			updated_time: hour
 		}; // Modifie tes données ici
 
 		window.electron.saveDatabase(updatedDb).then(() => {

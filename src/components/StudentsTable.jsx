@@ -496,6 +496,8 @@ const StudentsTable = ({
               <tbody className="divide-y divide-gray-300">
                 {filteredStudents.map((student, index) => (
                   <tr
+                    title="Double Clique"
+                    onDoubleClick={()=> console.log(student)}
                     key={student.id}
                     className={`${_text_color} divide-x divide-gray-300 ${
                       app_bg_color === gradients[1]
@@ -503,8 +505,7 @@ const StudentsTable = ({
                         : app_bg_color === gradients[2]
                         ? "hover:bg-gray-100"
                         : "hover:bg-gray-50"
-                    } hover:text-gray-700 transition-colors duration-300`}
-                    onClick={()=> console.log("click")}
+                    } hover:text-gray-700 transition-colors duration-300 cursor-pointer`}
                   >
                     <td className="py-1 px-2 text-center">
                       <input
