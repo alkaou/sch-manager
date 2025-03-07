@@ -1,5 +1,5 @@
 import React from "react";
-import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
+import { useOutletContext } from "react-router-dom";
 import StudentsTable from "../components/StudentsTable.jsx";
 import AddStudent from "../components/AddStudent.jsx";
 import ManageClasses from "../components/ManageClasses.jsx";
@@ -72,7 +72,7 @@ const StartedPageContent = ({
           width: "95%",
           maxWidth: "95%",
           minWidth: "95%",
-          height: "92vh"
+          height: "92vh",
         }}
       >
         <div
@@ -81,7 +81,7 @@ const StartedPageContent = ({
             maxWidth: "100%",
             minWidth: "100%",
             height: "100%",
-            overflow: "hidden"
+            overflow: "hidden",
           }}
         >
           <StudentsTable
@@ -105,11 +105,9 @@ const StartedPageContent = ({
 };
 
 const StartedPage = () => {
-  return (
-    <AdvancedLayout>
-      <StartedPageContent />
-    </AdvancedLayout>
-  );
+  // Récupère le contexte fourni par le layout via Outlet
+  const context = useOutletContext();
+  return <StartedPageContent {...context} />;
 };
 
 export default StartedPage;

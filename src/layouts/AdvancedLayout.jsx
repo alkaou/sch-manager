@@ -1,5 +1,6 @@
+// AdvancedLayout.jsx
 import React, { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useTheme } from "../components/contexts";
 import Navbar from "../components/NavBar.jsx";
 import SideBar from "../components/SideBar.jsx";
@@ -8,8 +9,8 @@ import FloatingMenu from "../components/MenuFloatting.jsx";
 import AppParameters from "../components/AppParameters.jsx";
 import ColorsSelector from "../components/ColorsSelector.jsx";
 
-const AdvancedLayout = ({ children }) => {
-  // États communs pour toute l’interface avancée
+const AdvancedLayout = () => {
+  // États et logique communs
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [school_name, setSchool_name] = useState("S");
   const [school_short_name, setSchool_short_name] = useState("GSAD");
@@ -21,7 +22,7 @@ const AdvancedLayout = ({ children }) => {
   const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
   const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
 
-  // États spécifiques à certaines actions (ex: affichage de formulaires)
+  // États spécifiques pour certaines actions
   const [isAddStudentActive, setIsAddStudentActive] = useState(false);
   const [isManageClassesActive, setIsManageClassesActive] = useState(false);
   const [students, setStudents] = useState([]);
@@ -31,7 +32,6 @@ const AdvancedLayout = ({ children }) => {
   const { app_bg_color, text_color, theme } = useTheme();
   const navigate = useNavigate();
 
-  // Gestion du clic en dehors des dropdowns
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsClassesOpen(false);
@@ -40,7 +40,6 @@ const AdvancedLayout = ({ children }) => {
     }
   };
 
-  // Récupération des données de la BDD et initialisation
   useEffect(() => {
     window.electron.getDatabase().then((data) => {
       if (data.name === undefined) {
@@ -58,7 +57,7 @@ const AdvancedLayout = ({ children }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [navigate]);
 
   const refreshData = () => {
     window.electron.getDatabase().then((data) => {
@@ -71,10 +70,9 @@ const AdvancedLayout = ({ children }) => {
     });
   };
 
-  // Fonction pour ouvrir/fermer le popup en gérant certains états
   const OpenThePopup = (closeAddUser = false) => {
     if (isOpenPopup) {
-      setActiveSideBarBtn(1);
+      // setActiveSideBarBtn(1);
       setIsShowParameters(false);
       setisShowBgColorSelector(false);
       if (closeAddUser) {
@@ -84,35 +82,11 @@ const AdvancedLayout = ({ children }) => {
     setIsOpenPopup(!isOpenPopup);
   };
 
-  // Injection des états et fonctions communs dans le composant enfant via cloneElement
-  const childrenWithProps = React.cloneElement(children, {
-    isAddStudentActive,
-    setIsAddStudentActive,
-    isManageClassesActive,
-    setIsManageClassesActive,
-    students,
-    setStudents,
-    studentsForUpdate,
-    setStudentsForUpdate,
-    refreshData,
-    database,
-    isFilterOpen,
-    setIsFilterOpen,
-    isClassesOpen,
-    setIsClassesOpen,
-    openDropdown,
-    setOpenDropdown,
-    app_bg_color,
-    text_color,
-    theme,
-    OpenThePopup
-  });
-
   return (
     <div className={`${app_bg_color} transition-all duration-500`}>
       <div ref={dropdownRef} />
-      
-      {/* Navbar toujours visible */}
+
+      {/* Navbar */}
       <Navbar
         isFilterOpen={isFilterOpen}
         setIsFilterOpen={setIsFilterOpen}
@@ -122,7 +96,7 @@ const AdvancedLayout = ({ children }) => {
         setIsManageClassesActive={setIsManageClassesActive}
       />
 
-      {/* Sidebar personnalisé */}
+      {/* Sidebar */}
       <SideBar
         setIsOpenPopup={OpenThePopup}
         setIsShowParameters={setIsShowParameters}
@@ -136,7 +110,7 @@ const AdvancedLayout = ({ children }) => {
         refreshData={refreshData}
       />
 
-      {/* Zone de contenu principal (sera rempli par la page enfant) */}
+      {/* Contenu spécifique rendu via Outlet */}
       <div
         // style={{
         //   marginTop: "4%",
@@ -144,10 +118,33 @@ const AdvancedLayout = ({ children }) => {
         //   width: "95%",
         //   maxWidth: "95%",
         //   minWidth: "95%",
-        //   height: "92vh" // hauteur ajustée en fonction de la Navbar
+        //   height: "92vh"
         // }}
       >
-        {childrenWithProps}
+        <Outlet
+          context={{
+            isAddStudentActive,
+            setIsAddStudentActive,
+            isManageClassesActive,
+            setIsManageClassesActive,
+            students,
+            setStudents,
+            studentsForUpdate,
+            setStudentsForUpdate,
+            refreshData,
+            database,
+            isFilterOpen,
+            setIsFilterOpen,
+            isClassesOpen,
+            setIsClassesOpen,
+            openDropdown,
+            setOpenDropdown,
+            app_bg_color,
+            text_color,
+            theme,
+            OpenThePopup
+          }}
+        />
       </div>
 
       <FloatingMenu />
