@@ -8,6 +8,7 @@ const StartedPageContent = ({
   isAddStudentActive,
   isManageClassesActive,
   students,
+  classes,
   openDropdown,
   setOpenDropdown,
   setIsAddStudentActive,
@@ -86,6 +87,7 @@ const StartedPageContent = ({
         >
           <StudentsTable
             students={students}
+            classes={classes}
             openDropdown={openDropdown}
             setOpenDropdown={setOpenDropdown}
             app_bg_color={app_bg_color}

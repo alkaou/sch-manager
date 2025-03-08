@@ -68,30 +68,12 @@ const FloatingMenu = () => {
 
       {/* Modale pour AdvancedCalculator */}
       {showCalculator && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-60">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-11/12 max-w-lg transform transition-all duration-300 ease-out scale-100">
-            <div className="flex justify-end">
-              <button onClick={toggleCalculator} className="text-gray-500 hover:text-gray-800 focus:outline-none">
-                Fermer
-              </button>
-            </div>
-            <AdvancedCalculator onClose={() => setShowCalculator(false)} />
-          </div>
-        </div>
+          <AdvancedCalculator onClose={() => setShowCalculator(false)} />
       )}
 
       {/* Modale pour AdvancedCalendar */}
       {showCalendar && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-60">
-          <div className="bg-white rounded-lg shadow-xl p-6 w-11/12 max-w-lg transform transition-all duration-300 ease-out scale-100">
-            <div className="flex justify-end">
-              <button onClick={toggleCalendar} className="text-gray-500 hover:text-gray-800 focus:outline-none">
-                Fermer
-              </button>
-            </div>
             <AdvancedCalendar onClose={() => setShowCalendar(false)} />
-          </div>
-        </div>
       )}
     </div>
   );

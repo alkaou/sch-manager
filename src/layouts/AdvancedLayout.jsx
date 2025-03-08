@@ -21,12 +21,34 @@ const AdvancedLayout = () => {
   const [isShowParameters, setIsShowParameters] = useState(false);
   const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
   const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
+  const [lastBtnActivate, setLastBtnActivate] = useState(1);
 
   // États spécifiques pour certaines actions
   const [isAddStudentActive, setIsAddStudentActive] = useState(false);
   const [isManageClassesActive, setIsManageClassesActive] = useState(false);
   const [students, setStudents] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [studentsForUpdate, setStudentsForUpdate] = useState([]);
+
+  // Mock user authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [userProfile, setUserProfile] = useState({
+    displayName: "John Doe",
+    email: "john.doe@example.com",
+    photoURL: null // Add a URL to a profile image if available
+  });
+
+  const handleLogout = () => {
+    // Implement your logout logic here
+    setIsAuthenticated(false);
+    console.log("User logged out");
+  };
+
+  const handleLogin = () => {
+    // Implement your logout logic here
+    setIsAuthenticated(true);
+    console.log("User logged in");
+  };
 
   const dropdownRef = useRef(null);
   const { app_bg_color, text_color, theme } = useTheme();
@@ -51,6 +73,9 @@ const AdvancedLayout = () => {
       if (data.students !== undefined && data.students !== null) {
         setStudents(data.students);
       }
+      if (data.classes !== undefined && data.classes !== null) {
+        setClasses(data.classes);
+      }
     });
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -72,7 +97,7 @@ const AdvancedLayout = () => {
 
   const OpenThePopup = (closeAddUser = false) => {
     if (isOpenPopup) {
-      // setActiveSideBarBtn(1);
+      setActiveSideBarBtn(lastBtnActivate);
       setIsShowParameters(false);
       setisShowBgColorSelector(false);
       if (closeAddUser) {
@@ -88,24 +113,24 @@ const AdvancedLayout = () => {
 
       {/* Navbar */}
       <Navbar
-        isFilterOpen={isFilterOpen}
-        setIsFilterOpen={setIsFilterOpen}
-        isClassesOpen={isClassesOpen}
-        setIsClassesOpen={setIsClassesOpen}
-        setIsAddStudentActive={setIsAddStudentActive}
-        setIsManageClassesActive={setIsManageClassesActive}
+        isAuthenticated={isAuthenticated} 
+        userProfile={userProfile}
+        onLogout={handleLogout}
+        onLogin={handleLogin}
       />
 
       {/* Sidebar */}
       <SideBar
         setIsOpenPopup={OpenThePopup}
+        isOpenPopup={isOpenPopup}
         setIsShowParameters={setIsShowParameters}
         setisShowBgColorSelector={setisShowBgColorSelector}
         school_name={school_name}
         school_short_name={school_short_name || "GSAD"}
-        text_color={text_color}
         activeSideBarBtn={activeSideBarBtn}
         setActiveSideBarBtn={setActiveSideBarBtn}
+        setLastBtnActivate={setLastBtnActivate}
+        lastBtnActivate={lastBtnActivate}
         db={database}
         refreshData={refreshData}
       />
@@ -129,6 +154,7 @@ const AdvancedLayout = () => {
             setIsManageClassesActive,
             students,
             setStudents,
+            classes,
             studentsForUpdate,
             setStudentsForUpdate,
             refreshData,
@@ -152,12 +178,12 @@ const AdvancedLayout = () => {
       <Popup
         isOpenPopup={isOpenPopup}
         setIsOpenPopup={setIsOpenPopup}
-        btnActiveVal={1}
+        btnActiveVal={lastBtnActivate}
         setActiveSideBarBtn={setActiveSideBarBtn}
       >
-        {isShowParameters ? (
+        {isShowParameters === true ? (
           <AppParameters />
-        ) : isShowBgColorSelector ? (
+        ) : isShowBgColorSelector === true ? (
           <ColorsSelector OpenThePopup={OpenThePopup} />
         ) : null}
       </Popup>

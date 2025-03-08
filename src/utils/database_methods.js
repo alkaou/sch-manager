@@ -1,7 +1,6 @@
 import { getFormattedDateTime, getDateTime } from './helpers.js';
 
-// Méthode pour ajouter un nouvel étudiant
-// Fonction utilitaire pour générer un identifiant unique
+// Fonction pour générer un identifiant unique
 const generateUniqueId = () => {
     if (crypto && crypto.randomUUID) {
         return crypto.randomUUID();
@@ -80,9 +79,6 @@ const updateDatabaseNameAndShortName = (
   const date = updated_date.dateTime;
   const hour = updated_hour.formattedTime;
 
-  // console.log(date);
-  // console.log(hour);
-
   // Préparation de l'objet mis à jour
   const updatedDb = {
     ...db,
@@ -108,10 +104,6 @@ const updateDatabaseNameAndShortName = (
     });
 };
 
-
-
-// Fonction utilitaire pour valider et nettoyer les données d'un élève.
-// Le paramètre requireAllFields indique si tous les champs obligatoires doivent être présents.
 const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
     const validNameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\-\s]+$/;
     const requiredFields = [
@@ -298,7 +290,7 @@ const saveStudent = (studentData, db) => {
     // Validation et nettoyage
     const cleanedData = validateAndCleanStudentData(studentData, true);
 
-    // Vérification de doublon (selon les champs clés)
+    // Vérification de doublon sur les autres champs
     if (db.students) {
         const duplicate = db.students.find(student =>
             student.first_name === cleanedData.first_name &&
@@ -313,6 +305,17 @@ const saveStudent = (studentData, db) => {
         if (duplicate) {
             // Doublon détecté : on quitte silencieusement
             return;
+        }
+    }
+
+    // Vérification de l'unicité du matricule (s'il est renseigné)
+    if (cleanedData.matricule && db.students) {
+        const duplicateMatricule = db.students.find(student => student.matricule === cleanedData.matricule);
+        if (duplicateMatricule) {
+            const error = new Error("Le matricule est déjà utilisé.");
+            error.field = "matricule";
+            error.step = "Le matricule est déjà utilisé.";
+            throw error;
         }
     }
 
@@ -359,8 +362,19 @@ const updateStudent = (studentId, updatedData, db) => {
 
     const student = db.students[studentIndex];
     
-    // Validation des données mises à jour (les champs ne sont validés que s'ils sont présents)
+    // Validation des données mises à jour
     const cleanedData = validateAndCleanStudentData(updatedData, true);
+
+    // Vérification de l'unicité du matricule en cas de modification
+    if (cleanedData.matricule && cleanedData.matricule !== student.matricule) {
+        const duplicateMatricule = db.students.find(s => s.matricule === cleanedData.matricule);
+        if (duplicateMatricule) {
+            const error = new Error("Le matricule est déjà utilisé.");
+            error.field = "matricule";
+            error.step = "Le matricule est déjà utilisé.";
+            throw error;
+        }
+    }
 
     // Mise à jour de l'étudiant en fusionnant les données existantes et les données mises à jour
     const updatedStudent = {
@@ -376,7 +390,6 @@ const updateStudent = (studentId, updatedData, db) => {
 
     db.students[studentIndex] = updatedStudent;
 
-
     window.electron.saveDatabase(db)
         .then(() => {
             console.log("Étudiant mis à jour avec succès :", updatedStudent);
@@ -385,7 +398,6 @@ const updateStudent = (studentId, updatedData, db) => {
             console.error("Erreur lors de la mise à jour de l'étudiant :", err);
         });
 };
-
 
 // Méthode pour activer un étudiant (passer son status à "actif")
 const activateStudent = (studentId, db, setFlashMessage) => {
@@ -406,7 +418,7 @@ const activateStudent = (studentId, db, setFlashMessage) => {
             console.log("Étudiant activé avec succès :", db.students[studentIndex]);
             setFlashMessage({
               message: "Étudiant activé avec succès.",
-              type: "success", // peut être 'success', 'error', 'warning' ou 'info'
+              type: "success", // 'success', 'error', 'warning' ou 'info'
               duration: 5000,  // durée d’affichage en ms
             });
         })
@@ -434,7 +446,7 @@ const deactivateStudent = (studentId, db, setFlashMessage) => {
             console.log("Étudiant désactivé avec succès :", db.students[studentIndex]);
             setFlashMessage({
               message: "Étudiant désactivé avec succès.",
-              type: "success", // peut être 'success', 'error', 'warning' ou 'info'
+              type: "success", // 'success', 'error', 'warning' ou 'info'
               duration: 5000,  // durée d’affichage en ms
             });
         })
@@ -462,7 +474,7 @@ const deleteStudent = (studentId, db, setFlashMessage) => {
             console.log("Étudiant supprimé avec succès :", removedStudent);
             setFlashMessage({
               message: "La suppression a été passée avec succès.",
-              type: "success", // peut être 'success', 'error', 'warning' ou 'info'
+              type: "success", // 'success', 'error', 'warning' ou 'info'
               duration: 5000,  // durée d’affichage en ms
             });
 

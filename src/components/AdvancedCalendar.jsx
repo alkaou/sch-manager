@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 import { format, addMonths, subMonths, addYears, subYears, startOfMonth, endOfMonth, startOfWeek, addDays, isSameDay } from "date-fns";
-import { useTheme } from './contexts.js';
+import { useTheme, useLanguage } from './contexts.js';
 
 const AdvancedCalendar = ({ onClose }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const today = new Date();
 
   const { app_bg_color, text_color, theme } = useTheme();
+  const { live_language } = useLanguage();
+
+  const week_days = live_language.week_days_name_array;
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -56,7 +59,7 @@ const AdvancedCalendar = ({ onClose }) => {
         </div>
 
         <div className="mt-4 grid grid-cols-7 gap-2 text-center">
-          {["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"].map((day) => (
+          {week_days.map((day) => (
             <span key={day} className="font-semibold">{day}</span>
           ))}
           {days.map((day, index) => (

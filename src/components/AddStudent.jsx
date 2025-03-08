@@ -3,7 +3,7 @@ import { saveStudent, updateStudent } from '../utils/database_methods';
 import { motion } from 'framer-motion';
 import { useLanguage } from './contexts.js';
 import { gradients } from '../utils/colors';
-import { getClasseName } from "../utils/helpers.js";
+import { getClasseName, getAge } from "../utils/helpers.js";
 
 const AddStudent = ({ 
   setIsAddStudentActive,
@@ -126,6 +126,18 @@ const AddStudent = ({
       if (!student.parents_contact.trim()) {
         err.parents_contact = "Le contact des parents est obligatoire.";
         valid = false;
+      }
+
+      // Vérifier si l'élève à autant d'âge pour faire la classe
+      if(student.classe && student.birth_date){
+        const str = student.classe;
+        const match = str.match(/\d+/); // recherche une ou plusieurs occurrences de chiffres
+        const student_level = match ? parseInt(match[0], 10) : null;
+        if(student_level + 1 > getAge(student.birth_date)){
+          err.birth_date = `L'élève est trop jeune pour la classe ${getClasseName(str)}.`;
+          err.classe = `L'élève est trop jeune pour la classe ${getClasseName(str)}.`;
+          valid = false;
+        }
       }
       return err;
     });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MoreVertical, User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2, CheckCircle, XCircle } from "lucide-react";
 import { gradients } from "../utils/colors";
 import { useLanguage, useFlashNotification } from "./contexts.js";
@@ -7,6 +7,7 @@ import { deleteStudent, activateStudent, deactivateStudent } from "../utils/data
 
 const StudentsTable = ({
   students,
+  classes,
   openDropdown,
   setOpenDropdown,
   app_bg_color,
@@ -103,6 +104,16 @@ const StudentsTable = ({
       setIsRefreshing(false);
     }, 2000);
   };
+
+  // Rafrîchir la data à render
+  useEffect(() => {
+    async function fetchData() {
+      await refreshData();
+    }
+    fetchData();
+    console.log(classes);
+  }, []);
+
 
   // Activation du formulaire d'ajout d'élève
   const handleAddStudent = () => {
@@ -214,12 +225,25 @@ const StudentsTable = ({
           style={{ marginTop: "20%" }}
           className={`flex flex-col items-center justify-center p-6 space-y-4 ${app_bg_color} animate-fadeIn`}
         >
-          <p className={`${_text_color} font-medium text-center`}>
-            {live_language.no_student_in_data_text}
-          </p>
-          <p className={`${_text_color} font-medium text-center`}>
-            {live_language.create_classe_in_data_text}
-          </p>
+          {classes.length <= 0 ?
+            <>
+              <p className={`${_text_color} font-medium text-center`}>
+                {live_language.no_student_in_data_text}
+              </p>
+              <p className={`${_text_color} font-medium text-center`}>
+                {live_language.create_classe_in_data_text}
+              </p>
+            </>
+            :
+            <>
+              <p className={`${_text_color} font-medium text-center`}>
+                {live_language.no_student_in_data_text_2}
+              </p>
+              <p className={`${_text_color} font-medium text-center`}>
+                {live_language.create_classe_in_data_text_2}
+              </p>
+            </>
+          }
           <button
             className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 transform hover:scale-105"
             onClick={handleAddClasses}
@@ -233,7 +257,7 @@ const StudentsTable = ({
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            {live_language.create_classe_btn_text}
+            {classes.length <= 0 ? live_language.create_classe_btn_text : live_language.create_students_btn_text}
           </button>
         </div>
       ) : (
