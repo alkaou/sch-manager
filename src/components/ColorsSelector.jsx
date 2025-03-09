@@ -9,7 +9,7 @@ import { Translator } from "../utils/Translator";
 const ColorsSelector = ({ OpenThePopup }) => {
     const [selectedColor, setSelectedColor] = useState(gradients[0]);
 
-    const { setThemeColor } = useTheme();
+    const { setThemeColor, theme } = useTheme();
     const { language } = useLanguage();
     
     useEffect(() => {
@@ -45,7 +45,7 @@ const ColorsSelector = ({ OpenThePopup }) => {
             </button>
 
             {/* Sélecteur de couleurs */}
-            <h2 className="text-lg font-semibold text-gray-800 text-bold italic text-center mb-2">{Translator[language].select_color_text}</h2>
+            <h2 className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-gray-800"} text-bold italic text-center mb-2`}>{Translator[language].select_color_text}</h2>
             <div className="grid grid-cols-4 gap-3 overflow-y-auto max-h-60 custom-scrollbar p-2">
                 {gradients.map((gradient, index) => (
                     <button

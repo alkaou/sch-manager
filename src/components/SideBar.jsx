@@ -83,17 +83,20 @@ const SideBar = ({
     setEditedShortName(school_short_name);
     if(isOpenController === true){
       setIsOpen(false);
+      setIsOpenController(false);
       setTimeout(() => {
         setShowOptionsNames(false);
       }, isOpenController ? 100 : 300);
     } else {
       setIsOpen(true);
+      setIsOpenController(true);
       setTimeout(() => {
         setShowOptionsNames(true);
       }, isOpenController ? 100 : 300);
     }
     // console.log(isOpen);
   };
+
 
   const toggleSettings = () => {
     setActiveSideBarBtn(3);
@@ -162,13 +165,12 @@ const SideBar = ({
   const inputBorder = theme === "dark" ? "border-gray-700" : "border-gray-300";
 
   return (
-    <>
+    <div
+      ref={sidebarRef}
+    >
       {/* Toggle button with animation */}
       <motion.button 
-        onClick={() => {
-          toggleSidebar();
-          setIsOpenController(!isOpenController);
-        }} 
+        onClick={toggleSidebar}
         className="fixed top-4 left-4 z-40 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-300"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -178,7 +180,6 @@ const SideBar = ({
 
       {/* Sidebar */}
       <motion.aside
-        ref={sidebarRef}
         initial={{ width: 80 }}
         animate={{ 
           width: isOpen ? 250 : 80,
@@ -380,7 +381,7 @@ const SideBar = ({
           </motion.button>
         </div>
       </motion.aside>
-    </>
+    </div>
   );
 };
 
