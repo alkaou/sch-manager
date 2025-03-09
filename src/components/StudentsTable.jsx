@@ -111,7 +111,7 @@ const StudentsTable = ({
       await refreshData();
     }
     fetchData();
-    console.log(classes);
+    // console.log(classes);
   }, []);
 
 
@@ -246,7 +246,7 @@ const StudentsTable = ({
           }
           <button
             className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 transform hover:scale-105"
-            onClick={handleAddClasses}
+            onClick={classes.length <= 0 ? handleAddClasses : handleAddStudent}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

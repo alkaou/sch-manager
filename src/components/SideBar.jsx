@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -24,6 +24,7 @@ const SideBar = ({
   lastBtnActivate
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenController, setIsOpenController] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [showOptionsNames, setShowOptionsNames] = useState(false);
 
@@ -39,11 +40,30 @@ const SideBar = ({
   const { live_language } = useLanguage();
   const navigate = useNavigate();
 
+  const sidebarRef = useRef(null);
+
+
   // Update local state when props change
   useEffect(() => {
     setEditedSchoolName(school_name);
     setEditedShortName(school_short_name);
-  }, [school_name, school_short_name]);
+
+    const handleClickOutsideSidebar = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        // Réduire la sidebar si elle était ouverte
+        if(isOpen) {
+          if(isOpenPopup === false){
+            toggleSidebar();
+          }
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideSidebar);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideSidebar);
+    };
+  }, [school_name, school_short_name, isOpen, isOpenPopup]);
 
   const toggleSidebar = () => {
     // Fermer tous les popu
@@ -61,11 +81,18 @@ const SideBar = ({
     setIsEditing(false);
     setEditedSchoolName(school_name);
     setEditedShortName(school_short_name);
-    setIsOpen(!isOpen);
-    setTimeout(() => {
-      setShowOptionsNames(!isOpen);
-    }, isOpen ? 100 : 300);
-    // console.log(school_name);
+    if(isOpenController === true){
+      setIsOpen(false);
+      setTimeout(() => {
+        setShowOptionsNames(false);
+      }, isOpenController ? 100 : 300);
+    } else {
+      setIsOpen(true);
+      setTimeout(() => {
+        setShowOptionsNames(true);
+      }, isOpenController ? 100 : 300);
+    }
+    // console.log(isOpen);
   };
 
   const toggleSettings = () => {
@@ -138,7 +165,10 @@ const SideBar = ({
     <>
       {/* Toggle button with animation */}
       <motion.button 
-        onClick={toggleSidebar} 
+        onClick={() => {
+          toggleSidebar();
+          setIsOpenController(!isOpenController);
+        }} 
         className="fixed top-4 left-4 z-40 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-300"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -148,6 +178,7 @@ const SideBar = ({
 
       {/* Sidebar */}
       <motion.aside
+        ref={sidebarRef}
         initial={{ width: 80 }}
         animate={{ 
           width: isOpen ? 250 : 80,
@@ -265,6 +296,7 @@ const SideBar = ({
             {navigationItems.map((item) => (
               <motion.button
                 key={item.index}
+                title={item.label}
                 onClick={() => handleNavigation(item.path, item.index)}
                 className={`w-full flex items-center rounded-lg px-3 py-2.5 transition-all duration-200
                   ${activeSideBarBtn === item.index ? activeBg : hoverBg}

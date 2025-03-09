@@ -4,6 +4,9 @@ import { motion } from 'framer-motion';
 import { useLanguage } from './contexts.js';
 import { gradients } from '../utils/colors';
 import { getClasseName, getAge } from "../utils/helpers.js";
+import { suggestNames, suggestLastNames, suggNameComplete } from "../utils/suggestionNames.js";
+import AutocompleteInput from "./AutocompleteInput.jsx";
+
 
 const AddStudent = ({ 
   setIsAddStudentActive,
@@ -16,7 +19,7 @@ const AddStudent = ({
   const [db, setDb] = useState(null);
   const { live_language, language } = useLanguage();
 
-  // Objet initial pour un élève (toutes les infos sont vides)
+  // Objet initial pour un élève
   const initialStudent = {
     first_name: '',
     sure_name: '',
@@ -30,27 +33,21 @@ const AddStudent = ({
     parents_contact: ''
   };
 
-  // On démarre avec un seul formulaire d'élève et un objet d'erreurs associé
   const [students, setStudents] = useState([initialStudent]);
-  const [errors, setErrors] = useState([{}]); 
+  const [errors, setErrors] = useState([{}]);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(null);
 
-
-  // On charge la DB, qui doit contenir la propriété "classes" avec les classes disponibles
   useEffect(() => {
     window.electron.getDatabase().then((data) => {
       setDb(data);
-      // console.log(studentsForUpdate.length);
-      if(studentsForUpdate.length > 0){
+      if (studentsForUpdate.length > 0) {
         setStudents(studentsForUpdate);
       }
     });
-
   }, []);
 
-
-  // Déterminer les couleurs en fonction du thème
+  // Couleurs et classes en fonction du thème
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const selectInputTextColor = theme === "dark" ? text_color : "text-gray-600";
@@ -60,13 +57,12 @@ const AddStudent = ({
   const buttonAddColor = "bg-green-600 hover:bg-green-700";
   const shinyBorderColor = theme === "dark" ? "border-blue-400" : "border-purple-400";
 
-  // Mise à jour des champs d'un élève et effacement de l'erreur pour le champ concerné
+  // Mise à jour d'un champ pour un élève
   const handleInputChange = (index, field, value) => {
     const updatedStudents = [...students];
     updatedStudents[index][field] = value;
     setStudents(updatedStudents);
 
-    // Vérifier et mettre à jour l'état des erreurs pour ce champ
     const updatedErrors = [...errors];
     if (updatedErrors[index] && updatedErrors[index][field]) {
       updatedErrors[index][field] = "";
@@ -74,13 +70,11 @@ const AddStudent = ({
     }
   };
 
-  // Ajoute un nouveau formulaire d'élève et son objet d'erreurs associé
   const handleAddForm = () => {
     setStudents([...students, initialStudent]);
     setErrors([...errors, {}]);
   };
 
-  // Supprime le formulaire de l'élève et l'objet d'erreurs correspondant
   const handleRemoveForm = (index) => {
     if (students.length > 1) {
       const updatedStudents = students.filter((_, i) => i !== index);
@@ -90,7 +84,6 @@ const AddStudent = ({
     }
   };
 
-  // Validation locale de chaque étudiant avant soumission
   const validateStudents = () => {
     let valid = true;
     const newErrors = students.map((student) => {
@@ -102,6 +95,13 @@ const AddStudent = ({
       if (!student.last_name.trim()) {
         err.last_name = "Le nom de famille est obligatoire.";
         valid = false;
+      }
+      if (student.sure_name.trim() !== "") {
+        const st_surename = student.sure_name.trim();
+        if(st_surename.length > 30){
+          err.sure_name = "Le surnom est ne doit pas dépasser 30 lettres.";
+          valid = false;
+        }
       }
       if (!student.classe) {
         err.classe = "La classe est obligatoire.";
@@ -127,15 +127,12 @@ const AddStudent = ({
         err.parents_contact = "Le contact des parents est obligatoire.";
         valid = false;
       }
-
-      // Vérifier si l'élève à autant d'âge pour faire la classe
-      if(student.classe && student.birth_date){
-        const str = student.classe;
-        const match = str.match(/\d+/); // recherche une ou plusieurs occurrences de chiffres
+      if (student.classe && student.birth_date) {
+        const match = student.classe.match(/\d+/);
         const student_level = match ? parseInt(match[0], 10) : null;
-        if(student_level + 1 > getAge(student.birth_date)){
-          err.birth_date = `L'élève est trop jeune pour la classe ${getClasseName(str)}.`;
-          err.classe = `L'élève est trop jeune pour la classe ${getClasseName(str)}.`;
+        if (student_level + 3 > getAge(student.birth_date)) {
+          err.birth_date = `L'élève est trop jeune pour la classe ${getClasseName(student.classe)}.`;
+          err.classe = `L'élève est trop jeune pour la classe ${getClasseName(student.classe)}.`;
           valid = false;
         }
       }
@@ -145,21 +142,16 @@ const AddStudent = ({
     return valid;
   };
 
-  // Soumission du formulaire général
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateStudents()) {
-      return;
-    }
+    if (!validateStudents()) return;
     setIsLoading(true);
     setSuccess(null);
     const newErrors = [...errors];
 
-    // Si des élèves sont à mettre à jour
     if (studentsForUpdate.length > 0) {
       for (let i = 0; i < students.length; i++) {
         const student = students[i];
-        // Transformation de la date de naissance en timestamp
         const updatedData = {
           ...student,
           birth_date: new Date(student.birth_date).getTime()
@@ -168,42 +160,30 @@ const AddStudent = ({
           await updateStudent(student.id, updatedData, db);
           newErrors[i] = {};
         } catch (err) {
-          newErrors[i] = {
-            ...newErrors[i],
-            [err.field]: err.message
-          };
+          newErrors[i] = { ...newErrors[i], [err.field]: err.message };
         }
       }
-      if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
+      if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
         setSuccess("Les élèves ont été mis à jour avec succès !");
-        setTimeout(() => {
-          setIsAddStudentActive(false);
-        }, 2000);
+        setTimeout(() => setIsAddStudentActive(false), 2000);
       }
     } else {
-      // Si aucun élève n'est à mettre à jour, on ajoute de nouveaux élèves
       for (let i = 0; i < students.length; i++) {
         const student = students[i];
         const studentData = {
           ...student,
           birth_date: new Date(student.birth_date).getTime()
         };
-
         try {
           await saveStudent(studentData, db);
           newErrors[i] = {};
         } catch (err) {
-          newErrors[i] = {
-            ...newErrors[i],
-            [err.field]: err.message
-          };
+          newErrors[i] = { ...newErrors[i], [err.field]: err.message };
         }
       }
-      if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
+      if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
         setSuccess("Les élèves ont été ajoutés avec succès!");
-        setTimeout(() => {
-          setIsAddStudentActive(false);
-        }, 2000);
+        setTimeout(() => setIsAddStudentActive(false), 2000);
       }
     }
 
@@ -211,18 +191,17 @@ const AddStudent = ({
     setIsLoading(false);
   };
 
+  const classOptions = db && db.classes
+    ? [...db.classes]
+        .sort((a, b) => a.level - b.level)
+        .map(cls => ({
+          id: cls.id,
+          label: `${cls.level} ${cls.name}`,
+          value: `${cls.level} ${cls.name}`
+        }))
+    : [];
 
-  // Génération des options du select en triant par niveau (ordre croissant)
-  const classOptions =
-    db && db.classes
-      ? [...db.classes]
-          .sort((a, b) => a.level - b.level)
-          .map(cls => ({
-            id: cls.id,
-            label: `${cls.level} ${cls.name}`,
-            value: `${cls.level} ${cls.name}`
-          }))
-      : [];
+  const commonInputClass = `w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`;
 
   return (
     <motion.div
@@ -234,10 +213,7 @@ const AddStudent = ({
     >
       <div className="flex justify-between items-center mb-6">
         <h2 className={`text-2xl font-bold ${selectInputTextColor}`}>Ajouter plusieurs élèves</h2>
-        <button
-          onClick={() => setIsAddStudentActive(false)}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
-        >
+        <button onClick={() => setIsAddStudentActive(false)} className="text-gray-500 hover:text-gray-700 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -257,7 +233,7 @@ const AddStudent = ({
 
       <form onSubmit={handleSubmit}>
         <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse">
+          <table className="min-w-full border-collapse mb-40">
             <thead>
               <tr>
                 <th className={`px-2 py-2 border ${inputBorderColor} ${selectInputTextColor}`}>Prénom</th>
@@ -277,31 +253,32 @@ const AddStudent = ({
               {students.map((student, index) => (
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-2 py-1 border">
-                    <input
-                      type="text"
+                    <AutocompleteInput
+                      suggestions={suggestNames}
                       value={student.first_name}
-                      onChange={(e) => handleInputChange(index, 'first_name', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
                       placeholder="EX : Fatoumata"
+                      inputClass={commonInputClass}
+                      onChange={(e) => handleInputChange(index, 'first_name', e.target.value)}
                     />
                     {errors[index]?.first_name && <span className="text-red-500 text-xs">{errors[index].first_name}</span>}
                   </td>
                   <td className="px-2 py-1 border">
-                    <input
-                      type="text"
+                    <AutocompleteInput
+                      suggestions={suggestNames}
                       value={student.sure_name}
-                      onChange={(e) => handleInputChange(index, 'sure_name', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
                       placeholder="EX : C"
+                      inputClass={commonInputClass}
+                      onChange={(e) => handleInputChange(index, 'sure_name', e.target.value)}
                     />
+                    {errors[index]?.sure_name && <span className="text-red-500 text-xs">{errors[index].sure_name}</span>}
                   </td>
                   <td className="px-2 py-1 border">
-                    <input
-                      type="text"
+                    <AutocompleteInput
+                      suggestions={suggestLastNames}
                       value={student.last_name}
-                      onChange={(e) => handleInputChange(index, 'last_name', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
                       placeholder="EX : Dembélé"
+                      inputClass={commonInputClass}
+                      onChange={(e) => handleInputChange(index, 'last_name', e.target.value)}
                     />
                     {errors[index]?.last_name && <span className="text-red-500 text-xs">{errors[index].last_name}</span>}
                   </td>
@@ -309,7 +286,7 @@ const AddStudent = ({
                     <select
                       value={student.classe}
                       onChange={(e) => handleInputChange(index, 'classe', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
+                      className={commonInputClass}
                     >
                       <option value="">Sélectionnez</option>
                       {classOptions.map(option => (
@@ -324,7 +301,7 @@ const AddStudent = ({
                     <select
                       value={student.sexe}
                       onChange={(e) => handleInputChange(index, 'sexe', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
+                      className={commonInputClass}
                     >
                       <option value="">Sélectionnez</option>
                       <option value="M">Masculin</option>
@@ -341,7 +318,7 @@ const AddStudent = ({
                           : ""
                       }
                       onChange={(e) => handleInputChange(index, 'birth_date', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
+                      className={commonInputClass}
                     />
                     {errors[index]?.birth_date && <span className="text-red-500 text-xs">{errors[index].birth_date}</span>}
                   </td>
@@ -350,28 +327,28 @@ const AddStudent = ({
                       type="text"
                       value={student.matricule}
                       onChange={(e) => handleInputChange(index, 'matricule', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
+                      className={commonInputClass}
                       placeholder="EX : MAT1234"
                     />
                     {errors[index]?.matricule && <span className="text-red-500 text-xs">{errors[index].matricule}</span>}
                   </td>
                   <td className="px-2 py-1 border">
-                    <input
-                      type="text"
+                    <AutocompleteInput
+                      suggestions={suggNameComplete}
                       value={student.father_name}
-                      onChange={(e) => handleInputChange(index, 'father_name', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
                       placeholder="EX : Mamadou Dembélé"
+                      inputClass={commonInputClass}
+                      onChange={(e) => handleInputChange(index, 'father_name', e.target.value)}
                     />
                     {errors[index]?.father_name && <span className="text-red-500 text-xs">{errors[index].father_name}</span>}
                   </td>
                   <td className="px-2 py-1 border">
-                    <input
-                      type="text"
+                    <AutocompleteInput
+                      suggestions={suggNameComplete}
                       value={student.mother_name}
-                      onChange={(e) => handleInputChange(index, 'mother_name', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
                       placeholder="EX : Aminata Konaté"
+                      inputClass={commonInputClass}
+                      onChange={(e) => handleInputChange(index, 'mother_name', e.target.value)}
                     />
                     {errors[index]?.mother_name && <span className="text-red-500 text-xs">{errors[index].mother_name}</span>}
                   </td>
@@ -380,7 +357,7 @@ const AddStudent = ({
                       type="text"
                       value={student.parents_contact}
                       onChange={(e) => handleInputChange(index, 'parents_contact', e.target.value)}
-                      className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`}
+                      className={commonInputClass}
                       placeholder="EX : +223 76 12 34 56"
                     />
                     {errors[index]?.parents_contact && <span className="text-red-500 text-xs">{errors[index].parents_contact}</span>}
@@ -407,9 +384,7 @@ const AddStudent = ({
           </table>
         </div>
 
-        {studentsForUpdate.length > 0 ? 
-        null :
-        (
+        {studentsForUpdate.length > 0 ? null : (
           <div className="flex justify-end mt-4">
             <motion.button
               type="button"
@@ -443,22 +418,14 @@ const AddStudent = ({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                { 
-                  studentsForUpdate.length > 0 ? 
-                  "Mis à jour en cours..." :
-                  "Sauvegarde en cours..."
-                }
+                {studentsForUpdate.length > 0 ? "Mis à jour en cours..." : "Sauvegarde en cours..."}
               </>
             ) : (
               <>
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"></path>
                 </svg>
-                { 
-                  studentsForUpdate.length > 0 ? 
-                  "Mettre à jour les informations" :
-                  "Sauvegarder tous les élèves"
-                }
+                {studentsForUpdate.length > 0 ? "Mettre à jour les informations" : "Sauvegarder tous les élèves"}
               </>
             )}
           </motion.button>

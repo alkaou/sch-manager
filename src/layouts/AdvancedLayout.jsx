@@ -92,6 +92,9 @@ const AdvancedLayout = () => {
       if (data.students !== undefined && data.students !== null) {
         setStudents(data.students);
       }
+      if (data.classes !== undefined && data.classes !== null) {
+        setClasses(data.classes);
+      }
     });
   };
 
