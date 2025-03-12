@@ -79,3 +79,27 @@
   border-radius: 50%;
   z-index: -1; /* place derrière le bouton */
 }
+
+/* CUSTOM SCROLL BAR */
+/* Styles pour WebKit (Chrome, Edge, Safari) */
+.scrollbar-custom::-webkit-scrollbar {
+  width: 15px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: #3498db;
+  border-radius: 8px;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: #2980b9;
+}
+
+.scrollbar-custom {
+  scrollbar-width: thin;
+  scrollbar-color:rgb(85, 85, 85) #f1f1f1;
+}

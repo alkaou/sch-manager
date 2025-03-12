@@ -7,6 +7,8 @@ import { useLanguage } from '../components/contexts.js';
 import { Search, Filter, Plus, Edit, Trash, Eye, FileText, CheckSquare, RefreshCcw } from 'lucide-react';
 
 import CreateBulletin from "../components/CreateBulletin.jsx";
+import GetBulletinStudents from "../components/GetBulletinStudents.jsx";
+import BulletinNotes from "../components/BulletinNotes.jsx";
 
 const BulletinsPageContent = ({
   app_bg_color,
@@ -161,6 +163,7 @@ const BulletinsPageContent = ({
 
   // Gérer la fermeture des composants
   const handleCloseComponent = () => {
+    refreshData();
     setActiveComponent(null);
     setSelectedComposition(null);
     setSelectedClass(null);
@@ -383,9 +386,15 @@ const BulletinsPageContent = ({
                             <div className="flex items-center">
                               {bulletinExistsForClass ? (
                                 <div className="flex items-center">
-                                  <span className={`mr-2 ${textClass}`}>
-                                    Composés: {composedStudents}/{totalStudents}
-                                  </span>
+                                  {composedStudents >= totalStudents ?
+                                    <span className={`mr-2 ${textClass}`}>
+                                      Composés: {composedStudents}
+                                    </span>
+                                    :
+                                    <span className={`mr-2 ${textClass}`}>
+                                      Composés: {composedStudents}/{totalStudents}
+                                    </span>
+                                  }
                                   {composedStudents < totalStudents && (
                                     <motion.button
                                       onClick={() => handleOpenComponent("GetBulletinStudents", composition, classId)}
@@ -426,7 +435,7 @@ const BulletinsPageContent = ({
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className={`${formBgColor} p-6 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto`}
+              className={`${formBgColor} p-6 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto scrollbar-custom`}
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
@@ -458,24 +467,39 @@ const BulletinsPageContent = ({
                     db={db}
                     textClass={textClass}
                     getClasseName={getClasseName}
+                    handleCloseComponent={handleCloseComponent}
+                    refreshData={refreshData}
                   />
                 )}
                 
                 {activeComponent === "GetBulletinStudents" && (
-                  <div className={`p-4 ${textClass}`}>
-                    {/* Placeholder pour GetBulletinStudents */}
-                    <p>Composant GetBulletinStudents à implémenter</p>
-                    <p>Composition: {selectedComposition.label}</p>
-                    <p>Classe: {getClasseName(`${db?.classes?.find(cls => cls.id === selectedClass)?.level} ${db?.classes?.find(cls => cls.id === selectedClass)?.name}`, language)}</p>
+                  <div className={`p-4`}>
+                    <GetBulletinStudents
+                      selectedComposition={selectedComposition}
+                      selectedClass={selectedClass}
+                      db={db}
+                      textClass={textClass}
+                      theme={theme}
+                      getClasseName={getClasseName}
+                      handleCloseComponent={handleCloseComponent}
+                      refreshData={refreshData}
+                    />
                   </div>
                 )}
                 
                 {activeComponent === "BulletinNotes" && (
-                  <div className={`p-4 ${textClass}`}>
+                  <div className={`p-4`}>
                     {/* Placeholder pour BulletinNotes */}
-                    <p>Composant BulletinNotes à implémenter</p>
-                    <p>Composition: {selectedComposition.label}</p>
-                    <p>Classe: {getClasseName(`${db?.classes?.find(cls => cls.id === selectedClass)?.level} ${db?.classes?.find(cls => cls.id === selectedClass)?.name}`, language)}</p>
+                    <BulletinNotes
+                      selectedComposition={selectedComposition}
+                      selectedClass={selectedClass}
+                      db={db}
+                      textClass={textClass}
+                      theme={theme}
+                      getClasseName={getClasseName}
+                      handleCloseComponent={handleCloseComponent}
+                      refreshData={refreshData}
+                    />
                   </div>
                 )}
                 

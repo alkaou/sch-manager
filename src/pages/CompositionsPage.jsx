@@ -452,7 +452,9 @@ const CompositionsPageContent = ({
                 <label className={`block mb-2 ${textClass}`}>Classes concernées</label>
                 {db && db.classes && db.classes.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {db.classes.map((cls) => (
+                    {[...db.classes]
+                    .sort((a, b) => a.level - b.level)
+                    .map((cls) => (
                       <div key={cls.id} className="flex items-center">
                         <input
                           type="checkbox"
