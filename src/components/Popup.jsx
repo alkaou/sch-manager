@@ -6,7 +6,7 @@ import { BG_COLORS, gradients } from "../utils/colors";
 import { useTheme } from "./contexts";
 
 
-const Popup = ({ isOpenPopup, setIsOpenPopup, children, btnActiveVal=1, setActiveSideBarBtn=(()=>{}) }) => {
+const Popup = ({ isOpenPopup, setIsOpenPopup, children, btnActiveVal = 1, setActiveSideBarBtn = (() => { }) }) => {
 
     const { theme, app_bg_color } = useTheme();
 

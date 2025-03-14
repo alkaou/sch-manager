@@ -2,7 +2,7 @@ import React from "react";
 import { useTheme } from "./contexts";
 
 const ThemeSwitcher = () => {
-    
+
     const { theme, toggleTheme } = useTheme();
     const isDarkmode = theme === "dark";
 
@@ -13,8 +13,8 @@ const ThemeSwitcher = () => {
         >
             <div
                 className={`w-5 h-5 relative rounded-full transition duration-500 transform p-0.5 text-white ${isDarkmode
-                        ? "bg-gray-700 translate-x-4"
-                        : "bg-yellow-500 -translate-x-1"
+                    ? "bg-gray-700 translate-x-4"
+                    : "bg-yellow-500 -translate-x-1"
                     }`}
             >
                 {isDarkmode ? (

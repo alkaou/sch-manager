@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
+import {
   Home, Settings, Palette, ChevronDown, Menu, Edit2, Check, X,
-  Layout, FileText, Star, DollarSign, BarChart, Database as DatabaseIcon 
+  Layout, FileText, Star, DollarSign, BarChart, Database as DatabaseIcon
 } from "lucide-react";
 
 import { useTheme, useLanguage, useFlashNotification } from "./contexts";
 import { updateDatabaseNameAndShortName } from "../utils/database_methods";
 
-const SideBar = ({ 
+const SideBar = ({
   setIsOpenPopup,
   isOpenPopup,
   school_name,
@@ -51,8 +51,8 @@ const SideBar = ({
     const handleClickOutsideSidebar = (event) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
         // Réduire la sidebar si elle était ouverte
-        if(isOpen) {
-          if(isOpenPopup === false){
+        if (isOpen) {
+          if (isOpenPopup === false) {
             toggleSidebar();
           }
         }
@@ -67,7 +67,7 @@ const SideBar = ({
 
   const toggleSidebar = () => {
     // Fermer tous les popu
-    if(isOpenPopup === true){
+    if (isOpenPopup === true) {
       setIsOpenPopup(false);
       setActiveSideBarBtn(lastBtnActivate);
       setIsSettingsOpen(false);
@@ -81,7 +81,7 @@ const SideBar = ({
     setIsEditing(false);
     setEditedSchoolName(school_name);
     setEditedShortName(school_short_name);
-    if(isOpenController === true){
+    if (isOpenController === true) {
       setIsOpen(false);
       setIsOpenController(false);
       setTimeout(() => {
@@ -169,7 +169,7 @@ const SideBar = ({
       ref={sidebarRef}
     >
       {/* Toggle button with animation */}
-      <motion.button 
+      <motion.button
         onClick={toggleSidebar}
         className="fixed top-4 left-4 z-40 p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition-all duration-300"
         whileHover={{ scale: 1.05 }}
@@ -181,7 +181,7 @@ const SideBar = ({
       {/* Sidebar */}
       <motion.aside
         initial={{ width: 80 }}
-        animate={{ 
+        animate={{
           width: isOpen ? 250 : 80,
           boxShadow: isOpen ? "0 4px 20px rgba(0, 0, 0, 0.1)" : "0 2px 10px rgba(0, 0, 0, 0.05)"
         }}
@@ -205,7 +205,7 @@ const SideBar = ({
                   className={`w-full px-3 py-2 rounded-md ${inputBg} ${inputBorder} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all`}
                 />
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0, transition: { delay: 0.1 } }}
@@ -219,7 +219,7 @@ const SideBar = ({
                   className={`w-full px-3 py-2 rounded-md ${inputBg} ${inputBorder} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all`}
                 />
               </motion.div>
-              
+
               {error && (
                 <motion.p
                   initial={{ opacity: 0 }}
@@ -229,8 +229,8 @@ const SideBar = ({
                   {error}
                 </motion.p>
               )}
-              
-              <motion.div 
+
+              <motion.div
                 className="flex space-x-2 mt-3"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: { delay: 0.2 } }}
@@ -258,14 +258,14 @@ const SideBar = ({
                 <motion.h2
                   layout
                   className="font-bold truncate"
-                  style={{ 
+                  style={{
                     fontSize: isOpen ? "1.25rem" : "1.5rem",
                     letterSpacing: isOpen ? "normal" : "0.05em"
                   }}
                 >
                   {isOpen ? editedSchoolName : editedSchoolName.charAt(0)}
                 </motion.h2>
-                
+
                 <AnimatePresence>
                   {isOpen && (
                     <motion.div

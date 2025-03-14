@@ -1,6 +1,5 @@
 import { createContext, useContext } from "react";
 
-
 // Theme Context
 const ThemeContext = createContext();
 const LanguageContext = createContext();
@@ -12,7 +11,7 @@ const useLanguage = () => useContext(LanguageContext);
 const usePageLoader = () => useContext(LoaderPageContext);
 const useFlashNotification = () => useContext(FlashNotificationContext);
 
-export { 
+export {
     ThemeContext,
     LanguageContext,
     LoaderPageContext,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-function TextInput({ name, value, setValue, type = "text", textColor="text-gray-800"}) {
+function TextInput({ name, value, setValue, type = "text", textColor = "text-gray-800" }) {
     return (
         <div className="flex flex-col-reverse max-w-xs w-full pt-4">
             <input

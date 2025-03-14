@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  LogOut, User, Settings, Bell, ChevronDown, 
+import {
+  LogOut, User, Settings, Bell, ChevronDown,
   Crown, HelpCircle, Moon, Sun
 } from "lucide-react";
 import { useTheme } from "./contexts";
@@ -10,7 +10,7 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  
+
   // Mock notifications for demo
   const [notifications, setNotifications] = useState([
     { id: 1, message: "New student registration", time: "5 min ago", read: false },
@@ -50,7 +50,7 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -61,9 +61,9 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
         <div className="flex items-center">
           <div className="flex items-center">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-2">
-              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600"/>
-              <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600"/>
-              <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600"/>
+              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600" />
+              <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600" />
+              <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600" />
             </svg>
             <span className={`font-bold text-xl ${textColor}`}>SchoolManager</span>
           </div>
@@ -121,7 +121,7 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
                   <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                     <h3 className="font-medium">Notifications</h3>
                     {unreadCount > 0 && (
-                      <button 
+                      <button
                         onClick={markAllAsRead}
                         className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                       >
@@ -129,12 +129,12 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
                       </button>
                     )}
                   </div>
-                  
+
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.length > 0 ? (
                       notifications.map(notification => (
-                        <div 
-                          key={notification.id} 
+                        <div
+                          key={notification.id}
                           className={`p-3 border-b ${borderColor} last:border-0 ${!notification.read ? notificationUnreadBg : ''}`}
                         >
                           <div className="flex justify-between">
@@ -152,7 +152,7 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="p-2 border-t border-gray-200 dark:border-gray-700 text-center">
                     <button className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                       View all notifications
@@ -175,9 +175,9 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
               >
                 <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-blue-500">
                   {userProfile?.photoURL ? (
-                    <img 
-                      src={userProfile.photoURL} 
-                      alt="User" 
+                    <img
+                      src={userProfile.photoURL}
+                      alt="User"
                       className="h-full w-full object-cover"
                     />
                   ) : (
@@ -207,7 +207,7 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
                       <p className="text-sm font-medium">{userProfile?.displayName || "User"}</p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{userProfile?.email || ""}</p>
                     </div>
-                    
+
                     <div className="py-1">
                       <button className={`flex items-center w-full px-4 py-2 text-sm ${textColor} ${hoverBg}`}>
                         <User size={16} className="mr-2" />
@@ -222,9 +222,9 @@ const Navbar = ({ isAuthenticated, userProfile, onLogout, onLogin }) => {
                         Help & Support
                       </button>
                     </div>
-                    
+
                     <div className="py-1 border-t border-gray-200 dark:border-gray-700">
-                      <button 
+                      <button
                         onClick={onLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
                       >

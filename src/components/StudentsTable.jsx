@@ -159,7 +159,7 @@ const StudentsTable = ({
     if (
       window.confirm(
         live_language.confirm_delete_selected ||
-          "Êtes-vous sûr de vouloir supprimer les élèves sélectionnés ?"
+        "Êtes-vous sûr de vouloir supprimer les élèves sélectionnés ?"
       )
     ) {
       for (const id of selected) {
@@ -214,12 +214,12 @@ const StudentsTable = ({
   const _text_color = app_bg_color === gradients[2] ? "text-gray-500" : text_color;
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const textClass = theme === "dark" ? text_color : "text-gray-600";
-  
+
   // Enhanced styling for expert view
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const tableHeaderBg = theme === "dark" ? "bg-gray-800" : head_bg_color;
-  const tableRowHoverBg = theme === "dark" 
-    ? "hover:bg-gray-700" 
+  const tableRowHoverBg = theme === "dark"
+    ? "hover:bg-gray-700"
     : app_bg_color === gradients[1]
       ? "hover:bg-white"
       : app_bg_color === gradients[2]
@@ -540,15 +540,14 @@ const StudentsTable = ({
                 {filteredStudents.map((student, index) => (
                   <tr
                     title="Double Clique"
-                    onDoubleClick={()=> console.log(student)}
+                    onDoubleClick={() => console.log(student)}
                     key={student.id}
-                    className={`${_text_color} divide-x divide-gray-300 ${
-                      app_bg_color === gradients[1]
+                    className={`${_text_color} divide-x divide-gray-300 ${app_bg_color === gradients[1]
                         ? "hover:bg-white"
                         : app_bg_color === gradients[2]
-                        ? "hover:bg-gray-100"
-                        : "hover:bg-gray-50"
-                    } hover:text-gray-700 transition-colors duration-300 cursor-pointer`}
+                          ? "hover:bg-gray-100"
+                          : "hover:bg-gray-50"
+                      } hover:text-gray-700 transition-colors duration-300 cursor-pointer`}
                   >
                     <td className="py-1 px-2 text-center">
                       <input
@@ -581,9 +580,9 @@ const StudentsTable = ({
                     <td className="py-1 px-2 text-center">
                       {
                         language === "Français" ? student.status :
-                        language === "Anglais" && student.status === "actif" ? "active" :
-                        language === "Anglais" && student.status === "inactif" ? "inactive" :
-                        language === "Bambara" && student.status === "actif" ? "Bɛɲin" : "Tɛɲin"
+                          language === "Anglais" && student.status === "actif" ? "active" :
+                            language === "Anglais" && student.status === "inactif" ? "inactive" :
+                              language === "Bambara" && student.status === "actif" ? "Bɛɲin" : "Tɛɲin"
                       }
                       <div className="text-center" style={{
                         width: "15px",
@@ -614,7 +613,7 @@ const StudentsTable = ({
           {/* Badge animé affichant le nombre d'élèves sélectionnés */}
           {selected.length > 0 && (
             <div className="fixed bottom-8 right-8 z-50">
-              { language === "Français" ?
+              {language === "Français" ?
                 <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
                                 animate-bounce transition-transform duration-300 transform hover:scale-110">
                   {selected.length} élève{selected.length > 1 ? "s" : ""} sélectionné{selected.length > 1 ? "s" : ""}
@@ -625,11 +624,11 @@ const StudentsTable = ({
                                 animate-bounce transition-transform duration-300 transform hover:scale-110">
                     {selected.length} student{selected.length > 1 ? "s" : ""} selected
                   </div>
-                :
-                <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
+                  :
+                  <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
                                 animate-bounce transition-transform duration-300 transform hover:scale-110">
-                  Kaladen {selected.length} sugandi le don
-                </div>
+                    Kaladen {selected.length} sugandi le don
+                  </div>
               }
             </div>
           )}

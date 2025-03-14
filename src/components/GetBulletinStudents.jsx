@@ -15,7 +15,7 @@ const GetBulletinStudents = ({
 }) => {
     const { live_language, language } = useLanguage();
     const { setFlashMessage } = useFlashNotification();
-    
+
     const [students, setStudents] = useState([]);
     const [filteredStudents, setFilteredStudents] = useState([]);
     const [selectedStudents, setSelectedStudents] = useState([]);
@@ -23,7 +23,7 @@ const GetBulletinStudents = ({
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [bulletin, setBulletin] = useState(null);
-    
+
     // Styles conditionnels
     const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
     const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -32,23 +32,23 @@ const GetBulletinStudents = ({
     const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
     const checkboxBgColor = theme === "dark" ? "bg-gray-600" : "bg-white";
     const whileHoverbackgroundColor = theme === "dark" ? "rgba(55, 65, 81, 0.7)" : "rgba(239, 246, 255, 0.7)";
-    
+
     // Récupérer les élèves de la classe sélectionnée
     useEffect(() => {
         if (!db || !selectedClass) return;
-        
+
         setLoading(true);
-        
+
         // Trouver la classe dans la base de données
         const classObj = db.classes.find(cls => cls.id === selectedClass);
         if (!classObj) {
             setLoading(false);
             return;
         }
-        
+
         // Construire le nom complet de la classe
         const className = `${classObj.level} ${classObj.name}`;
-        
+
         // Filtrer les élèves actifs de cette classe
         const classStudents = db.students
             .filter(student => student.classe === className && student.status === "actif")
@@ -58,28 +58,28 @@ const GetBulletinStudents = ({
                 isSelected: false
             }))
             .sort((a, b) => a.last_name.localeCompare(b.last_name)); // Tri alphabétique par nom
-        
+
         setStudents(classStudents);
         setFilteredStudents(classStudents);
-        
+
         // Récupérer le bulletin existant s'il y en a un
         const existingBulletin = db.bulletins?.find(
             bulletin => bulletin.compositionId === selectedComposition.id && bulletin.classId === selectedClass
         );
-        
+
         if (existingBulletin) {
             setBulletin(existingBulletin);
-            
+
             // Marquer les élèves déjà sélectionnés
             if (existingBulletin.students && existingBulletin.students.length > 0) {
                 const selectedIds = existingBulletin.students.map(s => s.id);
                 setSelectedStudents(selectedIds);
             }
         }
-        
+
         setLoading(false);
     }, [db, selectedClass, selectedComposition]);
-    
+
     // Filtrer les élèves en fonction du terme de recherche
     useEffect(() => {
         if (searchTerm.trim() === '') {
@@ -87,14 +87,14 @@ const GetBulletinStudents = ({
         } else {
             const term = searchTerm.toLowerCase();
             const filtered = students.filter(
-                student => 
-                    student.fullName.toLowerCase().includes(term) || 
+                student =>
+                    student.fullName.toLowerCase().includes(term) ||
                     student.last_name.toLowerCase().includes(term)
             );
             setFilteredStudents(filtered);
         }
     }, [searchTerm, students]);
-    
+
     // Gérer la sélection/désélection de tous les élèves
     const handleSelectAll = () => {
         if (selectedStudents.length === filteredStudents.length) {
@@ -105,7 +105,7 @@ const GetBulletinStudents = ({
             setSelectedStudents(filteredStudents.map(student => student.id));
         }
     };
-    
+
     // Gérer la sélection/désélection d'un élève
     const handleSelectStudent = (studentId) => {
         if (selectedStudents.includes(studentId)) {
@@ -116,14 +116,14 @@ const GetBulletinStudents = ({
             setSelectedStudents([...selectedStudents, studentId]);
         }
     };
-    
+
     // Vérifier si tous les élèves sont sélectionnés
     const areAllSelected = filteredStudents.length > 0 && selectedStudents.length === filteredStudents.length;
-    
+
     // Sauvegarder les élèves sélectionnés dans le bulletin
     const handleSaveStudents = async () => {
         setSaving(true);
-        
+
         try {
             // Récupérer les détails complets des élèves sélectionnés
             const studentsDetails = students
@@ -136,9 +136,9 @@ const GetBulletinStudents = ({
                     matricule: student.matricule || '',
                     notes: {} // Les notes seront ajoutées ultérieurement
                 }));
-            
+
             let updatedBulletins;
-            
+
             if (bulletin) {
                 // Mettre à jour un bulletin existant
                 updatedBulletins = db.bulletins.map(b => {
@@ -159,20 +159,20 @@ const GetBulletinStudents = ({
                     subjects: [{ name: "Conduite", coefficient: 1 }], // Sujet par défaut
                     students: studentsDetails
                 };
-                
+
                 updatedBulletins = [...(db.bulletins || []), newBulletin];
             }
-            
+
             // Mettre à jour la base de données
             const updatedDB = { ...db, bulletins: updatedBulletins };
             await window.electron.saveDatabase(updatedDB);
-            
+
             setFlashMessage({
                 message: "Les élèves ont été enregistrés avec succès dans le bulletin !",
                 type: "success",
                 duration: 5000
             });
-            
+
             // Fermer le composant et rafraîchir les données
             setTimeout(() => {
                 handleCloseComponent();
@@ -189,12 +189,12 @@ const GetBulletinStudents = ({
             setSaving(false);
         }
     };
-    
+
     // Obtenir le nom de la classe
     const className = db?.classes?.find(cls => cls.id === selectedClass)
         ? getClasseName(`${db.classes.find(cls => cls.id === selectedClass).level} ${db.classes.find(cls => cls.id === selectedClass).name}`, language)
         : "";
-    
+
     return (
         <motion.div
             className={`${textClass} w-full`}
@@ -215,7 +215,7 @@ const GetBulletinStudents = ({
                     </div>
                 </div>
             </div>
-            
+
             {/* Barre de recherche */}
             <div className="mb-4 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -229,7 +229,7 @@ const GetBulletinStudents = ({
                     className={`pl-10 pr-4 py-2 w-full rounded-lg border ${tableBorderColor} ${inputBgColor} ${textClass} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300`}
                 />
             </div>
-            
+
             {/* Tableau des élèves */}
             <div className="overflow-hidden rounded-lg border shadow-md mb-6">
                 <table className={`min-w-full divide-y ${tableBorderColor}`}>
@@ -298,8 +298,8 @@ const GetBulletinStudents = ({
                                     className={`${tableRowHoverBg} cursor-pointer`}
                                     onClick={() => handleSelectStudent(student.id)}
                                     whileHover={
-                                        selectedStudents.includes(student.id) === true ? 
-                                        { backgroundColor: whileHoverbackgroundColor } : {}
+                                        selectedStudents.includes(student.id) === true ?
+                                            { backgroundColor: whileHoverbackgroundColor } : {}
                                     }
                                     transition={{ duration: 0.2 }}
                                 >
@@ -351,7 +351,7 @@ const GetBulletinStudents = ({
                     </tbody>
                 </table>
             </div>
-            
+
             {/* Informations et statistiques */}
             <div className="mb-6 bg-blue-50 dark:bg-gray-700 p-4 rounded-lg shadow-sm">
                 <div className="flex flex-col md:flex-row md:items-center justify-between">
@@ -362,8 +362,8 @@ const GetBulletinStudents = ({
                     <div className="mt-3 md:mt-0">
                         {selectedStudents.length > 0 ? (
                             <p className="text-green-600 dark:text-green-400">
-                                {selectedStudents.length === students.length 
-                                    ? "Tous les élèves sont sélectionnés" 
+                                {selectedStudents.length === students.length
+                                    ? "Tous les élèves sont sélectionnés"
                                     : `${selectedStudents.length} élève(s) sélectionné(s) sur ${students.length}`}
                             </p>
                         ) : (
@@ -374,7 +374,7 @@ const GetBulletinStudents = ({
                     </div>
                 </div>
             </div>
-            
+
             {/* Boutons d'action */}
             <div className="flex justify-end space-x-4">
                 <motion.button
@@ -385,7 +385,7 @@ const GetBulletinStudents = ({
                 >
                     Annuler
                 </motion.button>
-                
+
                 <motion.button
                     onClick={handleSaveStudents}
                     disabled={saving}

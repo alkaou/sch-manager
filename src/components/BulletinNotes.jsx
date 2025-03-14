@@ -568,11 +568,10 @@ const BulletinNotes = ({
               whileTap={{ scale: 0.95 }}
               onClick={() => saveChangesToDatabase()}
               disabled={saving || !hasChanges}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                hasChanges
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${hasChanges
                   ? "bg-green-600 hover:bg-green-700 text-white"
                   : "bg-gray-400 text-gray-200 cursor-not-allowed"
-              } transition-colors duration-300`}
+                } transition-colors duration-300`}
             >
               {saving ? (
                 <RefreshCcw className="animate-spin" size={18} />
@@ -596,9 +595,9 @@ const BulletinNotes = ({
 
         {/* Conteneur scrollable pour le tableau */}
         <div className="overflow-auto max-h-[calc(100vh-20%)]">
-          <table 
+          <table
             className={`min-w-full border ${tableBorderColor} border-collapse`}
-            style={{marginBottom: "40%"}}
+            style={{ marginBottom: "40%" }}
           >
             <thead className="sticky -top-1 z-20">
               <tr className={`${tableHeaderBg}`}>
@@ -647,8 +646,8 @@ const BulletinNotes = ({
                             activeCoef === null
                               ? handleHeadMouseMove
                               : activeCoef === subject.name
-                              ? handleHeadMouseMove
-                              : () => {}
+                                ? handleHeadMouseMove
+                                : () => { }
                           }
                           className="ml-1 text-xs font-medium underline hover:text-blue-500"
                         >
@@ -658,7 +657,7 @@ const BulletinNotes = ({
 
                       {/* Menu déroulant pour les coefficients */}
                       {activeCoef === subject.name && (
-                        <div style={{marginRight: "2%"}}>
+                        <div style={{ marginRight: "2%" }}>
                           <div
                             ref={coefDropdownRef}
                             className={`absolute z-20 mt-1 py-1 rounded-md shadow-lg ${dropdownBgColor} border ${tableBorderColor} max-h-60 overflow-auto`}
@@ -676,11 +675,10 @@ const BulletinNotes = ({
                                     updateCoefficient(subject.name, coef);
                                     setActiveCoef(null);
                                   }}
-                                  className={`px-2 py-1 text-center rounded ${
-                                    coef === subject.coefficient
+                                  className={`px-2 py-1 text-center rounded ${coef === subject.coefficient
                                       ? cellActiveBgColor
                                       : dropdownHoverBgColor
-                                  }`}
+                                    }`}
                                 >
                                   {coef}
                                 </button>
@@ -763,11 +761,10 @@ const BulletinNotes = ({
                       <React.Fragment key={`${student.id}-${subject.name}`}>
                         {/* Note de classe */}
                         <td
-                          className={`px-2 py-2 text-center border ${tableBorderColor} ${
-                            activeCell === `${student.id}-${subject.name}-classe`
+                          className={`px-2 py-2 text-center border ${tableBorderColor} ${activeCell === `${student.id}-${subject.name}-classe`
                               ? cellActiveBgColor
                               : ""
-                          } cursor-pointer`}
+                            } cursor-pointer`}
                           onClick={(event) => {
                             setActiveCell(`${student.id}-${subject.name}-classe`);
                             if (activeCell !== `${student.id}-${subject.name}-classe`) {
@@ -815,19 +812,22 @@ const BulletinNotes = ({
                                     </button>
                                   ))}
                                 </div>
-                                <div className="grid grid-cols-4 gap-1">
-                                  {decimalOptions.map((decimal) => (
-                                    <button
-                                      key={decimal}
-                                      onClick={() =>
-                                        handleDecimalSelect(student.id, subject.name, "classe", decimal)
-                                      }
-                                      className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
-                                    >
-                                      0.{decimal}
-                                    </button>
-                                  ))}
-                                </div>
+                                {student?.notes[subject.name]?.["classe"] === 20 ? null :
+                                  <div className="grid grid-cols-4 gap-1">
+                                    {decimalOptions.map((decimal) => (
+                                      <button
+                                        key={decimal}
+                                        onClick={() => {
+                                          // console.log(student?.notes[subject.name]?.["classe"]);
+                                          handleDecimalSelect(student.id, subject.name, "classe", decimal)
+                                        }}
+                                        className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                      >
+                                        0.{decimal}
+                                      </button>
+                                    ))}
+                                  </div>
+                                }
                               </div>
                             </div>
                           )}
@@ -835,11 +835,10 @@ const BulletinNotes = ({
 
                         {/* Note de composition */}
                         <td
-                          className={`px-2 py-2 text-center border ${tableBorderColor} ${
-                            activeCell === `${student.id}-${subject.name}-composition`
+                          className={`px-2 py-2 text-center border ${tableBorderColor} ${activeCell === `${student.id}-${subject.name}-composition`
                               ? cellActiveBgColor
                               : ""
-                          } cursor-pointer`}
+                            } cursor-pointer`}
                           onClick={(event) => {
                             setActiveCell(`${student.id}-${subject.name}-composition`);
                             if (activeCell !== `${student.id}-${subject.name}-composition`) {
@@ -887,19 +886,21 @@ const BulletinNotes = ({
                                     </button>
                                   ))}
                                 </div>
-                                <div className="grid grid-cols-4 gap-1">
-                                  {decimalOptions.map((decimal) => (
-                                    <button
-                                      key={decimal}
-                                      onClick={() =>
-                                        handleDecimalSelect(student.id, subject.name, "composition", decimal)
-                                      }
-                                      className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
-                                    >
-                                      0.{decimal}
-                                    </button>
-                                  ))}
-                                </div>
+                                {student?.notes[subject.name]?.["composition"] === 20 ? null :
+                                  <div className="grid grid-cols-4 gap-1">
+                                    {decimalOptions.map((decimal) => (
+                                      <button
+                                        key={decimal}
+                                        onClick={() =>
+                                          handleDecimalSelect(student.id, subject.name, "composition", decimal)
+                                        }
+                                        className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                      >
+                                        0.{decimal}
+                                      </button>
+                                    ))}
+                                  </div>
+                                }
                               </div>
                             </div>
                           )}
@@ -977,6 +978,13 @@ const BulletinNotes = ({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3 }}
+              style={{
+              width: "60%",
+              height: "60%",
+              maxHeight: "60%",
+              minWidth: "60%",
+              marginTop: "5%",
+            }}
             >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold">Prévisualisation du bulletin</h3>

@@ -107,9 +107,8 @@ const AutocompleteInput = ({ suggestions, value, onChange, placeholder, inputCla
               key={index}
               ref={el => suggestionRefs.current[index] = el}
               onClick={() => handleSuggestionClick(sugg)}
-              className={`p-2 cursor-pointer ${
-                index === activeSuggestionIndex ? "bg-blue-100" : "hover:bg-gray-200"
-              }`}
+              className={`p-2 cursor-pointer ${index === activeSuggestionIndex ? "bg-blue-100" : "hover:bg-gray-200"
+                }`}
             >
               {sugg}
             </li>

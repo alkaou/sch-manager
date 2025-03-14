@@ -181,8 +181,8 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
     // Vérification de la duplication sur la combinaison niveau + nom pour l'édition
     const duplicate = classes.find(
       cls => cls.id !== editingClassId &&
-      Number(cls.level) === Number(editedClass.level) &&
-      cls.name.trim().toLowerCase() === editedClass.name.trim().toLowerCase()
+        Number(cls.level) === Number(editedClass.level) &&
+        cls.name.trim().toLowerCase() === editedClass.name.trim().toLowerCase()
     );
     if (duplicate) {
       setGlobalError("Cette classe existe déjà.");

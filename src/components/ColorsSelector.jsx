@@ -11,7 +11,7 @@ const ColorsSelector = ({ OpenThePopup }) => {
 
     const { setThemeColor, theme } = useTheme();
     const { language } = useLanguage();
-    
+
     useEffect(() => {
         let BgColorSelected = secureLocalStorage.getItem("ThemeColorSelect");
         if (BgColorSelected !== undefined && BgColorSelected !== null) {

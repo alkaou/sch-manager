@@ -4,7 +4,7 @@ import { Plus, Trash, Check, X, Save } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
 import { useLanguage, useFlashNotification } from "./contexts.js";
 
-const CreateBulletin = ({ 
+const CreateBulletin = ({
     selectedComposition,
     selectedClass,
     language,
@@ -62,13 +62,13 @@ const CreateBulletin = ({
             level.includes('5ème année') || level.includes('6ème année')) {
             return "Premier cycle";
         } else if (level.includes('7ème année') || level.includes('8ème année') ||
-                   level.includes('9ème année') || level.includes('10ème année')) {
+            level.includes('9ème année') || level.includes('10ème année')) {
             return "Second cycle";
         } else if (level.includes('11ème année') || level.includes('12ème année') ||
-                   level.includes('terminale')) {
+            level.includes('terminale')) {
             return "Lycée";
         } else if (level.includes('pro') || level.includes('bts') ||
-                   level.includes('cap') || level.includes('bep')) {
+            level.includes('cap') || level.includes('bep')) {
             return "Professionnel";
         }
         return "Premier cycle";
@@ -115,19 +115,18 @@ const CreateBulletin = ({
                 { name: "Technologie", coefficient: 1 }
             ],
             "Second cycle": [
-                { name: "Anglais", coefficient: 1 },
-                { name: "Biologie", coefficient: 2 },
-                { name: "Chimie", coefficient: 1.5 },
-                { name: "Dessin", coefficient: 1 },
-                { name: "Dictée & Question", coefficient: 2 },
-                { name: "ECM", coefficient: 1 },
-                { name: "EPS", coefficient: 1 },
-                { name: "Histoire-Géo", coefficient: 2 },
-                { name: "Mathématique", coefficient: 3 },
-                { name: "Musique", coefficient: 1 },
-                { name: "Physique", coefficient: 1.5 },
                 { name: "Rédaction", coefficient: 3 },
-                { name: "Récitation", coefficient: 1 }
+                { name: "Mathématique", coefficient: 3 },
+                { name: "Dictée & Question", coefficient: 2 },
+                { name: "Physique-Chimie", coefficient: 3 },
+                { name: "Biologie", coefficient: 2 },
+                { name: "Anglais", coefficient: 2 },
+                { name: "Histoire-Géo", coefficient: 2 },
+                { name: "Récitation", coefficient: 1 },
+                { name: "ECM", coefficient: 1 },
+                { name: "Musique", coefficient: 1 },
+                { name: "Dessin", coefficient: 1 },
+                { name: "EPS", coefficient: 1 },
             ],
             "Lycée": [
                 { name: "Art", coefficient: 3 },
@@ -158,7 +157,7 @@ const CreateBulletin = ({
             ],
             "Personnalisé": []
         };
-        
+
 
         const savedCustomSubjects = secureLocalStorage.getItem("customSubjects");
         if (savedCustomSubjects) {
@@ -166,7 +165,7 @@ const CreateBulletin = ({
         }
 
         setSubjects(defaultSubjects);
-        
+
         const authorizedSections = getAuthorizedSections();
         // Par défaut, sélectionner la première section autre que "Personnalisé"
         const defaultSection = authorizedSections.find(s => s !== "Personnalisé") || null;
@@ -205,13 +204,13 @@ const CreateBulletin = ({
 
     const handleSelectAllInSection = (section, isChecked) => {
         if (isChecked) {
-            const newSubjects = subjects[section].filter(subject => 
+            const newSubjects = subjects[section].filter(subject =>
                 !selectedSubjects.some(s => s.name === subject.name)
             );
             setSelectedSubjects([...selectedSubjects, ...newSubjects]);
             setActiveSection(section);
         } else {
-            setSelectedSubjects(selectedSubjects.filter(subject => 
+            setSelectedSubjects(selectedSubjects.filter(subject =>
                 !subjects[section].some(s => s.name === subject.name) || subject.name === "Conduite"
             ));
             if (selectedSubjects.length <= 1) {
@@ -229,12 +228,12 @@ const CreateBulletin = ({
             setCustomSubjectError("Le nom de la matière doit contenir entre 2 et 30 caractères.");
             return;
         }
-        
+
         if (selectedSubjects.some(s => s.name.toLowerCase() === customSubject.name.toLowerCase())) {
             setCustomSubjectError("Cette matière existe déjà dans la liste.");
             return;
         }
-        
+
         const newCustomSubject = { ...customSubject };
         const updatedCustomSubjects = [...subjects["Personnalisé"], newCustomSubject];
         setSubjects({
@@ -384,7 +383,7 @@ const CreateBulletin = ({
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                                 {subjects[section].map((subject) => (
-                                    <div 
+                                    <div
                                         key={subject.name}
                                         className="flex items-center justify-between p-2 border rounded"
                                     >
@@ -446,13 +445,12 @@ const CreateBulletin = ({
                         {subjects["Personnalisé"].length > 0 && (
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-4">
                                 {subjects["Personnalisé"].map((subject) => (
-                                    <div 
+                                    <div
                                         key={subject.name}
-                                        className={`flex items-center justify-between p-2 border rounded ${
-                                            deleteMode && subjectsToDelete.includes(subject.name)
+                                        className={`flex items-center justify-between p-2 border rounded ${deleteMode && subjectsToDelete.includes(subject.name)
                                                 ? 'bg-red-100'
                                                 : ''
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex items-center">
                                             {deleteMode ? (
@@ -527,11 +525,10 @@ const CreateBulletin = ({
                 <motion.button
                     onClick={handleSaveBulletin}
                     disabled={loading || selectedSubjects.length < 2}
-                    className={`flex items-center space-x-2 px-4 py-2 rounded text-white ${
-                        selectedSubjects.length < 2
+                    className={`flex items-center space-x-2 px-4 py-2 rounded text-white ${selectedSubjects.length < 2
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-blue-600 hover:bg-blue-700'
-                    }`}
+                        }`}
                     whileHover={{ scale: selectedSubjects.length < 2 ? 1 : 1.05 }}
                     whileTap={{ scale: selectedSubjects.length < 2 ? 1 : 0.95 }}
                 >

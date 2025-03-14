@@ -26,7 +26,7 @@ function AppParameters() {
                 <FaCog className={`${theme === "dark" ? "text-white" : "text-blue-600"} text-2xl mr-3`} />
                 <h2 className={`text-2xl font-bold ${theme === "dark" ? "text-white" : "text-gray-800"}`}>{live_language.parameters || "Parameters"}</h2>
             </div>
-            
+
             <div className="space-y-6">
                 {/* Language Settings */}
                 <div className="bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition-all">
@@ -50,7 +50,7 @@ function AppParameters() {
                         </div>
                     </div>
                 </div>
-                
+
                 {/* Additional parameter sections can be added here */}
                 {/* For example: Theme, Notifications, etc. */}
             </div>

@@ -65,9 +65,8 @@ const AdvancedCalendar = ({ onClose }) => {
           {days.map((day, index) => (
             <button
               key={index}
-              className={`p-2 rounded-full w-10 h-10 flex items-center justify-center transition ${
-                isSameDay(day, today) ? "bg-green-500 text-white" : "hover:bg-gray-200 text-gray-600"
-              }`}
+              className={`p-2 rounded-full w-10 h-10 flex items-center justify-center transition ${isSameDay(day, today) ? "bg-green-500 text-white" : "hover:bg-gray-200 text-gray-600"
+                }`}
             >
               {format(day, "d")}
             </button>

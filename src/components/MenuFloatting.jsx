@@ -12,9 +12,9 @@ const FloatingMenu = () => {
   const { live_language } = useLanguage();
 
   const toggleMenu = () => {
-    if(menuOpen === true){
+    if (menuOpen === true) {
       setPlayedAnimation(false);
-      setTimeout(()=> {
+      setTimeout(() => {
         setMenuOpen(false);
       }, 500)
     } else {
@@ -52,7 +52,7 @@ const FloatingMenu = () => {
             <button
               onClick={() => console.log("Option Idée sélectionnée")}
               className={`flex ${playedAnimation ? "animate-fadeIn" : "custom-animation"} items-center p-3 bg-yellow-500 text-white rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110 focus:outline-none`}
-              // title="Idée"
+            // title="Idée"
             >
               <FaRegLightbulb size={20} />
             </button>
@@ -68,12 +68,12 @@ const FloatingMenu = () => {
 
       {/* Modale pour AdvancedCalculator */}
       {showCalculator && (
-          <AdvancedCalculator onClose={() => setShowCalculator(false)} />
+        <AdvancedCalculator onClose={() => setShowCalculator(false)} />
       )}
 
       {/* Modale pour AdvancedCalendar */}
       {showCalendar && (
-            <AdvancedCalendar onClose={() => setShowCalendar(false)} />
+        <AdvancedCalendar onClose={() => setShowCalendar(false)} />
       )}
     </div>
   );
