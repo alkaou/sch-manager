@@ -488,7 +488,7 @@ const BulletinsPageContent = ({
                 )}
                 
                 {activeComponent === "BulletinNotes" && (
-                  <div className={`p-4`}>
+                  <div >
                     {/* Placeholder pour BulletinNotes */}
                     <BulletinNotes
                       selectedComposition={selectedComposition}
