@@ -569,8 +569,8 @@ const BulletinNotes = ({
               onClick={() => saveChangesToDatabase()}
               disabled={saving || !hasChanges}
               className={`px-4 py-2 rounded-lg flex items-center gap-2 ${hasChanges
-                  ? "bg-green-600 hover:bg-green-700 text-white"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 } transition-colors duration-300`}
             >
               {saving ? (
@@ -676,8 +676,8 @@ const BulletinNotes = ({
                                     setActiveCoef(null);
                                   }}
                                   className={`px-2 py-1 text-center rounded ${coef === subject.coefficient
-                                      ? cellActiveBgColor
-                                      : dropdownHoverBgColor
+                                    ? cellActiveBgColor
+                                    : dropdownHoverBgColor
                                     }`}
                                 >
                                   {coef}
@@ -762,8 +762,8 @@ const BulletinNotes = ({
                         {/* Note de classe */}
                         <td
                           className={`px-2 py-2 text-center border ${tableBorderColor} ${activeCell === `${student.id}-${subject.name}-classe`
-                              ? cellActiveBgColor
-                              : ""
+                            ? cellActiveBgColor
+                            : ""
                             } cursor-pointer`}
                           onClick={(event) => {
                             setActiveCell(`${student.id}-${subject.name}-classe`);
@@ -836,8 +836,8 @@ const BulletinNotes = ({
                         {/* Note de composition */}
                         <td
                           className={`px-2 py-2 text-center border ${tableBorderColor} ${activeCell === `${student.id}-${subject.name}-composition`
-                              ? cellActiveBgColor
-                              : ""
+                            ? cellActiveBgColor
+                            : ""
                             } cursor-pointer`}
                           onClick={(event) => {
                             setActiveCell(`${student.id}-${subject.name}-composition`);
@@ -979,12 +979,8 @@ const BulletinNotes = ({
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3 }}
               style={{
-              width: "60%",
-              height: "60%",
-              maxHeight: "60%",
-              minWidth: "60%",
-              marginTop: "5%",
-            }}
+                marginTop: "70%",
+              }}
             >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-xl font-semibold">Prévisualisation du bulletin</h3>
@@ -995,7 +991,6 @@ const BulletinNotes = ({
                   <X size={20} />
                 </button>
               </div>
-
               <BulletinComponent
                 student={selectedStudent}
                 subjects={subjects}
@@ -1006,6 +1001,8 @@ const BulletinNotes = ({
                 theme={theme}
                 textClass={textClass}
                 language={language}
+                students={students} // Ajout de la liste complète des étudiants
+                handleCloseBulletinPreview={handleCloseBulletinPreview}
               />
             </motion.div>
           </motion.div>

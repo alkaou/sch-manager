@@ -134,6 +134,8 @@ const GetBulletinStudents = ({
                     sure_name: student.sure_name || '',
                     last_name: student.last_name,
                     matricule: student.matricule || '',
+                    sexe: student.sexe || '',
+                    parents_contact: student.parents_contact || '',
                     notes: {} // Les notes seront ajoutées ultérieurement
                 }));
 
