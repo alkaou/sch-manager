@@ -13,7 +13,9 @@ const BulletinNotes = ({
   theme,
   getClasseName,
   handleCloseComponent,
-  refreshData
+  school_name,
+  school_short_name,
+  school_zone_name,
 }) => {
   const { live_language, language } = useLanguage();
   const { setFlashMessage } = useFlashNotification();
@@ -1003,6 +1005,9 @@ const BulletinNotes = ({
                 language={language}
                 students={students} // Ajout de la liste complète des étudiants
                 handleCloseBulletinPreview={handleCloseBulletinPreview}
+                school_name={school_name}
+                school_short_name={school_short_name}
+                school_zone_name={school_zone_name}
               />
             </motion.div>
           </motion.div>

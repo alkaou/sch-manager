@@ -14,6 +14,9 @@ const BulletinsPageContent = ({
   app_bg_color,
   text_color,
   theme,
+  school_name,
+  school_short_name,
+  school_zone_name,
 }) => {
   const { live_language, language } = useLanguage();
   const [db, setDb] = useState(null);
@@ -31,7 +34,7 @@ const BulletinsPageContent = ({
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const textClass = theme === "dark" ? text_color : "text-gray-600";
-  const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
+  // const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
   const buttonPrimary = app_bg_color === gradients[1] ? "bg-gray-600 hover:bg-gray-700" : "bg-blue-600 hover:bg-blue-700";
   const buttonDelete = "bg-red-600 hover:bg-red-700";
   const buttonAdd = "bg-green-600 hover:bg-green-700";
@@ -499,6 +502,9 @@ const BulletinsPageContent = ({
                       getClasseName={getClasseName}
                       handleCloseComponent={handleCloseComponent}
                       refreshData={refreshData}
+                      school_name={school_name}
+                      school_short_name={school_short_name}
+                      school_zone_name={school_zone_name}
                     />
                   </div>
                 )}

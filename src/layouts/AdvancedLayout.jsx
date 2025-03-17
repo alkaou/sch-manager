@@ -14,6 +14,7 @@ const AdvancedLayout = () => {
   const [isOpenPopup, setIsOpenPopup] = useState(false);
   const [school_name, setSchool_name] = useState("S");
   const [school_short_name, setSchool_short_name] = useState("GSAD");
+  const [school_zone_name, setSchool_zone_name] = useState(null);
   const [database, setDatabase] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isClassesOpen, setIsClassesOpen] = useState(false);
@@ -69,6 +70,7 @@ const AdvancedLayout = () => {
       }
       setSchool_name(data.name);
       setSchool_short_name(data.short_name);
+      setSchool_zone_name(data.zone);
       setDatabase(data);
       if (data.students !== undefined && data.students !== null) {
         setStudents(data.students);
@@ -88,6 +90,7 @@ const AdvancedLayout = () => {
     window.electron.getDatabase().then((data) => {
       setSchool_name(data.name);
       setSchool_short_name(data.short_name);
+      setSchool_zone_name(data.zone);
       setDatabase(data);
       if (data.students !== undefined && data.students !== null) {
         setStudents(data.students);
@@ -130,6 +133,7 @@ const AdvancedLayout = () => {
         setisShowBgColorSelector={setisShowBgColorSelector}
         school_name={school_name}
         school_short_name={school_short_name || "GSAD"}
+        school_zone_name={school_zone_name}
         activeSideBarBtn={activeSideBarBtn}
         setActiveSideBarBtn={setActiveSideBarBtn}
         setLastBtnActivate={setLastBtnActivate}
@@ -171,7 +175,10 @@ const AdvancedLayout = () => {
             app_bg_color,
             text_color,
             theme,
-            OpenThePopup
+            OpenThePopup,
+            school_name,
+            school_short_name,
+            school_zone_name,
           }}
         />
       </div>

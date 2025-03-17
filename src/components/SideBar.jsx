@@ -26,7 +26,6 @@ const SideBar = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenController, setIsOpenController] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [showOptionsNames, setShowOptionsNames] = useState(false);
 
   const { setFlashMessage } = useFlashNotification();
 
@@ -85,13 +84,11 @@ const SideBar = ({
       setIsOpen(false);
       setIsOpenController(false);
       setTimeout(() => {
-        setShowOptionsNames(false);
       }, isOpenController ? 100 : 300);
     } else {
       setIsOpen(true);
       setIsOpenController(true);
       setTimeout(() => {
-        setShowOptionsNames(true);
       }, isOpenController ? 100 : 300);
     }
     // console.log(isOpen);
