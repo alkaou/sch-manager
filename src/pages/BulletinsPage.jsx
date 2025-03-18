@@ -4,11 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { gradients } from '../utils/colors';
 import { getClasseName } from '../utils/helpers';
 import { useLanguage } from '../components/contexts.js';
-import { Search, Filter, Plus, Edit, Trash, Eye, FileText, CheckSquare, RefreshCcw } from 'lucide-react';
+import { Search, Filter, Plus, Edit, Trash, Eye, FileText, CheckSquare, RefreshCcw, Unlock } from 'lucide-react';
 
 import CreateBulletin from "../components/CreateBulletin.jsx";
 import GetBulletinStudents from "../components/GetBulletinStudents.jsx";
 import BulletinNotes from "../components/BulletinNotes.jsx";
+import ShowAllBulletin from "../components/ShowAllBulletin.jsx";
 
 const BulletinsPageContent = ({
   app_bg_color,
@@ -43,8 +44,8 @@ const BulletinsPageContent = ({
   const shinyBorderColor = theme === "dark" ? "border-blue-400" : "border-purple-400";
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const tableHeaderBg = theme === "dark" ? "bg-gray-800" : app_bg_color;
-  const tableRowHoverBg = theme === "dark" 
-    ? "hover:bg-gray-700" 
+  const tableRowHoverBg = theme === "dark"
+    ? "hover:bg-gray-700"
     : app_bg_color === gradients[1]
       ? "hover:bg-white"
       : app_bg_color === gradients[2]
@@ -60,7 +61,7 @@ const BulletinsPageContent = ({
         data.compositions = [];
       }
       setCompositions(data.compositions);
-      
+
       if (!data.bulletins) {
         data.bulletins = [];
       }
@@ -106,32 +107,32 @@ const BulletinsPageContent = ({
   // Filtrer les compositions
   const filteredCompositions = compositions.filter(comp => {
     // Filtre par recherche
-    const searchMatch = searchTerm === "" || 
+    const searchMatch = searchTerm === "" ||
       comp.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
       formatDate(comp.date).toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     // Filtre par année
-    const yearMatch = filterYear === "all" || 
+    const yearMatch = filterYear === "all" ||
       new Date(comp.date).getFullYear().toString() === filterYear;
-    
+
     // Filtre par type
     const typeMatch = filterType === "all" || comp.helper === filterType;
-    
+
     return searchMatch && yearMatch && typeMatch;
   }).sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
 
   // Vérifier si un bulletin existe pour une composition et une classe
   const bulletinExists = (compositionId, classId) => {
-    return bulletins.some(bulletin => 
-      bulletin.compositionId === compositionId && 
+    return bulletins.some(bulletin =>
+      bulletin.compositionId === compositionId &&
       bulletin.classId === classId
     );
   };
 
   // Obtenir le bulletin pour une composition et une classe
   const getBulletin = (compositionId, classId) => {
-    return bulletins.find(bulletin => 
-      bulletin.compositionId === compositionId && 
+    return bulletins.find(bulletin =>
+      bulletin.compositionId === compositionId &&
       bulletin.classId === classId
     );
   };
@@ -139,13 +140,13 @@ const BulletinsPageContent = ({
   // Compter les élèves d'une classe
   const getStudentCount = (classId) => {
     if (!db || !db.students) return 0;
-    
+
     const classObj = db.classes.find(cls => cls.id === classId);
     if (!classObj) return 0;
-    
+
     const className = `${classObj.level} ${classObj.name}`;
-    return db.students.filter(student => 
-      student.classe === className && 
+    return db.students.filter(student =>
+      student.classe === className &&
       student.status === "actif"
     ).length;
   };
@@ -179,11 +180,12 @@ const BulletinsPageContent = ({
         const updatedBulletins = bulletins.filter(
           bulletin => !(bulletin.compositionId === compositionId && bulletin.classId === classId)
         );
-        
+
         const updatedDB = { ...db, bulletins: updatedBulletins };
         await window.electron.saveDatabase(updatedDB);
-        
+
         setBulletins(updatedBulletins);
+        refreshData();
         alert("Bulletin supprimé avec succès !");
       } catch (error) {
         console.error("Erreur lors de la suppression du bulletin:", error);
@@ -224,7 +226,7 @@ const BulletinsPageContent = ({
               className={`px-3 py-2 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
             />
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Filter size={20} className={textClass} />
             <select
@@ -238,7 +240,7 @@ const BulletinsPageContent = ({
               ))}
             </select>
           </div>
-          
+
           <div className="flex items-center space-x-2">
             <Filter size={20} className={textClass} />
             <select
@@ -249,11 +251,11 @@ const BulletinsPageContent = ({
               <option value="all">Tous les types</option>
               {getUniqueTypes().map(type => (
                 <option key={type} value={type}>
-                  {type === "comp" ? "Composition" : 
-                   type === "Trim" ? "Trimestre" : 
-                   type === "Seme" ? "Semestre" : 
-                   type === "Def" ? "DEF Blanc" : 
-                   type === "Bac" ? "BAC Blanc" : type}
+                  {type === "comp" ? "Composition" :
+                    type === "Trim" ? "Trimestre" :
+                      type === "Seme" ? "Semestre" :
+                        type === "Def" ? "DEF Blanc" :
+                          type === "Bac" ? "BAC Blanc" : type}
                 </option>
               ))}
             </select>
@@ -272,7 +274,7 @@ const BulletinsPageContent = ({
         ) : (
           <div className="space-y-8">
             {filteredCompositions.map((composition) => (
-              <motion.div 
+              <motion.div
                 key={composition.id}
                 className={`border ${tableBorderColor} rounded-lg overflow-hidden shadow-md`}
                 initial={{ opacity: 0, y: 20 }}
@@ -286,36 +288,35 @@ const BulletinsPageContent = ({
                     <p className="text-sm opacity-80">{formatDate(composition.date)}</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      composition.helper === "comp" ? "bg-blue-100 text-blue-800" :
-                      composition.helper === "Trim" ? "bg-green-100 text-green-800" :
-                      composition.helper === "Seme" ? "bg-purple-100 text-purple-800" :
-                      composition.helper === "Def" ? "bg-yellow-100 text-yellow-800" :
-                      composition.helper === "Bac" ? "bg-red-100 text-red-800" :
-                      "bg-gray-100 text-gray-800"
-                    }`}>
-                      {composition.helper === "comp" ? "Composition" : 
-                       composition.helper === "Trim" ? "Trimestre" : 
-                       composition.helper === "Seme" ? "Semestre" : 
-                       composition.helper === "Def" ? "DEF Blanc" : 
-                       composition.helper === "Bac" ? "BAC Blanc" : type}
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${composition.helper === "comp" ? "bg-blue-100 text-blue-800" :
+                        composition.helper === "Trim" ? "bg-green-100 text-green-800" :
+                          composition.helper === "Seme" ? "bg-purple-100 text-purple-800" :
+                            composition.helper === "Def" ? "bg-yellow-100 text-yellow-800" :
+                              composition.helper === "Bac" ? "bg-red-100 text-red-800" :
+                                "bg-gray-100 text-gray-800"
+                      }`}>
+                      {composition.helper === "comp" ? "Composition" :
+                        composition.helper === "Trim" ? "Trimestre" :
+                          composition.helper === "Seme" ? "Semestre" :
+                            composition.helper === "Def" ? "DEF Blanc" :
+                              composition.helper === "Bac" ? "BAC Blanc" : type}
                     </span>
                   </div>
                 </div>
-                
+
                 {/* Classes de la composition */}
                 <div className="p-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {composition.classes.map((classId) => {
                       const classObj = db?.classes?.find(cls => cls.id === classId);
                       if (!classObj) return null;
-                      
+
                       const bulletinExistsForClass = bulletinExists(composition.id, classId);
                       const totalStudents = getStudentCount(classId);
                       const composedStudents = getComposedStudentCount(composition.id, classId);
-                      
+
                       return (
-                        <motion.div 
+                        <motion.div
                           key={classId}
                           className={`border ${tableBorderColor} rounded-lg p-4 ${tableRowHoverBg}`}
                           whileHover={{ scale: 1.02 }}
@@ -329,6 +330,16 @@ const BulletinsPageContent = ({
                               {bulletinExistsForClass ? (
                                 <>
                                   <motion.button
+                                    // onClick={() => handleOpenComponent("BulletinNotes", composition, classId)}
+                                    className={`p-1.5 rounded ${buttonAdd} text-white`}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    title="Fermer l'édition"
+                                  >
+                                    <Unlock size={16} />
+                                  </motion.button>
+
+                                  <motion.button
                                     onClick={() => handleOpenComponent("BulletinNotes", composition, classId)}
                                     className={`p-1.5 rounded ${buttonPrimary} text-white`}
                                     whileHover={{ scale: 1.1 }}
@@ -337,7 +348,7 @@ const BulletinsPageContent = ({
                                   >
                                     <FileText size={16} />
                                   </motion.button>
-                                  
+
                                   <motion.button
                                     onClick={() => handleOpenComponent("ShowAllBulletin", composition, classId)}
                                     className={`p-1.5 rounded ${buttonView} text-white`}
@@ -347,7 +358,7 @@ const BulletinsPageContent = ({
                                   >
                                     <Eye size={16} />
                                   </motion.button>
-                                  
+
                                   <motion.button
                                     onClick={() => handleOpenComponent("CreateBulletin", composition, classId)}
                                     className={`p-1.5 rounded ${buttonEdit} text-white`}
@@ -357,7 +368,7 @@ const BulletinsPageContent = ({
                                   >
                                     <Edit size={16} />
                                   </motion.button>
-                                  
+
                                   <motion.button
                                     onClick={() => handleDeleteBulletin(composition.id, classId)}
                                     className={`p-1.5 rounded ${buttonDelete} text-white`}
@@ -381,7 +392,7 @@ const BulletinsPageContent = ({
                               )}
                             </div>
                           </div>
-                          
+
                           <div className="flex justify-between items-center text-sm">
                             <div className={textClass}>
                               <span>Élèves: {totalStudents}</span>
@@ -427,7 +438,7 @@ const BulletinsPageContent = ({
           </div>
         )}
       </motion.div>
-      
+
       {/* Composants modaux pour la gestion des bulletins */}
       <AnimatePresence>
         {activeComponent && selectedComposition && selectedClass && (
@@ -459,7 +470,7 @@ const BulletinsPageContent = ({
                   </svg>
                 </button>
               </div>
-              
+
               {/* Contenu du composant actif */}
               <div className="mt-4">
                 {activeComponent === "CreateBulletin" && (
@@ -474,7 +485,7 @@ const BulletinsPageContent = ({
                     refreshData={refreshData}
                   />
                 )}
-                
+
                 {activeComponent === "GetBulletinStudents" && (
                   <div className={`p-4`}>
                     <GetBulletinStudents
@@ -489,9 +500,9 @@ const BulletinsPageContent = ({
                     />
                   </div>
                 )}
-                
+
                 {activeComponent === "BulletinNotes" && (
-                  <div >
+                  <div>
                     {/* Placeholder pour BulletinNotes */}
                     <BulletinNotes
                       selectedComposition={selectedComposition}
@@ -508,13 +519,22 @@ const BulletinsPageContent = ({
                     />
                   </div>
                 )}
-                
+
                 {activeComponent === "ShowAllBulletin" && (
-                  <div className={`p-4 ${textClass}`}>
-                    {/* Placeholder pour ShowAllBulletin */}
-                    <p>Composant ShowAllBulletin à implémenter</p>
-                    <p>Composition: {selectedComposition.label}</p>
-                    <p>Classe: {getClasseName(`${db?.classes?.find(cls => cls.id === selectedClass)?.level} ${db?.classes?.find(cls => cls.id === selectedClass)?.name}`, language)}</p>
+                  <div>
+                    {/* Placeholder pour ShowAllBulletin => Afficher les bulletins de tous les élèves */}
+                    <ShowAllBulletin
+                      selectedComposition={selectedComposition}
+                      selectedClass={selectedClass}
+                      db={db}
+                      textClass={textClass}
+                      theme={theme}
+                      handleCloseComponent={handleCloseComponent}
+                      refreshData={refreshData}
+                      school_name={school_name}
+                      school_short_name={school_short_name}
+                      school_zone_name={school_zone_name}
+                    />
                   </div>
                 )}
               </div>

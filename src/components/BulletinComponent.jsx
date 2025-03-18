@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
 import BulletinPhysique1 from "./BulletinPhysique_1.jsx"
+import BulletinPhysique2 from "./BulletinPhysique_2.jsx"
 
 const BulletinComponent = ({
     student,
@@ -30,6 +31,7 @@ const BulletinComponent = ({
     const [studentRank, setStudentRank] = useState("-");
     const [topAverage, setTopAverage] = useState("-");
     const [topAverageSexe, setTopAverageSexe] = useState(null);
+    const [studentClasseLevel, setStudentClasseLevel] = useState("1");
     // const [totalStudents, setTotalStudents] = useState(0);
 
     // Calculer le rang et la moyenne du premier
@@ -179,14 +181,14 @@ const BulletinComponent = ({
 
         // Calcul du ratio pour redimensionner l'image et la faire tenir sur la page
         const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        // const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         // console.log(`Longuer de l'image ${imgWidth}`);
         // console.log(`Hauteur de l'image ${imgHeight}`);
 
         // Si l'image est trop haute, on peut réduire la taille en ajustant le ratio (attention à la lisibilité)
         // Ici, on force le contenu sur une seule page en plaçant l'image à 0,0
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, pageHeight);
+        pdf.addImage(imgData, 'PNG', 12, 0, imgWidth - 24, pageHeight);
 
         // Sauvegarde le PDF
         pdf.save('bulletin.pdf');
@@ -196,34 +198,67 @@ const BulletinComponent = ({
     return (
         <div>
             {/* Zone de Bulletin Physique */}
-            <BulletinPhysique1
-                student={student}
-                students={students}
-                className={className}
-                composition={composition}
-                mainSubjects={mainSubjects}
-                secondarySubjects={secondarySubjects}
-                printRef={printRef}
-                tableBgColor={tableBgColor}
-                textClass={textClass}
-                tableRowBg={tableRowBg}
-                tableRowAltBg={tableRowAltBg}
-                mainCoefficients={mainCoefficients}
-                totalCoefficients={totalCoefficients}
-                topAverage={topAverage}
-                topAverageSexe={topAverageSexe}
-                studentRank={studentRank}
-                calculateSubjectAverageForStudent={calculateSubjectAverageForStudent}
-                calculateTotalPoints={calculateTotalPoints}
-                calculateGeneralAverage={calculateGeneralAverage}
-                getAppreciation={getAppreciation}
-                calculateMainPoints={calculateMainPoints}
-                getCurrentSchoolYear={getCurrentSchoolYear}
-                school_name={school_name}
-                school_short_name={school_short_name}
-                school_zone_name={school_zone_name}
-            />
-
+            {studentClasseLevel === "7" || studentClasseLevel === "8" || studentClasseLevel === "9" ?
+                // Afficher Moyennes au DEF Options
+                <BulletinPhysique1
+                    student={student}
+                    students={students}
+                    className={className}
+                    composition={composition}
+                    mainSubjects={mainSubjects}
+                    secondarySubjects={secondarySubjects}
+                    printRef={printRef}
+                    tableBgColor={tableBgColor}
+                    textClass={textClass}
+                    tableRowBg={tableRowBg}
+                    tableRowAltBg={tableRowAltBg}
+                    mainCoefficients={mainCoefficients}
+                    totalCoefficients={totalCoefficients}
+                    topAverage={topAverage}
+                    topAverageSexe={topAverageSexe}
+                    studentRank={studentRank}
+                    calculateSubjectAverageForStudent={calculateSubjectAverageForStudent}
+                    calculateTotalPoints={calculateTotalPoints}
+                    calculateGeneralAverage={calculateGeneralAverage}
+                    getAppreciation={getAppreciation}
+                    calculateMainPoints={calculateMainPoints}
+                    getCurrentSchoolYear={getCurrentSchoolYear}
+                    school_name={school_name}
+                    school_short_name={school_short_name}
+                    school_zone_name={school_zone_name}
+                    setStudentClasseLevel={setStudentClasseLevel}
+                />
+                :
+                <BulletinPhysique2
+                    student={student}
+                    students={students}
+                    className={className}
+                    composition={composition}
+                    mainSubjects={mainSubjects}
+                    secondarySubjects={secondarySubjects}
+                    printRef={printRef}
+                    tableBgColor={tableBgColor}
+                    textClass={textClass}
+                    tableRowBg={tableRowBg}
+                    tableRowAltBg={tableRowAltBg}
+                    mainCoefficients={mainCoefficients}
+                    totalCoefficients={totalCoefficients}
+                    topAverage={topAverage}
+                    topAverageSexe={topAverageSexe}
+                    studentRank={studentRank}
+                    calculateSubjectAverageForStudent={calculateSubjectAverageForStudent}
+                    calculateTotalPoints={calculateTotalPoints}
+                    calculateGeneralAverage={calculateGeneralAverage}
+                    getAppreciation={getAppreciation}
+                    calculateMainPoints={calculateMainPoints}
+                    getCurrentSchoolYear={getCurrentSchoolYear}
+                    school_name={school_name}
+                    school_short_name={school_short_name}
+                    school_zone_name={school_zone_name}
+                    setStudentClasseLevel={setStudentClasseLevel}
+                />
+            }
+            
             {/* Bouton pour générer le PDF */}
             <button onClick={handleGeneratePdf} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
                 Générer PDF

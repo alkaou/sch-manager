@@ -27,6 +27,7 @@ const BulletinPhysique1 = ({
     school_name,
     school_short_name,
     school_zone_name,
+    setStudentClasseLevel,
 }) => {
 
     const [centerType, setCenterType] = useState(null);
@@ -35,6 +36,7 @@ const BulletinPhysique1 = ({
         const regex = /^(\d+)\s*(.*)$/;
         const result = className.match(regex);
         const number = result[1];
+        setStudentClasseLevel(number);
         if(number === "6" || number === "7" || number === "8" || number === "9"){
             // console.log(number);
             setCenterType("CAP");
