@@ -8,7 +8,7 @@ import { suggestNames, suggestLastNames, suggNameComplete } from "../utils/sugge
 import AutocompleteInput from "./AutocompleteInput.jsx";
 
 
-const AddStudent = ({ 
+const AddStudent = ({
   setIsAddStudentActive,
   app_bg_color,
   text_color,
@@ -98,7 +98,7 @@ const AddStudent = ({
       }
       if (student.sure_name.trim() !== "") {
         const st_surename = student.sure_name.trim();
-        if(st_surename.length > 30){
+        if (st_surename.length > 30) {
           err.sure_name = "Le surnom est ne doit pas dépasser 30 lettres.";
           valid = false;
         }
@@ -193,12 +193,12 @@ const AddStudent = ({
 
   const classOptions = db && db.classes
     ? [...db.classes]
-        .sort((a, b) => a.level - b.level)
-        .map(cls => ({
-          id: cls.id,
-          label: `${cls.level} ${cls.name}`,
-          value: `${cls.level} ${cls.name}`
-        }))
+      .sort((a, b) => a.level - b.level)
+      .map(cls => ({
+        id: cls.id,
+        label: `${cls.level} ${cls.name}`,
+        value: `${cls.level} ${cls.name}`
+      }))
     : [];
 
   const commonInputClass = `w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`;

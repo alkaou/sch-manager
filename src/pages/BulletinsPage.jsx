@@ -195,7 +195,7 @@ const BulletinsPageContent = ({
   };
 
   return (
-    <div className="p-4 mt-20 ml-20">
+    <div className={`p-4 mt-20 ml-20 ${app_bg_color} min-h-screen`}>
       <motion.div
         className={`max-w-7xl mx-auto p-6 ${formBgColor} rounded-lg shadow-2xl border-2 ${shinyBorderColor}`}
         initial={{ opacity: 0, y: 20 }}
@@ -289,11 +289,11 @@ const BulletinsPageContent = ({
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${composition.helper === "comp" ? "bg-blue-100 text-blue-800" :
-                        composition.helper === "Trim" ? "bg-green-100 text-green-800" :
-                          composition.helper === "Seme" ? "bg-purple-100 text-purple-800" :
-                            composition.helper === "Def" ? "bg-yellow-100 text-yellow-800" :
-                              composition.helper === "Bac" ? "bg-red-100 text-red-800" :
-                                "bg-gray-100 text-gray-800"
+                      composition.helper === "Trim" ? "bg-green-100 text-green-800" :
+                        composition.helper === "Seme" ? "bg-purple-100 text-purple-800" :
+                          composition.helper === "Def" ? "bg-yellow-100 text-yellow-800" :
+                            composition.helper === "Bac" ? "bg-red-100 text-red-800" :
+                              "bg-gray-100 text-gray-800"
                       }`}>
                       {composition.helper === "comp" ? "Composition" :
                         composition.helper === "Trim" ? "Trimestre" :
@@ -520,23 +520,23 @@ const BulletinsPageContent = ({
                   </div>
                 )}
 
-                {activeComponent === "ShowAllBulletin" && (
-                  <div>
-                    {/* Placeholder pour ShowAllBulletin => Afficher les bulletins de tous les élèves */}
-                    <ShowAllBulletin
+                {/* Placeholder pour ShowAllBulletin => Afficher les bulletins de tous les élèves */}
+                <AnimatePresence>
+                  {activeComponent === "ShowAllBulletin" && (
+                    < ShowAllBulletin
                       selectedComposition={selectedComposition}
                       selectedClass={selectedClass}
                       db={db}
-                      textClass={textClass}
                       theme={theme}
+                      textClass={text_color}
                       handleCloseComponent={handleCloseComponent}
-                      refreshData={refreshData}
                       school_name={school_name}
                       school_short_name={school_short_name}
                       school_zone_name={school_zone_name}
                     />
-                  </div>
-                )}
+                  )}
+                </AnimatePresence>
+
               </div>
             </motion.div>
           </motion.div>
