@@ -4,6 +4,13 @@ import html2canvas from 'html2canvas-pro';
 import BulletinPhysique1 from "./BulletinPhysique_1.jsx"
 import BulletinPhysique2 from "./BulletinPhysique_2.jsx"
 
+import { 
+    getAppreciation, 
+    calculateTotalPoints,
+    getCurrentSchoolYear,
+    calculateMainPoints,
+} from "./bulletin_utils/BulletinMethods.js";
+
 const BulletinComponent = ({
     student,
     subjects,
@@ -19,6 +26,7 @@ const BulletinComponent = ({
     school_name,
     school_short_name,
     school_zone_name,
+    showPrintBottonBtn=true,
 }) => {
     // Styles conditionnels basés sur le thème
     const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -43,7 +51,7 @@ const BulletinComponent = ({
         const averages = students.map(s => ({
             id: s.id,
             sexe: s.sexe,
-            average: parseFloat(calculateGeneralAverage(s.id))
+            average: parseFloat(calculateGeneralAverage(students, s.id, subjects))
         })).filter(s => !isNaN(s.average)); // Filtrer les élèves sans moyenne
 
         // Trier les moyennes par ordre décroissant
@@ -59,7 +67,7 @@ const BulletinComponent = ({
         // setTotalStudents(averages.length);
 
         // Trouver le rang de l'élève actuel
-        const studentAverage = parseFloat(calculateGeneralAverage(student.id));
+        const studentAverage = parseFloat(calculateGeneralAverage(students, student.id, subjects));
         if (isNaN(studentAverage)) {
             setStudentRank("-");
             return;
@@ -80,35 +88,11 @@ const BulletinComponent = ({
         }
     }, [students, student, calculateGeneralAverage]);
 
-    // Fonction pour déterminer l'appréciation basée sur la note
-    const getAppreciation = (note) => {
-        if (note === "-") return "-";
-        const numNote = parseFloat(note);
-        if (numNote >= 18) return "Excellent";
-        if (numNote >= 16) return "Très-Bien";
-        if (numNote >= 14) return "Bien";
-        if (numNote >= 12) return "Assez-Bien";
-        if (numNote >= 10) return "Passable";
-        if (numNote >= 5) return "Insuffisant";
-        return "Très-Faible";
-    };
-
     // Calculer le total des coefficients
     const totalCoefficients = subjects.reduce((total, subject) => total + subject.coefficient, 0);
 
     const printRef = useRef();
 
-    // Calculer le total des points (moyenne * coefficient)
-    const calculateTotalPoints = () => {
-        let total = 0;
-        subjects.forEach(subject => {
-            const avg = calculateSubjectAverageForStudent(student.id, subject.name);
-            if (avg !== "-") {
-                total += parseFloat(avg) * subject.coefficient;
-            }
-        });
-        return total.toFixed(2);
-    };
 
     // Séparer les matières principales et secondaires (comme dans l'image)
     const mainSubjects = subjects.filter(subject =>
@@ -129,33 +113,6 @@ const BulletinComponent = ({
 
     // Calculer le total des coefficients pour les matières principales
     const mainCoefficients = mainSubjects.reduce((total, subject) => total + subject.coefficient, 0);
-
-    // Calculer le total des points pour les matières principales
-    const calculateMainPoints = () => {
-        let total = 0;
-        mainSubjects.forEach(subject => {
-            const avg = calculateSubjectAverageForStudent(student.id, subject.name);
-            if (avg !== "-") {
-                total += parseFloat(avg) * subject.coefficient;
-            }
-        });
-        return total.toFixed(2);
-    };
-
-    // Obtenir l'année scolaire actuelle
-    const getCurrentSchoolYear = () => {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth();
-
-        // Si nous sommes entre septembre et décembre, l'année scolaire est année-année+1
-        // Sinon, c'est année-1-année
-        if (month >= 8) { // Septembre à décembre
-            return `${year}-${year + 1}`;
-        } else {
-            return `${year - 1}-${year}`;
-        }
-    };
 
 
     const handleGeneratePdf = async () => {
@@ -205,6 +162,7 @@ const BulletinComponent = ({
                     students={students}
                     className={className}
                     composition={composition}
+                    subjects={subjects}
                     mainSubjects={mainSubjects}
                     secondarySubjects={secondarySubjects}
                     printRef={printRef}
@@ -234,6 +192,7 @@ const BulletinComponent = ({
                     students={students}
                     className={className}
                     composition={composition}
+                    subjects={subjects}
                     mainSubjects={mainSubjects}
                     secondarySubjects={secondarySubjects}
                     printRef={printRef}
@@ -247,10 +206,8 @@ const BulletinComponent = ({
                     topAverageSexe={topAverageSexe}
                     studentRank={studentRank}
                     calculateSubjectAverageForStudent={calculateSubjectAverageForStudent}
-                    calculateTotalPoints={calculateTotalPoints}
                     calculateGeneralAverage={calculateGeneralAverage}
                     getAppreciation={getAppreciation}
-                    calculateMainPoints={calculateMainPoints}
                     getCurrentSchoolYear={getCurrentSchoolYear}
                     school_name={school_name}
                     school_short_name={school_short_name}
@@ -258,16 +215,22 @@ const BulletinComponent = ({
                     setStudentClasseLevel={setStudentClasseLevel}
                 />
             }
-            
-            {/* Bouton pour générer le PDF */}
-            <button onClick={handleGeneratePdf} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                Générer PDF
-            </button>
 
             {/* Bouton pour générer le PDF */}
-            <button onClick={handleCloseBulletinPreview} className="mt-4 ml-10 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
-                Fermer
-            </button>
+            {
+                showPrintBottonBtn === true ?
+                <>
+                    <button onClick={handleGeneratePdf} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                        Générer PDF
+                    </button>
+
+                    {/* Bouton pour générer le PDF */}
+                    <button onClick={handleCloseBulletinPreview} className="mt-4 ml-10 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                        Fermer
+                    </button>
+                </>
+                : null
+            }
         </div>
     );
 };

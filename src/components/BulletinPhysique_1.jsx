@@ -6,6 +6,7 @@ const BulletinPhysique1 = ({
     students,
     className,
     composition,
+    subjects,
     mainSubjects,
     secondarySubjects,
     printRef,
@@ -37,18 +38,18 @@ const BulletinPhysique1 = ({
         const result = className.match(regex);
         const number = result[1];
         setStudentClasseLevel(number);
-        if(number === "6" || number === "7" || number === "8" || number === "9"){
+        if (number === "6" || number === "7" || number === "8" || number === "9") {
             // console.log(number);
             setCenterType("CAP");
             // console.log(composition.helper);
-        } else if(
+        } else if (
             (number === "1" || number === "2" || number === "3" || number === "4" || number === "5") &&
             composition.helper === "comp"
-        ){
+        ) {
             // console.log(number);
             setCenterType("CAP");
             // console.log(composition.helper);
-        } else if(number === "10" || number === "11" || number === "12" || composition.helper === "Trim" || composition.helper === "Bac"){
+        } else if (number === "10" || number === "11" || number === "12" || composition.helper === "Trim" || composition.helper === "Bac") {
             // console.log(number);
             setCenterType("ACADEMIE");
             // console.log(composition.helper);
@@ -77,14 +78,14 @@ const BulletinPhysique1 = ({
                         (
                             <>
                                 <div className="ml-2 uppercase font-bold">
-                                    { centerType === "CAP" ?
-                                        "Direction nationale de l'enseignement fondamental":
+                                    {centerType === "CAP" ?
+                                        "Direction nationale de l'enseignement fondamental" :
                                         "CENTRE NATIONAL DES EXAMENS ET CONCOURS DE L'EDUCATION"
                                     }
                                 </div>
                                 <div className="ml-20">************</div>
                                 <div className="ml-2 uppercase font-bold">
-                                    { centerType === "CAP" ?
+                                    {centerType === "CAP" ?
                                         "Centre d'animation pédagogique de" :
                                         "ACADEMIE D'ENSEIGNEMENT DE"
                                     } {school_zone_name}
@@ -150,7 +151,7 @@ const BulletinPhysique1 = ({
                             const compoNote = student.notes[subject.name]?.composition !== null
                                 ? student.notes[subject.name]?.composition
                                 : "-";
-                            const moyenne = calculateSubjectAverageForStudent(student.id, subject.name);
+                            const moyenne = calculateSubjectAverageForStudent(students, student.id, subject.name);
                             const moyenneCoef = moyenne !== "-"
                                 ? (parseFloat(moyenne) * subject.coefficient).toFixed(2)
                                 : "-";
@@ -173,7 +174,7 @@ const BulletinPhysique1 = ({
                         <tr className="border-b-2 border-t-2 border-black bg-gray-200 font-bold">
                             <td colSpan="4" className="border-r border-black p-2 text-center">TOTAL PARTIEL</td>
                             <td className="border-r border-black p-2 text-center">{mainCoefficients}</td>
-                            <td className="border-r border-black p-2 text-center">{calculateMainPoints()}</td>
+                            <td className="border-r border-black p-2 text-center">{calculateMainPoints(mainSubjects, students, student)}</td>
                             <td className="p-2"></td>
                         </tr>
 
@@ -186,7 +187,7 @@ const BulletinPhysique1 = ({
                         <tr className="border-b-2 border-black bg-gray-300 font-bold">
                             <td colSpan="3" className="border-r border-black p-2 text-right">MOYENNE</td>
                             <td colSpan="3" className="border-r border-black p-2 text-center">
-                                {calculateGeneralAverage(student.id)}
+                                {calculateGeneralAverage(students, student.id, subjects)}
                             </td>
                             <td className="p-2"></td>
                         </tr>
@@ -203,7 +204,7 @@ const BulletinPhysique1 = ({
                             const compoNote = student.notes[subject.name]?.composition !== null
                                 ? student.notes[subject.name]?.composition
                                 : "-";
-                            const moyenne = calculateSubjectAverageForStudent(student.id, subject.name);
+                            const moyenne = calculateSubjectAverageForStudent(students, student.id, subject.name);
                             const moyenneCoef = moyenne !== "-"
                                 ? (parseFloat(moyenne) * subject.coefficient).toFixed(2)
                                 : "-";
@@ -226,7 +227,7 @@ const BulletinPhysique1 = ({
                         <tr className="border-b-2 border-t-2 border-black bg-gray-200 font-bold">
                             <td colSpan="4" className="border-r border-black p-2 text-center">TOTAL GÉNÉRAL</td>
                             <td className="border-r border-black p-2 text-center">{totalCoefficients}</td>
-                            <td className="border-r border-black p-2 text-center">{calculateTotalPoints()}</td>
+                            <td className="border-r border-black p-2 text-center">{calculateTotalPoints(students, student, subjects)}</td>
                             <td className="p-2"></td>
                         </tr>
                     </tbody>
@@ -236,7 +237,7 @@ const BulletinPhysique1 = ({
                 <div className="grid grid-cols-3 border-t-2 border-black">
                     <div className="p-2 border-r-2 border-black">
                         <div className="font-bold mb-2">MOY. GÉNÉRALE :</div>
-                        <div className="text-xl font-bold">{calculateGeneralAverage(student.id)}</div>
+                        <div className="text-xl font-bold">{calculateGeneralAverage(students, student.id, subjects)}</div>
                     </div>
                     <div className="p-2 border-r-2 border-black">
                         <div className="font-bold mb-2">RANG :</div>
@@ -270,10 +271,10 @@ const BulletinPhysique1 = ({
                     <div className="p-2 border-r-2 border-black">
                         <div className="font-bold mb-2">APPRÉCIATION DU DIRECTEUR</div>
                         <div className="h-20 flex items-center justify-center">
-                            {parseFloat(calculateGeneralAverage(student.id)) >= 16 ? "Excellent Travail" :
-                                parseFloat(calculateGeneralAverage(student.id)) >= 14 ? "Très Bon Travail" :
-                                    parseFloat(calculateGeneralAverage(student.id)) >= 12 ? "Bon Travail" :
-                                        parseFloat(calculateGeneralAverage(student.id)) >= 10 ? "Travail Passable" :
+                            {parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 16 ? "Excellent Travail" :
+                                parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 14 ? "Très Bon Travail" :
+                                    parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 12 ? "Bon Travail" :
+                                        parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 10 ? "Travail Passable" :
                                             "Travail Insuffisant"}
                         </div>
                     </div>

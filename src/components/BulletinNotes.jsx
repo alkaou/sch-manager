@@ -1,9 +1,12 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Save, RefreshCcw, ChevronDown, X, UserMinus, AlertTriangle, Check, Eye, ArrowUp, ArrowDown } from 'lucide-react';
+import { Save, RefreshCcw, X, UserMinus, Check, Eye, ArrowUp, ArrowDown } from 'lucide-react';
 import { useLanguage, useFlashNotification } from './contexts.js';
 import BulletinComponent from './BulletinComponent.jsx';
+import { 
+  calculateSubjectAverage, calculateSubjectAverageForStudent,
+  formatNote, calculateGeneralAverage,
+} from './bulletin_utils/BulletinMethods.js';
 
 const BulletinNotes = ({
   selectedComposition,
@@ -181,63 +184,6 @@ const BulletinNotes = ({
     setSubjects(sortedSubjects);
   }, [sortType, subjects.length]); // 👈 Ajoute "subjects.length" pour s'assurer qu'on trie dès qu'ils sont disponibles
 
-
-  // Calculer la moyenne d'une matière
-  const calculateSubjectAverage = (classeNote, compoNote) => {
-    // Si l'une des notes est manquante, retourner l'autre note
-    if (classeNote === null && compoNote !== null) return formatNote(compoNote);
-    if (classeNote !== null && compoNote === null) return formatNote(classeNote);
-    if (classeNote === null && compoNote === null) return "-";
-
-    // Calculer la moyenne (classe compte pour 1/3, composition pour 2/3)
-    const average = (classeNote + (compoNote * 2)) / 3;
-    return formatNote(average);
-  };
-
-  // Formater une note pour l'affichage
-  const formatNote = (note) => {
-    if (note === null || note === undefined) return "-";
-
-    // Convertir en nombre si c'est une chaîne
-    const numericNote = typeof note === 'string' ? parseFloat(note) : note;
-
-    // Vérifier si c'est un nombre valide
-    if (isNaN(numericNote)) return "-";
-
-    // Formater avec 2 décimales
-    return numericNote.toFixed(2);
-  };
-
-  // Calculer la moyenne d'un élève pour une matière
-  const calculateSubjectAverageForStudent = (studentId, subjectName) => {
-    const student = students.find(s => s.id === studentId);
-    if (!student || !student.notes[subjectName]) return "-";
-
-    const classeNote = student.notes[subjectName].classe;
-    const compoNote = student.notes[subjectName].composition;
-
-    return calculateSubjectAverage(classeNote, compoNote);
-  };
-
-  // Calculer la moyenne générale d'un élève
-  const calculateGeneralAverage = (studentId) => {
-    const student = students.find(s => s.id === studentId);
-    if (!student) return "-";
-
-    let totalPoints = 0;
-    let totalCoefficients = 0;
-
-    subjects.forEach(subject => {
-      const subjectAvg = calculateSubjectAverageForStudent(studentId, subject.name);
-      if (subjectAvg !== "-") {
-        totalPoints += parseFloat(subjectAvg) * subject.coefficient;
-        totalCoefficients += subject.coefficient;
-      }
-    });
-
-    if (totalCoefficients === 0) return "-";
-    return (totalPoints / totalCoefficients).toFixed(2);
-  };
 
   // Mettre à jour une note
   const updateNote = async (studentId, subjectName, noteType, value) => {
@@ -910,14 +856,14 @@ const BulletinNotes = ({
 
                         {/* Moyenne */}
                         <td className={`px-2 py-2 text-center border ${tableBorderColor} font-medium`}>
-                          {calculateSubjectAverageForStudent(student.id, subject.name)}
+                          {calculateSubjectAverageForStudent(students, student.id, subject.name)}
                         </td>
                       </React.Fragment>
                     ))}
 
                     {/* Moyenne générale */}
                     <td className={`px-4 py-2 text-center border ${tableBorderColor} font-bold`}>
-                      {calculateGeneralAverage(student.id)}
+                      {calculateGeneralAverage(students, student.id, subjects)}
                     </td>
 
                     {/* Visualiseur de bulletin */}

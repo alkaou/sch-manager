@@ -6,6 +6,7 @@ const BulletinPhysique2 = ({
     students,
     className,
     composition,
+    subjects,
     mainSubjects,
     secondarySubjects,
     printRef,
@@ -13,16 +14,12 @@ const BulletinPhysique2 = ({
     textClass,
     tableRowBg,
     tableRowAltBg,
-    mainCoefficients,
-    totalCoefficients,
     topAverage,
     topAverageSexe,
     studentRank,
     calculateSubjectAverageForStudent,
-    calculateTotalPoints,
     calculateGeneralAverage,
     getAppreciation,
-    calculateMainPoints,
     getCurrentSchoolYear,
     school_name,
     school_short_name,
@@ -31,26 +28,26 @@ const BulletinPhysique2 = ({
 }) => {
 
     const [centerType, setCenterType] = useState(null);
-    const [allSubject, setAllSubject] = useState([]);
+    const [allSubjects, setAllSubjects] = useState([]);
 
     useEffect(() => {
         const regex = /^(\d+)\s*(.*)$/;
         const result = className.match(regex);
         const number = result[1];
         setStudentClasseLevel(number);
-        setAllSubject([...mainSubjects, ...secondarySubjects]);
-        if(number === "6" || number === "7" || number === "8" || number === "9"){
+        setAllSubjects([...mainSubjects, ...secondarySubjects]);
+        if (number === "6" || number === "7" || number === "8" || number === "9") {
             // console.log(number);
             setCenterType("CAP");
             // console.log(composition.helper);
-        } else if(
+        } else if (
             (number === "1" || number === "2" || number === "3" || number === "4" || number === "5") &&
             composition.helper === "comp"
-        ){
+        ) {
             // console.log(number);
             setCenterType("CAP");
             // console.log(composition.helper);
-        } else if(number === "10" || number === "11" || number === "12" || composition.helper === "Trim" || composition.helper === "Bac"){
+        } else if (number === "10" || number === "11" || number === "12" || composition.helper === "Trim" || composition.helper === "Bac") {
             // console.log(number);
             setCenterType("ACADEMIE");
             // console.log(composition.helper);
@@ -79,14 +76,14 @@ const BulletinPhysique2 = ({
                         (
                             <>
                                 <div className="ml-2 uppercase font-bold">
-                                    { centerType === "CAP" ?
-                                        "Direction nationale de l'enseignement fondamental":
+                                    {centerType === "CAP" ?
+                                        "Direction nationale de l'enseignement fondamental" :
                                         "CENTRE NATIONAL DES EXAMENS ET CONCOURS DE L'EDUCATION"
                                     }
                                 </div>
                                 <div className="ml-20">************</div>
                                 <div className="ml-2 uppercase font-bold">
-                                    { centerType === "CAP" ?
+                                    {centerType === "CAP" ?
                                         "Centre d'animation pédagogique de" :
                                         "ACADEMIE D'ENSEIGNEMENT DE"
                                     } {school_zone_name}
@@ -145,14 +142,14 @@ const BulletinPhysique2 = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {allSubject.map((subject, index) => {
+                        {allSubjects.map((subject, index) => {
                             const classeNote = student.notes[subject.name]?.classe !== null
                                 ? student.notes[subject.name]?.classe
                                 : "-";
                             const compoNote = student.notes[subject.name]?.composition !== null
                                 ? student.notes[subject.name]?.composition
                                 : "-";
-                            const moyenne = calculateSubjectAverageForStudent(student.id, subject.name);
+                            const moyenne = calculateSubjectAverageForStudent(students, student.id, subject.name);
                             const moyenneCoef = moyenne !== "-"
                                 ? (parseFloat(moyenne) * subject.coefficient).toFixed(2)
                                 : "-";
@@ -178,7 +175,7 @@ const BulletinPhysique2 = ({
                 <div className="grid grid-cols-3 border-t-2 border-black">
                     <div className="p-2 border-r-2 border-black">
                         <div className="font-bold mb-2">MOY. GÉNÉRALE :</div>
-                        <div className="text-xl font-bold">{calculateGeneralAverage(student.id)}</div>
+                        <div className="text-xl font-bold">{calculateGeneralAverage(students, student.id, subjects)}</div>
                     </div>
                     <div className="p-2 border-r-2 border-black">
                         <div className="font-bold mb-2">RANG :</div>
@@ -212,10 +209,10 @@ const BulletinPhysique2 = ({
                     <div className="p-2 border-r-2 border-black">
                         <div className="font-bold mb-2">APPRÉCIATION DU DIRECTEUR</div>
                         <div className="h-20 flex items-center justify-center">
-                            {parseFloat(calculateGeneralAverage(student.id)) >= 16 ? "Excellent Travail" :
-                                parseFloat(calculateGeneralAverage(student.id)) >= 14 ? "Très Bon Travail" :
-                                    parseFloat(calculateGeneralAverage(student.id)) >= 12 ? "Bon Travail" :
-                                        parseFloat(calculateGeneralAverage(student.id)) >= 10 ? "Travail Passable" :
+                            {parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 16 ? "Excellent Travail" :
+                                parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 14 ? "Très Bon Travail" :
+                                    parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 12 ? "Bon Travail" :
+                                        parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 10 ? "Travail Passable" :
                                             "Travail Insuffisant"}
                         </div>
                     </div>

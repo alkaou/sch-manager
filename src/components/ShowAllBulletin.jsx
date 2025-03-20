@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// import { X, Search, Filter, Download, Settings, ChevronDown, Check, ArrowUpDown, SlidersHorizontal } from 'lucide-react';
-import { useLanguage } from './contexts.js';
+import { Search, Filter, X, Settings, Download, Printer, ChevronLeft, ChevronRight, Check, Globe } from 'lucide-react';
 import { translations } from '../utils/bulletin_translation';
-import BulletinGrid from './bulletin_components/BulletinGrid.jsx';
-import BulletinHeader from './bulletin_components/BulletinHeader.jsx';
+import BulletinCard from './bulletin_components/BulletinCard.jsx';
 import BulletinSettings from './bulletin_components/BulletinSettings.jsx';
 import BulletinFilters from './bulletin_components/BulletinFilters.jsx';
-import { generateMultipleBulletinsPDF } from './bulletin_utils/BulletinPdfGenerator';
-import { sortStudentsByAverage, sortStudentsByName, filterStudentsBySearch } from './bulletin_utils/BulletinMethods';
+import BulletinPagination from './bulletin_components/BulletinPagination.jsx';
+import { generateMultipleBulletinsPDF } from './bulletin_utils/BulletinPDFGenerator.js';
+import { sortStudentsByAverage, sortStudentsByName } from './bulletin_utils/BulletinMethods';
 
 const ShowAllBulletin = ({
   selectedComposition,
@@ -21,30 +20,36 @@ const ShowAllBulletin = ({
   school_short_name,
   school_zone_name,
 }) => {
-  const { language } = useLanguage();
+  // States
+  const [bulletin, setBulletin] = useState(null);
   const [students, setStudents] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  // const [bulletin, setBulletin] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [generating, setGenerating] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState('rank'); // 'rank', 'name', 'average'
+  const [sortOption, setSortOption] = useState('rank'); // 'rank', 'name', 'average'
   const [bulletinsPerPage, setBulletinsPerPage] = useState(1); // 1 or 2 bulletins per page
-  const [selectedBulletinType, setSelectedBulletinType] = useState('type1'); // 'type1' or 'type2'
-  const [bulletinLanguage, setBulletinLanguage] = useState(language);
+  const [bulletinLanguage, setBulletinLanguage] = useState('Français');
+  const [bulletinType, setBulletinType] = useState('type1');
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [generating, setGenerating] = useState(false);
+  const [className, setClassName] = useState('');
 
-  // Refs for components
+  // Refs
   const containerRef = useRef(null);
 
   // Styles based on theme
   const bgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-100";
   const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const buttonPrimary = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
+  const headerBgColor = theme === "dark" ? "bg-gray-800 bg-opacity-90" : "bg-white bg-opacity-90";
+  const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
+  const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
   const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300";
+
+  // Get translations based on selected language
+  const t = translations[bulletinLanguage] || translations.Français;
 
   // Load bulletin data
   useEffect(() => {
@@ -58,107 +63,47 @@ const ShowAllBulletin = ({
     );
 
     if (existingBulletin) {
-      // setBulletin(existingBulletin);
+      setBulletin(existingBulletin);
       setSubjects(existingBulletin.subjects);
+      setStudents(existingBulletin.students);
+    }
 
-      // Get students with notes
-      const studentsWithNotes = existingBulletin.students.map(student => {
-        return {
-          ...student,
-          average: calculateGeneralAverage(student.id),
-          rank: 0 // Will be calculated below
-        };
-      });
-
-      // Calculate ranks
-      const sortedStudents = [...studentsWithNotes].sort((a, b) => {
-        const avgA = parseFloat(a.average) || 0;
-        const avgB = parseFloat(b.average) || 0;
-        return avgB - avgA;
-      });
-
-      // Assign ranks
-      sortedStudents.forEach((student, index) => {
-        const studentToUpdate = studentsWithNotes.find(s => s.id === student.id);
-        if (studentToUpdate) {
-          studentToUpdate.rank = index + 1;
-        }
-      });
-
-      setStudents(studentsWithNotes);
-      setFilteredStudents(studentsWithNotes);
+    // Get class name
+    const classObj = db.classes?.find(cls => cls.id === selectedClass);
+    if (classObj) {
+      setClassName(`${classObj.level} ${classObj.name}`);
     }
 
     setLoading(false);
   }, [db, selectedClass, selectedComposition]);
 
-  // Update filtered students when search or sort changes
-  // Update filtered students when search or sort changes
-  useEffect(() => {
-    if (!students.length) return;
-
-    console.log("Filtering students. Search term:", searchTerm, "Sort order:", sortOrder);
-
-    let result = [...students]; // Copy students
-
-    // Apply search filter
-    if (searchTerm) {
-      const beforeFilter = result.length;
-      result = filterStudentsBySearch(result, searchTerm);
-      console.log(`Search filter applied: ${beforeFilter} -> ${result.length} students`);
-    }
-
-    // Apply sort
-    if (sortOrder === 'rank') {
-      result.sort((a, b) => a.rank - b.rank);
-      console.log("Sorted by rank");
-    } else if (sortOrder === 'name') {
-      result = sortStudentsByName(result);
-      console.log("Sorted by name");
-    } else if (sortOrder === 'average') {
-      result = sortStudentsByAverage(result);
-      console.log("Sorted by average");
-    }
-
-    setFilteredStudents(result);
-    console.log("Filtered students updated:", result.length);
-  }, [students, searchTerm, sortOrder]);
-
-  // Calculate subject average for a student
-  const calculateSubjectAverageForStudent = (studentId, subjectName) => {
-    const student = students.find(s => s.id === studentId);
-    if (!student || !student.notes || !student.notes[subjectName]) return "-";
-
-    const classeNote = student.notes[subjectName].classe;
-    const compoNote = student.notes[subjectName].composition;
-
-    if (classeNote === null && compoNote === null) return "-";
-    if (classeNote === null) return compoNote.toFixed(2);
-    if (compoNote === null) return classeNote.toFixed(2);
-
-    const average = (parseFloat(classeNote) + parseFloat(compoNote)) / 2;
-    return average.toFixed(2);
-  };
-
-  // Calculate general average for a student
-  const calculateGeneralAverage = (studentId) => {
-    const student = students.find(s => s.id === studentId);
-    if (!student) return "-";
-
-    let totalPoints = 0;
-    let totalCoefficients = 0;
-
-    subjects.forEach(subject => {
-      const average = calculateSubjectAverageForStudent(studentId, subject.name);
-      if (average !== "-") {
-        totalPoints += parseFloat(average) * subject.coefficient;
-        totalCoefficients += subject.coefficient;
+  // Filter and sort students
+  const filteredStudents = students
+    .filter(student => 
+      student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${student.first_name} ${student.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOption === 'name') {
+        return sortStudentsByName(a, b);
+      } else if (sortOption === 'average') {
+        return sortStudentsByAverage(b, a, students, subjects);
+      } else {
+        // Default: sort by rank (average descending)
+        return sortStudentsByAverage(b, a, students, subjects);
       }
     });
 
-    if (totalCoefficients === 0) return "-";
-    return (totalPoints / totalCoefficients).toFixed(2);
-  };
+  // Pagination
+  const studentsPerPage = 10;
+  const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
+  const indexOfLastStudent = currentPage * studentsPerPage;
+  const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
+  const currentStudents = filteredStudents.slice(indexOfFirstStudent, indexOfLastStudent);
+
+  // Handle page change
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   // Toggle student selection
   const toggleStudentSelection = (studentId) => {
@@ -183,32 +128,28 @@ const ShowAllBulletin = ({
   // Generate PDF for selected students
   const handleGeneratePDF = async () => {
     setGenerating(true);
-
-    // Get selected students data
-    const studentsToExport = selectedStudents.length > 0
-      ? students.filter(student => selectedStudents.includes(student.id))
-      : filteredStudents;
-
+    
     try {
+      // Get students to include in PDF
+      const studentsToInclude = selectedStudents.length > 0
+        ? students.filter(student => selectedStudents.includes(student.id))
+        : filteredStudents;
+      
+      // Generate PDF
       await generateMultipleBulletinsPDF({
-        students: studentsToExport,
+        students: studentsToInclude,
+        allStudents: students,
         subjects,
         composition: selectedComposition,
-        className: db.classes.find(c => c.id === selectedClass)?.level + " " +
-          db.classes.find(c => c.id === selectedClass)?.name,
-        calculateSubjectAverageForStudent,
-        calculateGeneralAverage,
-        theme,
-        textClass,
+        className,
+        bulletinsPerPage,
         language: bulletinLanguage,
         school_name,
         school_short_name,
         school_zone_name,
-        bulletinsPerPage,
-        bulletinType: selectedBulletinType
       });
     } catch (error) {
-      console.error("Error generating PDF:", error);
+      console.error('Error generating PDF:', error);
     } finally {
       setGenerating(false);
     }
@@ -217,134 +158,230 @@ const ShowAllBulletin = ({
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
+    visible: { 
       opacity: 1,
-      transition: {
-        duration: 0.3,
+      transition: { 
+        duration: 0.5,
         when: "beforeChildren",
         staggerChildren: 0.1
       }
     },
-    exit: {
+    exit: { 
       opacity: 0,
-      transition: { duration: 0.2 }
+      transition: { duration: 0.3 }
     }
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
-    exit: { y: -20, opacity: 0 }
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { duration: 0.3 }
+    }
   };
 
-  if (loading) {
-    return (
-      <div className={`fixed inset-0 ${bgColor} ${textClass} z-50 flex items-center justify-center`}>
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-center"
-        >
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <h2 className="text-xl font-bold">{translations[language].loading}</h2>
-        </motion.div>
-      </div>
-    );
-  }
-
   return (
-    <motion.div
-      ref={containerRef}
-      className={`fixed inset-0 ${bgColor} ${textClass} z-50 overflow-hidden flex flex-col`}
-      variants={containerVariants}
+    <motion.div 
+      className={`fixed inset-0 z-50 ${bgColor} overflow-hidden flex flex-col`}
       initial="hidden"
       animate="visible"
       exit="exit"
+      variants={containerVariants}
+      ref={containerRef}
     >
-      {/* Header with controls */}
-      <BulletinHeader
-        handleCloseComponent={handleCloseComponent}
-        selectedComposition={selectedComposition}
-        className={db.classes.find(c => c.id === selectedClass)?.level + " " +
-          db.classes.find(c => c.id === selectedClass)?.name}
-        theme={theme}
-        textClass={textClass}
-        buttonPrimary={buttonPrimary}
-        buttonSecondary={buttonSecondary}
-        setShowSettings={() => setShowSettings(!showSettings)}
-        setShowFilters={() => setShowFilters(!showFilters)}
-        handleGeneratePDF={handleGeneratePDF}
-        generating={generating}
-        selectedStudents={selectedStudents}
-        filteredStudents={filteredStudents}
-        language={language}
-      />
+      {/* Header */}
+      <motion.div 
+        className={`sticky top-0 z-10 ${headerBgColor} shadow-md px-6 py-4 flex flex-wrap justify-between items-center gap-4 border-b ${borderColor}`}
+        variants={itemVariants}
+      >
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={handleCloseComponent}
+            className={`p-2 rounded-full ${buttonSecondary} text-${textClass} transition-all duration-300 hover:scale-105`}
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
+          <h2 className={`text-2xl font-bold ${textClass}`}>{t.title}</h2>
+          <div className={`px-3 py-1 rounded-full text-sm font-medium ${theme === "dark" ? "bg-blue-900 text-blue-200" : "bg-blue-100 text-blue-800"}`}>
+            {selectedComposition?.label} - {className}
+          </div>
+        </div>
 
-      {/* Settings Panel */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Search */}
+          <div className={`flex items-center px-3 py-2 rounded-lg border ${borderColor} ${cardBgColor}`}>
+            <Search size={18} className={textClass} />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={t.search}
+              className={`ml-2 bg-transparent outline-none ${textClass} w-40 md:w-60`}
+            />
+          </div>
+
+          {/* Filters button */}
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`p-2 rounded-lg ${buttonSecondary} ${textClass} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
+          >
+            <Filter size={18} />
+            <span className="hidden sm:inline">{t.filters}</span>
+          </button>
+
+          {/* Settings button */}
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className={`p-2 rounded-lg ${buttonSecondary} ${textClass} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
+          >
+            <Settings size={18} />
+            <span className="hidden sm:inline">{t.settings}</span>
+          </button>
+
+          {/* Generate PDF button */}
+          <button
+            onClick={handleGeneratePDF}
+            disabled={generating}
+            className={`p-2 rounded-lg ${buttonPrimary} text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${generating ? 'opacity-70 cursor-not-allowed' : ''}`}
+          >
+            {generating ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                <span>{t.generating}</span>
+              </>
+            ) : (
+              <>
+                <Download size={18} />
+                <span>{t.generatePDF}</span>
+              </>
+            )}
+          </button>
+        </div>
+      </motion.div>
+
+      {/* Settings panel */}
       <AnimatePresence>
         {showSettings && (
           <BulletinSettings
             theme={theme}
-            cardBgColor={cardBgColor}
             textClass={textClass}
-            buttonPrimary={buttonPrimary}
-            buttonSecondary={buttonSecondary}
+            cardBgColor={cardBgColor}
+            borderColor={borderColor}
             bulletinsPerPage={bulletinsPerPage}
             setBulletinsPerPage={setBulletinsPerPage}
-            selectedBulletinType={selectedBulletinType}
-            setSelectedBulletinType={setSelectedBulletinType}
             bulletinLanguage={bulletinLanguage}
             setBulletinLanguage={setBulletinLanguage}
-            language={language}
-            closeSettings={() => setShowSettings(false)}
+            bulletinType={bulletinType}
+            setBulletinType={setBulletinType}
+            t={t}
           />
         )}
       </AnimatePresence>
 
-      {/* Filters Panel */}
+      {/* Filters panel */}
       <AnimatePresence>
         {showFilters && (
           <BulletinFilters
             theme={theme}
-            cardBgColor={cardBgColor}
             textClass={textClass}
-            buttonPrimary={buttonPrimary}
-            buttonSecondary={buttonSecondary}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            sortOrder={sortOrder}
-            setSortOrder={setSortOrder}
-            selectAllStudents={selectAllStudents}
+            cardBgColor={cardBgColor}
+            borderColor={borderColor}
+            sortOption={sortOption}
+            setSortOption={setSortOption}
             selectedStudents={selectedStudents}
             filteredStudents={filteredStudents}
-            language={language}
-            closeFilters={() => setShowFilters(false)}
+            selectAllStudents={selectAllStudents}
+            t={t}
           />
         )}
       </AnimatePresence>
 
-      {/* Bulletin Grid */}
-      <div className="flex-1 overflow-auto p-4">
-        <BulletinGrid
-          filteredStudents={filteredStudents}
-          subjects={subjects}
-          composition={selectedComposition}
-          className={db.classes.find(c => c.id === selectedClass)?.level + " " +
-            db.classes.find(c => c.id === selectedClass)?.name}
-          calculateSubjectAverageForStudent={calculateSubjectAverageForStudent}
-          calculateGeneralAverage={calculateGeneralAverage}
+      {/* Main content */}
+      <div className="flex-1 overflow-auto p-6">
+        {loading ? (
+          <div className="flex justify-center items-center h-full">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <span className={`ml-3 ${textClass} text-lg`}>{t.loading}</span>
+          </div>
+        ) : filteredStudents.length === 0 ? (
+          <div className={`text-center ${textClass} p-10`}>
+            <div className="text-6xl mb-4">🔍</div>
+            <h3 className="text-xl font-semibold mb-2">Aucun élève trouvé</h3>
+            <p>Veuillez modifier vos critères de recherche</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            {currentStudents.map((student, index) => (
+              <motion.div
+                key={student.id}
+                variants={itemVariants}
+                className="relative"
+              >
+                <div 
+                  className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    selectedStudents.includes(student.id) 
+                      ? 'bg-blue-600 text-white' 
+                      : `${cardBgColor} border ${borderColor} ${textClass}`
+                  }`}
+                  onClick={() => toggleStudentSelection(student.id)}
+                >
+                  {selectedStudents.includes(student.id) && <Check size={16} />}
+                </div>
+                <BulletinCard
+                  student={student}
+                  students={students}
+                  subjects={subjects}
+                  composition={selectedComposition}
+                  className={className}
+                  theme={theme}
+                  textClass={textClass}
+                  cardBgColor={cardBgColor}
+                  borderColor={borderColor}
+                  language={bulletinLanguage}
+                  school_name={school_name}
+                  school_short_name={school_short_name}
+                  school_zone_name={school_zone_name}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {!loading && filteredStudents.length > 0 && (
+        <BulletinPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          paginate={paginate}
           theme={theme}
           textClass={textClass}
-          language={bulletinLanguage}
-          students={students}
-          school_name={school_name}
-          school_short_name={school_short_name}
-          school_zone_name={school_zone_name}
-          selectedBulletinType={selectedBulletinType}
-          selectedStudents={selectedStudents}
-          toggleStudentSelection={toggleStudentSelection}
-          cardBgColor={cardBgColor}
+          borderColor={borderColor}
+          buttonSecondary={buttonSecondary}
+          buttonPrimary={buttonPrimary}
         />
+      )}
+
+      {/* Status bar */}
+      <div className={`${headerBgColor} border-t ${borderColor} px-6 py-3 flex justify-between items-center`}>
+        <div className={textClass}>
+          <span className="font-medium">{filteredStudents.length}</span> {t.studentsFound}
+          {selectedStudents.length > 0 && (
+            <span className="ml-2">• <span className="font-medium">{selectedStudents.length}</span> {t.selected}</span>
+          )}
+        </div>
+        <div className="flex items-center gap-4">
+          <div className={`flex items-center gap-2 ${textClass}`}>
+            <Globe size={16} />
+            <span>{bulletinLanguage}</span>
+          </div>
+          <div className={`flex items-center gap-2 ${textClass}`}>
+            <Printer size={16} />
+            <span>{bulletinsPerPage === 1 ? '1 bulletin/page' : '2 bulletins/page'}</span>
+          </div>
+        </div>
       </div>
     </motion.div>
   );
