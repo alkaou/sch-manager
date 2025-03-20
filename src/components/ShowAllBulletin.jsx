@@ -8,6 +8,7 @@ import BulletinFilters from './bulletin_components/BulletinFilters.jsx';
 import BulletinPagination from './bulletin_components/BulletinPagination.jsx';
 import { generateMultipleBulletinsPDF } from './bulletin_utils/BulletinPDFGenerator.js';
 import { sortStudentsByAverage, sortStudentsByName } from './bulletin_utils/BulletinMethods';
+import {getClasseName} from "../utils/helpers";
 
 const ShowAllBulletin = ({
   selectedComposition,
@@ -46,6 +47,7 @@ const ShowAllBulletin = ({
   const headerBgColor = theme === "dark" ? "bg-gray-800 bg-opacity-90" : "bg-white bg-opacity-90";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
+  const buttonDanger = "bg-red-600 hover:bg-red-700";
   const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300";
 
   // Get translations based on selected language
@@ -77,8 +79,8 @@ const ShowAllBulletin = ({
     setLoading(false);
   }, [db, selectedClass, selectedComposition]);
 
-  // Filter and sort students
-  const filteredStudents = students
+    // Filter and sort students
+    const filteredStudents = students
     .filter(student => 
       student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -88,15 +90,16 @@ const ShowAllBulletin = ({
       if (sortOption === 'name') {
         return sortStudentsByName(a, b);
       } else if (sortOption === 'average') {
-        return sortStudentsByAverage(b, a, students, subjects);
+        // Utiliser directement la fonction sans inverser les paramètres
+        return sortStudentsByAverage(a, b, students, subjects);
       } else {
         // Default: sort by rank (average descending)
-        return sortStudentsByAverage(b, a, students, subjects);
+        return sortStudentsByAverage(a, b, students, subjects);
       }
     });
 
   // Pagination
-  const studentsPerPage = 10;
+  const studentsPerPage = 20;
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
   const indexOfLastStudent = currentPage * studentsPerPage;
   const indexOfFirstStudent = indexOfLastStudent - studentsPerPage;
@@ -198,14 +201,14 @@ const ShowAllBulletin = ({
         <div className="flex items-center gap-4">
           <button 
             onClick={handleCloseComponent}
-            className={`p-2 rounded-full ${buttonSecondary} text-${textClass} transition-all duration-300 hover:scale-105`}
+            className={`p-2 rounded-full ${buttonDanger} text-white transition-all duration-300 hover:scale-105`}
             aria-label="Close"
           >
             <X size={20} />
           </button>
           <h2 className={`text-2xl font-bold ${textClass}`}>{t.title}</h2>
           <div className={`px-3 py-1 rounded-full text-sm font-medium ${theme === "dark" ? "bg-blue-900 text-blue-200" : "bg-blue-100 text-blue-800"}`}>
-            {selectedComposition?.label} - {className}
+            {selectedComposition?.label} - {getClasseName(className)}
           </div>
         </div>
 
