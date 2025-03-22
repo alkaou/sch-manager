@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import {getClasseName} from "../utils/helpers";
 
 const BulletinPhysique2 = ({
     student,
@@ -20,11 +20,14 @@ const BulletinPhysique2 = ({
     calculateSubjectAverageForStudent,
     calculateGeneralAverage,
     getAppreciation,
+    calculateTotalPoints,
+    totalCoefficients,
     getCurrentSchoolYear,
     school_name,
     school_short_name,
     school_zone_name,
     setStudentClasseLevel,
+    language,
 }) => {
 
     const [centerType, setCenterType] = useState(null);
@@ -119,7 +122,7 @@ const BulletinPhysique2 = ({
                 <div className="flex justify-between p-2 border-t-2 border-black">
                     <div>
                         <span className="font-bold">CLASSE: </span>
-                        {className}
+                        {getClasseName(className)}
                     </div>
                     <div>
                         <span className="font-bold">ANNÉE SCOLAIRE: </span>
@@ -168,6 +171,13 @@ const BulletinPhysique2 = ({
                             );
                         })}
 
+                        {/* Total général */}
+                        <tr className="border-b-2 border-t-2 border-black bg-gray-200 font-bold">
+                            <td colSpan="4" className="border-r border-black p-2 text-center">TOTAL GÉNÉRAL</td>
+                            <td className="border-r border-black p-2 text-center">{totalCoefficients}</td>
+                            <td className="border-r border-black p-2 text-center">{calculateTotalPoints(students, student, subjects)}</td>
+                            <td className="p-2"></td>
+                        </tr>
                     </tbody>
                 </table>
 

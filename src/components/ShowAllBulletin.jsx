@@ -37,9 +37,11 @@ const ShowAllBulletin = ({
   const [showFilters, setShowFilters] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [className, setClassName] = useState('');
+  const [allStudentBulletinRefs, setallStudentBulletinRefs] = useState([]);
 
   // Refs
   const containerRef = useRef(null);
+  const printRef = useRef(null);
 
   // Styles based on theme
   const bgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-100";
@@ -108,6 +110,17 @@ const ShowAllBulletin = ({
   // Handle page change
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Obtenir les ref des bullettin de tous les students
+  const getStudentBulletinRef = (studentId, studentBulletinRef) => {
+    // console.log({ studentId, studentBulletinRef });
+    if (studentBulletinRef !== null) {
+      setallStudentBulletinRefs(prevRefs => [
+        ...prevRefs,
+        { studentId, studentBulletinRef }
+      ]);
+    }
+  };
+
   // Toggle student selection
   const toggleStudentSelection = (studentId) => {
     setSelectedStudents(prev => {
@@ -141,15 +154,10 @@ const ShowAllBulletin = ({
       // Generate PDF
       await generateMultipleBulletinsPDF({
         students: studentsToInclude,
-        allStudents: students,
-        subjects,
         composition: selectedComposition,
         className,
         bulletinsPerPage,
-        language: bulletinLanguage,
-        school_name,
-        school_short_name,
-        school_zone_name,
+        allStudentBulletinRefs: allStudentBulletinRefs,
       });
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -346,6 +354,7 @@ const ShowAllBulletin = ({
                   school_name={school_name}
                   school_short_name={school_short_name}
                   school_zone_name={school_zone_name}
+                  getStudentBulletinRef={getStudentBulletinRef}
                 />
               </motion.div>
             ))}

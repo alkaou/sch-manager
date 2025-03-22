@@ -20,13 +20,15 @@ const BulletinComponent = ({
     calculateGeneralAverage,
     theme,
     textClass,
-    language,
     students, // Ajout du paramètre students pour calculer le rang
     handleCloseBulletinPreview,
     school_name,
     school_short_name,
     school_zone_name,
     showPrintBottonBtn=true,
+    printRef = useRef(null),
+    language="Français",
+    getStudentBulletinRef = () => {},
 }) => {
     // Styles conditionnels basés sur le thème
     const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -86,12 +88,13 @@ const BulletinComponent = ({
         } else {
             setStudentRank(_student_position);
         }
+
+        getStudentBulletinRef(student.id, printRef);
+
     }, [students, student, calculateGeneralAverage]);
 
     // Calculer le total des coefficients
     const totalCoefficients = subjects.reduce((total, subject) => total + subject.coefficient, 0);
-
-    const printRef = useRef();
 
 
     // Séparer les matières principales et secondaires (comme dans l'image)
@@ -185,6 +188,7 @@ const BulletinComponent = ({
                     school_short_name={school_short_name}
                     school_zone_name={school_zone_name}
                     setStudentClasseLevel={setStudentClasseLevel}
+                    language={language}
                 />
                 :
                 <BulletinPhysique2
@@ -213,6 +217,8 @@ const BulletinComponent = ({
                     school_short_name={school_short_name}
                     school_zone_name={school_zone_name}
                     setStudentClasseLevel={setStudentClasseLevel}
+                    language={language}
+                    calculateTotalPoints={calculateTotalPoints}
                 />
             }
 

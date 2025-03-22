@@ -1,21 +1,15 @@
+import React from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
-import React from 'react';
-import ReactDOM from 'react-dom';
 import BulletinComponent from '../BulletinComponent.jsx';
 
 // Générer un PDF pour plusieurs bulletins
 export const generateMultipleBulletinsPDF = async ({
   students,
-  allStudents,
-  subjects,
   composition,
   className,
   bulletinsPerPage,
-  language,
-  school_name,
-  school_short_name,
-  school_zone_name,
+  allStudentBulletinRefs,
 }) => {
   // Créer un nouveau document PDF
   const pdf = new jsPDF({
@@ -28,129 +22,80 @@ export const generateMultipleBulletinsPDF = async ({
   const pageWidth = pdf.internal.pageSize.getWidth();
   const pageHeight = pdf.internal.pageSize.getHeight();
 
-  // Créer un conteneur temporaire pour le rendu des bulletins
-  const container = document.createElement('div');
-  document.body.appendChild(container);
+  let bulletinsForPrint = [];
+  const prepareBulletinsForPrint = () => {
+    bulletinsForPrint = [];
+    // Traiter chaque élève
+    for (const every_student of students) {
+      const bulletin = allStudentBulletinRefs.find(item => item.studentId === every_student.id);
+      if (bulletin !== undefined) {
+        bulletinsForPrint = [...bulletinsForPrint, bulletin];
+      }
+    }
+  };
 
-  // Traiter chaque élève
-  for (let i = 0; i < students.length; i++) {
-    // Créer un élément div pour contenir le bulletin
-    const bulletinContainer = document.createElement('div');
-    bulletinContainer.style.width = bulletinsPerPage === 1 ? '210mm' : '148mm'; // A4 width or half A4 width
-    bulletinContainer.style.height = bulletinsPerPage === 1 ? '297mm' : '210mm'; // A4 height or half A4 height
-    bulletinContainer.style.overflow = 'hidden';
-    bulletinContainer.style.position = 'relative';
-    
-    // Ajouter le conteneur au DOM
-    container.appendChild(bulletinContainer);
-    
-    // Rendre le composant BulletinComponent dans le conteneur
-    ReactDOM.render(
-      <BulletinComponent
-        student={students[i]}
-        subjects={subjects}
-        composition={composition}
-        className={className}
-        calculateSubjectAverageForStudent={(students, studentId, subjectName) => {
-          const student = students.find(s => s.id === studentId);
-          if (!student || !student.notes[subjectName]) return "-";
-          
-          const classeNote = student.notes[subjectName].classe;
-          const compoNote = student.notes[subjectName].composition;
-          
-          if (classeNote === null && compoNote !== null) return compoNote.toFixed(2);
-          if (classeNote !== null && compoNote === null) return classeNote.toFixed(2);
-          if (classeNote === null && compoNote === null) return "-";
-          
-          const average = (classeNote + (compoNote * 2)) / 3;
-          return average.toFixed(2);
-        }}
-        calculateGeneralAverage={(students, studentId, subjects) => {
-          const student = students.find(s => s.id === studentId);
-          if (!student) return "-";
-          
-          let totalPoints = 0;
-          let totalCoefficients = 0;
-          
-          subjects.forEach(subject => {
-            const subjectAvg = student.notes[subject.name] ? 
-              ((student.notes[subject.name].classe || 0) + ((student.notes[subject.name].composition || 0) * 2)) / 3 : 
-              "-";
-              
-            if (subjectAvg !== "-") {
-              totalPoints += parseFloat(subjectAvg) * subject.coefficient;
-              totalCoefficients += subject.coefficient;
-            }
-          });
-          
-          if (totalCoefficients === 0) return "-";
-          return (totalPoints / totalCoefficients).toFixed(2);
-        }}
-        theme="light" // Toujours utiliser le thème clair pour les PDF
-        textClass="text-gray-800"
-        language={language}
-        students={allStudents}
-        handleCloseBulletinPreview={() => {}}
-        school_name={school_name}
-        school_short_name={school_short_name}
-        school_zone_name={school_zone_name}
-      />,
-      bulletinContainer
-    );
-    
-    // Attendre que le rendu soit terminé
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    // Capturer le bulletin en image
-    const canvas = await html2canvas(bulletinContainer.querySelector('[ref="printRef"]') || bulletinContainer, { 
-      scale: 2,
-      useCORS: true,
-      allowTaint: true,
-      logging: false
-    });
-    
-    const imgData = canvas.toDataURL('image/png');
-    
-    // Si on a 2 bulletins par page
+  await prepareBulletinsForPrint();
+
+  // console.log(bulletinsForPrint);
+
+  let bulletinImages = [];
+  const getBulletinImages = async () => {
+    bulletinImages = [];
+    for(const st_ref of bulletinsForPrint){
+      const printRef = st_ref.studentBulletinRef;
+      const element = printRef.current;
+      // Capture l'élément en image avec html2canvas
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL('image/png');
+      // console.log(imgData);
+      bulletinImages = [...bulletinImages, imgData];
+    }
+  }
+
+  // Utiliser await pour s'assurer que getBulletinImages() se termine avant de continuer
+  await getBulletinImages()
+  // console.log(bulletinImages.length);
+
+  const generateBulletins = async () => {
     if (bulletinsPerPage === 2) {
-      // Premier bulletin de la paire (gauche)
-      if (i % 2 === 0) {
-        pdf.addImage(imgData, 'PNG', 0, 0, pageWidth / 2 - 5, pageHeight);
-        
-        // Si c'est le dernier élève, ajouter la page
-        if (i === students.length - 1) {
-          // La page est déjà ajoutée
+      // Marges éventuelles
+      const margin = 2;
+      const usableWidth = pageWidth - 2 * margin;
+      const usableHeight = pageHeight - 2 * margin;
+      // Largeur de chaque bulletin (disposition côte à côte)
+      const bulletinWidth = usableWidth / 2;
+      const bulletinHeight = usableHeight; // toute la hauteur disponible
+
+      for (let i = 0; i < bulletinImages.length; i += 2) {
+       const groupe = bulletinImages.slice(i, i + 2);
+        // console.log(groupe); // Affiche par exemple ["image1.jpg", "image2.jpg"], puis ["image3.jpg", "image4.jpg"]
+        // console.log(i);
+        if (groupe.length === 2) {
+          // Premier bulletin à gauche
+          pdf.addImage(groupe[0], 'PNG', margin, margin, bulletinWidth, bulletinHeight);
+          // Deuxième bulletin à droite
+          const snd_margin = margin + bulletinWidth;
+          pdf.addImage(groupe[1], 'PNG', snd_margin, margin, bulletinWidth, bulletinHeight);
+          if (i <= bulletinImages.length - 2) {
+            pdf.addPage();
+          }
+        } else {
+          pdf.addImage(groupe[0], 'PNG', margin, margin, bulletinWidth, bulletinHeight);
         }
-      } 
-      // Deuxième bulletin de la paire (droite)
-      else {
-        pdf.addImage(imgData, 'PNG', pageWidth / 2 + 5, 0, pageWidth / 2 - 5, pageHeight);
-        
-        // Ajouter une nouvelle page si ce n'est pas le dernier élève
-        if (i < students.length - 1) {
+      }
+    } else {
+
+      for (const [index, imgData] of bulletinImages.entries()) { 
+        pdf.addImage(imgData, 'PNG', 12, 0, pageWidth - 24, pageHeight);
+        if (index < bulletinImages.length - 1) {
           pdf.addPage();
         }
       }
-    } 
-    // Un seul bulletin par page
-    else {
-      pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
-      
-      // Ajouter une nouvelle page si ce n'est pas le dernier élève
-      if (i < students.length - 1) {
-        pdf.addPage();
-      }
     }
-    
-    // Nettoyer
-    ReactDOM.unmountComponentAtNode(bulletinContainer);
-    container.removeChild(bulletinContainer);
   }
   
-  // Nettoyer le conteneur principal
-  ReactDOM.unmountComponentAtNode(container);
-  document.body.removeChild(container);
-  
+  await generateBulletins();
+
   // Nom du fichier
   const fileName = `Bulletins_${className}_${composition.label.replace(/\s+/g, '_')}.pdf`;
   
@@ -158,4 +103,5 @@ export const generateMultipleBulletinsPDF = async ({
   pdf.save(fileName);
   
   return fileName;
+
 };

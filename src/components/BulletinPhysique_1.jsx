@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {getClasseName} from "../utils/helpers";
 
 
 const BulletinPhysique1 = ({
@@ -29,6 +30,7 @@ const BulletinPhysique1 = ({
     school_short_name,
     school_zone_name,
     setStudentClasseLevel,
+    language,
 }) => {
 
     const [centerType, setCenterType] = useState(null);
@@ -121,7 +123,7 @@ const BulletinPhysique1 = ({
                 <div className="flex justify-between p-2 border-t-2 border-black">
                     <div>
                         <span className="font-bold">CLASSE: </span>
-                        {className}
+                        {getClasseName(className)}
                     </div>
                     <div>
                         <span className="font-bold">ANNÉE SCOLAIRE: </span>
