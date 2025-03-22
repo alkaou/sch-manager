@@ -17,13 +17,13 @@ const BulletinFilters = ({
   // Animation variants
   const panelVariants = {
     hidden: { opacity: 0, y: -20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.3 }
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       y: -20,
       transition: { duration: 0.2 }
     }
@@ -51,33 +51,30 @@ const BulletinFilters = ({
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => setSortOption('rank')}
-              className={`p-2 rounded border ${borderColor} ${
-                sortOption === 'rank' 
-                  ? 'bg-blue-600 text-white' 
+              className={`p-2 rounded border ${borderColor} ${sortOption === 'rank'
+                  ? 'bg-blue-600 text-white'
                   : `${cardBgColor} ${textClass}`
-              } flex items-center justify-center gap-1`}
+                } flex items-center justify-center gap-1`}
             >
               <SortDesc size={16} />
               {t.rank}
             </button>
             <button
               onClick={() => setSortOption('name')}
-              className={`p-2 rounded border ${borderColor} ${
-                sortOption === 'name' 
-                  ? 'bg-blue-600 text-white' 
+              className={`p-2 rounded border ${borderColor} ${sortOption === 'name'
+                  ? 'bg-blue-600 text-white'
                   : `${cardBgColor} ${textClass}`
-              } flex items-center justify-center gap-1`}
+                } flex items-center justify-center gap-1`}
             >
               <SortAsc size={16} />
               {t.name}
             </button>
             <button
               onClick={() => setSortOption('average')}
-              className={`p-2 rounded border ${borderColor} ${
-                sortOption === 'average' 
-                  ? 'bg-blue-600 text-white' 
+              className={`p-2 rounded border ${borderColor} ${sortOption === 'average'
+                  ? 'bg-blue-600 text-white'
                   : `${cardBgColor} ${textClass}`
-              } flex items-center justify-center gap-1`}
+                } flex items-center justify-center gap-1`}
             >
               <SortDesc size={16} />
               {t.average}
@@ -90,13 +87,12 @@ const BulletinFilters = ({
           <label className={`block mb-2 font-medium ${textClass}`}>{t.selectAll}</label>
           <button
             onClick={selectAllStudents}
-            className={`w-full p-2 rounded border ${borderColor} ${
-              selectedStudents.length === filteredStudents.length && filteredStudents.length > 0
-                ? 'bg-blue-600 text-white' 
+            className={`w-full p-2 rounded border ${borderColor} ${selectedStudents.length === filteredStudents.length && filteredStudents.length > 0
+                ? 'bg-blue-600 text-white'
                 : `${cardBgColor} ${textClass}`
-            } flex items-center justify-center gap-2`}
+              } flex items-center justify-center gap-2`}
           >
-                        <CheckSquare size={18} />
+            <CheckSquare size={18} />
             {selectedStudents.length === filteredStudents.length && filteredStudents.length > 0
               ? 'Tout désélectionner'
               : t.selectAll}

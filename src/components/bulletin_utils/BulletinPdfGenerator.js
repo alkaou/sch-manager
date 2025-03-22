@@ -1,7 +1,5 @@
-import React from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
-import BulletinComponent from '../BulletinComponent.jsx';
 
 // Générer un PDF pour plusieurs bulletins
 export const generateMultipleBulletinsPDF = async ({
@@ -41,7 +39,7 @@ export const generateMultipleBulletinsPDF = async ({
   let bulletinImages = [];
   const getBulletinImages = async () => {
     bulletinImages = [];
-    for(const st_ref of bulletinsForPrint){
+    for (const st_ref of bulletinsForPrint) {
       const printRef = st_ref.studentBulletinRef;
       const element = printRef.current;
       // Capture l'élément en image avec html2canvas
@@ -67,7 +65,7 @@ export const generateMultipleBulletinsPDF = async ({
       const bulletinHeight = usableHeight; // toute la hauteur disponible
 
       for (let i = 0; i < bulletinImages.length; i += 2) {
-       const groupe = bulletinImages.slice(i, i + 2);
+        const groupe = bulletinImages.slice(i, i + 2);
         // console.log(groupe); // Affiche par exemple ["image1.jpg", "image2.jpg"], puis ["image3.jpg", "image4.jpg"]
         // console.log(i);
         if (groupe.length === 2) {
@@ -85,7 +83,7 @@ export const generateMultipleBulletinsPDF = async ({
       }
     } else {
 
-      for (const [index, imgData] of bulletinImages.entries()) { 
+      for (const [index, imgData] of bulletinImages.entries()) {
         pdf.addImage(imgData, 'PNG', 12, 0, pageWidth - 24, pageHeight);
         if (index < bulletinImages.length - 1) {
           pdf.addPage();
@@ -93,15 +91,15 @@ export const generateMultipleBulletinsPDF = async ({
       }
     }
   }
-  
+
   await generateBulletins();
 
   // Nom du fichier
   const fileName = `Bulletins_${className}_${composition.label.replace(/\s+/g, '_')}.pdf`;
-  
+
   // Télécharger le PDF
   pdf.save(fileName);
-  
+
   return fileName;
 
 };

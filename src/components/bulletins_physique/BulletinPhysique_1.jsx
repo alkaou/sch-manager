@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {getClasseName} from "../utils/helpers";
+import { getClasseName } from "../../utils/helpers";
 
 
 const BulletinPhysique1 = ({

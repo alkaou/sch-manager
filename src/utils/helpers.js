@@ -69,8 +69,8 @@ function getClasseName(chaine, lang = "Français") {
   } else if (lang === "Anglais") {
     // Définit le suffixe ordinal approprié en anglais
     const grade = number === "1" ? "st grade" :
-                  number === "2" ? "nd grade" :
-                  number === "3" ? "rd grade" : "th grade";
+      number === "2" ? "nd grade" :
+        number === "3" ? "rd grade" : "th grade";
     classeName = `${number}${grade} ${restText}`;
   } else {
     // Pour toute autre langue, ici exemple avec "Bambara"

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Save, RefreshCcw, X, UserMinus, Check, Eye, ArrowUp, ArrowDown } from 'lucide-react';
 import { useLanguage, useFlashNotification } from './contexts.js';
 import BulletinComponent from './BulletinComponent.jsx';
-import { 
+import {
   calculateSubjectAverage, calculateSubjectAverageForStudent,
   formatNote, calculateGeneralAverage,
 } from './bulletin_utils/BulletinMethods.js';

@@ -121,14 +121,14 @@ export const sortStudentsByName = (a, b) => {
 export const sortStudentsByAverage = (a, b, students, subjects) => {
   const avgA = parseFloat(calculateGeneralAverage(students, a.id, subjects));
   const avgB = parseFloat(calculateGeneralAverage(students, b.id, subjects));
-  
+
   // Pour déboguer
   // console.log(`${a.first_name} ${a.last_name}: ${avgA} vs ${b.first_name} ${b.last_name}: ${avgB}`);
-  
+
   if (isNaN(avgA) && isNaN(avgB)) return 0;
   if (isNaN(avgA)) return 1; // Placer les élèves sans note à la fin
   if (isNaN(avgB)) return -1;
-  
+
   // Tri décroissant (de la plus forte à la plus faible moyenne)
   return avgB - avgA;
 };

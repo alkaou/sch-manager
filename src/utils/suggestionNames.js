@@ -27,7 +27,7 @@ const suggestNames = [
   "Yacouba", "Saliou", "Mourtala", "Mahamane", "Issoufou", "Baba", "Kouyate", "Pape", "Papis", "Ibrahimou",
   // Ajouts féminins supplémentaires
   "Mousso", "Mounira", "Faiza", "Aicha", "Amie", "Assitan", "Safiatou", "Rokhaya", "Zainab", "Imane", "Leila",
-  "Binta", "Rahama", "Marieme", "Adja", 
+  "Binta", "Rahama", "Marieme", "Adja",
   // Ajouts unisex / mixtes
   "Aminou", "Assitan", "Binta", "Coumbi", "Dja", "Fadima", "Galou", "Hama", "Ibou", "Jamilou", "Kadi", "Lamina",
   "Niare", "Ouleye", "Penda", "Rokhaya", "Saara", "Sandi", "Tina", "Ussene", "Wassila", "Zara", "Zenab", "Zohra",

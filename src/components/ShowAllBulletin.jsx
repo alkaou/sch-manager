@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, X, Settings, Download, Printer, ChevronLeft, ChevronRight, Check, Globe } from 'lucide-react';
+import { Search, Filter, X, Settings, Download, Printer, Check, Globe } from 'lucide-react';
 import { translations } from '../utils/bulletin_translation';
 import BulletinCard from './bulletin_components/BulletinCard.jsx';
 import BulletinSettings from './bulletin_components/BulletinSettings.jsx';
@@ -8,7 +8,7 @@ import BulletinFilters from './bulletin_components/BulletinFilters.jsx';
 import BulletinPagination from './bulletin_components/BulletinPagination.jsx';
 import { generateMultipleBulletinsPDF } from './bulletin_utils/BulletinPDFGenerator.js';
 import { sortStudentsByAverage, sortStudentsByName } from './bulletin_utils/BulletinMethods';
-import {getClasseName} from "../utils/helpers";
+import { getClasseName } from "../utils/helpers";
 
 const ShowAllBulletin = ({
   selectedComposition,
@@ -22,13 +22,13 @@ const ShowAllBulletin = ({
   school_zone_name,
 }) => {
   // States
-  const [bulletin, setBulletin] = useState(null);
+  // const [bulletin, setBulletin] = useState(null);
   const [students, setStudents] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('rank'); // 'rank', 'name', 'average'
-  const [bulletinsPerPage, setBulletinsPerPage] = useState(1); // 1 or 2 bulletins per page
+  const [bulletinsPerPage, setBulletinsPerPage] = useState(2); // 1 or 2 bulletins per page
   const [bulletinLanguage, setBulletinLanguage] = useState('Français');
   const [bulletinType, setBulletinType] = useState('type1');
   const [currentPage, setCurrentPage] = useState(1);
@@ -67,7 +67,7 @@ const ShowAllBulletin = ({
     );
 
     if (existingBulletin) {
-      setBulletin(existingBulletin);
+      // setBulletin(existingBulletin);
       setSubjects(existingBulletin.subjects);
       setStudents(existingBulletin.students);
     }
@@ -81,9 +81,9 @@ const ShowAllBulletin = ({
     setLoading(false);
   }, [db, selectedClass, selectedComposition]);
 
-    // Filter and sort students
-    const filteredStudents = students
-    .filter(student => 
+  // Filter and sort students
+  const filteredStudents = students
+    .filter(student =>
       student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       `${student.first_name} ${student.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -144,13 +144,13 @@ const ShowAllBulletin = ({
   // Generate PDF for selected students
   const handleGeneratePDF = async () => {
     setGenerating(true);
-    
+
     try {
       // Get students to include in PDF
       const studentsToInclude = selectedStudents.length > 0
         ? students.filter(student => selectedStudents.includes(student.id))
         : filteredStudents;
-      
+
       // Generate PDF
       await generateMultipleBulletinsPDF({
         students: studentsToInclude,
@@ -169,15 +169,15 @@ const ShowAllBulletin = ({
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { 
+      transition: {
         duration: 0.5,
         when: "beforeChildren",
         staggerChildren: 0.1
       }
     },
-    exit: { 
+    exit: {
       opacity: 0,
       transition: { duration: 0.3 }
     }
@@ -185,15 +185,15 @@ const ShowAllBulletin = ({
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { 
-      y: 0, 
+    visible: {
+      y: 0,
       opacity: 1,
       transition: { duration: 0.3 }
     }
   };
 
   return (
-    <motion.div 
+    <motion.div
       className={`fixed inset-0 z-50 ${bgColor} overflow-hidden flex flex-col`}
       initial="hidden"
       animate="visible"
@@ -202,12 +202,12 @@ const ShowAllBulletin = ({
       ref={containerRef}
     >
       {/* Header */}
-      <motion.div 
+      <motion.div
         className={`sticky top-0 z-10 ${headerBgColor} shadow-md px-6 py-4 flex flex-wrap justify-between items-center gap-4 border-b ${borderColor}`}
         variants={itemVariants}
       >
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={handleCloseComponent}
             className={`p-2 rounded-full ${buttonDanger} text-white transition-all duration-300 hover:scale-105`}
             aria-label="Close"
@@ -330,12 +330,11 @@ const ShowAllBulletin = ({
                 variants={itemVariants}
                 className="relative"
               >
-                <div 
-                  className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
-                    selectedStudents.includes(student.id) 
-                      ? 'bg-blue-600 text-white' 
-                      : `${cardBgColor} border ${borderColor} ${textClass}`
-                  }`}
+                <div
+                  className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${selectedStudents.includes(student.id)
+                    ? 'bg-blue-600 text-white'
+                    : `${cardBgColor} border ${borderColor} ${textClass}`
+                    }`}
                   onClick={() => toggleStudentSelection(student.id)}
                 >
                   {selectedStudents.includes(student.id) && <Check size={16} />}

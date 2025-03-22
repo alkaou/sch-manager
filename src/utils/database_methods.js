@@ -13,95 +13,95 @@ const check_names_length = (name) => {
 };
 
 const updateDatabaseNameAndShortName = (
-  newName,
-  newShortName,
-  setError,
-  setFlashMessage,
-  live_language,
-  setIsEditing,
-  db
+    newName,
+    newShortName,
+    setError,
+    setFlashMessage,
+    live_language,
+    setIsEditing,
+    db
 ) => {
-  // Suppression des espaces en début/fin
-  const name = newName.trim();
-  const shortName = newShortName.trim();
+    // Suppression des espaces en début/fin
+    const name = newName.trim();
+    const shortName = newShortName.trim();
 
-  // Expression régulière de validation commune
-  const validRegex = /^[a-zA-Z0-9-_]+$/;
+    // Expression régulière de validation commune
+    const validRegex = /^[a-zA-Z0-9-_]+$/;
 
-  // Vérification : le shortName ne doit pas être vide
-  if (!shortName) {
-    setError(live_language.error_empty_short || "Le short name ne peut pas être vide.");
-    return;
-  }
+    // Vérification : le shortName ne doit pas être vide
+    if (!shortName) {
+        setError(live_language.error_empty_short || "Le short name ne peut pas être vide.");
+        return;
+    }
 
-  // Vérification : le name ne doit pas être vide
-  if (!name) {
-    setError(live_language.error_empty || "Le nom ne peut pas être vide.");
-    return;
-  }
+    // Vérification : le name ne doit pas être vide
+    if (!name) {
+        setError(live_language.error_empty || "Le nom ne peut pas être vide.");
+        return;
+    }
 
-  // Vérification de la longueur du shortName (entre 2 et 10 caractères)
-  if (shortName.length < 2) {
-    setError(live_language.error_minLength_short || "Le short name doit contenir au moins 2 caractères.");
-    return;
-  }
-  if (shortName.length > 10) {
-    setError(live_language.error_maxLength_short || "Le short name ne peut contenir plus de 10 caractères.");
-    return;
-  }
+    // Vérification de la longueur du shortName (entre 2 et 10 caractères)
+    if (shortName.length < 2) {
+        setError(live_language.error_minLength_short || "Le short name doit contenir au moins 2 caractères.");
+        return;
+    }
+    if (shortName.length > 10) {
+        setError(live_language.error_maxLength_short || "Le short name ne peut contenir plus de 10 caractères.");
+        return;
+    }
 
-  // Vérification de la longueur du name (maximum 45 caractères)
-  if (name.length > 45) {
-    setError(live_language.error_maxLength_name || "Le nom ne peut contenir plus de 45 caractères.");
-    return;
-  }
+    // Vérification de la longueur du name (maximum 45 caractères)
+    if (name.length > 45) {
+        setError(live_language.error_maxLength_name || "Le nom ne peut contenir plus de 45 caractères.");
+        return;
+    }
 
-  // Vérification des caractères valides pour name et shortName
-  if (!validRegex.test(name)) {
-    setError(live_language.error_invalidChars || "Le nom contient des caractères invalides.");
-    return;
-  }
-  if (!validRegex.test(shortName)) {
-    setError(live_language.error_invalidChars || "Le short name contient des caractères invalides.");
-    return;
-  }
+    // Vérification des caractères valides pour name et shortName
+    if (!validRegex.test(name)) {
+        setError(live_language.error_invalidChars || "Le nom contient des caractères invalides.");
+        return;
+    }
+    if (!validRegex.test(shortName)) {
+        setError(live_language.error_invalidChars || "Le short name contient des caractères invalides.");
+        return;
+    }
 
-  // Formatage du shortName en majuscules
-  const formattedShortName = shortName.toUpperCase();
+    // Formatage du shortName en majuscules
+    const formattedShortName = shortName.toUpperCase();
 
-  // Suppression de l'erreur éventuelle
-  setError("");
+    // Suppression de l'erreur éventuelle
+    setError("");
 
-  // Récupération des dates pour la mise à jour
-  const updated_hour = getFormattedDateTime();
-  const updated_date = getDateTime();
+    // Récupération des dates pour la mise à jour
+    const updated_hour = getFormattedDateTime();
+    const updated_date = getDateTime();
 
-  const date = updated_date.dateTime;
-  const hour = updated_hour.formattedTime;
+    const date = updated_date.dateTime;
+    const hour = updated_hour.formattedTime;
 
-  // Préparation de l'objet mis à jour
-  const updatedDb = {
-    ...db,
-    name,
-    short_name: formattedShortName,
-    updated_at: date,
-    updated_time: hour,
-  };
+    // Préparation de l'objet mis à jour
+    const updatedDb = {
+        ...db,
+        name,
+        short_name: formattedShortName,
+        updated_at: date,
+        updated_time: hour,
+    };
 
-  // Sauvegarde de la base de données avec feedback utilisateur
-  window.electron
-    .saveDatabase(updatedDb)
-    .then(() => {
-      setIsEditing(false);
-      setFlashMessage({
-        message: live_language.updated_db_message || "Base de données mise à jour !",
-        type: "success", // 'success', 'error', 'warning' ou 'info'
-        duration: 5000,  // durée d’affichage en ms
-      });
-    })
-    .catch((err) => {
-      console.error("Erreur lors de la mise à jour de la base de données :", err);
-    });
+    // Sauvegarde de la base de données avec feedback utilisateur
+    window.electron
+        .saveDatabase(updatedDb)
+        .then(() => {
+            setIsEditing(false);
+            setFlashMessage({
+                message: live_language.updated_db_message || "Base de données mise à jour !",
+                type: "success", // 'success', 'error', 'warning' ou 'info'
+                duration: 5000,  // durée d’affichage en ms
+            });
+        })
+        .catch((err) => {
+            console.error("Erreur lors de la mise à jour de la base de données :", err);
+        });
 };
 
 const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
@@ -361,7 +361,7 @@ const updateStudent = (studentId, updatedData, db) => {
     }
 
     const student = db.students[studentIndex];
-    
+
     // Validation des données mises à jour
     const cleanedData = validateAndCleanStudentData(updatedData, true);
 
@@ -417,9 +417,9 @@ const activateStudent = (studentId, db, setFlashMessage) => {
         .then(() => {
             console.log("Étudiant activé avec succès :", db.students[studentIndex]);
             setFlashMessage({
-              message: "Étudiant activé avec succès.",
-              type: "success", // 'success', 'error', 'warning' ou 'info'
-              duration: 5000,  // durée d’affichage en ms
+                message: "Étudiant activé avec succès.",
+                type: "success", // 'success', 'error', 'warning' ou 'info'
+                duration: 5000,  // durée d’affichage en ms
             });
         })
         .catch((err) => {
@@ -445,9 +445,9 @@ const deactivateStudent = (studentId, db, setFlashMessage) => {
         .then(() => {
             console.log("Étudiant désactivé avec succès :", db.students[studentIndex]);
             setFlashMessage({
-              message: "Étudiant désactivé avec succès.",
-              type: "success", // 'success', 'error', 'warning' ou 'info'
-              duration: 5000,  // durée d’affichage en ms
+                message: "Étudiant désactivé avec succès.",
+                type: "success", // 'success', 'error', 'warning' ou 'info'
+                duration: 5000,  // durée d’affichage en ms
             });
         })
         .catch((err) => {
@@ -473,9 +473,9 @@ const deleteStudent = (studentId, db, setFlashMessage) => {
         .then(() => {
             console.log("Étudiant supprimé avec succès :", removedStudent);
             setFlashMessage({
-              message: "La suppression a été passée avec succès.",
-              type: "success", // 'success', 'error', 'warning' ou 'info'
-              duration: 5000,  // durée d’affichage en ms
+                message: "La suppression a été passée avec succès.",
+                type: "success", // 'success', 'error', 'warning' ou 'info'
+                duration: 5000,  // durée d’affichage en ms
             });
 
         })

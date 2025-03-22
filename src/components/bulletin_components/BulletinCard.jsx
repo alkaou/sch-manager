@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import BulletinComponent from '../BulletinComponent.jsx';
-import {calculateSubjectAverageForStudent, calculateGeneralAverage} from '../bulletin_utils/BulletinMethods';
+import { calculateSubjectAverageForStudent, calculateGeneralAverage } from '../bulletin_utils/BulletinMethods';
 
 const BulletinCard = ({
   student,
@@ -22,7 +22,7 @@ const BulletinCard = ({
 
   // Utiliser votre composant BulletinComponent existant
   return (
-    <motion.div 
+    <motion.div
       className="w-full"
       whileHover={{ scale: 1.01 }}
       transition={{ duration: 0.2 }}
@@ -38,7 +38,7 @@ const BulletinCard = ({
         textClass={textClass}
         language={language}
         students={students}
-        handleCloseBulletinPreview={() => {}} // Cette fonction ne sera pas utilisée dans ce contexte
+        handleCloseBulletinPreview={() => { }} // Cette fonction ne sera pas utilisée dans ce contexte
         school_name={school_name}
         school_short_name={school_short_name}
         school_zone_name={school_zone_name}

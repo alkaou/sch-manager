@@ -18,7 +18,7 @@ const useLanguage = () => useContext(LanguageContext);
 
 
 const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, OpenThePopup, theme }) => {
-    
+
     const bg_colors = checkThemeForBgColor();
 
     const hide_all_panel = () => {

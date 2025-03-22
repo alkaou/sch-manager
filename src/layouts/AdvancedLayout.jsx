@@ -119,7 +119,7 @@ const AdvancedLayout = () => {
 
       {/* Navbar */}
       <Navbar
-        isAuthenticated={isAuthenticated} 
+        isAuthenticated={isAuthenticated}
         userProfile={userProfile}
         onLogout={handleLogout}
         onLogin={handleLogin}
@@ -144,14 +144,14 @@ const AdvancedLayout = () => {
 
       {/* Contenu spécifique rendu via Outlet */}
       <div
-        // style={{
-        //   marginTop: "4%",
-        //   marginLeft: "5%",
-        //   width: "95%",
-        //   maxWidth: "95%",
-        //   minWidth: "95%",
-        //   height: "92vh"
-        // }}
+      // style={{
+      //   marginTop: "4%",
+      //   marginLeft: "5%",
+      //   width: "95%",
+      //   maxWidth: "95%",
+      //   minWidth: "95%",
+      //   height: "92vh"
+      // }}
       >
         <Outlet
           context={{

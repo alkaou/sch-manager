@@ -5,7 +5,7 @@ const BulletinPagination = ({
   currentPage,
   totalPages,
   paginate,
-  theme,
+  // theme,
   textClass,
   borderColor,
   buttonSecondary,
@@ -14,14 +14,14 @@ const BulletinPagination = ({
   // Generate page numbers
   const pageNumbers = [];
   const maxPagesToShow = 5;
-  
+
   let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
   let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-  
+
   if (endPage - startPage + 1 < maxPagesToShow) {
     startPage = Math.max(1, endPage - maxPagesToShow + 1);
   }
-  
+
   for (let i = startPage; i <= endPage; i++) {
     pageNumbers.push(i);
   }
@@ -33,21 +33,19 @@ const BulletinPagination = ({
         <button
           onClick={() => currentPage > 1 && paginate(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${
-            currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
         >
           <ChevronLeft size={18} />
         </button>
-        
+
         {/* First page */}
         {startPage > 1 && (
           <>
             <button
               onClick={() => paginate(1)}
-              className={`w-10 h-10 rounded-lg ${
-                currentPage === 1 ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
-              }`}
+              className={`w-10 h-10 rounded-lg ${currentPage === 1 ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
+                }`}
             >
               1
             </button>
@@ -56,20 +54,19 @@ const BulletinPagination = ({
             )}
           </>
         )}
-        
+
         {/* Page numbers */}
         {pageNumbers.map(number => (
           <button
             key={number}
             onClick={() => paginate(number)}
-            className={`w-10 h-10 rounded-lg ${
-              currentPage === number ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
-            }`}
+            className={`w-10 h-10 rounded-lg ${currentPage === number ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
+              }`}
           >
             {number}
           </button>
         ))}
-        
+
         {/* Last page */}
         {endPage < totalPages && (
           <>
@@ -78,22 +75,20 @@ const BulletinPagination = ({
             )}
             <button
               onClick={() => paginate(totalPages)}
-              className={`w-10 h-10 rounded-lg ${
-                currentPage === totalPages ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
-              }`}
+              className={`w-10 h-10 rounded-lg ${currentPage === totalPages ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
+                }`}
             >
               {totalPages}
             </button>
           </>
         )}
-        
+
         {/* Next button */}
         <button
           onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${
-            currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
         >
           <ChevronRight size={18} />
         </button>

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { gradients } from '../utils/colors';
 import { getClasseName } from '../utils/helpers';
 import { useLanguage } from '../components/contexts.js';
+import ActionConfirmePopup from '../components/ActionConfirmePopup.jsx';
 
 const CompositionsPageContent = ({
   app_bg_color,
@@ -107,8 +108,8 @@ const CompositionsPageContent = ({
     const duplicate = compositions.find(comp => {
       if (editingCompositionId && comp.id === editingCompositionId) return false;
       return comp.name === newComposition.name &&
-             new Date(comp.date).getFullYear() === new Date(newComposition.date).getFullYear() &&
-             arraysAreEqual(comp.classes, newComposition.classes);
+        new Date(comp.date).getFullYear() === new Date(newComposition.date).getFullYear() &&
+        arraysAreEqual(comp.classes, newComposition.classes);
     });
 
     if (duplicate) {
@@ -130,13 +131,13 @@ const CompositionsPageContent = ({
         updatedCompositions = updatedCompositions.map(comp =>
           comp.id === editingCompositionId
             ? {
-                ...comp,
-                name: newComposition.name,
-                helper: newComposition.helper,
-                label: newComposition.label,
-                date: newComposition.date,
-                classes: newComposition.classes
-              }
+              ...comp,
+              name: newComposition.name,
+              helper: newComposition.helper,
+              label: newComposition.label,
+              date: newComposition.date,
+              classes: newComposition.classes
+            }
             : comp
         );
         setSuccess("La composition a été mise à jour avec succès!");
@@ -384,7 +385,7 @@ const CompositionsPageContent = ({
                             <motion.button
                               type="button"
                               onClick={() => handleEditComposition(composition)}
-                              className={`text-white px-3 py-1 rounded ${buttonPrimary} mr-2`}
+                              className={`text-white px-3 py-1 rounded ${buttonPrimary} mr-2 mb-1`}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
                             >
@@ -453,21 +454,21 @@ const CompositionsPageContent = ({
                 {db && db.classes && db.classes.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {[...db.classes]
-                    .sort((a, b) => a.level - b.level)
-                    .map((cls) => (
-                      <div key={cls.id} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id={`class-${cls.id}`}
-                          checked={newComposition.classes.includes(cls.id)}
-                          onChange={() => handleClassToggle(cls.id)}
-                          className="mr-2 h-5 w-5"
-                        />
-                        <label htmlFor={`class-${cls.id}`} className={`${textClass}`}>
-                          {getClasseName(`${cls.level} ${cls.name}`, language)}
-                        </label>
-                      </div>
-                    ))}
+                      .sort((a, b) => a.level - b.level)
+                      .map((cls) => (
+                        <div key={cls.id} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id={`class-${cls.id}`}
+                            checked={newComposition.classes.includes(cls.id)}
+                            onChange={() => handleClassToggle(cls.id)}
+                            className="mr-2 h-5 w-5"
+                          />
+                          <label htmlFor={`class-${cls.id}`} className={`${textClass}`}>
+                            {getClasseName(`${cls.level} ${cls.name}`, language)}
+                          </label>
+                        </div>
+                      ))}
                   </div>
                 ) : (
                   <p className={`${textClass} italic`}>
@@ -497,48 +498,19 @@ const CompositionsPageContent = ({
       </motion.div>
 
       {/* Popup de confirmation de suppression */}
-      <AnimatePresence>
-        {compositionToDelete && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl ${inputBorderColor} border`}
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-            >
-              <h3 className="text-xl font-semibold mb-4 text-center">Confirmer la suppression</h3>
-              <p className="mb-6 text-center">
-                Voulez-vous vraiment supprimer la composition <span className="font-bold">{compositionToDelete.name}</span> du <span className="font-bold">{formatDate(compositionToDelete.date)}</span> ?
-              </p>
-              <div className="flex justify-around">
-                <motion.button
-                  type="button"
-                  onClick={confirmDeleteComposition}
-                  className={`text-white px-4 py-2 rounded ${buttonDelete}`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Confirmer
-                </motion.button>
-                <motion.button
-                  type="button"
-                  onClick={() => setCompositionToDelete(null)}
-                  className="text-white px-4 py-2 rounded bg-gray-500 hover:bg-gray-600"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Annuler
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <ActionConfirmePopup
+        isOpenConfirmPopup={compositionToDelete}
+        setIsOpenConfirmPopup={() => setCompositionToDelete(null)}
+        handleConfirmeAction={confirmDeleteComposition}
+        title={"Confirmer la suppression"}
+        message={"Voulez-vous vraiment supprimer la composition"}
+        element_info={
+          <>
+            <span className="font-bold">{compositionToDelete?.name}</span> du <span className="font-bold">{formatDate(compositionToDelete?.date)} ?</span>
+          </>
+        }
+      />
+
     </div>
   );
 };

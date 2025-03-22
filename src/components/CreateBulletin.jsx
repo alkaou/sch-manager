@@ -295,6 +295,7 @@ const CreateBulletin = ({
                 id: existingBulletinIndex >= 0 ? db.bulletins[existingBulletinIndex].id : Date.now().toString(),
                 compositionId: selectedComposition.id,
                 classId: selectedClass,
+                isLocked: false,
                 subjects: selectedSubjects,
                 students: existingBulletinIndex >= 0 ? db.bulletins[existingBulletinIndex].students || [] : []
             };
@@ -450,8 +451,8 @@ const CreateBulletin = ({
                                     <div
                                         key={subject.name}
                                         className={`flex items-center justify-between p-2 border rounded ${deleteMode && subjectsToDelete.includes(subject.name)
-                                                ? 'bg-red-100'
-                                                : ''
+                                            ? 'bg-red-100'
+                                            : ''
                                             }`}
                                     >
                                         <div className="flex items-center">
@@ -528,8 +529,8 @@ const CreateBulletin = ({
                     onClick={handleSaveBulletin}
                     disabled={loading || selectedSubjects.length < 2}
                     className={`flex items-center space-x-2 px-4 py-2 rounded text-white ${selectedSubjects.length < 2
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'bg-blue-600 hover:bg-blue-700'
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-blue-600 hover:bg-blue-700'
                         }`}
                     whileHover={{ scale: selectedSubjects.length < 2 ? 1 : 1.05 }}
                     whileTap={{ scale: selectedSubjects.length < 2 ? 1 : 0.95 }}

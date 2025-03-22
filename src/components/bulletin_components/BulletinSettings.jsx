@@ -1,9 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Sliders } from 'lucide-react';
+import { Sliders } from 'lucide-react';
 
 const BulletinSettings = ({
-  theme,
+  // theme,
   textClass,
   cardBgColor,
   borderColor,
@@ -18,13 +18,13 @@ const BulletinSettings = ({
   // Animation variants
   const panelVariants = {
     hidden: { opacity: 0, y: -20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: { duration: 0.3 }
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       y: -20,
       transition: { duration: 0.2 }
     }
@@ -87,21 +87,19 @@ const BulletinSettings = ({
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setBulletinType('type1')}
-              className={`p-2 rounded border ${borderColor} ${
-                bulletinType === 'type1' 
-                  ? 'bg-blue-600 text-white' 
-                  : `${cardBgColor} ${textClass}`
-              }`}
+              className={`p-2 rounded border ${borderColor} ${bulletinType === 'type1'
+                ? 'bg-blue-600 text-white'
+                : `${cardBgColor} ${textClass}`
+                }`}
             >
               {t.type1}
             </button>
             <button
               onClick={() => setBulletinType('type2')}
-              className={`p-2 rounded border ${borderColor} ${
-                bulletinType === 'type2' 
-                  ? 'bg-blue-600 text-white' 
-                  : `${cardBgColor} ${textClass}`
-              }`}
+              className={`p-2 rounded border ${borderColor} ${bulletinType === 'type2'
+                ? 'bg-blue-600 text-white'
+                : `${cardBgColor} ${textClass}`
+                }`}
             >
               {t.type2}
             </button>

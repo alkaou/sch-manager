@@ -13,7 +13,6 @@ const ColorPalette = ({ OpenThePopup, theme }) => {
                     />
                 </div>
                 : (
-
                     <button className="text-gray-700 dark:text-white" onClick={OpenThePopup}>
                         <img
                             src={palletteIcon}

@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas-pro';
-import BulletinPhysique1 from "./BulletinPhysique_1.jsx"
-import BulletinPhysique2 from "./BulletinPhysique_2.jsx"
+import BulletinPhysique1 from "./bulletins_physique/BulletinPhysique_1.jsx"
+import BulletinPhysique2 from "./bulletins_physique/BulletinPhysique_2.jsx"
 
-import { 
-    getAppreciation, 
+import {
+    getAppreciation,
     calculateTotalPoints,
     getCurrentSchoolYear,
     calculateMainPoints,
@@ -25,10 +25,10 @@ const BulletinComponent = ({
     school_name,
     school_short_name,
     school_zone_name,
-    showPrintBottonBtn=true,
+    showPrintBottonBtn = true,
     printRef = useRef(null),
-    language="Français",
-    getStudentBulletinRef = () => {},
+    language = "Français",
+    getStudentBulletinRef = () => { },
 }) => {
     // Styles conditionnels basés sur le thème
     const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -225,17 +225,17 @@ const BulletinComponent = ({
             {/* Bouton pour générer le PDF */}
             {
                 showPrintBottonBtn === true ?
-                <>
-                    <button onClick={handleGeneratePdf} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                        Générer PDF
-                    </button>
+                    <>
+                        <button onClick={handleGeneratePdf} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                            Générer PDF
+                        </button>
 
-                    {/* Bouton pour générer le PDF */}
-                    <button onClick={handleCloseBulletinPreview} className="mt-4 ml-10 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
-                        Fermer
-                    </button>
-                </>
-                : null
+                        {/* Bouton pour générer le PDF */}
+                        <button onClick={handleCloseBulletinPreview} className="mt-4 ml-10 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors">
+                            Fermer
+                        </button>
+                    </>
+                    : null
             }
         </div>
     );

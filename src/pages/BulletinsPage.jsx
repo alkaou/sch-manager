@@ -3,13 +3,14 @@ import { useOutletContext } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import { gradients } from '../utils/colors';
 import { getClasseName } from '../utils/helpers';
-import { useLanguage } from '../components/contexts.js';
-import { Search, Filter, Plus, Edit, Trash, Eye, FileText, CheckSquare, RefreshCcw, Unlock } from 'lucide-react';
+import { useLanguage, useFlashNotification } from '../components/contexts.js';
+import { Search, Filter, Plus, Edit, Trash, Eye, FileText, CheckSquare, RefreshCcw, Unlock, Lock } from 'lucide-react';
 
 import CreateBulletin from "../components/CreateBulletin.jsx";
 import GetBulletinStudents from "../components/GetBulletinStudents.jsx";
 import BulletinNotes from "../components/BulletinNotes.jsx";
 import ShowAllBulletin from "../components/ShowAllBulletin.jsx";
+import ActionConfirmePopup from '../components/ActionConfirmePopup.jsx';
 
 const BulletinsPageContent = ({
   app_bg_color,
@@ -30,6 +31,14 @@ const BulletinsPageContent = ({
   const [activeComponent, setActiveComponent] = useState(null);
   const [selectedComposition, setSelectedComposition] = useState(null);
   const [selectedClass, setSelectedClass] = useState(null);
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [confirmPopupTitle, setConfirmPopupTitle] = useState("");
+  const [confirmPopupMessage, setConfirmPopupMessage] = useState("");
+  const [the_compositionId, set_the_compositionId] = useState(null);
+  const [the_classId, set_the_classId] = useState(null);
+  const [popup_action, set_popup_action] = useState(null);
+
+  const { setFlashMessage } = useFlashNotification();
 
   // Couleurs et styles
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
@@ -174,23 +183,83 @@ const BulletinsPageContent = ({
   };
 
   // Gérer la suppression d'un bulletin
-  const handleDeleteBulletin = async (compositionId, classId) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce bulletin ?")) {
-      try {
-        const updatedBulletins = bulletins.filter(
-          bulletin => !(bulletin.compositionId === compositionId && bulletin.classId === classId)
-        );
+  const handleDeleteBulletin = async (compositionId = "", classId = "") => {
+    setConfirmPopupTitle("Confirmer la suppression du bulletin")
+    setConfirmPopupMessage("Êtes-vous sûr de vouloir supprimer ce bulletin ?")
+    if (showConfirmPopup === false) {
+      set_the_compositionId(compositionId);
+      set_the_classId(classId);
+      set_popup_action(2);
+      setShowConfirmPopup(true);
+      return;
+    }
+    try {
+      const updatedBulletins = bulletins.filter(
+        bulletin => !(bulletin.compositionId === the_compositionId && bulletin.classId === the_classId)
+      );
 
-        const updatedDB = { ...db, bulletins: updatedBulletins };
-        await window.electron.saveDatabase(updatedDB);
+      const updatedDB = { ...db, bulletins: updatedBulletins };
+      await window.electron.saveDatabase(updatedDB);
 
-        setBulletins(updatedBulletins);
-        refreshData();
-        alert("Bulletin supprimé avec succès !");
-      } catch (error) {
-        console.error("Erreur lors de la suppression du bulletin:", error);
-        alert("Erreur lors de la suppression du bulletin.");
-      }
+      setBulletins(updatedBulletins);
+      refreshData();
+      setFlashMessage({
+        message: "Bulletin supprimé avec succès !",
+        type: "success",
+        duration: 5000,
+      });
+      setShowConfirmPopup(false);
+      set_the_compositionId(null);
+      set_the_classId(null);
+      set_popup_action(null);
+    } catch (error) {
+      // console.error("Erreur lors de la suppression du bulletin:", error);
+      // alert("Erreur lors de la suppression du bulletin.");
+      setFlashMessage({
+        message: "Erreur lors de la suppression du bulletin.",
+        type: "error",
+        duration: 5000,
+      });
+      setShowConfirmPopup(false);
+      set_the_compositionId(null);
+      set_the_classId(null);
+      set_popup_action(null);
+    }
+  };
+
+  // Gérer la suppression d'un bulletin
+  const handleLokedBulletin = async (compositionId = "", classId = "") => {
+    setConfirmPopupTitle("Confirmer la fermeture du bulletin")
+    setConfirmPopupMessage("Êtes-vous sûr de vouloir fermer ce bulletin ?\nVous ne pourrez plus désormais modifier quoi que ce soit sur ce bulletin !")
+    if (showConfirmPopup === false) {
+      set_the_compositionId(compositionId);
+      set_the_classId(classId);
+      set_popup_action(1);
+      setShowConfirmPopup(true);
+      return;
+    }
+    try {
+      const updatedBulletins = bulletins.filter(
+        bulletin => (bulletin.compositionId === the_compositionId && bulletin.classId === the_classId).isLocked = true
+      );
+      console.log(updatedBulletins);
+      // const updatedDB = { ...db, bulletins: updatedBulletins };
+      // await window.electron.saveDatabase(updatedDB);
+
+      // setBulletins(updatedBulletins);
+      // refreshData();
+      // alert("Bulletin supprimé avec succès !");
+      // setShowConfirmPopup(false);
+      // set_the_compositionId(null);
+      // set_the_classId(null);
+      // set_popup_action(null);
+    } catch (error) {
+      // console.error("Erreur lors de la suppression du bulletin:", error);
+      // alert("Erreur lors de la suppression du bulletin.");
+      // setShowConfirmPopup(false);
+      // set_the_compositionId(null);
+      // set_the_classId(null);
+      // set_popup_action(null);
     }
   };
 
@@ -330,7 +399,7 @@ const BulletinsPageContent = ({
                               {bulletinExistsForClass ? (
                                 <>
                                   <motion.button
-                                    // onClick={() => handleOpenComponent("BulletinNotes", composition, classId)}
+                                    onClick={() => handleLokedBulletin(composition.id, classId)}
                                     className={`p-1.5 rounded ${buttonAdd} text-white`}
                                     whileHover={{ scale: 1.1 }}
                                     whileTap={{ scale: 0.95 }}
@@ -542,6 +611,29 @@ const BulletinsPageContent = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Popup de confirmation de suppression */}
+      <ActionConfirmePopup
+        isOpenConfirmPopup={showConfirmPopup}
+        setIsOpenConfirmPopup={() => {
+          setShowConfirmPopup(false);
+          set_the_compositionId(null);
+          set_the_classId(null);
+          set_popup_action(null);
+        }}
+        handleConfirmeAction={
+          popup_action === 1 ? handleLokedBulletin :
+            popup_action === 2 ? handleDeleteBulletin : () => { }
+        }
+        title={confirmPopupTitle}
+        message={confirmPopupMessage}
+      // element_info={
+      //   <>
+      //     <span className="font-bold">{compositionToDelete?.name}</span> du <span className="font-bold">{formatDate(compositionToDelete?.date)}</span>
+      //   </>
+      // }
+      />
+
     </div>
   );
 };
