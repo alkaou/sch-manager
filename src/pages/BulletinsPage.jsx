@@ -227,7 +227,7 @@ const BulletinsPageContent = ({
     }
   };
 
-  // Gérer la suppression d'un bulletin
+  // Gérer la fermeture d'un bulletin
   const handleLokedBulletin = async (compositionId = "", classId = "") => {
     setConfirmPopupTitle("Confirmer la fermeture du bulletin")
     setConfirmPopupMessage("Êtes-vous sûr de vouloir fermer ce bulletin ?\nVous ne pourrez plus désormais modifier quoi que ce soit sur ce bulletin !")
@@ -239,27 +239,40 @@ const BulletinsPageContent = ({
       return;
     }
     try {
-      const updatedBulletins = bulletins.filter(
-        bulletin => (bulletin.compositionId === the_compositionId && bulletin.classId === the_classId).isLocked = true
-      );
-      console.log(updatedBulletins);
-      // const updatedDB = { ...db, bulletins: updatedBulletins };
-      // await window.electron.saveDatabase(updatedDB);
-
-      // setBulletins(updatedBulletins);
-      // refreshData();
-      // alert("Bulletin supprimé avec succès !");
-      // setShowConfirmPopup(false);
-      // set_the_compositionId(null);
-      // set_the_classId(null);
-      // set_popup_action(null);
+      const updatedBulletins = bulletins.map(bulletin => {
+        if (bulletin.compositionId === the_compositionId && bulletin.classId === the_classId) {
+          // On retourne une copie du bulletin avec isLocked mis à true
+          return { ...bulletin, isLocked: true };
+        }
+        // Sinon, on retourne le bulletin tel quel
+        return bulletin;
+      });
+      // console.log(updatedBulletins);
+      const updatedDB = { ...db, bulletins: updatedBulletins };
+      await window.electron.saveDatabase(updatedDB);
+      setBulletins(updatedBulletins);
+      refreshData();
+      setFlashMessage({
+        message: "Bulletin fermé avec succès !",
+        type: "success",
+        duration: 5000,
+      });
+      setShowConfirmPopup(false);
+      set_the_compositionId(null);
+      set_the_classId(null);
+      set_popup_action(null);
     } catch (error) {
       // console.error("Erreur lors de la suppression du bulletin:", error);
       // alert("Erreur lors de la suppression du bulletin.");
-      // setShowConfirmPopup(false);
-      // set_the_compositionId(null);
-      // set_the_classId(null);
-      // set_popup_action(null);
+      setFlashMessage({
+        message: "Erreur lors de la fermeture du bulletin.",
+        type: "error",
+        duration: 5000,
+      });
+      setShowConfirmPopup(false);
+      set_the_compositionId(null);
+      set_the_classId(null);
+      set_popup_action(null);
     }
   };
 
@@ -383,6 +396,8 @@ const BulletinsPageContent = ({
                       const bulletinExistsForClass = bulletinExists(composition.id, classId);
                       const totalStudents = getStudentCount(classId);
                       const composedStudents = getComposedStudentCount(composition.id, classId);
+                      const bullettinIsLocked = getBulletin(composition.id, classId)?.isLocked;
+                      // console.log(bullettinIsLocked);
 
                       return (
                         <motion.div
@@ -396,28 +411,16 @@ const BulletinsPageContent = ({
                               {getClasseName(`${classObj.level} ${classObj.name}`, language)}
                             </h4>
                             <div className="flex space-x-1">
-                              {bulletinExistsForClass ? (
+                              {bullettinIsLocked ?
                                 <>
-                                  <motion.button
-                                    onClick={() => handleLokedBulletin(composition.id, classId)}
-                                    className={`p-1.5 rounded ${buttonAdd} text-white`}
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    title="Fermer l'édition"
-                                  >
-                                    <Unlock size={16} />
-                                  </motion.button>
-
-                                  <motion.button
-                                    onClick={() => handleOpenComponent("BulletinNotes", composition, classId)}
-                                    className={`p-1.5 rounded ${buttonPrimary} text-white`}
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    title="Saisir les notes"
-                                  >
-                                    <FileText size={16} />
-                                  </motion.button>
-
+                                  <span style={{
+                                    fontSize: "12px",
+                                    padding: "2px 4px",
+                                    borderRadius: "5px",
+                                  }} className={`text-white bg-blue-300 italic flex`}>
+                                    Bulletin fermé!
+                                    <Lock className="mt-1 ml-1 text-white" size={15} />
+                                  </span>
                                   <motion.button
                                     onClick={() => handleOpenComponent("ShowAllBulletin", composition, classId)}
                                     className={`p-1.5 rounded ${buttonView} text-white`}
@@ -427,38 +430,76 @@ const BulletinsPageContent = ({
                                   >
                                     <Eye size={16} />
                                   </motion.button>
-
-                                  <motion.button
-                                    onClick={() => handleOpenComponent("CreateBulletin", composition, classId)}
-                                    className={`p-1.5 rounded ${buttonEdit} text-white`}
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    title="Reconfigurer le bulletin"
-                                  >
-                                    <Edit size={16} />
-                                  </motion.button>
-
-                                  <motion.button
-                                    onClick={() => handleDeleteBulletin(composition.id, classId)}
-                                    className={`p-1.5 rounded ${buttonDelete} text-white`}
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    title="Supprimer le bulletin"
-                                  >
-                                    <Trash size={16} />
-                                  </motion.button>
                                 </>
-                              ) : (
-                                <motion.button
-                                  onClick={() => handleOpenComponent("CreateBulletin", composition, classId)}
-                                  className={`p-1.5 rounded ${buttonAdd} text-white`}
-                                  whileHover={{ scale: 1.1 }}
-                                  whileTap={{ scale: 0.95 }}
-                                  title="Créer un bulletin"
-                                >
-                                  <Plus size={16} />
-                                </motion.button>
-                              )}
+                                :
+                                (
+                                  <>
+                                    {bulletinExistsForClass ? (
+                                      <>
+                                        <motion.button
+                                          onClick={() => handleLokedBulletin(composition.id, classId)}
+                                          className={`p-1.5 rounded ${buttonAdd} text-white`}
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                          title="Fermer l'édition"
+                                        >
+                                          <Unlock size={16} />
+                                        </motion.button>
+
+                                        <motion.button
+                                          onClick={() => handleOpenComponent("BulletinNotes", composition, classId)}
+                                          className={`p-1.5 rounded ${buttonPrimary} text-white`}
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                          title="Saisir les notes"
+                                        >
+                                          <FileText size={16} />
+                                        </motion.button>
+
+                                        <motion.button
+                                          onClick={() => handleOpenComponent("ShowAllBulletin", composition, classId)}
+                                          className={`p-1.5 rounded ${buttonView} text-white`}
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                          title="Voir les bulletins"
+                                        >
+                                          <Eye size={16} />
+                                        </motion.button>
+
+                                        <motion.button
+                                          onClick={() => handleOpenComponent("CreateBulletin", composition, classId)}
+                                          className={`p-1.5 rounded ${buttonEdit} text-white`}
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                          title="Reconfigurer le bulletin"
+                                        >
+                                          <Edit size={16} />
+                                        </motion.button>
+
+                                        <motion.button
+                                          onClick={() => handleDeleteBulletin(composition.id, classId)}
+                                          className={`p-1.5 rounded ${buttonDelete} text-white`}
+                                          whileHover={{ scale: 1.1 }}
+                                          whileTap={{ scale: 0.95 }}
+                                          title="Supprimer le bulletin"
+                                        >
+                                          <Trash size={16} />
+                                        </motion.button>
+                                      </>
+                                    ) : (
+                                      <motion.button
+                                        onClick={() => handleOpenComponent("CreateBulletin", composition, classId)}
+                                        className={`p-1.5 rounded ${buttonAdd} text-white`}
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        title="Créer un bulletin"
+                                      >
+                                        <Plus size={16} />
+                                      </motion.button>
+                                    )}
+                                  </>
+                                )
+                              }
                             </div>
                           </div>
 
@@ -478,7 +519,7 @@ const BulletinsPageContent = ({
                                       Composés: {composedStudents}/{totalStudents}
                                     </span>
                                   }
-                                  {composedStudents < totalStudents && (
+                                  {!bullettinIsLocked && composedStudents < totalStudents && (
                                     <motion.button
                                       onClick={() => handleOpenComponent("GetBulletinStudents", composition, classId)}
                                       className={`p-1.5 rounded ${buttonPrimary} text-white`}
