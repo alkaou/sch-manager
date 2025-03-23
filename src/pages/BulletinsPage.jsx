@@ -436,15 +436,17 @@ const BulletinsPageContent = ({
                                   <>
                                     {bulletinExistsForClass ? (
                                       <>
-                                        <motion.button
-                                          onClick={() => handleLokedBulletin(composition.id, classId)}
-                                          className={`p-1.5 rounded ${buttonAdd} text-white`}
-                                          whileHover={{ scale: 1.1 }}
-                                          whileTap={{ scale: 0.95 }}
-                                          title="Fermer l'édition"
-                                        >
-                                          <Unlock size={16} />
-                                        </motion.button>
+                                        {composedStudents > 1 ?
+                                          <motion.button
+                                            onClick={() => handleLokedBulletin(composition.id, classId)}
+                                            className={`p-1.5 rounded ${buttonAdd} text-white`}
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            title="Fermer l'édition"
+                                          >
+                                            <Unlock size={16} />
+                                          </motion.button> : null
+                                        }
 
                                         <motion.button
                                           onClick={() => handleOpenComponent("BulletinNotes", composition, classId)}

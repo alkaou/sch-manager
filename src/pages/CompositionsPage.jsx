@@ -180,6 +180,19 @@ const CompositionsPageContent = ({
   };
 
   const handleEditComposition = (composition) => {
+    // Check if this composition has more than 2 bulletins and all are locked
+    const compositionBulletins = db?.bulletins?.filter(bulletin =>
+      bulletin.compositionId === composition.id
+    ) || [];
+
+    const isFullyLocked = compositionBulletins.length > 2 &&
+      compositionBulletins.every(bulletin => bulletin.isLocked === true);
+
+    // If fully locked, don't allow editing
+    if (isFullyLocked) {
+      return;
+    }
+
     setEditingCompositionId(composition.id);
     setNewComposition({
       name: composition.name,
@@ -195,15 +208,30 @@ const CompositionsPageContent = ({
     if (!compositionToDelete) return;
 
     try {
+      // Check if this composition has more than 2 bulletins and all are locked
+      const compositionBulletins = db?.bulletins?.filter(bulletin =>
+        bulletin.compositionId === compositionToDelete.id
+      ) || [];
+
+      const isFullyLocked = compositionBulletins.length > 2 &&
+        compositionBulletins.every(bulletin => bulletin.isLocked === true);
+
+      // If fully locked, don't allow deletion
+      if (isFullyLocked) {
+        setGlobalError("Cette composition ne peut pas être supprimée car tous ses bulletins sont verrouillés.");
+        setCompositionToDelete(null);
+        return;
+      }
+
       // Filter out the composition to delete
       const updatedCompositions = compositions.filter(comp => comp.id !== compositionToDelete.id);
-      
+
       // Also filter out all bulletins related to this composition
       const updatedBulletins = db.bulletins.filter(bulletin => bulletin.compositionId !== compositionToDelete.id);
-      
+
       // Update the database with both changes
-      const updatedDB = { 
-        ...db, 
+      const updatedDB = {
+        ...db,
         compositions: updatedCompositions,
         bulletins: updatedBulletins
       };
@@ -216,7 +244,6 @@ const CompositionsPageContent = ({
       setGlobalError("Erreur lors de la suppression de la composition.");
     }
   };
-  
 
   const resetForm = () => {
     setNewComposition({

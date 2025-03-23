@@ -74,7 +74,7 @@ export const generateMultipleBulletinsPDF = async ({
           // Deuxième bulletin à droite
           const snd_margin = margin + bulletinWidth;
           pdf.addImage(groupe[1], 'PNG', snd_margin, margin, bulletinWidth, bulletinHeight);
-          if (i <= bulletinImages.length - 2) {
+          if (i <= bulletinImages.length - 3) {
             pdf.addPage();
           }
         } else {

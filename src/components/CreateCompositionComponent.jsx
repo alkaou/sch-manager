@@ -45,7 +45,7 @@ const CreateCompositionComponent = ({
         type: "spring",
         stiffness: 300,
         damping: 25,
-        duration: 0.5
+        duration: 1.5
       }
     },
     exit: {
@@ -127,33 +127,54 @@ const CreateCompositionComponent = ({
                       </tr>
                     </thead>
                     <tbody>
-                      {sortedCompositions.map((composition) => (
-                        <tr key={composition.id} className={`hover:bg-gray-50 hover:text-gray-500 ${textClass}`}>
-                          <td className="px-2 py-1 border text-center">{composition.label}</td>
-                          <td className="px-2 py-1 border text-center">{formatDate(composition.date)}</td>
-                          <td className="px-2 py-1 border text-center">{getClassesNames(composition.classes)}</td>
-                          <td className="px-2 py-1 border text-center">
-                            <motion.button
-                              type="button"
-                              onClick={() => handleEditComposition(composition)}
-                              className={`text-white px-3 py-1 rounded ${buttonPrimary} mr-2 mb-1`}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Modifier
-                            </motion.button>
-                            <motion.button
-                              type="button"
-                              onClick={() => setCompositionToDelete(composition)}
-                              className={`text-white px-3 py-1 rounded ${buttonDelete}`}
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              Supprimer
-                            </motion.button>
-                          </td>
-                        </tr>
-                      ))}
+                      {sortedCompositions.map((composition) => {
+                        // Check if this composition has more than 2 bulletins and all are locked
+                        const compositionBulletins = db?.bulletins?.filter(bulletin =>
+                          bulletin.compositionId === composition.id
+                        ) || [];
+
+                        const isFullyLocked = compositionBulletins.length > 2 &&
+                          compositionBulletins.every(bulletin => bulletin.isLocked === true);
+
+                        return (
+                          <tr key={composition.id} className={`hover:bg-gray-50 hover:text-gray-500 ${textClass}`}>
+                            <td className="px-2 py-1 border text-center">{composition.label}</td>
+                            <td className="px-2 py-1 border text-center">{formatDate(composition.date)}</td>
+                            <td className="px-2 py-1 border text-center">{getClassesNames(composition.classes)}</td>
+                            <td className="px-2 py-1 border text-center">
+                              {isFullyLocked ? (
+                                <div className="flex items-center justify-center text-gray-500">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                  </svg>
+                                  Locked
+                                </div>
+                              ) : (
+                                <>
+                                  <motion.button
+                                    type="button"
+                                    onClick={() => handleEditComposition(composition)}
+                                    className={`text-white px-3 py-1 rounded ${buttonPrimary} mr-2 mb-1`}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    Modifier
+                                  </motion.button>
+                                  <motion.button
+                                    type="button"
+                                    onClick={() => setCompositionToDelete(composition)}
+                                    className={`text-white px-3 py-1 rounded ${buttonDelete}`}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                  >
+                                    Supprimer
+                                  </motion.button>
+                                </>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
