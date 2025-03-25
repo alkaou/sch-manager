@@ -30,13 +30,13 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
 
     // Charger les systèmes de paiement existants
     useEffect(() => {
-        if (db) {
-            if (!db.paymentSystems) {
-                setPaymentSystems([]);
-            } else {
-                setPaymentSystems(db.paymentSystems);
-            }
-            updateAvailableClasses(db.classes || [], db.paymentSystems || []);
+        if (db && db.paymentSystems) {
+            // Sort payment systems by creation date (newest first)
+            const sortedSystems = [...db.paymentSystems].sort((a, b) => 
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            setPaymentSystems(sortedSystems);
+            updateAvailableClasses(db.classes, sortedSystems);
         }
     }, [db]);
 
@@ -44,17 +44,24 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     const updateAvailableClasses = (allClasses, systems) => {
         if (!allClasses) return;
 
-        // Trouver les IDs des classes déjà assignées à un système actif
+        // Get current date for comparison
+        const currentDate = new Date();
+        
+        // Find classes that are already assigned to active payment systems (not expired)
         const assignedClassIds = new Set();
-        systems?.forEach(system => {
-            if (system.isActive) {
-                system.classes.forEach(classId => {
-                    assignedClassIds.add(classId);
-                });
+        
+        systems.forEach(system => {
+            // Only consider systems that are active and not expired
+            const endDate = new Date(system.endDate);
+            const isExpired = endDate < currentDate;
+            
+            // If system is not expired, mark its classes as assigned
+            if (system.isActive && !isExpired && system.classes) {
+                system.classes.forEach(classId => assignedClassIds.add(classId));
             }
         });
-
-        // Filtrer les classes non assignées
+        
+        // Filter out classes that are already assigned to active systems
         const available = allClasses.filter(cls => !assignedClassIds.has(cls.id));
         setAvailableClasses(available);
     };
@@ -250,8 +257,13 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     const pastSystemBgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-200";
 
     // Séparer les systèmes actifs et inactifs
-    const activeSystems = paymentSystems.filter(system => system.isActive && !isSchoolYearEnded(system.endDate));
-    const pastSystems = paymentSystems.filter(system => !system.isActive || isSchoolYearEnded(system.endDate));
+    const activeSystems = paymentSystems
+        .filter(system => system.isActive && !isSchoolYearEnded(system.endDate))
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by creation date (newest first)
+    
+    const pastSystems = paymentSystems
+        .filter(system => !system.isActive || isSchoolYearEnded(system.endDate))
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by creation date (newest first)
 
     return (
         <motion.div

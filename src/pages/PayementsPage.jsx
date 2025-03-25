@@ -8,7 +8,7 @@ import PayementsMonthlyClass from "../components/payements/PayementsMonthlyClass
 import PayementsYearlyClass from "../components/payements/PayementsYearlyClass.jsx";
 import PayementsMonthlyTotal from "../components/payements/PayementsMonthlyTotal.jsx";
 import PayementsYearlyTotal from "../components/payements/PayementsYearlyTotal.jsx";
-import PayementsClassDetails from "../components/payements/PayementsClassDetails.jsx";
+import PayementsStudentList from "../components/payements/PayementsStudentList.jsx";
 
 const PayementsPage = () => {
   const context = useOutletContext();
@@ -17,6 +17,7 @@ const PayementsPage = () => {
   const [db, setDb] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
+  const [paymentSystems, setPaymentSystems] = useState([]);
 
   // Largeur fixe du sidebar
   const sidebarWidth = 280;
@@ -35,13 +36,14 @@ const PayementsPage = () => {
   // Rendu du contenu principal en fonction de l'onglet actif
   const renderContent = () => {
     if (selectedClass) {
-      return <PayementsClassDetails
-        classInfo={selectedClass}
+      return <PayementsStudentList
+        selectedClass={selectedClass}
         db={db}
         refreshData={refreshData}
         theme={theme}
         app_bg_color={app_bg_color}
         text_color={text_color}
+        selectedPaymentSystem={paymentSystems}
       />;
     }
 
@@ -127,6 +129,8 @@ const PayementsPage = () => {
           text_color={text_color}
           selectedClass={selectedClass}
           setSelectedClass={setSelectedClass}
+          paymentSystems={paymentSystems}
+          setPaymentSystems={setPaymentSystems}
           setActiveTab={setActiveTab}
         />
       </div>
