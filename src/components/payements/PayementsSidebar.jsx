@@ -89,6 +89,8 @@ const PayementsSidebar = ({
   const buttonBgColor = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
   const systemHeaderBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
   const systemHeaderHoverBgColor = theme === "dark" ? "hover:bg-gray-600" : "hover:bg-gray-200";
+  const cardBgColor = theme === "dark" ? "bg-gray-750" : "bg-white";
+  const cardBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
 
   return (
     <div className={`h-full ${sidebarBgColor} overflow-hidden flex flex-col border-b-2 border-r-2 ${borderRightColor} shadow-md`}>
@@ -177,76 +179,88 @@ const PayementsSidebar = ({
               return (
                 <div
                   key={system.id}
-                  className={`rounded-lg ${sidebarBgColor} overflow-hidden shadow-md transition-all duration-300 ${expandedSystems[system.id]
-                    ? 'border-l-4 border-blue-500'
-                    : 'border border-gray-600 hover:border-blue-400'
+                  className={`rounded-lg overflow-hidden shadow-md transition-all duration-300 ${expandedSystems[system.id]
+                      ? 'border-l-4 border-blue-500'
+                      : `border ${cardBorderColor} hover:border-blue-400`
                     }`}
+                  style={{
+                    backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff"
+                  }}
                 >
-                  <motion.button
-                    onClick={() => toggleExpanded(system.id)}
-                    className={`w-full text-left px-4 py-4 
-                      ${expandedSystems[system.id]} ${text_color} 
-                      flex justify-between items-center transition-all duration-300
-                      ${sidebarBgColor} ${hoverClassBgColor}
-                    `}
-                    whileHover={{
-                      backgroundColor: expandedSystems[system.id]
-                        ? theme === "dark" ? "rgba(75, 85, 99, 1)" : "rgba(219, 234, 254, 1)"
-                        : theme === "dark" ? "rgba(75, 85, 99, 1)" : "rgba(229, 231, 235, 1)"
-                    }}
-                  >
-                    <div className="flex items-start">
-                      <div className={`mr-3 p-2 rounded-full ${expandedSystems[system.id]
-                        ? theme === "dark" ? 'bg-blue-600' : 'bg-blue-500'
-                        : theme === "dark" ? 'bg-gray-600' : 'bg-gray-200'
-                        } transition-colors duration-300 mt-1`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id] ? 'text-white' : theme === "dark" ? 'text-gray-300' : 'text-gray-600'
-                          }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className={`font-medium text-lg ${expandedSystems[system.id]
-                          ? theme === "dark" ? 'text-blue-300' : 'text-blue-700'
-                          : text_color
-                          }`}>
-                          {system.name}
-                        </span>
-                        <span className="text-xs opacity-80 mt-1">
-                          {new Date(system.startDate).toLocaleDateString()} - {new Date(system.endDate).toLocaleDateString()}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <div className={`px-2 py-1 rounded-full text-center text-xs font-medium mr-3 ${
-                        expandedSystems[system.id]
-                          ? theme === "dark" ? 'bg-blue-800 text-blue-200' : 'bg-blue-100 text-blue-800'
-                          : theme === "dark" ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700 border border-gray-300'
+                  {/* Header section with system name as title */}
+                  <div className={`w-full px-4 py-3 ${expandedSystems[system.id] ? 'bg-blue-50 dark:bg-gray-700' : ''}`}>
+                    <div className={`font-bold text-lg mb-1 ${expandedSystems[system.id]
+                        ? theme === "dark" ? 'text-blue-300' : 'text-blue-700'
+                        : text_color
                       }`}>
-                        {systemClasses.length} classes
-                      </div>
-                      <motion.div
-                        animate={{
-                          rotate: expandedSystems[system.id] ? 180 : 0,
-                          backgroundColor: expandedSystems[system.id]
-                            ? theme === "dark" ? 'rgba(37, 99, 235, 0.5)' : 'rgba(219, 234, 254, 1)'
-                            : 'transparent'
-                        }}
-                        transition={{ duration: 0.3 }}
-                        className={`p-1 rounded-full ${expandedSystems[system.id]
-                          ? theme === "dark" ? 'bg-blue-800' : 'bg-blue-100'
-                          : ''
-                          }`}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id]
-                          ? theme === "dark" ? 'text-blue-200' : 'text-blue-600'
-                          : text_color
-                          }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </motion.div>
+                      {system.name}
                     </div>
-                  </motion.button>
+
+                    {/* Button section with details */}
+                    <motion.button
+                      onClick={() => toggleExpanded(system.id)}
+                      className={`w-full text-left 
+                        flex justify-between items-center transition-all duration-300
+                        py-2 rounded-md ${expandedSystems[system.id] ? 'bg-opacity-10' : ''}
+                      `}
+                      whileHover={{
+                        backgroundColor: expandedSystems[system.id]
+                          ? theme === "dark" ? "rgba(75, 85, 99, 0.3)" : "rgba(219, 234, 254, 0.5)"
+                          : theme === "dark" ? "rgba(75, 85, 99, 0.3)" : "rgba(229, 231, 235, 0.5)"
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <div className={`mr-3 p-2 rounded-full ${expandedSystems[system.id]
+                            ? theme === "dark" ? 'bg-blue-600' : 'bg-blue-500'
+                            : theme === "dark" ? 'bg-gray-600' : 'bg-gray-200'
+                          } transition-colors duration-300`}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id] ? 'text-white' : theme === "dark" ? 'text-gray-300' : 'text-gray-600'
+                            }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs opacity-80">
+                            {new Date(system.startDate).toLocaleDateString()} - {new Date(system.endDate).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <div className={`px-2 py-1 rounded-full text-center text-xs font-medium mr-3 ${expandedSystems[system.id]
+                            ? theme === "dark" ? 'bg-blue-800 text-blue-200' : 'bg-blue-100 text-blue-800'
+                            : theme === "dark" ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700 border border-gray-300'
+                          }`}>
+                          {systemClasses.length} classes
+                        </div>
+                        <motion.div
+                          initial={{ rotate: 0 }}
+                          animate={{
+                            rotate: expandedSystems[system.id] ? 180 : 0,
+                            backgroundColor: expandedSystems[system.id]
+                              ? theme === "dark" ? 'rgba(37, 99, 235, 0.5)' : 'rgba(219, 234, 254, 1)'
+                              : 'rgba(0, 0, 0, 0)'
+                          }}
+                          transition={{ duration: 0.3 }}
+                          className={`p-1 rounded-full ${expandedSystems[system.id]
+                              ? theme === "dark" ? 'bg-blue-800' : 'bg-blue-100'
+                              : ''
+                            }`}
+                          style={{
+                            backgroundColor: expandedSystems[system.id]
+                              ? theme === "dark" ? 'rgba(37, 99, 235, 0.5)' : 'rgba(219, 234, 254, 1)'
+                              : 'rgba(0, 0, 0, 0)'
+                          }}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id]
+                              ? theme === "dark" ? 'text-blue-200' : 'text-blue-600'
+                              : text_color
+                            }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </motion.div>
+                      </div>
+                    </motion.button>
+                  </div>
 
                   <AnimatePresence>
                     {expandedSystems[system.id] && (
@@ -325,29 +339,26 @@ const PayementsSidebar = ({
               );
             })}
           </div>
-        )
-        }
-      </div >
+        )}
+      </div>
 
       {/* Bouton pour revenir aux onglets */}
-      {
-        selectedClass && (
-          <div className="p-3 border-t border-gray-700">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                setSelectedClass(null);
-                setActiveTab(0);
-              }}
-              className={`w-full py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white transition-colors`}
-            >
-              Retour aux onglets
-            </motion.button>
-          </div>
-        )
-      }
-    </div >
+      {selectedClass && (
+        <div className="p-3 border-t border-gray-700">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setSelectedClass(null);
+              setActiveTab(0);
+            }}
+            className={`w-full py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white transition-colors`}
+          >
+            Retour aux onglets
+          </motion.button>
+        </div>
+      )}
+    </div>
   );
 };
 

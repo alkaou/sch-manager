@@ -1,816 +1,799 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getClasseName } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { useFlashNotification } from "../contexts";
-import { Search, Calendar, CheckCircle, XCircle, Edit2, ArrowLeft, ArrowRight, Filter, AlertCircle, DollarSign } from "lucide-react";
+import { Search, Calendar, CheckCircle, XCircle, Edit2, RefreshCcw, Filter, ChevronDown, ChevronUp } from 'lucide-react';
 
-const PayementsStudentList = ({ db, theme, app_bg_color, text_color, selectedClass, selectedPaymentSystem }) => {
+const PayementsStudentList = ({
+    selectedClass,
+    db,
+    refreshData,
+    theme,
+    app_bg_color,
+    text_color,
+    selectedPaymentSystem
+}) => {
     const { language } = useLanguage();
     const { setFlashMessage } = useFlashNotification();
     const [students, setStudents] = useState([]);
-    const [filteredStudents, setFilteredStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const [isLoading, setIsLoading] = useState(true);
+    const [selectedMonth, setSelectedMonth] = useState(1); // Default to first month
+    const [paymentSystem, setPaymentSystem] = useState(null);
+    const [months, setMonths] = useState([]);
+    const [isYearExpired, setIsYearExpired] = useState(false);
     const [validatedPayments, setValidatedPayments] = useState([]);
     const [pendingPayments, setPendingPayments] = useState([]);
-    const [showValidated, setShowValidated] = useState(false);
-    const [editingPayment, setEditingPayment] = useState(null);
-    const [paymentToEdit, setPaymentToEdit] = useState(null);
-    const [isSystemExpired, setIsSystemExpired] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [expandedStudent, setExpandedStudent] = useState(null);
+    const [sortBy, setSortBy] = useState('name'); // 'name', 'status'
+    const [sortDirection, setSortDirection] = useState('asc');
 
-    // Styles en fonction du thème
-    const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-    const headerBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-    const textColorClass = theme === "dark" ? text_color : "text-gray-700";
-    const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
-    const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-    const tableBgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-50";
-    const tableHeaderBgColor = theme === "dark" ? "bg-gray-800" : "bg-gray-200";
-    const tableRowHoverBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100";
-    const buttonPrimary = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
-    const buttonSecondary = theme === "dark" ? "bg-gray-600 hover:bg-gray-700" : "bg-gray-400 hover:bg-gray-500";
-    const buttonDanger = "bg-red-600 hover:bg-red-700";
-    const buttonSuccess = "bg-green-600 hover:bg-green-700";
-
-    // Mois en français
-    const months = [
-        "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
-    ];
-
-    // Vérifier si le système de paiement est expiré
+    // Load data when component mounts or when selectedClass/db changes
     useEffect(() => {
-        if (selectedPaymentSystem) {
-            const endDate = new Date(selectedPaymentSystem.endDate);
-            const today = new Date();
-            setIsSystemExpired(endDate < today);
-
-            // Définir le mois sélectionné au premier mois de l'année scolaire
-            const startDate = new Date(selectedPaymentSystem.startDate);
-            setSelectedMonth(startDate.getMonth());
-            setSelectedYear(startDate.getFullYear());
+        if (selectedClass && db) {
+            loadData();
         }
-    }, [selectedPaymentSystem]);
+    }, [selectedClass, db]);
 
-    // Charger les étudiants de la classe sélectionnée
-    useEffect(() => {
-        if (db && selectedClass && selectedPaymentSystem) {
-            setIsLoading(true);
-            loadStudentsWithPaymentInfo();
-        } else {
-            setStudents([]);
-            setFilteredStudents([]);
-            setValidatedPayments([]);
-            setPendingPayments([]);
-        }
-        // console.log(selectedClass);
-    }, [db, selectedClass, selectedPaymentSystem, selectedMonth, selectedYear]);
-
-    // Filtrer les étudiants en fonction de la recherche
-    useEffect(() => {
-        if (searchTerm.trim() === '') {
-            setFilteredStudents(students);
-        } else {
-            const term = searchTerm.toLowerCase();
-            const filtered = students.filter(student =>
-                student.name_complet.toLowerCase().includes(term) ||
-                student.matricule.toLowerCase().includes(term)
+    // Function to load all necessary data
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            // Find the payment system for this class
+            const system = db.paymentSystems.find(sys =>
+                sys.classes && sys.classes.includes(selectedClass.id)
             );
-            setFilteredStudents(filtered);
-        }
-    }, [students, searchTerm]);
 
-    // Charger les informations de paiement des étudiants
-    const loadStudentsWithPaymentInfo = async () => {
-        if (!db || !db.students || !selectedClass || !selectedPaymentSystem) {
-            setIsLoading(false);
-            return;
-        }
-
-        // Récupérer les étudiants de la classe sélectionnée
-        const classStudents = db.students.filter(student =>
-            student.classe === `${selectedClass.level} ${selectedClass.name}` &&
-            student.status === "actif"
-        );
-
-        // Récupérer les paiements existants
-        const payments = db.payments || [];
-
-        // Préparer les données pour chaque étudiant
-        const studentsWithPayments = classStudents.map(student => {
-            // Calculer les montants attendus pour le mois sélectionné
-            const monthlyFee = selectedPaymentSystem.monthlyFee || 0;
-
-            // Déterminer si le frais d'inscription doit être affiché (uniquement pour le premier mois)
-            const startDate = new Date(selectedPaymentSystem.startDate);
-            const isFirstMonth = selectedMonth === startDate.getMonth() && selectedYear === startDate.getFullYear();
-            const registrationFee = isFirstMonth ? (selectedPaymentSystem.registrationFee || 0) : 0;
-
-            // Calculer le montant total à payer pour ce mois
-            const totalMonthlyAmount = monthlyFee + registrationFee;
-
-            // Trouver les paiements de l'étudiant pour ce mois
-            const studentPayments = payments.filter(payment => {
-                const paymentDate = new Date(payment.date);
-                return payment.studentId === student.id &&
-                    payment.paymentSystemId === selectedPaymentSystem.id &&
-                    paymentDate.getMonth() === selectedMonth &&
-                    paymentDate.getFullYear() === selectedYear;
-            });
-
-            // Calculer le montant total payé pour ce mois
-            const paidAmount = studentPayments.reduce((sum, payment) => sum + payment.amount, 0);
-
-            // Déterminer si le paiement est validé pour ce mois
-            const isValidated = paidAmount >= totalMonthlyAmount;
-
-            return {
-                ...student,
-                monthlyFee,
-                registrationFee,
-                totalMonthlyAmount,
-                paidAmount,
-                remainingAmount: Math.max(0, totalMonthlyAmount - paidAmount),
-                isValidated,
-                payments: studentPayments
-            };
-        });
-
-        // Trier les étudiants par nom
-        studentsWithPayments.sort((a, b) => a.name_complet.localeCompare(b.name_complet));
-
-        // Séparer les paiements validés et en attente
-        const validated = studentsWithPayments.filter(student => student.isValidated);
-        const pending = studentsWithPayments.filter(student => !student.isValidated);
-
-        setStudents(studentsWithPayments);
-        setFilteredStudents(studentsWithPayments);
-        setValidatedPayments(validated);
-        setPendingPayments(pending);
-        setIsLoading(false);
-    };
-
-    // Gérer l'ajout d'un nouveau paiement
-    const handleAddPayment = async (student, amount) => {
-        if (isSystemExpired) {
-            setFlashMessage({
-                message: "Impossible de modifier les paiements d'un système expiré",
-                type: "error",
-                duration: 5000,
-            });
-            return;
-        }
-
-        if (!amount || amount <= 0) {
-            setFlashMessage({
-                message: "Veuillez entrer un montant valide",
-                type: "error",
-                duration: 5000,
-            });
-            return;
-        }
-
-        try {
-            // Créer un nouvel objet de paiement
-            const newPayment = {
-                id: `payment-${Date.now()}`,
-                studentId: student.id,
-                paymentSystemId: selectedPaymentSystem.id,
-                amount: Number(amount),
-                date: new Date().toISOString(),
-                month: selectedMonth,
-                year: selectedYear,
-                type: "monthly",
-                createdAt: new Date().toISOString()
-            };
-
-            // Ajouter le paiement à la base de données
-            const updatedDb = { ...db };
-            if (!updatedDb.payments) updatedDb.payments = [];
-            updatedDb.payments.push(newPayment);
-
-            // Sauvegarder dans la base de données
-            await window.electron.saveDatabase(updatedDb);
-
-            // Mettre à jour l'interface
-            setFlashMessage({
-                message: `Paiement de ${amount} FCFA enregistré pour ${student.name_complet}`,
-                type: "success",
-                duration: 5000,
-            });
-
-            // Recharger les données
-            loadStudentsWithPaymentInfo();
-        } catch (error) {
-            setFlashMessage({
-                message: "Erreur lors de l'enregistrement du paiement",
-                type: "error",
-                duration: 5000,
-            });
-        }
-    };
-
-    // Gérer la modification d'un paiement existant
-    const handleEditPayment = async (payment, newAmount) => {
-        if (isSystemExpired) {
-            setFlashMessage({
-                message: "Impossible de modifier les paiements d'un système expiré",
-                type: "error",
-                duration: 5000,
-            });
-            return;
-        }
-
-        if (!newAmount || newAmount <= 0) {
-            setFlashMessage({
-                message: "Veuillez entrer un montant valide",
-                type: "error",
-                duration: 5000,
-            });
-            return;
-        }
-
-        try {
-            // Mettre à jour le paiement dans la base de données
-            const updatedDb = { ...db };
-            const paymentIndex = updatedDb.payments.findIndex(p => p.id === payment.id);
-
-            if (paymentIndex !== -1) {
-                updatedDb.payments[paymentIndex] = {
-                    ...updatedDb.payments[paymentIndex],
-                    amount: Number(newAmount),
-                    updatedAt: new Date().toISOString()
-                };
-
-                // Sauvegarder dans la base de données
-                await window.electron.saveDatabase(updatedDb);
-
-                // Mettre à jour l'interface
+            if (!system) {
                 setFlashMessage({
-                    message: "Paiement modifié avec succès",
-                    type: "success",
+                    message: "Aucun système de paiement trouvé pour cette classe",
+                    type: "error",
                     duration: 5000,
                 });
-
-                // Réinitialiser l'état d'édition
-                setEditingPayment(null);
-                setPaymentToEdit(null);
-
-                // Recharger les données
-                loadStudentsWithPaymentInfo();
+                setLoading(false);
+                return;
             }
+
+            setPaymentSystem(system);
+
+            // Check if school year is expired
+            const endDate = new Date(system.endDate);
+            const currentDate = new Date();
+            const isExpired = endDate < currentDate;
+            setIsYearExpired(isExpired);
+
+            // Calculate months between start and end dates
+            const startDate = new Date(system.startDate);
+            const monthsArray = [];
+            let currentMonth = new Date(startDate);
+
+            while (currentMonth <= endDate) {
+                monthsArray.push({
+                    number: monthsArray.length + 1,
+                    name: currentMonth.toLocaleString('fr-FR', { month: 'long' }),
+                    year: currentMonth.getFullYear()
+                });
+                currentMonth.setMonth(currentMonth.getMonth() + 1);
+            }
+
+            setMonths(monthsArray);
+
+            // Get students from this class
+            const classStudents = db.students.filter(
+                student => student.classe === `${selectedClass.level} ${selectedClass.name}` && student.status === "actif"
+            );
+
+            // Check if payment data exists for this class and system
+            const paymentKey = `students_${system.id}_${selectedClass.id}`;
+            let paymentData = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
+
+            // If payment data doesn't exist, initialize it
+            if (paymentData.length === 0) {
+                paymentData = classStudents.map(student => ({
+                    ...student,
+                    schoolar_month_number: monthsArray.length,
+                    month_payed: []
+                }));
+
+                // Save initialized payment data if not expired
+                if (!isExpired) {
+                    const updatedPayments = { ...db.payments || {} };
+                    updatedPayments[paymentKey] = paymentData;
+
+                    const updatedDb = { ...db, payments: updatedPayments };
+                    await window.electron.saveDatabase(updatedDb);
+                    await refreshData();
+                }
+            }
+
+            setStudents(paymentData);
+            updatePaymentLists(paymentData, selectedMonth);
         } catch (error) {
+            console.error("Error loading payment data:", error);
             setFlashMessage({
-                message: "Erreur lors de la modification du paiement",
+                message: "Erreur lors du chargement des données de paiement",
                 type: "error",
                 duration: 5000,
             });
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Gérer la suppression d'un paiement
-    const handleDeletePayment = async (payment) => {
-        if (isSystemExpired) {
-            setFlashMessage({
-                message: "Impossible de supprimer les paiements d'un système expiré",
-                type: "error",
-                duration: 5000,
-            });
-            return;
+    // Update payment lists when selected month changes
+    useEffect(() => {
+        if (students.length > 0) {
+            updatePaymentLists(students, selectedMonth);
         }
+    }, [selectedMonth, students]);
+
+    // Function to update validated and pending payment lists
+    const updatePaymentLists = (studentsList, month) => {
+        const validated = studentsList.filter(student =>
+            student.month_payed && student.month_payed.includes(month.toString())
+        );
+
+        const pending = studentsList.filter(student =>
+            !student.month_payed || !student.month_payed.includes(month.toString())
+        );
+
+        setValidatedPayments(validated);
+        setPendingPayments(pending);
+    };
+
+    // Handle payment validation
+    const handleValidatePayment = async (student) => {
+        if (isYearExpired) return;
 
         try {
-            // Supprimer le paiement de la base de données
-            const updatedDb = { ...db };
-            updatedDb.payments = updatedDb.payments.filter(p => p.id !== payment.id);
-
-            // Sauvegarder dans la base de données
-            await window.electron.saveDatabase(updatedDb);
-
-            // Mettre à jour l'interface
-            setFlashMessage({
-                message: "Paiement supprimé avec succès",
-                type: "success",
-                duration: 5000,
+            const updatedStudents = students.map(s => {
+                if (s.id === student.id) {
+                    const monthPayed = s.month_payed || [];
+                    if (!monthPayed.includes(selectedMonth.toString())) {
+                        return {
+                            ...s,
+                            month_payed: [...monthPayed, selectedMonth.toString()]
+                        };
+                    }
+                }
+                return s;
             });
 
-            // Recharger les données
-            loadStudentsWithPaymentInfo();
-        } catch (error) {
+            setStudents(updatedStudents);
+
+            // Update database
+            const paymentKey = `students_${paymentSystem.id}_${selectedClass.id}`;
+            const updatedPayments = { ...db.payments || {} };
+            updatedPayments[paymentKey] = updatedStudents;
+
+            const updatedDb = { ...db, payments: updatedPayments };
+            await window.electron.saveDatabase(updatedDb);
+            await refreshData();
+
+            updatePaymentLists(updatedStudents, selectedMonth);
+
             setFlashMessage({
-                message: "Erreur lors de la suppression du paiement",
+                message: `Paiement validé pour ${student.name_complet}`,
+                type: "success",
+                duration: 3000,
+            });
+        } catch (error) {
+            console.error("Error validating payment:", error);
+            setFlashMessage({
+                message: "Erreur lors de la validation du paiement",
                 type: "error",
                 duration: 5000,
             });
         }
     };
 
-    // Générer les mois disponibles pour le système de paiement sélectionné
-    const availableMonths = useMemo(() => {
-        if (!selectedPaymentSystem) return [];
+    // Handle payment invalidation
+    const handleInvalidatePayment = async (student) => {
+        if (isYearExpired) return;
 
-        const startDate = new Date(selectedPaymentSystem.startDate);
-        const endDate = new Date(selectedPaymentSystem.endDate);
-        const result = [];
-
-        let currentDate = new Date(startDate);
-
-        while (currentDate <= endDate) {
-            result.push({
-                month: currentDate.getMonth(),
-                year: currentDate.getFullYear(),
-                label: `${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`
+        try {
+            const updatedStudents = students.map(s => {
+                if (s.id === student.id) {
+                    const monthPayed = s.month_payed || [];
+                    return {
+                        ...s,
+                        month_payed: monthPayed.filter(m => m !== selectedMonth.toString())
+                    };
+                }
+                return s;
             });
 
-            currentDate.setMonth(currentDate.getMonth() + 1);
-        }
+            setStudents(updatedStudents);
 
-        return result;
-    }, [selectedPaymentSystem]);
+            // Update database
+            const paymentKey = `students_${paymentSystem.id}_${selectedClass.id}`;
+            const updatedPayments = { ...db.payments || {} };
+            updatedPayments[paymentKey] = updatedStudents;
 
-    // Changer le mois sélectionné
-    const handleMonthChange = (monthData) => {
-        setSelectedMonth(monthData.month);
-        setSelectedYear(monthData.year);
-    };
+            const updatedDb = { ...db, payments: updatedPayments };
+            await window.electron.saveDatabase(updatedDb);
+            await refreshData();
 
-    // Naviguer au mois précédent
-    const goToPreviousMonth = () => {
-        const currentIndex = availableMonths.findIndex(m =>
-            m.month === selectedMonth && m.year === selectedYear
-        );
+            updatePaymentLists(updatedStudents, selectedMonth);
 
-        if (currentIndex > 0) {
-            const prevMonth = availableMonths[currentIndex - 1];
-            setSelectedMonth(prevMonth.month);
-            setSelectedYear(prevMonth.year);
-        }
-    };
-
-    // Naviguer au mois suivant
-    const goToNextMonth = () => {
-        const currentIndex = availableMonths.findIndex(m =>
-            m.month === selectedMonth && m.year === selectedYear
-        );
-
-        if (currentIndex < availableMonths.length - 1) {
-            const nextMonth = availableMonths[currentIndex + 1];
-            setSelectedMonth(nextMonth.month);
-            setSelectedYear(nextMonth.year);
+            setFlashMessage({
+                message: `Paiement invalidé pour ${student.name_complet}`,
+                type: "info",
+                duration: 3000,
+            });
+        } catch (error) {
+            console.error("Error invalidating payment:", error);
+            setFlashMessage({
+                message: "Erreur lors de l'invalidation du paiement",
+                type: "error",
+                duration: 5000,
+            });
         }
     };
 
-    // Afficher un message si aucune classe n'est sélectionnée
-    if (!selectedClass || !selectedPaymentSystem) {
-        return (
-            <div className={`h-full flex items-center justify-center ${cardBgColor}`}>
-                <div className="text-center p-8">
-                    <div className="mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                    </div>
-                    <h2 className={`text-xl font-bold ${textColorClass} mb-2`}>Aucune classe sélectionnée</h2>
-                    <p className={`${textColorClass} opacity-70`}>Veuillez sélectionner une classe dans le menu de gauche pour gérer les paiements.</p>
-                </div>
-            </div>
-        );
-    }
+    // Handle refresh
+    const handleRefresh = async () => {
+        setIsRefreshing(true);
+        await refreshData();
+        await loadData();
+        setTimeout(() => {
+            setIsRefreshing(false);
+        }, 1000);
+    };
 
-    // Afficher un indicateur de chargement
-    if (isLoading) {
-        return (
-            <div className={`h-full flex items-center justify-center ${cardBgColor}`}>
-                <div className="text-center p-8">
-                    <div className="mb-4">
-                        <svg className="animate-spin h-10 w-10 mx-auto text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    </div>
-                    <p className={`${textColorClass}`}>Chargement des données...</p>
-                </div>
-            </div>
+    // Toggle expanded student details
+    const toggleExpandStudent = (studentId) => {
+        setExpandedStudent(expandedStudent === studentId ? null : studentId);
+    };
+
+    // Handle sort change
+    const handleSortChange = (field) => {
+        if (sortBy === field) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortBy(field);
+            setSortDirection('asc');
+        }
+    };
+
+    // Sort students
+    const sortStudents = (studentsList) => {
+        return [...studentsList].sort((a, b) => {
+            if (sortBy === 'name') {
+                const nameA = a.name_complet.toLowerCase();
+                const nameB = b.name_complet.toLowerCase();
+                return sortDirection === 'asc'
+                    ? nameA.localeCompare(nameB)
+                    : nameB.localeCompare(nameA);
+            } else if (sortBy === 'status') {
+                const statusA = a.month_payed ? a.month_payed.length : 0;
+                const statusB = b.month_payed ? b.month_payed.length : 0;
+                return sortDirection === 'asc'
+                    ? statusA - statusB
+                    : statusB - statusA;
+            }
+            return 0;
+        });
+    };
+
+    // Filter students by search term
+    const filterStudents = (studentsList) => {
+        if (!searchTerm) return studentsList;
+
+        return studentsList.filter(student =>
+            student.name_complet.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (student.matricule && student.matricule.toLowerCase().includes(searchTerm.toLowerCase()))
         );
-    }
+    };
+
+    // Styles based on theme
+    const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+    const headerBgColor = theme === "dark" ? "bg-gray-900" : app_bg_color;
+    const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+    const inputTextColor = theme === "dark" ? text_color : "text-gray-700";
+    const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
+    const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+    const tableHeaderBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
+    const tableRowHoverBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-50";
+    const buttonBgColor = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
+    const buttonRedColor = theme === "dark" ? "bg-red-600 hover:bg-red-700" : "bg-red-500 hover:bg-red-600";
+    const buttonGreenColor = theme === "dark" ? "bg-green-600 hover:bg-green-700" : "bg-green-500 hover:bg-green-600";
+    const buttonGrayColor = theme === "dark" ? "bg-gray-600 hover:bg-gray-700" : "bg-gray-500 hover:bg-gray-600";
+    const expiredBadgeBgColor = theme === "dark" ? "bg-red-900" : "bg-red-100";
+    const expiredBadgeTextColor = theme === "dark" ? "text-red-200" : "text-red-800";
+
+    // Get filtered and sorted students
+    const filteredPendingPayments = filterStudents(sortStudents(pendingPayments));
+    const filteredValidatedPayments = filterStudents(sortStudents(validatedPayments));
 
     return (
-        <div className={`h-full flex flex-col ${cardBgColor}`}>
-            {/* En-tête avec informations sur la classe et le système de paiement */}
-            <div className={`p-4 ${headerBgColor} border-b flex justify-between items-center`}>
-                <div>
-                    <h2 className={`text-xl font-bold ${textColorClass}`}>
-                        Classe: {selectedClass.level} {selectedClass.name}
-                        <span className="ml-2 text-sm font-normal opacity-70">
-                            ({filteredStudents.length} élèves)
-                        </span>
-                    </h2>
-                    <p className={`${textColorClass} opacity-80 text-sm`}>
-                        Système de paiement: {selectedPaymentSystem.name}
-                        {isSystemExpired && (
-                            <span className="ml-2 px-2 py-0.5 bg-red-100 text-red-600 text-xs font-medium rounded">
-                                Expiré
-                            </span>
-                        )}
-                    </p>
+        <motion.div
+            className="container mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
+            {loading ? (
+                <div className="flex justify-center items-center h-64">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
-                <div className="flex items-center space-x-2">
-                    <button
-                        onClick={goToPreviousMonth}
-                        className={`p-2 rounded-full ${buttonSecondary} text-white`}
-                        disabled={availableMonths.findIndex(m => m.month === selectedMonth && m.year === selectedYear) === 0}
-                    >
-                        <ArrowLeft size={16} />
-                    </button>
+            ) : (
+                <>
+                    {/* Header with class info and payment system */}
+                    <div className={`${cardBgColor} rounded-lg shadow-md p-4 mb-6 border ${borderColor}`}>
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                            <div>
+                                <h2 className={`text-2xl font-bold ${inputTextColor}`}>
+                                    Classe: {getClasseName(`${selectedClass.level} ${selectedClass.name}`, language)}
+                                </h2>
+                                <p className={`${inputTextColor} opacity-80`}>
+                                    Système de paiement: {paymentSystem?.name}
+                                </p>
+                                <div className="flex items-center mt-1">
+                                    <p className={`${inputTextColor} opacity-80 mr-2`}>
+                                        Période: {new Date(paymentSystem?.startDate).toLocaleDateString()} - {new Date(paymentSystem?.endDate).toLocaleDateString()}
+                                    </p>
+                                    {isYearExpired && (
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${expiredBadgeBgColor} ${expiredBadgeTextColor}`}>
+                                            Année Scolaire Expirée
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-2 mt-4 md:mt-0">
+                                <button
+                                    onClick={handleRefresh}
+                                    className={`p-2 rounded-full border ${borderColor} hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300`}
+                                    title="Rafraîchir"
+                                >
+                                    <RefreshCcw className={`${inputTextColor} ${isRefreshing ? 'animate-spin' : ''}`} size={20} />
+                                </button>
+                            </div>
+                        </div>
 
-                    <div className="relative">
-                        <select
-                            value={`${selectedMonth}-${selectedYear}`}
-                            onChange={(e) => {
-                                const [month, year] = e.target.value.split('-');
-                                handleMonthChange({ month: parseInt(month), year: parseInt(year) });
-                            }}
-                            className={`px-3 py-2 rounded ${inputBgColor} ${textColorClass} border ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none pr-8`}
-                        >
-                            {availableMonths.map((monthData, index) => (
-                                <option key={index} value={`${monthData.month}-${monthData.year}`}>
-                                    {monthData.label}
-                                </option>
-                            ))}
-                        </select>
-                        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                            <Calendar size={16} className={textColorClass} />
+                        {/* Payment details */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                <p className="text-sm opacity-70 mb-1">Frais mensuels</p>
+                                <p className={`${inputTextColor} text-xl font-bold`}>
+                                    {Number(paymentSystem?.monthlyFee).toLocaleString()} FCFA
+                                </p>
+                            </div>
+                            {selectedMonth === 1 && paymentSystem?.registrationFee > 0 && (
+                                <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                    <p className="text-sm opacity-70 mb-1">Frais d'inscription</p>
+                                    <p className={`${inputTextColor} text-xl font-bold`}>
+                                        {Number(paymentSystem?.registrationFee).toLocaleString()} FCFA
+                                    </p>
+                                </div>
+                            )}
+                            <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                <p className="text-sm opacity-70 mb-1">Total élèves</p>
+                                <p className={`${inputTextColor} text-xl font-bold`}>
+                                    {students.length}
+                                </p>
+                            </div>
+                            <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                <p className="text-sm opacity-70 mb-1">Paiements validés</p>
+                                <p className={`text-green-500 text-xl font-bold`}>
+                                    {validatedPayments.length} / {students.length}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Month selector and search */}
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
+                            <div className="flex flex-wrap gap-2">
+                                {months.map((month, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedMonth(month.number)}
+                                        className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${selectedMonth === month.number
+                                                ? `${buttonBgColor} text-white`
+                                                : `border ${borderColor} ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"}`
+                                            }`}
+                                    >
+                                        {month.name} {month.year}
+                                    </button>
+                                ))}
+                            </div>
+                            <div className="relative w-full md:w-64">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Search className={`${inputTextColor} opacity-50`} size={18} />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Rechercher un élève..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className={`w-full pl-10 pr-4 py-2 rounded-lg ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                />
+                            </div>
                         </div>
                     </div>
 
-                    <button
-                        onClick={goToNextMonth}
-                        className={`p-2 rounded-full ${buttonSecondary} text-white`}
-                        disabled={availableMonths.findIndex(m => m.month === selectedMonth && m.year === selectedYear) === availableMonths.length - 1}
-                    >
-                        <ArrowRight size={16} />
-                    </button>
-                </div>
-            </div>
-
-            {/* Barre de recherche et filtres */}
-            <div className="p-4 border-b flex flex-wrap items-center justify-between gap-4">
-                <div className="relative flex-grow max-w-md">
-                    <input
-                        type="text"
-                        placeholder="Rechercher un élève..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className={`w-full pl-10 pr-4 py-2 rounded ${inputBgColor} ${textColorClass} border ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    />
-                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                        <Search size={18} className={`${textColorClass} opacity-60`} />
-                    </div>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                    <button
-                        onClick={() => setShowValidated(!showValidated)}
-                        className={`px-4 py-2 rounded flex items-center space-x-2 ${showValidated ? buttonPrimary : buttonSecondary} text-white`}
-                    >
-                        {showValidated ? <CheckCircle size={18} /> : <Filter size={18} />}
-                        <span>{showValidated ? "Paiements validés" : "Paiements en attente"}</span>
-                    </button>
-
-                    {isSystemExpired && (
-                        <div className="flex items-center space-x-2 px-3 py-1.5 bg-yellow-100 text-yellow-800 rounded">
-                            <AlertCircle size={16} />
-                            <span className="text-sm">Mode lecture seule (système expiré)</span>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Contenu principal */}
-            <div className="flex-grow overflow-auto">
-                {filteredStudents.length === 0 ? (
-                    <div className="h-full flex items-center justify-center">
-                        <div className="text-center p-8">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                            <p className={`${textColorClass} font-medium`}>Aucun élève trouvé</p>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="p-4">
-                        <div className={`rounded-lg overflow-hidden border ${inputBorderColor} mb-6`}>
-                            <table className="w-full">
-                                <thead className={`${tableHeaderBgColor}`}>
-                                    <tr>
-                                        <th className={`px-4 py-3 text-left ${textColorClass}`}>Élève</th>
-                                        <th className={`px-4 py-3 text-right ${textColorClass}`}>Frais mensuel</th>
-                                        {selectedMonth === new Date(selectedPaymentSystem.startDate).getMonth() &&
-                                            selectedYear === new Date(selectedPaymentSystem.startDate).getFullYear() && (
-                                                <th className={`px-4 py-3 text-right ${textColorClass}`}>Frais d'inscription</th>
-                                            )}
-                                        <th className={`px-4 py-3 text-right ${textColorClass}`}>Total à payer</th>
-                                        <th className={`px-4 py-3 text-right ${textColorClass}`}>Montant payé</th>
-                                        <th className={`px-4 py-3 text-right ${textColorClass}`}>Reste à payer</th>
-                                        <th className={`px-4 py-3 text-center ${textColorClass}`}>Statut</th>
-                                        <th className={`px-4 py-3 text-center ${textColorClass}`}>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {(showValidated ? validatedPayments : pendingPayments)
-                                        .filter(student => filteredStudents.some(s => s.id === student.id))
-                                        .map((student, index) => (
-                                            <tr
-                                                key={student.id}
-                                                className={`${index % 2 === 0 ? tableBgColor : ''} ${tableRowHoverBgColor} border-t ${inputBorderColor}`}
-                                            >
-                                                <td className={`px-4 py-3 ${textColorClass}`}>
-                                                    <div className="flex items-center">
-                                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${student.isValidated ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'
-                                                            } mr-3`}>
-                                                            {student.name_complet.charAt(0).toUpperCase()}
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium">{student.name_complet}</div>
-                                                            <div className="text-xs opacity-70">Matricule: {student.matricule}</div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td className={`px-4 py-3 text-right ${textColorClass}`}>
-                                                    {student.monthlyFee.toLocaleString()} FCFA
-                                                </td>
-                                                {selectedMonth === new Date(selectedPaymentSystem.startDate).getMonth() &&
-                                                    selectedYear === new Date(selectedPaymentSystem.startDate).getFullYear() && (
-                                                        <td className={`px-4 py-3 text-right ${textColorClass}`}>
-                                                            {student.registrationFee.toLocaleString()} FCFA
-                                                        </td>
-                                                    )}
-                                                <td className={`px-4 py-3 text-right font-medium ${textColorClass}`}>
-                                                    {student.totalMonthlyAmount.toLocaleString()} FCFA
-                                                </td>
-                                                <td className={`px-4 py-3 text-right font-medium text-green-600`}>
-                                                    {student.paidAmount.toLocaleString()} FCFA
-                                                </td>
-                                                <td className={`px-4 py-3 text-right font-medium ${student.remainingAmount > 0 ? 'text-red-600' : 'text-green-600'
-                                                    }`}>
-                                                    {student.remainingAmount.toLocaleString()} FCFA
-                                                </td>
-                                                <td className={`px-4 py-3 text-center`}>
-                                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${student.isValidated
-                                                            ? 'bg-green-100 text-green-800'
-                                                            : 'bg-yellow-100 text-yellow-800'
-                                                        }`}>
-                                                        {student.isValidated ? (
-                                                            <>
-                                                                <CheckCircle size={12} className="mr-1" />
-                                                                Payé
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <XCircle size={12} className="mr-1" />
-                                                                En attente
-                                                            </>
-                                                        )}
-                                                    </span>
-                                                </td>
-                                                <td className={`px-4 py-3 text-center`}>
-                                                    {!isSystemExpired && (
-                                                        <div className="flex items-center justify-center space-x-2">
-                                                            {editingPayment === student.id ? (
-                                                                <div className="flex items-center space-x-2">
-                                                                    <input
-                                                                        type="number"
-                                                                        value={paymentToEdit || ''}
-                                                                        onChange={(e) => setPaymentToEdit(e.target.value)}
-                                                                        className={`w-24 px-2 py-1 rounded ${inputBgColor} ${textColorClass} border ${inputBorderColor} focus:outline-none focus:ring-1 focus:ring-blue-500`}
-                                                                        placeholder="Montant"
-                                                                    />
-                                                                    <button
-                                                                        onClick={() => {
-                                                                            handleAddPayment(student, paymentToEdit);
-                                                                            setEditingPayment(null);
-                                                                            setPaymentToEdit(null);
-                                                                        }}
-                                                                        className={`p-1 rounded ${buttonSuccess} text-white`}
-                                                                    >
-                                                                        <CheckCircle size={16} />
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => {
-                                                                            setEditingPayment(null);
-                                                                            setPaymentToEdit(null);
-                                                                        }}
-                                                                        className={`p-1 rounded ${buttonDanger} text-white`}
-                                                                    >
-                                                                        <XCircle size={16} />
-                                                                    </button>
-                                                                </div>
-                                                            ) : (
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setEditingPayment(student.id);
-                                                                        setPaymentToEdit(student.remainingAmount > 0 ? student.remainingAmount : '');
-                                                                    }}
-                                                                    className={`p-1.5 rounded ${buttonPrimary} text-white`}
-                                                                >
-                                                                    <DollarSign size={16} />
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* Section des paiements détaillés */}
-                        <div className="mt-8">
-                            <h3 className={`text-lg font-semibold ${textColorClass} mb-4`}>
-                                Historique des paiements - {months[selectedMonth]} {selectedYear}
+                    {/* Pending payments section */}
+                    <div className={`${cardBgColor} rounded-lg shadow-md p-4 mb-6 border ${borderColor}`}>
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className={`text-xl font-semibold ${inputTextColor}`}>
+                                Paiements en attente ({filteredPendingPayments.length})
                             </h3>
+                            <div className="flex items-center space-x-2">
+                                <button
+                                    onClick={() => handleSortChange('name')}
+                                    className={`flex items-center px-3 py-1 rounded text-sm ${sortBy === 'name' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}
+                                >
+                                    Nom
+                                    {sortBy === 'name' && (
+                                        sortDirection === 'asc' ? <ChevronUp size={16} className="ml-1" /> : <ChevronDown size={16} className="ml-1" />
+                                    )}
+                                </button>
+                                <button
+                                    onClick={() => handleSortChange('status')}
+                                    className={`flex items-center px-3 py-1 rounded text-sm ${sortBy === 'status' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}
+                                >
+                                    Statut
+                                    {sortBy === 'status' && (
+                                        sortDirection === 'asc' ? <ChevronUp size={16} className="ml-1" /> : <ChevronDown size={16} className="ml-1" />
+                                    )}
+                                </button>
+                            </div>
+                        </div>
 
-                            {/* Liste des paiements pour le mois sélectionné */}
-                            <div className={`rounded-lg overflow-hidden border ${inputBorderColor}`}>
-                                <table className="w-full">
+                        {filteredPendingPayments.length === 0 ? (
+                            <div className="text-center py-8">
+                                <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-3" />
+                                <p className={`${inputTextColor} font-medium`}>Tous les paiements sont validés pour ce mois!</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                     <thead className={`${tableHeaderBgColor}`}>
                                         <tr>
-                                            <th className={`px-4 py-3 text-left ${textColorClass}`}>Élève</th>
-                                            <th className={`px-4 py-3 text-left ${textColorClass}`}>Date</th>
-                                            <th className={`px-4 py-3 text-right ${textColorClass}`}>Montant</th>
-                                            <th className={`px-4 py-3 text-center ${textColorClass}`}>Actions</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Élève</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Matricule</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Statut</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Montant</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {db.payments && db.payments
-                                            .filter(payment => {
-                                                const paymentDate = new Date(payment.date);
-                                                return payment.paymentSystemId === selectedPaymentSystem.id &&
-                                                    paymentDate.getMonth() === selectedMonth &&
-                                                    paymentDate.getFullYear() === selectedYear &&
-                                                    filteredStudents.some(s => s.id === payment.studentId);
-                                            })
-                                            .sort((a, b) => new Date(b.date) - new Date(a.date))
-                                            .map((payment, index) => {
-                                                const student = filteredStudents.find(s => s.id === payment.studentId);
-                                                if (!student) return null;
+                                    <tbody className={`${tableBgColor} divide-y divide-gray-200 dark:divide-gray-700`}>
+                                        {filteredPendingPayments.map((student) => {
+                                            // Calculate amount to pay
+                                            let amountToPay = Number(paymentSystem.monthlyFee);
+                                            if (selectedMonth === 1 && paymentSystem.registrationFee) {
+                                                amountToPay += Number(paymentSystem.registrationFee);
+                                            }
 
-                                                return (
-                                                    <tr
-                                                        key={payment.id}
-                                                        className={`${index % 2 === 0 ? tableBgColor : ''} ${tableRowHoverBgColor} border-t ${inputBorderColor}`}
-                                                    >
-                                                        <td className={`px-4 py-3 ${textColorClass}`}>
+                                            return (
+                                                <React.Fragment key={student.id}>
+                                                    <tr className={`${tableRowHoverBgColor} cursor-pointer`} onClick={() => toggleExpandStudent(student.id)}>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
                                                             <div className="flex items-center">
-                                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center bg-blue-100 text-blue-600 mr-3`}>
+                                                                <div className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center ${student.sexe === 'M' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200'}`}>
                                                                     {student.name_complet.charAt(0).toUpperCase()}
                                                                 </div>
-                                                                <div>
-                                                                    <div className="font-medium">{student.name_complet}</div>
-                                                                    <div className="text-xs opacity-70">Matricule: {student.matricule}</div>
+                                                                <div className="ml-4">
+                                                                    <div className={`text-sm font-medium ${inputTextColor}`}>{student.name_complet}</div>
+                                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{student.sexe === 'M' ? 'Garçon' : 'Fille'}</div>
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td className={`px-4 py-3 ${textColorClass}`}>
-                                                            {new Date(payment.date).toLocaleDateString('fr-FR', {
-                                                                day: 'numeric',
-                                                                month: 'short',
-                                                                year: 'numeric',
-                                                                hour: '2-digit',
-                                                                minute: '2-digit'
-                                                            })}
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className={`text-sm ${inputTextColor}`}>{student.matricule || 'Non défini'}</div>
                                                         </td>
-                                                        <td className={`px-4 py-3 text-right font-medium text-green-600`}>
-                                                            {payment.amount.toLocaleString()} FCFA
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${student.month_payed && student.month_payed.length > 0
+                                                                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                                                    : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                                                }`}>
+                                                                {student.month_payed && student.month_payed.length > 0
+                                                                    ? `${student.month_payed.length}/${student.schoolar_month_number} mois payés`
+                                                                    : 'Aucun mois payé'}
+                                                            </span>
                                                         </td>
-                                                        <td className={`px-4 py-3 text-center`}>
-                                                            {!isSystemExpired && (
-                                                                <div className="flex items-center justify-center space-x-2">
-                                                                    <button
-                                                                        onClick={() => {
-                                                                            setEditingPayment(`payment-${payment.id}`);
-                                                                            setPaymentToEdit(payment.amount);
-                                                                        }}
-                                                                        className={`p-1.5 rounded ${buttonPrimary} text-white`}
-                                                                    >
-                                                                        <Edit2 size={16} />
-                                                                    </button>
-
-                                                                    {editingPayment === `payment-${payment.id}` ? (
-                                                                        <div className="flex items-center space-x-2">
-                                                                            <input
-                                                                                type="number"
-                                                                                value={paymentToEdit || ''}
-                                                                                onChange={(e) => setPaymentToEdit(e.target.value)}
-                                                                                className={`w-24 px-2 py-1 rounded ${inputBgColor} ${textColorClass} border ${inputBorderColor} focus:outline-none focus:ring-1 focus:ring-blue-500`}
-                                                                                placeholder="Montant"
-                                                                            />
-                                                                            <button
-                                                                                onClick={() => {
-                                                                                    handleEditPayment(payment, paymentToEdit);
-                                                                                }}
-                                                                                className={`p-1 rounded ${buttonSuccess} text-white`}
-                                                                            >
-                                                                                <CheckCircle size={16} />
-                                                                            </button>
-                                                                            <button
-                                                                                onClick={() => {
-                                                                                    setEditingPayment(null);
-                                                                                    setPaymentToEdit(null);
-                                                                                }}
-                                                                                className={`p-1 rounded ${buttonDanger} text-white`}
-                                                                            >
-                                                                                <XCircle size={16} />
-                                                                            </button>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <button
-                                                                            onClick={() => {
-                                                                                if (window.confirm(`Êtes-vous sûr de vouloir supprimer ce paiement de ${payment.amount.toLocaleString()} FCFA ?`)) {
-                                                                                    handleDeletePayment(payment);
-                                                                                }
-                                                                            }}
-                                                                            className={`p-1.5 rounded ${buttonDanger} text-white`}
-                                                                        >
-                                                                            <XCircle size={16} />
-                                                                        </button>
-                                                                    )}
-                                                                </div>
-                                                            )}
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className={`text-sm font-medium ${inputTextColor}`}>
+                                                                {amountToPay.toLocaleString()} FCFA
+                                                                {selectedMonth === 1 && paymentSystem.registrationFee > 0 && (
+                                                                    <span className="text-xs text-gray-500 dark:text-gray-400 block">
+                                                                        (Inclus frais d'inscription)
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleValidatePayment(student);
+                                                                }}
+                                                                disabled={isYearExpired}
+                                                                className={`inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white ${isYearExpired ? buttonGrayColor : buttonGreenColor} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mr-2`}
+                                                            >
+                                                                <CheckCircle size={16} className="mr-1" /> Valider
+                                                            </button>
                                                         </td>
                                                     </tr>
-                                                );
-                                            })}
-
-                                        {(!db.payments || db.payments.filter(payment => {
-                                            const paymentDate = new Date(payment.date);
-                                            return payment.paymentSystemId === selectedPaymentSystem.id &&
-                                                paymentDate.getMonth() === selectedMonth &&
-                                                paymentDate.getFullYear() === selectedYear &&
-                                                filteredStudents.some(s => s.id === payment.studentId);
-                                        }).length === 0) && (
-                                                <tr>
-                                                    <td colSpan="4" className={`px-4 py-6 text-center ${textColorClass} opacity-70`}>
-                                                        Aucun paiement enregistré pour ce mois
-                                                    </td>
-                                                </tr>
-                                            )}
+                                                    <AnimatePresence>
+                                                        {expandedStudent === student.id && (
+                                                            <motion.tr
+                                                                initial={{ opacity: 0, height: 0 }}
+                                                                animate={{ opacity: 1, height: 'auto' }}
+                                                                exit={{ opacity: 0, height: 0 }}
+                                                                transition={{ duration: 0.3 }}
+                                                            >
+                                                                <td colSpan={5} className={`px-6 py-4 ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                        <div>
+                                                                            <h4 className={`text-sm font-bold ${inputTextColor} mb-2`}>Informations de l'élève</h4>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Nom complet:</span> {student.name_complet}
+                                                                            </p>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Classe:</span> {student.classe}
+                                                                            </p>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Matricule:</span> {student.matricule || 'Non défini'}
+                                                                            </p>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Sexe:</span> {student.sexe === 'M' ? 'Masculin' : 'Féminin'}
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h4 className={`text-sm font-bold ${inputTextColor} mb-2`}>Statut des paiements</h4>
+                                                                            <div className="flex flex-wrap gap-2">
+                                                                                {months.map((month, index) => (
+                                                                                    <span
+                                                                                        key={index}
+                                                                                        className={`px-2 py-1 rounded-full text-xs font-medium ${student.month_payed && student.month_payed.includes(month.number.toString())
+                                                                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                                                                                : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                                                                                            }`}
+                                                                                    >
+                                                                                        {month.name}
+                                                                                    </span>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </motion.tr>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </React.Fragment>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
+                        )}
+                    </div>
+
+                    {/* Validated payments section */}
+                    <div className={`${cardBgColor} rounded-lg shadow-md p-4 mb-6 border ${borderColor}`}>
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className={`text-xl font-semibold ${inputTextColor}`}>
+                                Paiements validés ({filteredValidatedPayments.length})
+                            </h3>
+                            <div className="flex items-center space-x-2">
+                                <button
+                                    onClick={() => handleSortChange('name')}
+                                    className={`flex items-center px-3 py-1 rounded text-sm ${sortBy === 'name' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}
+                                >
+                                    Nom
+                                    {sortBy === 'name' && (
+                                        sortDirection === 'asc' ? <ChevronUp size={16} className="ml-1" /> : <ChevronDown size={16} className="ml-1" />
+                                    )}
+                                </button>
+                                <button
+                                    onClick={() => handleSortChange('status')}
+                                    className={`flex items-center px-3 py-1 rounded text-sm ${sortBy === 'status' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'}`}
+                                >
+                                    Statut
+                                    {sortBy === 'status' && (
+                                        sortDirection === 'asc' ? <ChevronUp size={16} className="ml-1" /> : <ChevronDown size={16} className="ml-1" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Statistiques de paiement */}
-                        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className={`p-4 rounded-lg border ${inputBorderColor} ${cardBgColor}`}>
-                                <h4 className={`text-sm font-medium opacity-70 ${textColorClass} mb-1`}>Total des paiements</h4>
-                                <p className={`text-2xl font-bold text-green-600`}>
-                                    {db.payments
-                                        ? db.payments
-                                            .filter(payment => {
-                                                const paymentDate = new Date(payment.date);
-                                                return payment.paymentSystemId === selectedPaymentSystem.id &&
-                                                    paymentDate.getMonth() === selectedMonth &&
-                                                    paymentDate.getFullYear() === selectedYear &&
-                                                    filteredStudents.some(s => s.id === payment.studentId);
-                                            })
-                                            .reduce((sum, payment) => sum + payment.amount, 0)
-                                            .toLocaleString()
-                                        : 0
-                                    } FCFA
+                        {filteredValidatedPayments.length === 0 ? (
+                            <div className="text-center py-8">
+                                <XCircle className="mx-auto h-12 w-12 text-gray-400 mb-3" />
+                                <p className={`${inputTextColor} font-medium`}>Aucun paiement validé pour ce mois</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                    <thead className={`${tableHeaderBgColor}`}>
+                                        <tr>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Élève</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Matricule</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Statut</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Montant</th>
+                                            <th scope="col" className={`px-6 py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className={`${tableBgColor} divide-y divide-gray-200 dark:divide-gray-700`}>
+                                        {filteredValidatedPayments.map((student) => {
+                                            // Calculate amount paid
+                                            let amountPaid = Number(paymentSystem.monthlyFee);
+                                            if (selectedMonth === 1 && paymentSystem.registrationFee) {
+                                                amountPaid += Number(paymentSystem.registrationFee);
+                                            }
+
+                                            return (
+                                                <React.Fragment key={student.id}>
+                                                    <tr className={`${tableRowHoverBgColor} cursor-pointer`} onClick={() => toggleExpandStudent(student.id)}>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className="flex items-center">
+                                                                <div className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center ${student.sexe === 'M' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200'}`}>
+                                                                    {student.name_complet.charAt(0).toUpperCase()}
+                                                                </div>
+                                                                <div className="ml-4">
+                                                                    <div className={`text-sm font-medium ${inputTextColor}`}>{student.name_complet}</div>
+                                                                    <div className="text-sm text-gray-500 dark:text-gray-400">{student.sexe === 'M' ? 'Garçon' : 'Fille'}</div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className={`text-sm ${inputTextColor}`}>{student.matricule || 'Non défini'}</div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200`}>
+                                                                {student.month_payed.length}/{student.schoolar_month_number} mois payés
+                                                            </span>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap">
+                                                            <div className={`text-sm font-medium ${inputTextColor}`}>
+                                                                {amountPaid.toLocaleString()} FCFA
+                                                                {selectedMonth === 1 && paymentSystem.registrationFee > 0 && (
+                                                                    <span className="text-xs text-gray-500 dark:text-gray-400 block">
+                                                                        (Inclus frais d'inscription)
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleInvalidatePayment(student);
+                                                                }}
+                                                                disabled={isYearExpired}
+                                                                className={`inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white ${isYearExpired ? buttonGrayColor : buttonRedColor} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 mr-2`}
+                                                            >
+                                                                <XCircle size={16} className="mr-1" /> Invalider
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <AnimatePresence>
+                                                        {expandedStudent === student.id && (
+                                                            <motion.tr
+                                                                initial={{ opacity: 0, height: 0 }}
+                                                                animate={{ opacity: 1, height: 'auto' }}
+                                                                exit={{ opacity: 0, height: 0 }}
+                                                                transition={{ duration: 0.3 }}
+                                                            >
+                                                                <td colSpan={5} className={`px-6 py-4 ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                                        <div>
+                                                                            <h4 className={`text-sm font-bold ${inputTextColor} mb-2`}>Informations de l'élève</h4>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Nom complet:</span> {student.name_complet}
+                                                                            </p>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Classe:</span> {student.classe}
+                                                                            </p>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Matricule:</span> {student.matricule || 'Non défini'}
+                                                                            </p>
+                                                                            <p className={`text-sm ${inputTextColor}`}>
+                                                                                <span className="font-medium">Sexe:</span> {student.sexe === 'M' ? 'Masculin' : 'Féminin'}
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h4 className={`text-sm font-bold ${inputTextColor} mb-2`}>Statut des paiements</h4>
+                                                                            <div className="flex flex-wrap gap-2">
+                                                                                {months.map((month, index) => (
+                                                                                    <span
+                                                                                        key={index}
+                                                                                        className={`px-2 py-1 rounded-full text-xs font-medium ${student.month_payed && student.month_payed.includes(month.number.toString())
+                                                                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                                                                                                : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                                                                                            }`}
+                                                                                    >
+                                                                                        {month.name}
+                                                                                    </span>
+                                                                                ))}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </motion.tr>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </React.Fragment>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Payment summary */}
+                    <div className={`${cardBgColor} rounded-lg shadow-md p-4 mb-6 border ${borderColor}`}>
+                        <h3 className={`text-xl font-semibold ${inputTextColor} mb-4`}>
+                            Résumé des paiements
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                <p className="text-sm opacity-70 mb-1">Total attendu (mois courant)</p>
+                                <p className={`${inputTextColor} text-xl font-bold`}>
+                                    {(Number(paymentSystem?.monthlyFee) * students.length).toLocaleString()} FCFA
+                                </p>
+                            </div>
+                            <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                <p className="text-sm opacity-70 mb-1">Total perçu (mois courant)</p>
+                                <p className={`text-green-500 text-xl font-bold`}>
+                                    {(Number(paymentSystem?.monthlyFee) * validatedPayments.length).toLocaleString()} FCFA
+                                </p>
+                            </div>
+                            <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                <p className="text-sm opacity-70 mb-1">Reste à percevoir (mois courant)</p>
+                                <p className={`text-red-500 text-xl font-bold`}>
+                                    {(Number(paymentSystem?.monthlyFee) * pendingPayments.length).toLocaleString()} FCFA
                                 </p>
                             </div>
 
-                            <div className={`p-4 rounded-lg border ${inputBorderColor} ${cardBgColor}`}>
-                                <h4 className={`text-sm font-medium opacity-70 ${textColorClass} mb-1`}>Élèves ayant payé</h4>
-                                <p className={`text-2xl font-bold ${textColorClass}`}>
-                                    {validatedPayments.length} / {students.length}
-                                </p>
-                                <div className="w-full bg-gray-300 rounded-full h-2.5 mt-2">
-                                    <div
-                                        className="bg-green-600 h-2.5 rounded-full"
-                                        style={{ width: `${students.length > 0 ? (validatedPayments.length / students.length) * 100 : 0}%` }}
-                                    ></div>
-                                </div>
-                            </div>
-
-                            <div className={`p-4 rounded-lg border ${inputBorderColor} ${cardBgColor}`}>
-                                <h4 className={`text-sm font-medium opacity-70 ${textColorClass} mb-1`}>Reste à percevoir</h4>
-                                <p className={`text-2xl font-bold text-red-600`}>
-                                    {pendingPayments
-                                        .reduce((sum, student) => sum + student.remainingAmount, 0)
-                                        .toLocaleString()
-                                    } FCFA
-                                </p>
-                            </div>
+                            {selectedMonth === 1 && paymentSystem?.registrationFee > 0 && (
+                                <>
+                                    <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                        <p className="text-sm opacity-70 mb-1">Total frais d'inscription attendu</p>
+                                        <p className={`${inputTextColor} text-xl font-bold`}>
+                                            {(Number(paymentSystem?.registrationFee) * students.length).toLocaleString()} FCFA
+                                        </p>
+                                    </div>
+                                    <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                        <p className="text-sm opacity-70 mb-1">Total frais d'inscription perçu</p>
+                                        <p className={`text-green-500 text-xl font-bold`}>
+                                            {(Number(paymentSystem?.registrationFee) * validatedPayments.length).toLocaleString()} FCFA
+                                        </p>
+                                    </div>
+                                    <div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
+                                        <p className="text-sm opacity-70 mb-1">Reste frais d'inscription à percevoir</p>
+                                        <p className={`text-red-500 text-xl font-bold`}>
+                                            {(Number(paymentSystem?.registrationFee) * pendingPayments.length).toLocaleString()} FCFA
+                                        </p>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
-                )}
-            </div>
-        </div>
+
+                    {/* Year status */}
+                    {isYearExpired && (
+                        <div className={`${expiredBadgeBgColor} rounded-lg shadow-md p-4 mb-6 border ${borderColor}`}>
+                            <div className="flex items-center">
+                                <XCircle className={`${expiredBadgeTextColor} mr-3`} size={24} />
+                                <div>
+                                    <h3 className={`text-lg font-semibold ${expiredBadgeTextColor}`}>
+                                        Année Scolaire Expirée
+                                    </h3>
+                                    <p className={`${expiredBadgeTextColor} opacity-80`}>
+                                        Cette année scolaire est terminée. Les modifications ne sont plus possibles.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </>
+            )}
+        </motion.div>
     );
 };
 

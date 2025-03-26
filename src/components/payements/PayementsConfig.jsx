@@ -32,7 +32,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     useEffect(() => {
         if (db && db.paymentSystems) {
             // Sort payment systems by creation date (newest first)
-            const sortedSystems = [...db.paymentSystems].sort((a, b) => 
+            const sortedSystems = [...db.paymentSystems].sort((a, b) =>
                 new Date(b.createdAt) - new Date(a.createdAt)
             );
             setPaymentSystems(sortedSystems);
@@ -46,21 +46,21 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
 
         // Get current date for comparison
         const currentDate = new Date();
-        
+
         // Find classes that are already assigned to active payment systems (not expired)
         const assignedClassIds = new Set();
-        
+
         systems.forEach(system => {
             // Only consider systems that are active and not expired
             const endDate = new Date(system.endDate);
             const isExpired = endDate < currentDate;
-            
+
             // If system is not expired, mark its classes as assigned
             if (system.isActive && !isExpired && system.classes) {
                 system.classes.forEach(classId => assignedClassIds.add(classId));
             }
         });
-        
+
         // Filter out classes that are already assigned to active systems
         const available = allClasses.filter(cls => !assignedClassIds.has(cls.id));
         setAvailableClasses(available);
@@ -260,7 +260,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     const activeSystems = paymentSystems
         .filter(system => system.isActive && !isSchoolYearEnded(system.endDate))
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by creation date (newest first)
-    
+
     const pastSystems = paymentSystems
         .filter(system => !system.isActive || isSchoolYearEnded(system.endDate))
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort by creation date (newest first)
