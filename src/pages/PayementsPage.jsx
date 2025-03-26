@@ -17,6 +17,7 @@ const PayementsPage = () => {
   const [db, setDb] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
   const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedPaymentSystem, setSelectedPaymentSystem] = useState(null);
   const [paymentSystems, setPaymentSystems] = useState([]);
 
   // Largeur fixe du sidebar
@@ -43,7 +44,7 @@ const PayementsPage = () => {
         theme={theme}
         app_bg_color={app_bg_color}
         text_color={text_color}
-        selectedPaymentSystem={paymentSystems}
+        system={selectedPaymentSystem}
       />;
     }
 
@@ -129,6 +130,8 @@ const PayementsPage = () => {
           text_color={text_color}
           selectedClass={selectedClass}
           setSelectedClass={setSelectedClass}
+          selectedPaymentSystem={selectedPaymentSystem}
+          setSelectedPaymentSystem={setSelectedPaymentSystem}
           paymentSystems={paymentSystems}
           setPaymentSystems={setPaymentSystems}
           setActiveTab={setActiveTab}

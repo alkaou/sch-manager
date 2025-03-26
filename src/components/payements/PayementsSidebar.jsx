@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getClasseName } from '../../utils/helpers';
+import { getClasseName, delay } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 
 const PayementsSidebar = ({
@@ -13,6 +13,8 @@ const PayementsSidebar = ({
   setActiveTab,
   setPaymentSystems,
   paymentSystems,
+  selectedPaymentSystem,
+  setSelectedPaymentSystem,
 }) => {
   const { language } = useLanguage();
   const [expandedSystems, setExpandedSystems] = useState({});
@@ -283,7 +285,8 @@ const PayementsSidebar = ({
                             <div className="grid grid-cols-1 gap-2">
                               {systemClasses.map((cls) => {
                                 const className = `${cls.level} ${cls.name}`;
-                                const isActive = selectedClass && selectedClass.id === cls.id;
+                                const isActive = selectedClass && selectedClass.id === cls.id 
+                                                              && selectedPaymentSystem.id === system.id;
                                 const studentCount = countStudentsInClass(className);
 
                                 return (
@@ -295,7 +298,21 @@ const PayementsSidebar = ({
                                   >
                                     <button
                                       onClick={() => {
+                                        if(selectedClass?.id === cls.id && selectedPaymentSystem?.id === system.id) return;
+                                        if(selectedClass?.id === cls.id){
+                                          // console.log(system);
+                                          setSelectedClass(null);
+                                          setSelectedPaymentSystem(null);
+                                          delay(500).then(() => {
+                                            // console.log("hello");
+                                            setSelectedClass(cls);
+                                            setSelectedPaymentSystem(system);
+                                            if (!isActive) setActiveTab(-1);
+                                          });
+                                          return;
+                                        }
                                         setSelectedClass(cls);
+                                        setSelectedPaymentSystem(system);
                                         if (!isActive) setActiveTab(-1);
                                       }}
                                       className={`w-full text-left px-4 py-3 rounded-lg flex justify-between items-center transition-all duration-200 ${isActive

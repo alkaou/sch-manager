@@ -12,7 +12,7 @@ const PayementsStudentList = ({
     theme,
     app_bg_color,
     text_color,
-    selectedPaymentSystem
+    system,
 }) => {
     const { language } = useLanguage();
     const { setFlashMessage } = useFlashNotification();
@@ -42,9 +42,9 @@ const PayementsStudentList = ({
         setLoading(true);
         try {
             // Find the payment system for this class
-            const system = db.paymentSystems.find(sys =>
-                sys.classes && sys.classes.includes(selectedClass.id)
-            );
+            // const _system = db.paymentSystems.find(sys =>
+            //     sys.classes && sys.classes.includes(selectedClass.id)
+            // );
 
             if (!system) {
                 setFlashMessage({

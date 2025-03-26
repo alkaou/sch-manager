@@ -81,6 +81,10 @@ function getClasseName(chaine, lang = "Français") {
 }
 
 
+const delay = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-export { getFormattedDateTime, getAge, getDateTime, getClasseName }
+
+export { getFormattedDateTime, getAge, getDateTime, getClasseName, delay }
 

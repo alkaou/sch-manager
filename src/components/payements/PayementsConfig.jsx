@@ -28,6 +28,15 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
         createdAt: new Date().toISOString()
     });
 
+    // Trier les classes par level
+    const sortClassesByLevel = (classeArray = []) => {
+        if(classeArray.length < 2 ) return classeArray;
+        const sortedClasses = [...classeArray].sort((a, b) =>
+            b.level - a.level
+        );
+        return sortedClasses;
+    };
+
     // Charger les systèmes de paiement existants
     useEffect(() => {
         if (db && db.paymentSystems) {
@@ -36,8 +45,9 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                 new Date(b.createdAt) - new Date(a.createdAt)
             );
             setPaymentSystems(sortedSystems);
-            updateAvailableClasses(db.classes, sortedSystems);
         }
+        const sortedClasses = sortClassesByLevel(db?.classes);
+        updateAvailableClasses(sortedClasses, paymentSystems);
     }, [db]);
 
     // Mettre à jour les classes disponibles
@@ -159,7 +169,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             await window.electron.saveDatabase(updatedDb);
 
             setPaymentSystems(updatedSystems);
-            updateAvailableClasses(db.classes, updatedSystems);
+            const sortedClasses = sortClassesByLevel(db.classes);
+            updateAvailableClasses(sortedClasses, updatedSystems);
 
             setFlashMessage({
                 message: editingSystemId
@@ -585,7 +596,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                     </div>
 
                                     {/* Frais supplémentaires */}
-                                    <div>
+                                    {/*<div>
                                         <div className="flex justify-between items-center mb-2">
                                             <label className={`text-sm font-medium ${inputTextColor}`}>
                                                 Frais supplémentaires
@@ -641,7 +652,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 ))}
                                             </div>
                                         )}
-                                    </div>
+                                    </div>*/}
 
                                     {/* Classes disponibles */}
                                     <div>
