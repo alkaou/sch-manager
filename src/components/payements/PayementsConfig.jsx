@@ -211,8 +211,27 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
 
         try {
             let updatedSystems;
+            let updatedPayments = { ...db.payments };
 
             if (editingSystemId) {
+                // Récupérer l'ancien système pour comparer les classes
+                const oldSystem = paymentSystems.find(system => system.id === editingSystemId);
+                
+                // Identifier les classes qui ont été supprimées
+                if (oldSystem && oldSystem.classes) {
+                    const removedClasses = oldSystem.classes.filter(
+                        classId => !newSystem.classes.includes(classId)
+                    );
+                    
+                    // Supprimer les paiements liés aux classes supprimées
+                    removedClasses.forEach(classId => {
+                        const paymentKey = `students_${editingSystemId}_${classId}`;
+                        if (updatedPayments[paymentKey]) {
+                            delete updatedPayments[paymentKey];
+                        }
+                    });
+                }
+                
                 // Mise à jour d'un système existant
                 updatedSystems = paymentSystems.map(system =>
                     system.id === editingSystemId ? { ...newSystem, id: editingSystemId } : system
@@ -222,7 +241,11 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                 updatedSystems = [...paymentSystems, { ...newSystem, id: Date.now().toString() }];
             }
 
-            const updatedDb = { ...db, paymentSystems: updatedSystems };
+            const updatedDb = { 
+                ...db, 
+                paymentSystems: updatedSystems,
+                payments: updatedPayments
+            };
             await window.electron.saveDatabase(updatedDb);
 
             setPaymentSystems(updatedSystems);
