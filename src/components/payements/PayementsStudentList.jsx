@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getClasseName } from '../../utils/helpers';
+import { getClasseName, areArraysEqual } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { useFlashNotification } from "../contexts";
 import { Search, Calendar, CheckCircle, XCircle, Edit2, RefreshCcw, Filter, ChevronDown, ChevronUp } from 'lucide-react';
@@ -80,25 +80,51 @@ const PayementsStudentList = ({
 
             setMonths(monthsArray);
 
-            // Get students from this class
+            // Récupérer les étudiants actifs de la classe
             const classStudents = db.students.filter(
                 student => student.classe === `${selectedClass.level} ${selectedClass.name}` && student.status === "actif"
             );
 
-            // Check if payment data exists for this class and system
+            // Clé unique pour les paiements de cette classe et de ce système
             const paymentKey = `students_${system.id}_${selectedClass.id}`;
+            // Récupérer les données de paiement existantes (ou tableau vide si aucune)
             let paymentData = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
 
-            // If payment data doesn't exist, initialize it
-            if (paymentData.length === 0) {
-                paymentData = classStudents.map(student => ({
-                    ...student,
-                    schoolar_month_number: monthsArray.length,
-                    month_payed: []
-                }));
+            if (!isExpired) {
+                // Recréer la liste des données de paiement en comparant avec les étudiants actuels
+                const newPaymentData = classStudents.map(student => {
+                    // Chercher un enregistrement existant pour cet étudiant
+                    const existingPayment = paymentData.find(p => p.id === student.id);
+                    
+                    // Si aucun enregistrement n'existe, initialiser une nouvelle donnée de paiement
+                    if (!existingPayment) {
+                        return {
+                            ...student,
+                            schoolar_month_number: monthsArray.length,
+                            month_payed: []
+                        };
+                    }
+                    // Si l'étudiant existe mais ses informations ont été modifiées (ex: updated_at différent)
+                    else if (existingPayment.updated_at !== student.updated_at) {
+                        return {
+                            ...student,
+                            schoolar_month_number: monthsArray.length,
+                            month_payed: existingPayment.month_payed // conserver l'historique des paiements
+                        };
+                    }
+                    // Si l'enregistrement est à jour, le conserver tel quel
+                    else {
+                        return existingPayment;
+                    }
+                });
 
-                // Save initialized payment data if not expired
-                if (!isExpired) {
+                // On met à jour paymentData avec les données reconstruites
+                const arrAreSame = areArraysEqual(paymentData, newPaymentData);
+
+                if(!arrAreSame){
+                    console.log(arrAreSame);
+                    paymentData = newPaymentData;
+                    // Si les données ne sont pas expirées, sauvegarder les mises à jour dans la base de données
                     const updatedPayments = { ...db.payments || {} };
                     updatedPayments[paymentKey] = paymentData;
 
@@ -110,6 +136,7 @@ const PayementsStudentList = ({
 
             setStudents(paymentData);
             updatePaymentLists(paymentData, selectedMonth);
+
         } catch (error) {
             console.error("Error loading payment data:", error);
             setFlashMessage({

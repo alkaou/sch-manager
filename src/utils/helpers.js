@@ -80,11 +80,18 @@ function getClasseName(chaine, lang = "Français") {
   return classeName;
 }
 
-
 const delay = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+const areArraysEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+    
+    return arr1.every(item1 => 
+        arr2.some(item2 => JSON.stringify(item1) === JSON.stringify(item2))
+    );
+}
 
-export { getFormattedDateTime, getAge, getDateTime, getClasseName, delay }
+
+export { getFormattedDateTime, getAge, getDateTime, getClasseName, delay, areArraysEqual }
 

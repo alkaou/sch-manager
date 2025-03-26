@@ -14,6 +14,13 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     const [editingSystemId, setEditingSystemId] = useState(null);
     const [availableClasses, setAvailableClasses] = useState([]);
 
+    // Les date pour Input Date
+    const DateForInputs = new Date().getFullYear();
+    // Calculer la date de demain
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+
     // Nouveau système de paiement
     const [newSystem, setNewSystem] = useState({
         id: Date.now().toString(),
@@ -37,8 +44,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
         return sortedClasses;
     };
 
-    // Charger les systèmes de paiement existants
-    useEffect(() => {
+    const loadData = () => {
         if (db && db.paymentSystems) {
             // Sort payment systems by creation date (newest first)
             const sortedSystems = [...db.paymentSystems].sort((a, b) =>
@@ -48,6 +54,11 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
         }
         const sortedClasses = sortClassesByLevel(db?.classes);
         updateAvailableClasses(sortedClasses, paymentSystems);
+    }
+
+    // Charger les systèmes de paiement existants
+    useEffect(() => {
+        loadData();
     }, [db]);
 
     // Mettre à jour les classes disponibles
@@ -88,6 +99,51 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     const handleSystemChange = (field, value) => {
         const updatedSystem = { ...newSystem, [field]: value };
 
+        // Calculer les bornes pour startDate (règle a)
+        const startMin = new Date(`${DateForInputs - 1}-01-01`);
+        const startMax = new Date(`${DateForInputs + 1}-12-31`);
+
+        // Calculer les bornes pour endDate (règle b)
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+        const endMin = new Date(tomorrowStr);
+        const endMax = new Date(`${tomorrow.getFullYear() + 2}-12-31`);
+
+        // Convertir les dates saisies en objets Date
+        const startDate = updatedSystem.startDate ? new Date(updatedSystem.startDate) : null;
+        const endDate = updatedSystem.endDate ? new Date(updatedSystem.endDate) : null;
+
+        // 1. Vérifier que la date de fin n'est pas antérieure à la date de début
+        if (startDate && endDate && endDate < startDate) {
+            setFlashMessage({
+                message: "La date de fin ne peut pas être antérieure à la date de début.",
+                type: "error",
+                duration: 5000,
+            });
+            return;
+        }
+
+        // 2. Vérifier que la date de début est dans la plage autorisée
+        if (startDate && (startDate < startMin || startDate > startMax)) {
+            setFlashMessage({
+                message: `La date de début doit être comprise entre ${startMin.toISOString().split('T')[0]} et ${startMax.toISOString().split('T')[0]}.`,
+                type: "error",
+                duration: 5000,
+            });
+            return;
+        }
+
+        // 3. Vérifier que la date de fin est dans la plage autorisée
+        if (endDate && (endDate < endMin || endDate > endMax)) {
+            setFlashMessage({
+                message: `La date de fin doit être comprise entre ${endMin.toISOString().split('T')[0]} et ${endMax.toISOString().split('T')[0]}.`,
+                type: "error",
+                duration: 5000,
+            });
+            return;
+        }
+
         // Recalculer les frais annuels si nécessaire
         if (field === 'monthlyFee' || field === 'startDate' || field === 'endDate') {
             updatedSystem.yearlyFee = calculateYearlyFee(
@@ -99,6 +155,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
 
         setNewSystem(updatedSystem);
     };
+
 
     // Ajouter/Supprimer une classe du nouveau système
     const toggleClassSelection = (classId) => {
@@ -197,6 +254,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             });
 
             refreshData();
+            loadData();
 
         } catch (err) {
             setFlashMessage({
@@ -313,7 +371,10 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         <h4 className="text-lg font-bold">{system.name}</h4>
                                         <div className="flex space-x-2">
                                             <button
-                                                onClick={() => handleEditSystem(system)}
+                                                onClick={() => {
+                                                    handleEditSystem(system);
+                                                    loadData();
+                                                }}
                                                 className="p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -473,6 +534,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                         >
                             <motion.button
                                 onClick={() => {
+                                    loadData();
                                     setShowNewSystemForm(true);
                                     setEditingSystemId(null);
                                     setNewSystem({
@@ -517,6 +579,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                     </h3>
                                     <button
                                         onClick={() => {
+                                            loadData();
                                             setShowNewSystemForm(false);
                                             setEditingSystemId(null);
                                         }}
@@ -549,6 +612,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                             </label>
                                             <input
                                                 type="date"
+                                                min={`${DateForInputs - 1}-01-01`}
+                                                max={`${DateForInputs + 1}-12-31`}
                                                 value={newSystem.startDate}
                                                 onChange={(e) => handleSystemChange('startDate', e.target.value)}
                                                 className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -560,6 +625,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                             </label>
                                             <input
                                                 type="date"
+                                                min={`${tomorrowStr}`}
+                                                max={`${tomorrow.getFullYear() + 2}-12-31`}
                                                 value={newSystem.endDate}
                                                 onChange={(e) => handleSystemChange('endDate', e.target.value)}
                                                 className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -759,6 +826,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         <motion.button
                                             type="button"
                                             onClick={() => {
+                                                loadData();
                                                 setShowNewSystemForm(false);
                                                 setEditingSystemId(null);
                                             }}
