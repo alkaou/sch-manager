@@ -283,8 +283,19 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
         setIsLoading(true);
 
         try {
+            // Mettre à jour la liste des systèmes en supprimant celui dont l'id correspond à systemId
             const updatedSystems = paymentSystems.filter(system => system.id !== systemId);
-            const updatedDb = { ...db, paymentSystems: updatedSystems };
+
+            // Supprimer les paiements liés à ce système
+            const updatedPayments = { ...db.payments };
+            Object.keys(updatedPayments).forEach(key => {
+                if (key.startsWith(`students_${systemId}_`)) {
+                    delete updatedPayments[key];
+                }
+            });
+
+            // Construire la nouvelle base de données avec la mise à jour des systèmes et des paiements
+            const updatedDb = { ...db, paymentSystems: updatedSystems, payments: updatedPayments };
             await window.electron.saveDatabase(updatedDb);
 
             setPaymentSystems(updatedSystems);
@@ -297,7 +308,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             });
 
             refreshData();
-            
+            loadData();
+
         } catch (err) {
             setFlashMessage({
                 message: "Erreur lors de la suppression du système de paiement.",
@@ -308,6 +320,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             setIsLoading(false);
         }
     };
+
 
     // Vérifier si une année scolaire est terminée
     const isSchoolYearEnded = (endDate) => {
