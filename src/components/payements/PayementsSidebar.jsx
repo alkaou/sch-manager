@@ -64,9 +64,9 @@ const PayementsSidebar = ({
       case "name-desc":
         return sortedSystems.sort((a, b) => b.name.localeCompare(a.name));
       case "date-asc":
-        return sortedSystems.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        return sortedSystems.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
       case "date-desc":
-        return sortedSystems.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+        return sortedSystems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       default:
         return sortedSystems;
     }

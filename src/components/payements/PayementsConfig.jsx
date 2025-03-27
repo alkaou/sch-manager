@@ -212,6 +212,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
         try {
             let updatedSystems;
             let updatedPayments = { ...db.payments };
+            let updatedRegistrationFees = { ...db.registrationFees };
 
             if (editingSystemId) {
                 // Récupérer l'ancien système pour comparer les classes
@@ -229,6 +230,22 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                         if (updatedPayments[paymentKey]) {
                             delete updatedPayments[paymentKey];
                         }
+                        
+                        // Supprimer également les frais d'inscription liés aux classes supprimées
+                        const registrationFeeKey = `registration_fee_${editingSystemId}_${classId}`;
+                        if (updatedRegistrationFees[registrationFeeKey]) {
+                            delete updatedRegistrationFees[registrationFeeKey];
+                        }
+                    });
+                }
+                
+                // Si les frais d'inscription sont mis à 0, supprimer tous les enregistrements de frais d'inscription
+                if (Number(newSystem.registrationFee) === 0 && oldSystem.registrationFee > 0) {
+                    newSystem.classes.forEach(classId => {
+                        const registrationFeeKey = `registration_fee_${editingSystemId}_${classId}`;
+                        if (updatedRegistrationFees[registrationFeeKey]) {
+                            delete updatedRegistrationFees[registrationFeeKey];
+                        }
                     });
                 }
                 
@@ -244,7 +261,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             const updatedDb = { 
                 ...db, 
                 paymentSystems: updatedSystems,
-                payments: updatedPayments
+                payments: updatedPayments,
+                registrationFees: updatedRegistrationFees
             };
             await window.electron.saveDatabase(updatedDb);
 
@@ -306,6 +324,9 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
         setIsLoading(true);
 
         try {
+            // Récupérer le système à supprimer pour connaître ses classes
+            const systemToDelete = paymentSystems.find(system => system.id === systemId);
+            
             // Mettre à jour la liste des systèmes en supprimant celui dont l'id correspond à systemId
             const updatedSystems = paymentSystems.filter(system => system.id !== systemId);
 
@@ -316,9 +337,22 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                     delete updatedPayments[key];
                 }
             });
+            
+            // Supprimer les frais d'inscription liés à ce système
+            const updatedRegistrationFees = { ...db.registrationFees };
+            Object.keys(updatedRegistrationFees).forEach(key => {
+                if (key.startsWith(`registration_fee_${systemId}_`)) {
+                    delete updatedRegistrationFees[key];
+                }
+            });
 
-            // Construire la nouvelle base de données avec la mise à jour des systèmes et des paiements
-            const updatedDb = { ...db, paymentSystems: updatedSystems, payments: updatedPayments };
+            // Construire la nouvelle base de données avec la mise à jour des systèmes, des paiements et des frais d'inscription
+            const updatedDb = { 
+                ...db, 
+                paymentSystems: updatedSystems, 
+                payments: updatedPayments,
+                registrationFees: updatedRegistrationFees
+            };
             await window.electron.saveDatabase(updatedDb);
 
             setPaymentSystems(updatedSystems);
@@ -482,7 +516,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                             <div className="flex justify-between">
                                                 <span className={`${inputTextColor} text-sm`}>Inscription:</span>
                                                 <span className={`${inputTextColor} font-bold`}>
-                                                    {system.registrationFee.toLocaleString()} FCFA
+                                                    {system.registrationFee ? system.registrationFee.toLocaleString() : "0"} FCFA
                                                 </span>
                                             </div>
                                             {system.otherFees && system.otherFees.length > 0 && (
@@ -871,7 +905,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 setShowNewSystemForm(false);
                                                 setEditingSystemId(null);
                                             }}
-                                            className={`px-4 py-2 rounded border ${borderColor} ${inputTextColor}`}
+                                            className={`px-4 py-2 rounded hover:text-white border hover:bg-red-600 border ${borderColor} ${inputTextColor}`}
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                             disabled={isLoading}
