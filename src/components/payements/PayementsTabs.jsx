@@ -77,20 +77,19 @@ const PayementsTabs = ({
                 setActiveTab(tab.id);
                 setSelectedClass(null);
               }}
-              className={`flex items-center space-x-1 px-4 py-3 text-sm font-medium transition-colors relative ${
-                activeTab === tab.id 
-                  ? `${activeTextColor}` 
+              className={`flex items-center space-x-1 px-4 py-3 text-sm font-medium transition-colors relative ${activeTab === tab.id
+                  ? `${activeTextColor}`
                   : `${tabTextColor} ${hoverTabBgColor}`
-              }`}
+                }`}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
               {tab.icon}
               <span>{tab.title}</span>
-              
+
               {/* Indicateur d'onglet actif */}
               {activeTab === tab.id && (
-                <motion.div 
+                <motion.div
                   className={`absolute bottom-0 left-0 w-full h-1 ${activeTabBgColor}`}
                   layoutId="activeTab"
                   initial={{ opacity: 0 }}

@@ -174,16 +174,17 @@ const PayementsSidebar = ({
           <div className="space-y-4">
             {filteredPaymentSystems.map((system) => {
               // Get classes for this payment system
-              const systemClasses = db?.classes?.filter(cls =>
+              const _systemClasses = db?.classes?.filter(cls =>
                 system.classes && system.classes.includes(cls.id)
               ) || [];
+              const systemClasses = _systemClasses.sort((a, b) => b.level - a.level);
 
               return (
                 <div
                   key={system.id}
                   className={`rounded-lg overflow-hidden shadow-md transition-all duration-300 ${expandedSystems[system.id]
-                      ? 'border-l-4 border-blue-500'
-                      : `border ${cardBorderColor} hover:border-blue-400`
+                    ? 'border-l-4 border-blue-500'
+                    : `border ${cardBorderColor} hover:border-blue-400`
                     }`}
                   style={{
                     backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff"
@@ -192,8 +193,8 @@ const PayementsSidebar = ({
                   {/* Header section with system name as title */}
                   <div className={`w-full px-4 py-3 ${expandedSystems[system.id] ? 'bg-blue-50 dark:bg-gray-700' : ''}`}>
                     <div className={`font-bold text-lg mb-1 ${expandedSystems[system.id]
-                        ? theme === "dark" ? 'text-blue-300' : 'text-blue-700'
-                        : text_color
+                      ? theme === "dark" ? 'text-blue-300' : 'text-blue-700'
+                      : text_color
                       }`}>
                       {system.name}
                     </div>
@@ -213,8 +214,8 @@ const PayementsSidebar = ({
                     >
                       <div className="flex items-center">
                         <div className={`mr-3 p-2 rounded-full ${expandedSystems[system.id]
-                            ? theme === "dark" ? 'bg-blue-600' : 'bg-blue-500'
-                            : theme === "dark" ? 'bg-gray-600' : 'bg-gray-200'
+                          ? theme === "dark" ? 'bg-blue-600' : 'bg-blue-500'
+                          : theme === "dark" ? 'bg-gray-600' : 'bg-gray-200'
                           } transition-colors duration-300`}>
                           <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id] ? 'text-white' : theme === "dark" ? 'text-gray-300' : 'text-gray-600'
                             }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -229,8 +230,8 @@ const PayementsSidebar = ({
                       </div>
                       <div className="flex items-center">
                         <div className={`px-2 py-1 rounded-full text-center text-xs font-medium mr-3 ${expandedSystems[system.id]
-                            ? theme === "dark" ? 'bg-blue-800 text-blue-200' : 'bg-blue-100 text-blue-800'
-                            : theme === "dark" ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700 border border-gray-300'
+                          ? theme === "dark" ? 'bg-blue-800 text-blue-200' : 'bg-blue-100 text-blue-800'
+                          : theme === "dark" ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700 border border-gray-300'
                           }`}>
                           {systemClasses.length} classes
                         </div>
@@ -244,8 +245,8 @@ const PayementsSidebar = ({
                           }}
                           transition={{ duration: 0.3 }}
                           className={`p-1 rounded-full ${expandedSystems[system.id]
-                              ? theme === "dark" ? 'bg-blue-800' : 'bg-blue-100'
-                              : ''
+                            ? theme === "dark" ? 'bg-blue-800' : 'bg-blue-100'
+                            : ''
                             }`}
                           style={{
                             backgroundColor: expandedSystems[system.id]
@@ -254,8 +255,8 @@ const PayementsSidebar = ({
                           }}
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id]
-                              ? theme === "dark" ? 'text-blue-200' : 'text-blue-600'
-                              : text_color
+                            ? theme === "dark" ? 'text-blue-200' : 'text-blue-600'
+                            : text_color
                             }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
@@ -285,8 +286,8 @@ const PayementsSidebar = ({
                             <div className="grid grid-cols-1 gap-2">
                               {systemClasses.map((cls) => {
                                 const className = `${cls.level} ${cls.name}`;
-                                const isActive = selectedClass && selectedClass.id === cls.id 
-                                                              && selectedPaymentSystem.id === system.id;
+                                const isActive = selectedClass && selectedClass.id === cls.id
+                                  && selectedPaymentSystem.id === system.id;
                                 const studentCount = countStudentsInClass(className);
 
                                 return (
@@ -298,8 +299,8 @@ const PayementsSidebar = ({
                                   >
                                     <button
                                       onClick={() => {
-                                        if(selectedClass?.id === cls.id && selectedPaymentSystem?.id === system.id) return;
-                                        if(selectedClass?.id === cls.id){
+                                        if (selectedClass?.id === cls.id && selectedPaymentSystem?.id === system.id) return;
+                                        if (selectedClass?.id === cls.id) {
                                           // console.log(system);
                                           setSelectedClass(null);
                                           setSelectedPaymentSystem(null);

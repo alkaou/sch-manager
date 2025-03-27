@@ -446,7 +446,12 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         <div className="mb-4">
                                             <p className="text-sm opacity-70 mb-1">Classes concernées</p>
                                             <div className="flex flex-wrap gap-2">
-                                                {system.classes.map(classId => {
+                                                {/* Trier par level avant le map */}
+                                                {system.classes.sort((a, b) => {
+                                                    const levelA = parseInt(a.split('-')[0], 10);
+                                                    const levelB = parseInt(b.split('-')[0], 10);
+                                                    return levelB - levelA; // Tri décroissant
+                                                }).map(classId => {
                                                     const classObj = db?.classes?.find(c => c.id === classId);
                                                     return classObj ? (
                                                         <span
