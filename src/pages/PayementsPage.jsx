@@ -6,8 +6,8 @@ import PayementsTabs from "../components/payements/PayementsTabs.jsx";
 import PayementsConfig from "../components/payements/PayementsConfig.jsx";
 import PayementsMonthlyClass from "../components/payements/PayementsMonthlyClass.jsx";
 import PayementsYearlyClass from "../components/payements/PayementsYearlyClass.jsx";
-import PayementsMonthlyTotal from "../components/payements/PayementsMonthlyTotal.jsx";
-import PayementsYearlyTotal from "../components/payements/PayementsYearlyTotal.jsx";
+import PayementsMonthlyStatistique from "../components/payements/PayementsMonthlyStatistique.jsx";
+import PayementsYearlyStatistique from "../components/payements/PayementsYearlyStatistique.jsx";
 import PayementsStudentList from "../components/payements/PayementsStudentList.jsx";
 
 const PayementsPage = () => {
@@ -74,7 +74,7 @@ const PayementsPage = () => {
           text_color={text_color}
         />;
       case 3:
-        return <PayementsMonthlyTotal
+        return <PayementsMonthlyStatistique
           db={db}
           refreshData={refreshData}
           theme={theme}
@@ -82,7 +82,7 @@ const PayementsPage = () => {
           text_color={text_color}
         />;
       case 4:
-        return <PayementsYearlyTotal
+        return <PayementsYearlyStatistique
           db={db}
           refreshData={refreshData}
           theme={theme}
