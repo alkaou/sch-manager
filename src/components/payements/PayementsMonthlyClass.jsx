@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { getClasseName } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
-import { Calendar, DollarSign, TrendingUp, Users, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Calendar, DollarSign, TrendingUp, Users, ArrowLeft, ArrowRight, Filter } from 'lucide-react';
 
 const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshData }) => {
     const { language } = useLanguage();
@@ -13,6 +13,8 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
     const [activePaymentSystems, setActivePaymentSystems] = useState([]);
     const [totalExpected, setTotalExpected] = useState(0);
     const [totalReceived, setTotalReceived] = useState(0);
+    const [paymentSystemGroups, setPaymentSystemGroups] = useState([]);
+    const [selectedSystemGroup, setSelectedSystemGroup] = useState(null);
 
     // Styles en fonction du thème
     const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -25,6 +27,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
     const tableRowHoverBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100";
     const buttonPrimary = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
     const buttonSecondary = theme === "dark" ? "bg-gray-600 hover:bg-gray-700" : "bg-gray-400 hover:bg-gray-500";
+    const selectBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
 
     useEffect(() => {
         if (db) {
@@ -37,15 +40,46 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
 
             setActivePaymentSystems(activeSystems);
             
-            // Générer les mois scolaires à partir des systèmes de paiement actifs
-            if (activeSystems.length > 0) {
-                const schoolMonthsArray = generateSchoolMonths(activeSystems);
+            // Grouper les systèmes de paiement par dates de début et de fin
+            const groups = groupPaymentSystemsByDate(activeSystems);
+            setPaymentSystemGroups(groups);
+            
+            // Sélectionner le premier groupe par défaut
+            if (groups.length > 0) {
+                setSelectedSystemGroup(groups[0]);
+                
+                // Générer les mois scolaires à partir du groupe sélectionné
+                const schoolMonthsArray = generateSchoolMonths(groups[0].systems);
                 setSchoolMonths(schoolMonthsArray);
             }
             
             calculateMonthlyData();
         }
     }, [db]);
+
+    // Grouper les systèmes de paiement par dates de début et de fin
+    const groupPaymentSystemsByDate = (systems) => {
+        const groups = [];
+        const groupMap = {};
+        
+        systems.forEach(system => {
+            const key = `${system.startDate}_${system.endDate}`;
+            
+            if (!groupMap[key]) {
+                groupMap[key] = {
+                    id: key,
+                    startDate: system.startDate,
+                    endDate: system.endDate,
+                    systems: []
+                };
+                groups.push(groupMap[key]);
+            }
+            
+            groupMap[key].systems.push(system);
+        });
+        
+        return groups;
+    };
 
     // Générer les mois scolaires à partir des systèmes de paiement
     const generateSchoolMonths = (systems) => {
@@ -78,20 +112,35 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
         }
     }, [selectedSchoolMonth, schoolMonths]);
 
+    // Gérer le changement de groupe de système de paiement
+    const handleSystemGroupChange = (groupId) => {
+        const group = paymentSystemGroups.find(g => g.id === groupId);
+        if (group) {
+            setSelectedSystemGroup(group);
+            const schoolMonthsArray = generateSchoolMonths(group.systems);
+            setSchoolMonths(schoolMonthsArray);
+            setSelectedSchoolMonth(1); // Réinitialiser au premier mois
+        }
+    };
+
+    // ... existing code (calculateMonthlyData, handlePreviousMonth, handleNextMonth, etc.)
     const calculateMonthlyData = () => {
         setIsLoading(true);
 
-        if (!db || !db.classes || !db.students || !db.paymentSystems || schoolMonths.length === 0) {
+        if (!db || !db.classes || !db.students || !db.paymentSystems || schoolMonths.length === 0 || !selectedSystemGroup) {
             setMonthlyData([]);
             setIsLoading(false);
             return;
         }
 
-        // Filtrer les systèmes de paiement actifs (non expirés)
-        const now = new Date();
+        // Obtenir les IDs des systèmes de paiement du groupe sélectionné
+        const selectedSystemIds = selectedSystemGroup.systems.map(system => system.id);
+        
+        // Filtrer les systèmes de paiement actifs qui appartiennent au groupe sélectionné
         const activeSystems = db.paymentSystems.filter(system => {
             const endDate = new Date(system.endDate);
-            return endDate >= now && system.isActive;
+            const now = new Date();
+            return endDate >= now && system.isActive && selectedSystemIds.includes(system.id);
         });
 
         if (activeSystems.length === 0) {
@@ -115,13 +164,13 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
         let receivedTotal = 0;
 
         db.classes.forEach(cls => {
-            // Trouver le système de paiement actif pour cette classe
+            // Trouver le système de paiement actif pour cette classe qui appartient au groupe sélectionné
             const paymentSystem = activeSystems.find(system =>
                 system.classes && system.classes.includes(cls.id)
             );
 
             if (!paymentSystem) {
-                return; // Ignorer les classes sans système de paiement actif
+                return; // Ignorer les classes sans système de paiement actif dans le groupe sélectionné
             }
 
             // Compter les élèves dans cette classe
@@ -259,6 +308,12 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
         return "";
     };
 
+    // Formater la date pour l'affichage
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    };
+
     return (
         <motion.div
             className="container mx-auto p-4"
@@ -267,24 +322,54 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             transition={{ duration: 0.5 }}
         >
             <div className={`${cardBgColor} rounded-lg shadow-lg p-6 mb-6`}>
-                <div className="flex justify-between items-center mb-6">
-                    <h2 className={`text-2xl font-bold ${textColorClass}`}>
+                {/* Sélecteur de système de paiement */}
+                {paymentSystemGroups.length > 1 && (
+                    <div className="mb-6">
+                        <div className={`p-4 ${headerBgColor} rounded-lg shadow-md`}>
+                            <div className="flex items-center mb-3">
+                                <Filter className="h-5 w-5 mr-2 text-blue-500" />
+                                <h3 className={`font-semibold ${textColorClass}`}>Sélectionner une période de paiement</h3>
+                            </div>
+                            <div className="flex flex-col md:flex-row md:items-center gap-4">
+                                <select 
+                                    className={`${selectBgColor} ${textColorClass} border ${inputBorderColor} rounded-md p-2 flex-grow`}
+                                    value={selectedSystemGroup?.id || ''}
+                                    onChange={(e) => handleSystemGroupChange(e.target.value)}
+                                >
+                                    {paymentSystemGroups.map(group => (
+                                        <option key={group.id} value={group.id}>
+                                            Du {formatDate(group.startDate)} au {formatDate(group.endDate)}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className={`text-sm ${textColorClass} bg-blue-50 dark:bg-gray-700 p-2 rounded-md`}>
+                                    <span className="font-medium">Période actuelle:</span> {selectedSystemGroup && 
+                                    `${formatDate(selectedSystemGroup.startDate)} - ${formatDate(selectedSystemGroup.endDate)}`}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <h2 className={`text-2xl font-bold ${textColorClass} flex items-center`}>
+                        <DollarSign className="h-6 w-6 mr-2 text-blue-500" />
                         Budget Mensuel par Classe
                     </h2>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg shadow-md">
                         <button
                             onClick={handlePreviousMonth}
-                            className={`p-2 rounded-full ${buttonSecondary} text-white ${selectedSchoolMonth <= 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors ${selectedSchoolMonth <= 1 ? 'opacity-50 cursor-not-allowed' : ''}`}
                             disabled={selectedSchoolMonth <= 1}
                         >
                             <ArrowLeft size={16} />
                         </button>
-                        <span className={`text-lg font-medium ${textColorClass}`}>
+                        <span className="text-lg font-medium text-white">
                             {getCurrentMonthDisplay()} (Mois {selectedSchoolMonth}/{schoolMonths.length})
                         </span>
                         <button
                             onClick={handleNextMonth}
-                            className={`p-2 rounded-full ${buttonSecondary} text-white ${selectedSchoolMonth >= schoolMonths.length ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            className={`p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-colors ${selectedSchoolMonth >= schoolMonths.length ? 'opacity-50 cursor-not-allowed' : ''}`}
                             disabled={selectedSchoolMonth >= schoolMonths.length}
                         >
                             <ArrowRight size={16} />
@@ -293,71 +378,81 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                 </div>
 
                 {/* Résumé global */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <motion.div
-                        className={`${headerBgColor} rounded-lg p-4 shadow`}
-                        whileHover={{ y: -5 }}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white`}
+                        whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
-                        <div className="flex items-center mb-2">
-                            <DollarSign className="h-5 w-5 mr-2 text-blue-500" />
-                            <h3 className={`font-semibold ${textColorClass}`}>Budget Total Prévu</h3>
+                        <div className="flex items-center mb-3">
+                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                                <DollarSign className="h-6 w-6" />
+                            </div>
+                            <h3 className="font-semibold text-lg">Budget Total Prévu</h3>
                         </div>
-                        <p className="text-2xl font-bold text-blue-500">{formatCurrency(totalExpected)}</p>
+                        <p className="text-3xl font-bold mt-2">{formatCurrency(totalExpected)}</p>
+                        <div className="mt-3 text-sm text-blue-100">Montant total attendu pour ce mois</div>
                     </motion.div>
 
                     <motion.div
-                        className={`${headerBgColor} rounded-lg p-4 shadow`}
-                        whileHover={{ y: -5 }}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-green-500 to-green-600 text-white`}
+                        whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
-                        <div className="flex items-center mb-2">
-                            <TrendingUp className="h-5 w-5 mr-2 text-green-500" />
-                            <h3 className={`font-semibold ${textColorClass}`}>Montant Total Reçu</h3>
+                        <div className="flex items-center mb-3">
+                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                                <TrendingUp className="h-6 w-6" />
+                            </div>
+                            <h3 className="font-semibold text-lg">Montant Total Reçu</h3>
                         </div>
-                        <p className="text-2xl font-bold text-green-500">{formatCurrency(totalReceived)}</p>
+                        <p className="text-3xl font-bold mt-2">{formatCurrency(totalReceived)}</p>
+                        <div className="mt-3 text-sm text-green-100">Paiements déjà effectués</div>
                     </motion.div>
 
                     <motion.div
-                        className={`${headerBgColor} rounded-lg p-4 shadow`}
-                        whileHover={{ y: -5 }}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-red-500 to-red-600 text-white`}
+                        whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
-                        <div className="flex items-center mb-2">
-                            <Calendar className="h-5 w-5 mr-2 text-red-500" />
-                            <h3 className={`font-semibold ${textColorClass}`}>Budget en Attente</h3>
+                        <div className="flex items-center mb-3">
+                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                                <Calendar className="h-6 w-6" />
+                            </div>
+                            <h3 className="font-semibold text-lg">Budget en Attente</h3>
                         </div>
-                        <p className="text-2xl font-bold text-red-500">
-                            {formatCurrency(totalExpected - totalReceived)}
-                        </p>
+                        <p className="text-3xl font-bold mt-2">{formatCurrency(totalExpected - totalReceived)}</p>
+                        <div className="mt-3 text-sm text-red-100">Montant restant à percevoir</div>
                     </motion.div>
 
                     <motion.div
-                        className={`${headerBgColor} rounded-lg p-4 shadow`}
-                        whileHover={{ y: -5 }}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-purple-500 to-purple-600 text-white`}
+                        whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
-                        <div className="flex items-center mb-2">
-                            <Calendar className="h-5 w-5 mr-2 text-purple-500" />
-                            <h3 className={`font-semibold ${textColorClass}`}>Taux de Recouvrement</h3>
+                        <div className="flex items-center mb-3">
+                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                                <Calendar className="h-6 w-6" />
+                            </div>
+                            <h3 className="font-semibold text-lg">Taux de Recouvrement</h3>
                         </div>
-                        <p className="text-2xl font-bold text-purple-500">
+                        <p className="text-3xl font-bold mt-2">
                             {totalExpected > 0 ? Math.round((totalReceived / totalExpected) * 100) : 0}%
                         </p>
+                        <div className="mt-3 text-sm text-purple-100">Pourcentage des paiements reçus</div>
                     </motion.div>
                 </div>
 
                 {/* Sélecteur de mois scolaires */}
                 {schoolMonths.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    <div className="flex flex-wrap gap-2 mb-6 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 p-4 rounded-lg shadow-inner">
                         {schoolMonths.map((month) => (
                             <button
                                 key={month.number}
                                 onClick={() => setSelectedSchoolMonth(month.number)}
-                                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${
                                     selectedSchoolMonth === month.number
-                                        ? `${buttonPrimary} text-white`
-                                        : `border ${inputBorderColor} ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"}`
+                                        ? `bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md`
+                                        : `bg-white dark:bg-gray-600 ${textColorClass} shadow hover:shadow-md`
                                 }`}
                             >
                                 {month.name} {month.year}
@@ -385,31 +480,39 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                         {monthlyData.map((classData) => (
                             <motion.div
                                 key={classData.id}
-                                className={`${cardBgColor} rounded-lg shadow-md overflow-hidden`}
-                                whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                                className={`${cardBgColor} rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700`}
+                                whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white">
-                                    <h3 className="text-lg font-bold">{classData.className}</h3>
-                                    <div className="flex items-center mt-1">
-                                        <Users size={16} className="mr-1" />
+                                <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-5 text-white relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 w-24 h-24 transform translate-x-8 -translate-y-8">
+                                        <div className="w-full h-full bg-white/10 rounded-full"></div>
+                                    </div>
+                                    <h3 className="text-xl font-bold relative z-10">{classData.className}</h3>
+                                    <div className="flex items-center mt-2 relative z-10">
+                                        <div className="p-1.5 bg-white/20 rounded-full mr-2">
+                                            <Users size={16} />
+                                        </div>
                                         <span className="text-sm">
                                             {classData.paidStudentCount}/{classData.studentCount} élèves ont payé
                                         </span>
                                     </div>
                                 </div>
 
-                                <div className="p-4">
-                                    <div className="mb-4">
-                                        <div className="flex justify-between mb-1">
-                                            <span className={`text-sm ${textColorClass}`}>Progression des paiements</span>
-                                            <span className={`text-sm font-medium ${textColorClass}`}>{classData.paymentPercentage}%</span>
+                                <div className="p-5">
+                                    <div className="mb-5">
+                                        <div className="flex justify-between mb-2">
+                                            <span className={`text-sm font-medium ${textColorClass}`}>Progression des paiements</span>
+                                            <span className={`text-sm font-bold ${
+                                                classData.paymentPercentage < 30 ? 'text-red-500' : 
+                                                classData.paymentPercentage < 70 ? 'text-yellow-500' : 'text-green-500'
+                                            }`}>{classData.paymentPercentage}%</span>
                                         </div>
-                                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                                             <motion.div
-                                                className={`h-2.5 rounded-full ${getProgressColor(classData.paymentPercentage)}`}
+                                                className={`h-3 rounded-full ${getProgressColor(classData.paymentPercentage)}`}
                                                 initial={{ width: "0%" }}
                                                 animate={{ width: `${classData.paymentPercentage}%` }}
                                                 transition={{ duration: 1, ease: "easeOut" }}
@@ -417,38 +520,44 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <p className={`text-xs opacity-70 ${textColorClass}`}>Frais mensuels</p>
-                                            <p className={`${textColorClass} font-medium`}>{formatCurrency(classData.monthlyFee)}</p>
+                                    <div className="grid grid-cols-2 gap-4 mb-5">
+                                        <div className="bg-blue-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                                            <p className={`text-xs font-medium text-blue-500 dark:text-blue-300 mb-1`}>Frais mensuels</p>
+                                            <p className={`${textColorClass} font-bold`}>{formatCurrency(classData.monthlyFee)}</p>
                                         </div>
-                                        {classData.isFirstMonth && classData.registrationFee > 0 && (
-                                            <div>
-                                                <p className={`text-xs opacity-70 ${textColorClass}`}>Frais d'inscription</p>
-                                                <p className={`${textColorClass} font-medium`}>{formatCurrency(classData.registrationFee)}</p>
-                                                <p className={`text-xs opacity-70 ${textColorClass}`}>
-                                                    ({classData.studentsRequiringRegistrationFee} nouveaux élèves)
+                                        {classData.isFirstMonth && classData.registrationFee > 0 ? (
+                                            <div className="bg-purple-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                                                <p className={`text-xs font-medium text-purple-500 dark:text-purple-300 mb-1`}>Frais d'inscription</p>
+                                                <p className={`${textColorClass} font-bold`}>{formatCurrency(classData.registrationFee)}</p>
+                                                <p className={`text-xs text-purple-500 dark:text-purple-300 mt-1`}>
+                                                    ({classData.studentsRequiringRegistrationFee} nouveaux)
                                                 </p>
+                                            </div>
+                                        ) : (
+                                            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg">
+                                                <p className={`text-xs font-medium text-gray-500 dark:text-gray-300 mb-1`}>Élèves inscrits</p>
+                                                <p className={`${textColorClass} font-bold`}>{classData.studentCount}</p>
                                             </div>
                                         )}
                                     </div>
 
-                                    <div className={`p-3 rounded-lg ${inputBgColor} border ${inputBorderColor}`}>
-                                        <div className="flex justify-between mb-2">
-                                            <span className={`${textColorClass} text-sm`}>Prévu:</span>
-                                            <span className={`${textColorClass} font-bold`}>
+                                    <div className={`p-4 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 shadow-inner`}>
+                                        <div className="flex justify-between mb-3">
+                                            <span className={`${textColorClass} text-sm font-medium`}>Prévu:</span>
+                                            <span className={`${textColorClass} text-sm font-medium`}>Prévu:</span>
+                                            <span className={`text-blue-600 dark:text-blue-400 font-bold`}>
                                                 {formatCurrency(classData.expectedBudget)}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between mb-2">
-                                            <span className={`${textColorClass} text-sm`}>Reçu:</span>
-                                            <span className={`text-green-500 font-bold`}>
+                                        <div className="flex justify-between mb-3">
+                                            <span className={`${textColorClass} text-sm font-medium`}>Reçu:</span>
+                                            <span className={`text-green-600 dark:text-green-400 font-bold`}>
                                                 {formatCurrency(classData.receivedAmount)}
                                             </span>
                                         </div>
-                                        <div className="flex justify-between pt-2 border-t border-gray-300">
-                                            <span className={`${textColorClass} text-sm`}>Restant:</span>
-                                            <span className={`text-red-500 font-bold`}>
+                                        <div className="flex justify-between pt-2 border-t border-gray-300 dark:border-gray-600">
+                                            <span className={`${textColorClass} text-sm font-medium`}>Restant:</span>
+                                            <span className={`text-red-600 dark:text-red-400 font-bold`}>
                                                 {formatCurrency(classData.remainingAmount)}
                                             </span>
                                         </div>

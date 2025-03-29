@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts';
+import { getClasseName } from "../../utils/helpers";
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -54,7 +55,7 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
   const chartGridColor = theme === "dark" ? "rgba(74, 85, 104, 0.2)" : "rgba(160, 174, 192, 0.2)";
 
   // Mois en français
-  const months = language === 'fr'
+  const months = language === 'Français'
     ? ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
     : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -113,21 +114,37 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
       }));
       setAvailablePaymentSystems(paymentSystems);
 
-      // Extraire les classes disponibles
-      if (db.classes) {
-        const classes = db.classes.map(cls => ({
-          id: cls.id,
-          name: `${cls.level} ${cls.name}`
-        }));
-        setAvailableClasses([{ id: 'all', name: 'Toutes les classes' }, ...classes]);
-      }
-
       // Définir le système de paiement par défaut (le plus récent)
       if (db.paymentSystems.length > 0) {
         setSelectedPaymentSystem(db.paymentSystems[0].id);
       }
     }
   }, [db]);
+
+  // Mettre à jour les classes disponibles lorsque le système de paiement change
+  useEffect(() => {
+    if (db && db.classes && selectedPaymentSystem) {
+      // Trouver le système de paiement sélectionné
+      const paymentSystem = db.paymentSystems.find(system => system.id === selectedPaymentSystem);
+
+      if (paymentSystem && paymentSystem.classes) {
+        // Filtrer uniquement les classes qui sont dans le système de paiement
+        const filteredClasses = db.classes
+          .filter(cls => paymentSystem.classes.includes(cls.id))
+          .sort((a, b) => a.level - b.level);
+
+        const classes = filteredClasses.map(cls => ({
+          id: cls.id,
+          name: getClasseName(`${cls.level} ${cls.name}`, language),
+        }));
+
+        setAvailableClasses([{ id: 'all', name: 'Toutes les classes' }, ...classes]);
+      } else {
+        // Si aucun système n'est sélectionné ou s'il n'a pas de classes, afficher une liste vide
+        setAvailableClasses([{ id: 'all', name: 'Toutes les classes' }]);
+      }
+    }
+  }, [db, selectedPaymentSystem]);
 
   // Générer les mois scolaires à partir des systèmes de paiement
   const generateSchoolMonths = (systems) => {
@@ -229,7 +246,10 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
       receivedAmount: 0,
       studentCount: 0,
       paidCount: 0,
-      paymentPercentage: 0
+      paymentPercentage: 0,
+      yearlyExpectedAmount: 0,
+      yearlyReceivedAmount: 0,
+      yearlyPaidCount: 0
     }));
 
     // Calculer les statistiques pour chaque classe
@@ -241,8 +261,9 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
 
       if (studentsInClass.length === 0) return;
 
-      // Frais mensuels
+      // Frais mensuels et annuels
       const monthlyFee = Number(paymentSystem.monthlyFee);
+      const yearlyFee = Number(paymentSystem.yearlyFee || 0);
 
       // Clé pour les paiements de cette classe
       const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
@@ -252,17 +273,24 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
 
       // Pour chaque mois, calculer les montants attendus et reçus
       monthlyStats.forEach(stat => {
-        // Montant attendu pour ce mois
-        stat.expectedAmount += studentsInClass.length * monthlyFee;
+        // Montant mensuel attendu pour ce mois
+        const monthlyExpected = studentsInClass.length * monthlyFee;
+        stat.expectedAmount += monthlyExpected;
         stat.studentCount += studentsInClass.length;
 
         // Compter les élèves qui ont payé ce mois
         let paidStudentsCount = 0;
         classPayments.forEach(student => {
           if (student.month_payed && Array.isArray(student.month_payed) &&
-            student.month_payed.includes(stat.jsMonth)) {
+            student.month_payed.includes(stat.monthNumber.toString())) {
             paidStudentsCount++;
             stat.receivedAmount += monthlyFee;
+          }
+
+          // Si l'élève a payé le frais annuel (supposons qu'il est marqué dans le premier mois)
+          if (yearlyFee > 0 && stat.monthNumber === 1 && student.yearly_paid === true) {
+            stat.yearlyReceivedAmount += yearlyFee;
+            stat.yearlyPaidCount++;
           }
         });
 
@@ -296,8 +324,15 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
 
     // Calculer les pourcentages de paiement
     monthlyStats.forEach(stat => {
-      stat.paymentPercentage = stat.expectedAmount > 0
-        ? Math.round((stat.receivedAmount / stat.expectedAmount) * 100)
+      // Ajouter les frais annuels aux montants totaux
+      const totalExpected = stat.expectedAmount + stat.yearlyExpectedAmount;
+      const totalReceived = stat.receivedAmount + stat.yearlyReceivedAmount;
+
+      stat.totalExpectedAmount = totalExpected;
+      stat.totalReceivedAmount = totalReceived;
+
+      stat.paymentPercentage = totalExpected > 0
+        ? Math.round((totalReceived / totalExpected) * 100)
         : 0;
     });
 
@@ -322,8 +357,8 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
         {
           label: 'Montant reçu',
           data: monthlyData.map(data => data.receivedAmount),
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.5)',
+          borderColor: 'rgb(4, 241, 83)',
+          backgroundColor: 'rgba(8, 245, 87, 0.5)',
           tension: 0.4,
           fill: chartType === 'line' ? 'origin' : false,
           borderWidth: 2
@@ -677,8 +712,12 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
                           <td className={`px-6 py-4 whitespace-nowrap text-sm ${textColorClass}`}>{data.month}</td>
                           <td className={`px-6 py-4 whitespace-nowrap text-sm ${textColorClass}`}>{data.studentCount}</td>
                           <td className={`px-6 py-4 whitespace-nowrap text-sm ${textColorClass}`}>{data.paidCount}</td>
-                          <td className={`px-6 py-4 whitespace-nowrap text-sm ${textColorClass}`}>{formatCurrency(data.expectedAmount)}</td>
-                          <td className={`px-6 py-4 whitespace-nowrap text-sm ${textColorClass}`}>{formatCurrency(data.receivedAmount)}</td>
+                          <td className={`px-6 py-4 whitespace-nowrap text-sm ${textColorClass}`}>
+                            {formatCurrency(data.totalExpectedAmount || data.expectedAmount)}
+                          </td>
+                          <td className={`px-6 py-4 whitespace-nowrap text-sm ${textColorClass}`}>
+                            {formatCurrency(data.totalReceivedAmount || data.receivedAmount)}
+                          </td>
                           <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${data.paymentPercentage >= 70 ? 'text-green-500' : data.paymentPercentage >= 40 ? 'text-yellow-500' : 'text-red-500'}`}>
                             {data.paymentPercentage}%
                           </td>
