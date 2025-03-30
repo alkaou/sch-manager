@@ -37,7 +37,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
 
     // Trier les classes par level
     const sortClassesByLevel = (classeArray = []) => {
-        if(classeArray.length < 2 ) return classeArray;
+        if (classeArray.length < 2) return classeArray;
         const sortedClasses = [...classeArray].sort((a, b) =>
             b.level - a.level
         );
@@ -217,20 +217,20 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             if (editingSystemId) {
                 // Récupérer l'ancien système pour comparer les classes
                 const oldSystem = paymentSystems.find(system => system.id === editingSystemId);
-                
+
                 // Identifier les classes qui ont été supprimées
                 if (oldSystem && oldSystem.classes) {
                     const removedClasses = oldSystem.classes.filter(
                         classId => !newSystem.classes.includes(classId)
                     );
-                    
+
                     // Supprimer les paiements liés aux classes supprimées
                     removedClasses.forEach(classId => {
                         const paymentKey = `students_${editingSystemId}_${classId}`;
                         if (updatedPayments[paymentKey]) {
                             delete updatedPayments[paymentKey];
                         }
-                        
+
                         // Supprimer également les frais d'inscription liés aux classes supprimées
                         const registrationFeeKey = `registration_fee_${editingSystemId}_${classId}`;
                         if (updatedRegistrationFees[registrationFeeKey]) {
@@ -238,7 +238,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                         }
                     });
                 }
-                
+
                 // Si les frais d'inscription sont mis à 0, supprimer tous les enregistrements de frais d'inscription
                 if (Number(newSystem.registrationFee) === 0 && oldSystem.registrationFee > 0) {
                     newSystem.classes.forEach(classId => {
@@ -248,7 +248,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                         }
                     });
                 }
-                
+
                 // Mise à jour d'un système existant
                 updatedSystems = paymentSystems.map(system =>
                     system.id === editingSystemId ? { ...newSystem, id: editingSystemId } : system
@@ -258,8 +258,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                 updatedSystems = [...paymentSystems, { ...newSystem, id: Date.now().toString() }];
             }
 
-            const updatedDb = { 
-                ...db, 
+            const updatedDb = {
+                ...db,
                 paymentSystems: updatedSystems,
                 payments: updatedPayments,
                 registrationFees: updatedRegistrationFees
@@ -326,7 +326,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
         try {
             // Récupérer le système à supprimer pour connaître ses classes
             const systemToDelete = paymentSystems.find(system => system.id === systemId);
-            
+
             // Mettre à jour la liste des systèmes en supprimant celui dont l'id correspond à systemId
             const updatedSystems = paymentSystems.filter(system => system.id !== systemId);
 
@@ -337,7 +337,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                     delete updatedPayments[key];
                 }
             });
-            
+
             // Supprimer les frais d'inscription liés à ce système
             const updatedRegistrationFees = { ...db.registrationFees };
             Object.keys(updatedRegistrationFees).forEach(key => {
@@ -347,9 +347,9 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             });
 
             // Construire la nouvelle base de données avec la mise à jour des systèmes, des paiements et des frais d'inscription
-            const updatedDb = { 
-                ...db, 
-                paymentSystems: updatedSystems, 
+            const updatedDb = {
+                ...db,
+                paymentSystems: updatedSystems,
                 payments: updatedPayments,
                 registrationFees: updatedRegistrationFees
             };

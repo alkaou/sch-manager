@@ -77,8 +77,8 @@ const PayementsTabs = ({
                 setSelectedClass(null);
               }}
               className={`flex items-center space-x-1 px-4 py-3 text-sm font-medium transition-colors relative ${activeTab === tab.id
-                  ? `${activeTextColor}`
-                  : `${tabTextColor} ${hoverTabBgColor}`
+                ? `${activeTextColor}`
+                : `${tabTextColor} ${hoverTabBgColor}`
                 }`}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}

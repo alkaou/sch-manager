@@ -29,14 +29,14 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
         if (db && db.paymentSystems) {
             // Extraire toutes les années scolaires uniques des systèmes de paiement
             const schoolYears = new Map();
-            
+
             db.paymentSystems.forEach(system => {
                 const startYear = new Date(system.startDate).getFullYear();
                 const endYear = new Date(system.endDate).getFullYear();
-                
+
                 // Créer une clé pour l'année scolaire (ex: "2023-2024")
                 const schoolYearKey = `${startYear}-${endYear}`;
-                
+
                 if (!schoolYears.has(schoolYearKey)) {
                     schoolYears.set(schoolYearKey, {
                         key: schoolYearKey,
@@ -46,11 +46,11 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                         systems: []
                     });
                 }
-                
+
                 // Ajouter ce système à l'année scolaire correspondante
                 schoolYears.get(schoolYearKey).systems.push(system);
             });
-            
+
             // Convertir en tableau et trier
             const sortedSchoolYears = Array.from(schoolYears.values()).sort((a, b) => {
                 // D'abord par année de début (décroissant)
@@ -60,30 +60,30 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                 // Ensuite par année de fin (décroissant)
                 return b.endYear - a.endYear;
             });
-            
+
             setAvailableSchoolYears(sortedSchoolYears);
-            
+
             // Si des années scolaires sont disponibles, sélectionner la première par défaut
             if (sortedSchoolYears.length > 0) {
                 const defaultSchoolYear = sortedSchoolYears[0].key;
                 setCurrentSchoolYear(defaultSchoolYear);
-                
+
                 // Définir l'année civile en fonction de l'année scolaire sélectionnée
                 const selectedSchoolYear = sortedSchoolYears[0];
                 setCurrentYear(selectedSchoolYear.startYear);
             }
-            
+
             // Garder aussi la liste des années civiles pour la compatibilité
             const years = new Set();
             db.paymentSystems.forEach(system => {
                 const startYear = new Date(system.startDate).getFullYear();
                 const endYear = new Date(system.endDate).getFullYear();
-                
+
                 for (let year = startYear; year <= endYear; year++) {
                     years.add(year);
                 }
             });
-            
+
             const sortedYears = Array.from(years).sort((a, b) => b - a);
             setAvailableYears(sortedYears);
         }
@@ -116,7 +116,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
 
         // Filtrer les systèmes de paiement pour l'année scolaire sélectionnée
         let selectedYearSystems = [];
-        
+
         if (currentSchoolYear) {
             // Trouver l'année scolaire sélectionnée
             const schoolYear = availableSchoolYears.find(sy => sy.key === currentSchoolYear);
@@ -164,63 +164,63 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
 
             // Calculer le budget annuel prévu
             const monthlyFee = Number(paymentSystem.monthlyFee);
-            
+
             // Calculer le nombre de mois dans l'année scolaire
             const startDate = new Date(paymentSystem.startDate);
             const endDate = new Date(paymentSystem.endDate);
-            const monthDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + 
-                              (endDate.getMonth() - startDate.getMonth()) + 1;
-            
+            const monthDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+                (endDate.getMonth() - startDate.getMonth()) + 1;
+
             // Budget mensuel total pour l'année
             const monthlyTotal = studentsInClass.length * monthlyFee * monthDiff;
-            
+
             // Frais d'inscription
             const registrationFee = Number(paymentSystem.registrationFee);
-            
+
             // Clé pour les frais d'inscription de cette classe
             const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls.id}`;
-            const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey] 
-                ? db.registrationFees[registrationFeeKey] 
+            const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey]
+                ? db.registrationFees[registrationFeeKey]
                 : {};
-            
+
             // Compter les élèves qui doivent payer les frais d'inscription
             const studentsRequiringRegistrationFee = Object.entries(registrationFeeData)
                 .filter(([studentId, value]) => value === true)
                 .length;
-            
+
             // Calculer les frais d'inscription prévus
             const registrationTotal = studentsRequiringRegistrationFee * registrationFee;
-            
+
             // Budget total prévu pour l'année
             const expectedAmount = monthlyTotal + registrationTotal;
             expectedTotalSum += expectedAmount;
 
             // Clé pour les paiements de cette classe
             const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
-            
+
             // Récupérer les paiements pour cette classe
             const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
-            
+
             // Calculer le montant total reçu pour tous les mois
             let receivedAmount = 0;
-            
+
             // Pour chaque élève, compter les mois payés et multiplier par le frais mensuel
             classPayments.forEach(student => {
                 if (student.month_payed && Array.isArray(student.month_payed)) {
                     receivedAmount += student.month_payed.length * monthlyFee;
                 }
             });
-            
+
             // Ajouter les frais d'inscription reçus
             const paidRegistrationCount = Object.entries(registrationFeeData)
                 .filter(([studentId, value]) => value === true)
                 .length;
-                
+
             const receivedRegistrationFees = paidRegistrationCount * registrationFee;
             receivedAmount += receivedRegistrationFees;
-            
+
             receivedTotalSum += receivedAmount;
-            
+
             // Calculer le pourcentage de paiement
             const paymentPercentage = expectedAmount > 0
                 ? Math.round((receivedAmount / expectedAmount) * 100)
@@ -275,9 +275,9 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
     // Animation variants
     const containerVariants = {
         hidden: { opacity: 0 },
-        visible: { 
+        visible: {
             opacity: 1,
-            transition: { 
+            transition: {
                 staggerChildren: 0.1
             }
         }
@@ -285,11 +285,11 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
 
     const itemVariants = {
         hidden: { y: 20, opacity: 0 },
-        visible: { 
-            y: 0, 
+        visible: {
+            y: 0,
             opacity: 1,
-            transition: { 
-                type: "spring", 
+            transition: {
+                type: "spring",
                 stiffness: 100,
                 damping: 12
             }
@@ -338,7 +338,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
             ) : (
                 <>
                     {/* Résumé global */}
-                    <motion.div 
+                    <motion.div
                         className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
                         variants={containerVariants}
                         initial="hidden"
@@ -403,8 +403,8 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                 </div>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-                                <div 
-                                    className="h-2 rounded-full bg-gradient-to-r from-purple-400 to-purple-600" 
+                                <div
+                                    className="h-2 rounded-full bg-gradient-to-r from-purple-400 to-purple-600"
                                     style={{ width: `${totalExpected > 0 ? Math.round((totalReceived / totalExpected) * 100) : 0}%` }}
                                 ></div>
                             </div>
@@ -422,7 +422,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                             </p>
                         </div>
                     ) : (
-                        <motion.div 
+                        <motion.div
                             className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"
                             variants={containerVariants}
                             initial="hidden"
@@ -433,8 +433,8 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                     key={data.id}
                                     className={`${cardBgColor} rounded-lg shadow-lg overflow-hidden`}
                                     variants={itemVariants}
-                                    whileHover={{ 
-                                        y: -5, 
+                                    whileHover={{
+                                        y: -5,
                                         boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)",
                                         transition: { duration: 0.2 }
                                     }}
@@ -633,11 +633,10 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                                 </div>
                                                 <div className="flex justify-between mb-2">
                                                     <span className={`${textColorClass}`}>Taux de recouvrement:</span>
-                                                    <span className={`font-bold ${
-                                                        selectedClass.paymentPercentage >= 70 ? 'text-green-600' : 
-                                                        selectedClass.paymentPercentage >= 40 ? 'text-yellow-500' : 
-                                                        'text-red-500'
-                                                    }`}>
+                                                    <span className={`font-bold ${selectedClass.paymentPercentage >= 70 ? 'text-green-600' :
+                                                            selectedClass.paymentPercentage >= 40 ? 'text-yellow-500' :
+                                                                'text-red-500'
+                                                        }`}>
                                                         {selectedClass.paymentPercentage}%
                                                     </span>
                                                 </div>

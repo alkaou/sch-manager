@@ -39,20 +39,20 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             }) || [];
 
             setActivePaymentSystems(activeSystems);
-            
+
             // Grouper les systèmes de paiement par dates de début et de fin
             const groups = groupPaymentSystemsByDate(activeSystems);
             setPaymentSystemGroups(groups);
-            
+
             // Sélectionner le premier groupe par défaut
             if (groups.length > 0) {
                 setSelectedSystemGroup(groups[0]);
-                
+
                 // Générer les mois scolaires à partir du groupe sélectionné
                 const schoolMonthsArray = generateSchoolMonths(groups[0].systems);
                 setSchoolMonths(schoolMonthsArray);
             }
-            
+
             calculateMonthlyData();
         }
     }, [db]);
@@ -61,10 +61,10 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
     const groupPaymentSystemsByDate = (systems) => {
         const groups = [];
         const groupMap = {};
-        
+
         systems.forEach(system => {
             const key = `${system.startDate}_${system.endDate}`;
-            
+
             if (!groupMap[key]) {
                 groupMap[key] = {
                     id: key,
@@ -74,10 +74,10 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                 };
                 groups.push(groupMap[key]);
             }
-            
+
             groupMap[key].systems.push(system);
         });
-        
+
         return groups;
     };
 
@@ -88,10 +88,10 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
         const system = systems[0];
         const startDate = new Date(system.startDate);
         const endDate = new Date(system.endDate);
-        
+
         const monthsArray = [];
         let currentMonth = new Date(startDate);
-        
+
         while (currentMonth <= endDate) {
             monthsArray.push({
                 number: monthsArray.length + 1, // 1-indexed school month number
@@ -102,7 +102,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             });
             currentMonth.setMonth(currentMonth.getMonth() + 1);
         }
-        
+
         return monthsArray;
     };
 
@@ -135,7 +135,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
 
         // Obtenir les IDs des systèmes de paiement du groupe sélectionné
         const selectedSystemIds = selectedSystemGroup.systems.map(system => system.id);
-        
+
         // Filtrer les systèmes de paiement actifs qui appartiennent au groupe sélectionné
         const activeSystems = db.paymentSystems.filter(system => {
             const endDate = new Date(system.endDate);
@@ -151,7 +151,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
 
         // Obtenir le mois scolaire sélectionné
         const currentSchoolMonth = schoolMonths.find(month => month.number === selectedSchoolMonth);
-        
+
         if (!currentSchoolMonth) {
             setMonthlyData([]);
             setIsLoading(false);
@@ -189,19 +189,19 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             // Vérifier si c'est le premier mois pour les frais d'inscription
             const isFirstMonth = selectedSchoolMonth === 1;
             const registrationFee = Number(paymentSystem.registrationFee);
-            
+
             // Clé pour les frais d'inscription de cette classe
             const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls.id}`;
-            const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey] 
-                ? db.registrationFees[registrationFeeKey] 
+            const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey]
+                ? db.registrationFees[registrationFeeKey]
                 : {};
-            
+
             // Compter les élèves qui doivent payer les frais d'inscription
             // (ceux qui ont true dans registrationFeeData - les nouveaux élèves)
             const studentsRequiringRegistrationFee = Object.entries(registrationFeeData)
                 .filter(([studentId, value]) => value === true)
                 .map(([studentId]) => studentId);
-            
+
             // Calculer les frais d'inscription prévus uniquement pour les nouveaux élèves
             const registrationFees = isFirstMonth ? studentsRequiringRegistrationFee.length * registrationFee : 0;
 
@@ -211,32 +211,32 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
 
             // Clé pour les paiements de cette classe
             const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
-            
+
             // Récupérer les paiements pour cette classe
             const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
-            
+
             // Compter les élèves qui ont payé pour le mois scolaire en cours
-            const paidStudents = classPayments.filter(student => 
+            const paidStudents = classPayments.filter(student =>
                 student.month_payed && student.month_payed.includes(selectedSchoolMonth.toString())
             );
-            
+
             // Calculer le montant reçu (nombre d'élèves payés * frais mensuels)
             const receivedAmount = paidStudents.length * monthlyFee;
-            
+
             // Compter les élèves qui ont payé les frais d'inscription
             // (ceux qui ont une entrée dans registrationFeeData qui est true)
             const paidRegistrationCount = Object.entries(registrationFeeData)
                 .filter(([studentId, value]) => value === true)
                 .length;
-                
+
             const receivedRegistrationFees = paidRegistrationCount * registrationFee;
-            
+
             // Ajouter les frais d'inscription reçus au montant total reçu si c'est le premier mois
             const totalReceivedAmount = receivedAmount + (isFirstMonth ? receivedRegistrationFees : 0);
-            
+
             // Ajouter au total reçu global (incluant les frais d'inscription si c'est le premier mois)
             receivedTotal += totalReceivedAmount;
-            
+
             // Calculer le pourcentage de paiement
             const paymentPercentage = totalExpectedBudget > 0
                 ? Math.round((totalReceivedAmount / totalExpectedBudget) * 100)
@@ -331,7 +331,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                                 <h3 className={`font-semibold ${textColorClass}`}>Sélectionner une période de paiement</h3>
                             </div>
                             <div className="flex flex-col md:flex-row md:items-center gap-4">
-                                <select 
+                                <select
                                     className={`${selectBgColor} ${textColorClass} border ${inputBorderColor} rounded-md p-2 flex-grow`}
                                     value={selectedSystemGroup?.id || ''}
                                     onChange={(e) => handleSystemGroupChange(e.target.value)}
@@ -343,8 +343,8 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                                     ))}
                                 </select>
                                 <div className={`text-sm ${textColorClass} bg-blue-50 dark:bg-gray-700 p-2 rounded-md`}>
-                                    <span className="font-medium">Période actuelle:</span> {selectedSystemGroup && 
-                                    `${formatDate(selectedSystemGroup.startDate)} - ${formatDate(selectedSystemGroup.endDate)}`}
+                                    <span className="font-medium">Période actuelle:</span> {selectedSystemGroup &&
+                                        `${formatDate(selectedSystemGroup.startDate)} - ${formatDate(selectedSystemGroup.endDate)}`}
                                 </div>
                             </div>
                         </div>
@@ -449,11 +449,10 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                             <button
                                 key={month.number}
                                 onClick={() => setSelectedSchoolMonth(month.number)}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${
-                                    selectedSchoolMonth === month.number
+                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${selectedSchoolMonth === month.number
                                         ? `bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md`
                                         : `bg-white dark:bg-gray-600 ${textColorClass} shadow hover:shadow-md`
-                                }`}
+                                    }`}
                             >
                                 {month.name} {month.year}
                             </button>
@@ -505,10 +504,9 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                                     <div className="mb-5">
                                         <div className="flex justify-between mb-2">
                                             <span className={`text-sm font-medium ${textColorClass}`}>Progression des paiements</span>
-                                            <span className={`text-sm font-bold ${
-                                                classData.paymentPercentage < 30 ? 'text-red-500' : 
-                                                classData.paymentPercentage < 70 ? 'text-yellow-500' : 'text-green-500'
-                                            }`}>{classData.paymentPercentage}%</span>
+                                            <span className={`text-sm font-bold ${classData.paymentPercentage < 30 ? 'text-red-500' :
+                                                    classData.paymentPercentage < 70 ? 'text-yellow-500' : 'text-green-500'
+                                                }`}>{classData.paymentPercentage}%</span>
                                         </div>
                                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
                                             <motion.div

@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts";
 import { getClasseName } from "../../utils/helpers";
-import { 
-  Chart as ChartJS, 
-  CategoryScale, 
-  LinearScale, 
-  PointElement, 
-  LineElement, 
-  BarElement, 
-  Title, 
-  Tooltip, 
-  Legend, 
-  ArcElement, 
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
   RadialLinearScale,
   Filler
 } from 'chart.js';
@@ -63,14 +63,14 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
     if (db && db.paymentSystems) {
       // Extract unique school years from payment systems
       const schoolYears = new Map();
-      
+
       db.paymentSystems.forEach(system => {
         const startYear = new Date(system.startDate).getFullYear();
         const endYear = new Date(system.endDate).getFullYear();
-        
+
         // Create a key for the school year (e.g., "2023-2024")
         const schoolYearKey = `${startYear}-${endYear}`;
-        
+
         if (!schoolYears.has(schoolYearKey)) {
           schoolYears.set(schoolYearKey, {
             key: schoolYearKey,
@@ -80,11 +80,11 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
             systems: []
           });
         }
-        
+
         // Add this system to the corresponding school year
         schoolYears.get(schoolYearKey).systems.push(system);
       });
-      
+
       // Convert to array and sort
       const sortedSchoolYears = Array.from(schoolYears.values()).sort((a, b) => {
         // First by start year (descending)
@@ -94,9 +94,9 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
         // Then by end year (descending)
         return b.endYear - a.endYear;
       });
-      
+
       setAvailableYears(sortedSchoolYears);
-      
+
       // Select the two most recent years by default if available
       if (sortedSchoolYears.length > 0) {
         const yearsToSelect = sortedSchoolYears.slice(0, Math.min(2, sortedSchoolYears.length)).map(y => y.key);
@@ -158,73 +158,73 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
       // Process each class for this year
       db.classes.forEach(cls => {
         // Find the payment system for this class in the selected year
-        const paymentSystem = yearSystems.find(system => 
+        const paymentSystem = yearSystems.find(system =>
           system.classes && system.classes.includes(cls.id)
         );
-      
+
         if (!paymentSystem) return; // Skip classes without a payment system for this year
-      
+
         // Count students in this class
-        const studentsInClass = db.students.filter(student => 
+        const studentsInClass = db.students.filter(student =>
           student.classe === `${cls.level} ${cls.name}` && student.status === "actif"
         );
-      
+
         if (studentsInClass.length === 0) return; // Skip classes without students
-      
+
         // Calculate expected annual budget
         const monthlyFee = Number(paymentSystem.monthlyFee);
         const yearlyFee = Number(paymentSystem.yearlyFee || 0);
-      
+
         // Calculate number of months in the school year
         const startDate = new Date(paymentSystem.startDate);
         const endDate = new Date(paymentSystem.endDate);
-        const monthDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + 
-                          (endDate.getMonth() - startDate.getMonth()) + 1;
-      
+        const monthDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+          (endDate.getMonth() - startDate.getMonth()) + 1;
+
         // Total monthly budget for the year - using the correct number of months
         const monthlyTotal = studentsInClass.length * monthlyFee * monthDiff;
-      
+
         // Registration fees
         const registrationFee = Number(paymentSystem.registrationFee);
-      
+
         // Key for registration fees for this class
         const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls.id}`;
-        const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey] 
-          ? db.registrationFees[registrationFeeKey] 
+        const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey]
+          ? db.registrationFees[registrationFeeKey]
           : {};
-      
+
         // Count students who need to pay registration fees
         const studentsRequiringRegistrationFee = Object.entries(registrationFeeData)
           .filter(([studentId, value]) => value === true)
           .length;
-      
+
         // Calculate expected registration fees
         const registrationTotal = studentsRequiringRegistrationFee * registrationFee;
-      
+
         // Yearly fees total if applicable
         const yearlyTotal = studentsInClass.length * yearlyFee;
-      
+
         // Total expected budget for the year
         const expectedAmount = monthlyTotal + registrationTotal;
         yearData.totalExpected += expectedAmount;
         yearData.registrationFees += registrationTotal;
         yearData.monthlyFees += monthlyTotal;
         yearData.yearlyFees += yearlyTotal;
-      
+
         // Key for payments for this class
         const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
-      
+
         // Get payments for this class
         const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
-      
+
         // Calculate total amount received for all months
         let receivedAmount = 0;
-      
+
         // For each student, count paid months and multiply by monthly fee
         classPayments.forEach(student => {
           if (student.month_payed && Array.isArray(student.month_payed)) {
             receivedAmount += student.month_payed.length * monthlyFee;
-            
+
             // Add to monthly breakdown
             student.month_payed.forEach(monthNum => {
               const monthIndex = parseInt(monthNum) - 1;
@@ -233,23 +233,23 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
               }
             });
           }
-          
+
           // Add yearly fee if paid
           if (student.yearly_paid) {
             receivedAmount += yearlyFee;
           }
         });
-      
+
         // Add received registration fees - THIS IS THE CORRECTED PART
         const paidRegistrationCount = Object.entries(registrationFeeData)
           .filter(([studentId, value]) => value === true)
           .length;
-          
+
         const receivedRegistrationFees = paidRegistrationCount * registrationFee;
         receivedAmount += receivedRegistrationFees;
-      
+
         yearData.totalReceived += receivedAmount;
-      
+
         // Calculate payment percentage
         const paymentPercentage = expectedAmount > 0
           ? Math.round((receivedAmount / expectedAmount) * 100)
@@ -299,11 +299,11 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
         year: yearKey,
         label: selectedYear.label,
         value: comparisonMetric === 'totalRevenue' ? yearData.totalReceived :
-               comparisonMetric === 'expectedRevenue' ? yearData.totalExpected :
-               comparisonMetric === 'paymentPercentage' ? yearData.paymentPercentage :
-               comparisonMetric === 'registrationFees' ? yearData.registrationFees :
-               comparisonMetric === 'monthlyFees' ? yearData.monthlyFees :
-               yearData.yearlyFees
+          comparisonMetric === 'expectedRevenue' ? yearData.totalExpected :
+            comparisonMetric === 'paymentPercentage' ? yearData.paymentPercentage :
+              comparisonMetric === 'registrationFees' ? yearData.registrationFees :
+                comparisonMetric === 'monthlyFees' ? yearData.monthlyFees :
+                  yearData.yearlyFees
       });
 
       // Calculate monthly trends
@@ -320,15 +320,15 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
     });
 
     // Calculate year-over-year growth
-    const yoyGrowth = previousYearTotal > 0 
-      ? ((currentYearTotal - previousYearTotal) / previousYearTotal) * 100 
+    const yoyGrowth = previousYearTotal > 0
+      ? ((currentYearTotal - previousYearTotal) / previousYearTotal) * 100
       : 0;
 
     // Find top and underperforming classes
     if (yearlyStats.length > 0) {
       const latestYear = yearlyStats[0];
       setTopPerformingClasses(latestYear.classeStats.slice(0, 3));
-      setUnderperformingClasses([...latestYear.classeStats].sort((a, b) => 
+      setUnderperformingClasses([...latestYear.classeStats].sort((a, b) =>
         a.paymentPercentage - b.paymentPercentage
       ).slice(0, 3));
     }
@@ -354,7 +354,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
   const getComparisonChartData = () => {
     const labels = comparisonData.map(data => data.label);
     const values = comparisonData.map(data => data.value);
-    
+
     return {
       labels,
       datasets: [
@@ -403,7 +403,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           borderColor: borderColor,
           borderWidth: 1,
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               let label = context.dataset.label || '';
               if (label) {
                 label += ': ';
@@ -434,7 +434,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           },
           ticks: {
             color: theme === 'dark' ? '#fff' : '#333',
-            callback: function(value) {
+            callback: function (value) {
               if (comparisonMetric === 'paymentPercentage') {
                 return value + '%';
               } else {
@@ -500,7 +500,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           titleColor: theme === 'dark' ? '#fff' : '#333',
           bodyColor: theme === 'dark' ? '#fff' : '#333',
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               let label = context.dataset.label || '';
               if (label) {
                 label += ': ';
@@ -528,7 +528,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           },
           ticks: {
             color: theme === 'dark' ? '#fff' : '#333',
-            callback: function(value) {
+            callback: function (value) {
               return value + '%';
             }
           }
@@ -544,10 +544,10 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
   // Get radar chart data for class performance
   const getClassPerformanceData = () => {
     if (yearlyData.length === 0) return { labels: [], datasets: [] };
-    
+
     const latestYear = yearlyData[0];
     const topClasses = latestYear.classeStats.slice(0, 6);
-    
+
     return {
       labels: topClasses.map(cls => cls.className),
       datasets: [
@@ -585,7 +585,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           titleColor: theme === 'dark' ? '#fff' : '#333',
           bodyColor: theme === 'dark' ? '#fff' : '#333',
           callbacks: {
-            label: function(context) {
+            label: function (context) {
               return `${context.dataset.label}: ${context.parsed.r}%`;
             }
           }
@@ -696,8 +696,8 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
                     }
                   }}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 
-                    ${selectedYears.includes(year.key) 
-                      ? 'bg-blue-500 text-white shadow-md' 
+                    ${selectedYears.includes(year.key)
+                      ? 'bg-blue-500 text-white shadow-md'
                       : `${cardBgColor} ${textColorClass} border ${borderColor} hover:bg-blue-100 dark:hover:bg-gray-700`}
                   `}
                 >
@@ -776,7 +776,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
         >
           {/* Key Performance Indicators */}
           {yearlyData.length > 0 && (
-            <motion.div 
+            <motion.div
               variants={itemVariants}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
             >
@@ -811,7 +811,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
                   </div>
                 </div>
                 <div className="mt-1">
-                <div className="mb-1">
+                  <div className="mb-1">
                     <p className="text-2xl font-bold text-green-500">{formatCurrency(yearlyData[0]?.totalExpected || 0)}</p>
                   </div>
                   <p className={`text-xs ${textColorClass} opacity-60`}>
@@ -857,8 +857,8 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
                 </div>
                 <div className="mt-2">
                   <p className={`text-xs ${textColorClass} opacity-60`}>
-                    {selectedYears.length > 1 
-                      ? `Par rapport à ${availableYears.find(y => y.key === selectedYears[1])?.label}` 
+                    {selectedYears.length > 1
+                      ? `Par rapport à ${availableYears.find(y => y.key === selectedYears[1])?.label}`
                       : 'Sélectionnez une année précédente pour comparer'}
                   </p>
                 </div>
@@ -867,7 +867,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           )}
 
           {/* Main Charts Section */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="grid grid-cols-1 lg:grid-cols-2 gap-6"
           >
@@ -904,7 +904,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           </motion.div>
 
           {/* Class Performance Section */}
-          <motion.div 
+          <motion.div
             variants={itemVariants}
             className="grid grid-cols-1 lg:grid-cols-3 gap-6"
           >
@@ -930,8 +930,8 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
                       </div>
                     </div>
                     <div className="mt-2 w-full bg-gray-200 rounded-full h-2.5">
-                      <div 
-                        className="bg-green-500 h-2.5 rounded-full" 
+                      <div
+                        className="bg-green-500 h-2.5 rounded-full"
                         style={{ width: `${cls.paymentPercentage}%` }}
                       ></div>
                     </div>
@@ -975,8 +975,8 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
                       </div>
                     </div>
                     <div className="mt-2 w-full bg-gray-200 rounded-full h-2.5">
-                      <div 
-                        className="bg-red-500 h-2.5 rounded-full" 
+                      <div
+                        className="bg-red-500 h-2.5 rounded-full"
                         style={{ width: `${cls.paymentPercentage}%` }}
                       ></div>
                     </div>
