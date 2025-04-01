@@ -54,55 +54,44 @@ ipcMain.handle('save-database', (event, db) => {
   return { success: true };
 });
 
-// Dans votre fichier main.js ou équivalent
-ipcMain.handle('saveStudentList', async (event, listData) => {
-  try {
-    // Vérifier si la liste existe déjà
-    const existingList = await db.get('SELECT * FROM student_lists WHERE id = ?', [listData.id]);
-    
-    if (existingList) {
-      // Mettre à jour la liste existante
-      await db.run(
-        'UPDATE student_lists SET name = ?, data = ?, updated_at = ? WHERE id = ?',
-        [listData.name, JSON.stringify(listData), listData.updatedAt, listData.id]
-      );
-    } else {
-      // Insérer une nouvelle liste
-      await db.run(
-        'INSERT INTO student_lists (id, name, data, created_at, updated_at) VALUES (?, ?, ?, ?, ?)',
-        [listData.id, listData.name, JSON.stringify(listData), listData.createdAt, listData.updatedAt]
-      );
-    }
-    
-    return { success: true };
-  } catch (error) {
-    console.error('Error saving student list:', error);
-    return { success: false, error: error.message };
+// Nouvelles fonctions pour les listes d'élèves
+ipcMain.handle('saveStudentList', (event, listData) => {
+  const db = readDatabase();
+  
+  // Initialiser le tableau student_lists s'il n'existe pas
+  if (!db.student_lists) {
+    db.student_lists = [];
   }
+  
+  // Vérifier si la liste existe déjà (mise à jour) ou s'il faut l'ajouter
+  const existingListIndex = db.student_lists.findIndex(list => list.id === listData.id);
+  
+  if (existingListIndex >= 0) {
+    // Mise à jour d'une liste existante
+    db.student_lists[existingListIndex] = listData;
+  } else {
+    // Ajout d'une nouvelle liste
+    db.student_lists.push(listData);
+  }
+  
+  saveDatabase(db);
+  return { success: true, id: listData.id };
 });
 
-ipcMain.handle('getStudentLists', async () => {
-  try {
-    const lists = await db.all('SELECT * FROM student_lists ORDER BY updated_at DESC');
-    return lists.map(list => ({
-      id: list.id,
-      name: list.name,
-      ...JSON.parse(list.data)
-    }));
-  } catch (error) {
-    console.error('Error getting student lists:', error);
-    return [];
-  }
+ipcMain.handle('getStudentLists', () => {
+  const db = readDatabase();
+  return db.student_lists || [];
 });
 
-ipcMain.handle('deleteStudentList', async (event, listId) => {
-  try {
-    await db.run('DELETE FROM student_lists WHERE id = ?', [listId]);
-    return { success: true };
-  } catch (error) {
-    console.error('Error deleting student list:', error);
-    return { success: false, error: error.message };
+ipcMain.handle('deleteStudentList', (event, listId) => {
+  const db = readDatabase();
+  
+  if (db.student_lists) {
+    db.student_lists = db.student_lists.filter(list => list.id !== listId);
+    saveDatabase(db);
   }
+  
+  return { success: true };
 });
 
 // Quand l'application est prête

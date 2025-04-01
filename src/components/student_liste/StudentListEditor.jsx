@@ -1,491 +1,414 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { ArrowLeft, Printer, Download, Settings, ChevronDown, ChevronUp, Plus, Users, Save } from "lucide-react";
-import CreateListPopup from "./CreateListPopup.jsx";
-import HeaderSelector from "./HeaderSelector.jsx";
-import TitleEditor from "./TitleEditor.jsx";
-import A4Preview from "./A4Preview.jsx";
-import StudentSelector from "./StudentSelector.jsx";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowLeft, Save, Settings, Download, Users } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas-pro";
+import { useFlashNotification } from "../contexts.js";
+import StudentListSidebar from './StudentListSidebar.jsx';
+import StudentListPreview from './StudentListPreview.jsx';
+import StudentListAddStudents from './StudentListAddStudents.jsx';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import StudentListPDF from './StudentListPDF.jsx';
 
 const StudentListEditor = ({
+  list,
+  onUpdateList,
+  onReturnToMenu,
   db,
-  currentList,
-  saveList,
-  setView,
   theme,
-  app_bg_color,
-  text_color,
-  mode
+  textClass,
+  appBgColor
 }) => {
-  // State for create popup
-  const [showCreatePopup, setShowCreatePopup] = useState(mode === "create");
-  
-  // State for editor
-  const [listData, setListData] = useState(
-    currentList || {
-      name: "",
-      title: {
-        text: "Liste des élèves",
-        style: "style1",
-        position: "center",
-        color: "#000000",
-        fontSize: "24px",
-        fontFamily: "Arial",
-        bold: true,
-        italic: false,
-        underline: false
-      },
-      headers: [
-        { id: "numero", label: "N°", selected: false, required: false, priority: 1 },
-        { id: "first_name", label: "Prénom", selected: true, required: true, priority: 2 },
-        { id: "last_name", label: "Nom", selected: true, required: true, priority: 3 },
-        { id: "matricule", label: "Matricule", selected: false, required: false, priority: 4 },
-        { id: "classe", label: "Classe", selected: false, required: false, priority: 5 },
-        { id: "sexe", label: "Sexe", selected: false, required: false, priority: 6 },
-        { id: "age", label: "Âge", selected: false, required: false, priority: 7 },
-        { id: "birth_date", label: "Date de naissance", selected: false, required: false, priority: 8 },
-        { id: "father_name", label: "Père", selected: false, required: false, priority: 9 },
-        { id: "mother_name", label: "Mère", selected: false, required: false, priority: 10 },
-        { id: "moyenne", label: "Moyenne", selected: false, required: false, priority: 11 },
-        { id: "parents_contact", label: "Contact", selected: false, required: false, priority: 12  },
-        { id: "signature", label: "Signature", selected: false, required: false, priority: 13 },
-      ],
-      customHeaders: [],
-      students: [],
-      orientation: "portrait",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
-  );
-  
-  // State for UI
-  const [showTools, setShowTools] = useState(true);
-  const [showStudentSelector, setShowStudentSelector] = useState(false);
-  
-  // Load custom headers from secure storage
+  const { setFlashMessage } = useFlashNotification();
+  const [currentList, setCurrentList] = useState(list);
+  const [showSidebar, setShowSidebar] = useState(true);
+  const [showAddStudents, setShowAddStudents] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [customHeaderInput, setCustomHeaderInput] = useState('');
+
+  // Load custom headers from local storage
   useEffect(() => {
-    const customHeaders = secureLocalStorage.getItem("custom_headers");
-    if (customHeaders) {
-      const parsedHeaders = JSON.parse(customHeaders);
-      setListData(prev => ({
-        ...prev,
-        customHeaders: parsedHeaders
-      }));
+    const savedCustomHeaders = secureLocalStorage.getItem("customListHeaders");
+    if (savedCustomHeaders && Array.isArray(savedCustomHeaders)) {
+      // We don't need to set them to the list, just make them available in the sidebar
     }
   }, []);
-  
-  // Auto-save when list data changes
-  useEffect(() => {
-    if (listData.name && listData.name.length >= 6) {
+
+  // Handle saving the list
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      // Update the list with the latest changes
       const updatedList = {
-        ...listData,
+        ...currentList,
         updatedAt: new Date().toISOString()
       };
-      saveList(updatedList);
-    }
-  }, [listData]);
-  
-  // Handle create popup submission
-  const handleCreateSubmit = (name) => {
-    setListData(prev => ({
-      ...prev,
-      name,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }));
-    setShowCreatePopup(false);
-  };
-  
-  // Handle header selection
-  const handleHeaderToggle = (headerId) => {
-    // Check if we're trying to deselect a required header
-    const header = [...listData.headers, ...listData.customHeaders].find(h => h.id === headerId);
-    
-    if (header.required && header.selected) {
-      return; // Cannot deselect required headers
-    }
-    
-    // Count currently selected headers
-    const selectedCount = [...listData.headers, ...listData.customHeaders].filter(h => h.selected).length;
-    
-    // Check if we're trying to select more than 6 headers
-    if (!header.selected && selectedCount >= 10) {
-      alert("Vous ne pouvez pas sélectionner plus de 10 colonnes.");
-      return;
-    }
-    
-    // Check if we're trying to deselect when we have only 3 headers
-    if (header.selected && selectedCount <= 3) {
-      alert("Vous devez avoir au moins 3 colonnes sélectionnées.");
-      return;
-    }
-    
-    // Update headers
-    if (header.id === "numero" && !header.selected) {
-      // If selecting "numero", it should be the first
-      setListData(prev => ({
-        ...prev,
-        headers: prev.headers.map(h => 
-          h.id === "numero" ? { ...h, selected: true } : h
-        )
-      }));
-    } else {
-      // Normal toggle
-      if (listData.headers.some(h => h.id === headerId)) {
-        setListData(prev => ({
-          ...prev,
-          headers: prev.headers.map(h => 
-            h.id === headerId ? { ...h, selected: !h.selected } : h
-          )
-        }));
-      } else {
-        setListData(prev => ({
-          ...prev,
-          customHeaders: prev.customHeaders.map(h => 
-            h.id === headerId ? { ...h, selected: !h.selected } : h
-          )
-        }));
-      }
-    }
-  };
-  
-  // Add custom header
-  const addCustomHeader = (label) => {
-    const newHeader = {
-      id: `custom-${Date.now()}`,
-      label,
-      selected: false,
-      required: false,
-      priority: listData.headers.length + listData.customHeaders.length + 1,
-      isCustom: true
-    };
-    
-    const updatedCustomHeaders = [...listData.customHeaders, newHeader];
-    
-    setListData(prev => ({
-      ...prev,
-      customHeaders: updatedCustomHeaders
-    }));
-    
-    // Save to secure storage
-    secureLocalStorage.setItem("custom_headers", JSON.stringify(updatedCustomHeaders));
-  };
-  
-  // Update title
-  const updateTitle = (titleData) => {
-    setListData(prev => ({
-      ...prev,
-      title: { ...prev.title, ...titleData }
-    }));
-  };
-  
-  // Toggle orientation
-  const toggleOrientation = () => {
-    setListData(prev => ({
-      ...prev,
-      orientation: prev.orientation === "portrait" ? "landscape" : "portrait"
-    }));
-  };
-  
-  // Add students to list
-  const addStudentsToList = (selectedStudents) => {
-    setListData(prev => ({
-      ...prev,
-      students: [...prev.students, ...selectedStudents]
-    }));
-    setShowStudentSelector(false);
-  };
-  
-  // Add ref for PDF generation
-  const previewRef = useRef(null);
-  
-  // Generate PDF
-  const generatePDF = () => {
-    if (!previewRef.current) return;
-    
-    const orientation = listData.orientation === "portrait" ? "p" : "l";
-    const unit = "mm";
-    const format = "a4";
-    
-    const pdf = new jsPDF(orientation, unit, format);
-    
-    // Get all pages
-    const pages = previewRef.current.querySelectorAll(".a4-page");
-    
-    const generatePage = (index) => {
-      if (index >= pages.length) {
-        // All pages processed, save the PDF
-        pdf.save(`${listData.name}.pdf`);
-        return;
-      }
-      
-      const page = pages[index];
-      
-      html2canvas(page, {
-        scale: 2, // Higher scale for better quality
-        useCORS: true,
-        logging: false,
-        backgroundColor: "#ffffff"
-      }).then(canvas => {
-        const imgData = canvas.toDataURL("image/jpeg", 1.0);
-        
-        // Add page if not the first one
-        if (index > 0) {
-          pdf.addPage();
-        }
-        
-        // Calculate dimensions
-        const imgWidth = orientation === "p" ? 210 : 297;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        
-        pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, imgHeight);
-        
-        // Process next page
-        generatePage(index + 1);
+
+      await window.electron.saveStudentList(updatedList);
+      onUpdateList(updatedList);
+
+      setFlashMessage({
+        message: "Liste sauvegardée avec succès",
+        type: "success",
+        duration: 3000,
       });
-    };
-    
-    // Start generating pages
-    generatePage(0);
-  };
-  
-  // Print function
-  const printList = () => {
-    if (!previewRef.current) return;
-    
-    const printContent = document.createElement("iframe");
-    printContent.style.position = "absolute";
-    printContent.style.top = "-9999px";
-    printContent.style.left = "-9999px";
-    document.body.appendChild(printContent);
-    
-    const contentDocument = printContent.contentDocument;
-    
-    // Create print document
-    contentDocument.write(`
-      <html>
-        <head>
-          <title>${listData.name}</title>
-          <style>
-            @page {
-              size: ${listData.orientation === "portrait" ? "portrait" : "landscape"};
-              margin: 0;
-            }
-            body {
-              margin: 0;
-              padding: 0;
-            }
-            .page-container {
-              page-break-after: always;
-            }
-            .page-container:last-child {
-              page-break-after: avoid;
-            }
-          </style>
-        </head>
-        <body>
-          ${previewRef.current.innerHTML}
-        </body>
-      </html>
-    `);
-    
-    contentDocument.close();
-    
-    printContent.onload = function() {
-      printContent.contentWindow.focus();
-      printContent.contentWindow.print();
-      document.body.removeChild(printContent);
-    };
-  };
-  
-  // Save to database
-  const saveToDatabase = async () => {
-    if (!listData.name || listData.name.length < 6) {
-      alert("Le nom de la liste doit contenir au moins 6 caractères");
-      return;
-    }
-    
-    try {
-      // Save to database via electron API
-      await window.electron.saveStudentList({
-        ...listData,
-        updatedAt: new Date().toISOString()
-      });
-      
-      alert("Liste sauvegardée avec succès dans la base de données");
     } catch (error) {
-      console.error("Erreur lors de la sauvegarde:", error);
-      alert("Erreur lors de la sauvegarde de la liste");
+      console.error("Error saving list:", error);
+      setFlashMessage({
+        message: "Erreur lors de la sauvegarde de la liste",
+        type: "error",
+        duration: 5000,
+      });
+    } finally {
+      setSaving(false);
     }
   };
-  
+
+  // Handle returning to menu (with auto-save)
+  const handleReturn = async () => {
+    await handleSave();
+    onReturnToMenu();
+  };
+
+  // Handle adding students to the list
+  const handleAddStudents = (selectedStudents) => {
+    // Filter out students that are already in the list
+    const existingStudentIds = currentList.students.map(s => s.id);
+    const newStudents = selectedStudents.filter(s => !existingStudentIds.includes(s.id));
+
+    if (newStudents.length > 0) {
+      const updatedList = {
+        ...currentList,
+        students: [...currentList.students, ...newStudents]
+      };
+
+      setCurrentList(updatedList);
+      onUpdateList(updatedList);
+
+      setFlashMessage({
+        message: `${newStudents.length} élève(s) ajouté(s) à la liste`,
+        type: "success",
+        duration: 3000,
+      });
+    } else {
+      setFlashMessage({
+        message: "Aucun nouvel élève ajouté à la liste",
+        type: "info",
+        duration: 3000,
+      });
+    }
+
+    setShowAddStudents(false);
+  };
+
+  // Handle removing a student from the list
+  const handleRemoveStudent = (studentId) => {
+    const updatedList = {
+      ...currentList,
+      students: currentList.students.filter(s => s.id !== studentId)
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+
+    setFlashMessage({
+      message: "Élève retiré de la liste",
+      type: "success",
+      duration: 3000,
+    });
+  };
+
+  // Handle adding a custom header
+  const handleAddCustomHeader = (headerName) => {
+    if (!headerName || headerName.trim() === '') return;
+
+    // Check if header already exists
+    if ([...currentList.headers, ...currentList.customHeaders].includes(headerName)) {
+      setFlashMessage({
+        message: "Cet en-tête existe déjà",
+        type: "error",
+        duration: 3000,
+      });
+      return;
+    }
+
+    // Add to list
+    const updatedList = {
+      ...currentList,
+      customHeaders: [...currentList.customHeaders, headerName]
+    };
+
+    // Save to local storage for future use
+    const savedCustomHeaders = secureLocalStorage.getItem("customListHeaders") || [];
+    if (!savedCustomHeaders.includes(headerName)) {
+      secureLocalStorage.setItem("customListHeaders", [...savedCustomHeaders, headerName]);
+    }
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+    setCustomHeaderInput('');
+
+    setFlashMessage({
+      message: "En-tête personnalisé ajouté",
+      type: "success",
+      duration: 3000,
+    });
+  };
+
+  // Handle toggling a header
+  const handleToggleHeader = (header, isCustom = false) => {
+    let updatedHeaders = [...currentList.headers];
+    let updatedCustomHeaders = [...currentList.customHeaders];
+
+    // Special case for required headers (Prénom, Nom)
+    if (header === "Prénom" || header === "Nom") {
+      setFlashMessage({
+        message: "Les en-têtes Prénom et Nom sont obligatoires",
+        type: "info",
+        duration: 3000,
+      });
+      return;
+    }
+
+    // Handle standard headers
+    if (!isCustom) {
+      if (updatedHeaders.includes(header)) {
+        // Remove header
+        updatedHeaders = updatedHeaders.filter(h => h !== header);
+      } else {
+        // Add header, but check if we're at the limit
+        if (updatedHeaders.length + updatedCustomHeaders.length >= 10) {
+          setFlashMessage({
+            message: "Vous ne pouvez pas sélectionner plus de 10 en-têtes",
+            type: "error",
+            duration: 3000,
+          });
+          return;
+        }
+        updatedHeaders.push(header);
+      }
+    } else {
+      // Handle custom headers
+      if (updatedCustomHeaders.includes(header)) {
+        // Remove header
+        updatedCustomHeaders = updatedCustomHeaders.filter(h => h !== header);
+      } else {
+        // Add header, but check if we're at the limit
+        if (updatedHeaders.length + updatedCustomHeaders.length >= 6) {
+          setFlashMessage({
+            message: "Vous ne pouvez pas sélectionner plus de 6 en-têtes",
+            type: "error",
+            duration: 3000,
+          });
+          return;
+        }
+        updatedCustomHeaders.push(header);
+      }
+    }
+
+    // Update the list
+    const updatedList = {
+      ...currentList,
+      headers: updatedHeaders,
+      customHeaders: updatedCustomHeaders
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+  };
+
+  // Handle updating title properties
+  const handleUpdateTitle = (titleProps) => {
+    const updatedList = {
+      ...currentList,
+      title: {
+        ...currentList.title,
+        ...titleProps
+      }
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+  };
+
+  // Handle updating orientation
+  const handleUpdateOrientation = (orientation) => {
+    const updatedList = {
+      ...currentList,
+      orientation
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+
+    setFlashMessage({
+      message: `Orientation changée en ${orientation === 'portrait' ? 'portrait' : 'paysage'}`,
+      type: "success",
+      duration: 3000,
+    });
+  };
+
+  // Handle updating custom message
+  const handleUpdateCustomMessage = (customMessage) => {
+    const updatedList = {
+      ...currentList,
+      customMessage
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+  };
+
+  // Handle updating student custom data
+  const handleUpdateStudentCustomData = (studentId, headerName, value) => {
+    const updatedStudents = currentList.students.map(student => {
+      if (student.id === studentId) {
+        // Créer une copie profonde pour s'assurer que React détecte le changement
+        const updatedStudent = {
+          ...student,
+          customData: {
+            ...(student.customData || {}),
+            [headerName]: value
+          }
+        };
+        return updatedStudent;
+      }
+      return student;
+    });
+    console.log(updatedStudents); // Commencer par ici
+    const updatedList = {
+      ...currentList,
+      students: updatedStudents
+    };
+
+    // Mettre à jour l'état local et propager la mise à jour au parent
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+  };
+
   // Styles based on theme
-  const bgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const textClass = theme === "dark" ? text_color : "text-gray-700";
-  const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
-  const buttonBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-  
+  const buttonPrimary = "bg-blue-600 hover:bg-blue-700 text-white";
+  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
+  const buttonDanger = "bg-red-600 hover:bg-red-700 text-white";
+  const buttonSuccess = "bg-green-600 hover:bg-green-700 text-white";
+
   return (
-    <>
-      {showCreatePopup && (
-        <CreateListPopup
-          onSubmit={handleCreateSubmit}
-          onCancel={() => {
-            setShowCreatePopup(false);
-            setView("menu");
-          }}
-          theme={theme}
-          text_color={text_color}
-        />
-      )}
-      
-      {!showCreatePopup && (
-        <div className="flex flex-col h-full">
-          {/* Top toolbar */}
-          <div className={`flex justify-between items-center mb-4 p-3 ${bgColor} rounded-lg shadow border ${borderColor}`}>
-            <div className="flex items-center">
-              <motion.button
-                onClick={() => setView("menu")}
-                className={`p-2 rounded-full ${buttonBgColor} mr-3`}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <ArrowLeft className={`h-5 w-5 ${textClass}`} />
-              </motion.button>
-              <h2 className={`text-xl font-semibold ${textClass}`}>{listData.name}</h2>
-            </div>
-            
-            <div className="flex space-x-2">
-              <motion.button
-                onClick={toggleOrientation}
-                className={`p-2 rounded-md ${buttonBgColor} flex items-center`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className={`text-sm mr-1 ${textClass}`}>
-                  {listData.orientation === "portrait" ? "Portrait" : "Paysage"}
-                </span>
-              </motion.button>
-              
-              <motion.button
-                onClick={() => setShowTools(!showTools)}
-                className={`p-2 rounded-md ${buttonBgColor} flex items-center`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Settings className={`h-5 w-5 mr-1 ${textClass}`} />
-                <span className={`text-sm ${textClass}`}>Outils</span>
-                {showTools ? (
-                  <ChevronUp className={`h-4 w-4 ml-1 ${textClass}`} />
-                ) : (
-                  <ChevronDown className={`h-4 w-4 ml-1 ${textClass}`} />
-                )}
-              </motion.button>
-              
-              <motion.button
-                onClick={() => setShowStudentSelector(true)}
-                className={`p-2 rounded-md bg-blue-600 text-white flex items-center`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Users className="h-5 w-5 mr-1" />
-                <span className="text-sm">Ajouter des élèves</span>
-              </motion.button>
-              
-              <motion.button
-                onClick={saveToDatabase}
-                className={`p-2 rounded-md bg-green-600 text-white flex items-center`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Save className="h-5 w-5 mr-1" />
-                <span className="text-sm">Enregistrer</span>
-              </motion.button>
-              
-              <motion.button
-                onClick={generatePDF}
-                className={`p-2 rounded-md ${buttonBgColor} flex items-center`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Download className={`h-5 w-5 ${textClass}`} />
-              </motion.button>
-              
-              <motion.button
-                onClick={printList}
-                className={`p-2 rounded-md ${buttonBgColor} flex items-center`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Printer className={`h-5 w-5 ${textClass}`} />
-              </motion.button>
-            </div>
-          </div>
-          
-          {/* Main content */}
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Tools panel */}
-            {showTools && (
-              <motion.div
-                className={`w-full md:w-1/3 ${bgColor} rounded-lg shadow border ${borderColor} p-4`}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="mb-6">
-                  <h3 className={`text-lg font-semibold mb-3 ${textClass}`}>Titre de la liste</h3>
-                  <TitleEditor 
-                    title={listData.title} 
-                    updateTitle={updateTitle} 
-                    theme={theme}
-                    text_color={text_color}
-                  />
-                </div>
-                
-                <div className="mb-6">
-                  <h3 className={`text-lg font-semibold mb-3 ${textClass}`}>Colonnes du tableau</h3>
-                  <HeaderSelector 
-                    headers={listData.headers}
-                    customHeaders={listData.customHeaders}
-                    onToggle={handleHeaderToggle}
-                    onAddCustom={addCustomHeader}
-                    theme={theme}
-                    text_color={text_color}
-                  />
-                </div>
-              </motion.div>
-            )}
-            
-            {/* A4 Preview */}
-            <div className={`flex-1 ${bgColor} rounded-lg shadow border ${borderColor} p-4 overflow-auto`}>
-              <div ref={previewRef}>
-                <A4Preview 
-                  listData={listData}
-                  theme={theme}
-                  text_color={text_color}
-                />
-              </div>
-            </div>
-          </div>
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className={`flex items-center justify-between p-4 border-b ${theme === "dark" ? "border-gray-700" : "border-gray-200"}`}>
+        <div className="flex items-center">
+          <motion.button
+            onClick={handleReturn}
+            className={`${buttonSecondary} p-2 rounded-lg mr-4 flex items-center`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArrowLeft size={20} />
+          </motion.button>
+          <h1 className={`text-xl font-semibold ${textClass}`}>{currentList.name}</h1>
         </div>
-      )}
-      
-      {/* Student selector popup */}
-      {showStudentSelector && (
-        <StudentSelector
-          db={db}
-          onClose={() => setShowStudentSelector(false)}
-          onAddStudents={addStudentsToList}
-          theme={theme}
-          text_color={text_color}
-          alreadySelectedIds={listData.students.map(s => s.id)}
-        />
-      )}
-    </>
+
+        <div className="flex items-center space-x-2">
+          <motion.button
+            onClick={() => setShowSidebar(!showSidebar)}
+            className={`${buttonSecondary} p-2 rounded-lg flex items-center`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Settings size={20} />
+          </motion.button>
+
+          <motion.button
+            onClick={() => setShowAddStudents(true)}
+            className={`${buttonPrimary} p-2 rounded-lg flex items-center`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Users size={20} />
+          </motion.button>
+
+          <motion.button
+            onClick={handleSave}
+            disabled={saving}
+            className={`${buttonSuccess} p-2 rounded-lg flex items-center`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Save size={20} />
+          </motion.button>
+
+          <PDFDownloadLink
+            document={
+              <StudentListPDF
+                list={currentList}
+                db={db}
+              />
+            }
+            fileName={`${currentList.name.replace(/\s+/g, '_')}.pdf`}
+            className={`${buttonPrimary} p-2 rounded-lg flex items-center`}
+          >
+            {({ blob, url, loading, error }) =>
+              loading ?
+                <Download size={20} className="animate-pulse" /> :
+                <Download size={20} />
+            }
+          </PDFDownloadLink>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <AnimatePresence>
+          {showSidebar && (
+            <motion.div
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 300, opacity: 1 }}
+              exit={{ width: 0, opacity: 0 }}
+              className={`border-r ${theme === "dark" ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-gray-50"} overflow-y-auto`}
+            >
+              <StudentListSidebar
+                list={currentList}
+                onToggleHeader={handleToggleHeader}
+                onAddCustomHeader={handleAddCustomHeader}
+                customHeaderInput={customHeaderInput}
+                setCustomHeaderInput={setCustomHeaderInput}
+                onUpdateTitle={handleUpdateTitle}
+                onUpdateOrientation={handleUpdateOrientation}
+                onUpdateCustomMessage={handleUpdateCustomMessage}
+                theme={theme}
+                textClass={textClass}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Preview */}
+        <div className="flex-1 overflow-auto p-4">
+          <StudentListPreview
+            list={currentList}
+            onRemoveStudent={handleRemoveStudent}
+            onUpdateStudentCustomData={handleUpdateStudentCustomData}
+            theme={theme}
+            textClass={textClass}
+          />
+        </div>
+      </div>
+
+      {/* Add Students Modal */}
+      <AnimatePresence>
+        {showAddStudents && (
+          <StudentListAddStudents
+            db={db}
+            onClose={() => setShowAddStudents(false)}
+            onAddStudents={handleAddStudents}
+            theme={theme}
+            textClass={textClass}
+            currentStudents={currentList.students}
+          />
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
