@@ -686,14 +686,14 @@ const StudentListSidebar = ({
             className={`${sectionBgColor} p-3 flex justify-between items-center cursor-pointer`}
             onClick={() => toggleSection('headers')}
           >
-            <h3 className="font-medium">En-têtes standard ({selectedHeadersCount}/6)</h3>
+            <h3 className="font-medium">En-têtes standard ({selectedHeadersCount}/10)</h3>
             {expandedSections.headers ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>
 
           {expandedSections.headers && (
             <div className="p-3">
               <p className="text-sm mb-2 opacity-75">
-                Sélectionnez jusqu'à 6 en-têtes (Prénom et Nom sont obligatoires)
+                Sélectionnez jusqu'à 10 en-têtes (Prénom et Nom sont obligatoires)
               </p>
 
               <div className="space-y-2 max-h-60 overflow-y-auto scrollbar-custom">

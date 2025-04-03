@@ -6,8 +6,6 @@ import { useFlashNotification } from "../contexts.js";
 import StudentListSidebar from './StudentListSidebar.jsx';
 import StudentListPreview from './StudentListPreview.jsx';
 import StudentListAddStudents from './StudentListAddStudents.jsx';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import StudentListPDF from './StudentListPDF.jsx';
 
 const StudentListEditor = ({
   list,
@@ -75,11 +73,20 @@ const StudentListEditor = ({
     // Filter out students that are already in the list
     const existingStudentIds = currentList.students.map(s => s.id);
     const newStudents = selectedStudents.filter(s => !existingStudentIds.includes(s.id));
+    const all_students = [...currentList.students, ...newStudents];
+    const filter_students = all_students.sort((a, b) => {
+      const lastNameA = (a.last_name || '').toLowerCase();
+      const lastNameB = (b.last_name || '').toLowerCase();
+
+      if (lastNameA !== lastNameB) {
+        return lastNameA.localeCompare(lastNameB);
+      }
+    });
 
     if (newStudents.length > 0) {
       const updatedList = {
         ...currentList,
-        students: [...currentList.students, ...newStudents]
+        students: filter_students,
       };
 
       setCurrentList(updatedList);
@@ -264,18 +271,20 @@ const StudentListEditor = ({
     const updatedStudents = currentList.students.map(student => {
       if (student.id === studentId) {
         // Créer une copie profonde pour s'assurer que React détecte le changement
+        const new_header = {}
         const updatedStudent = {
           ...student,
-          customData: {
-            ...(student.customData || {}),
-            [headerName]: value
-          }
+          [headerName]: value,
+          // customData: {
+          //   ...(student.customData || {}),
+          //   [headerName]: value
+          // }
         };
         return updatedStudent;
       }
       return student;
     });
-    console.log(updatedStudents); // Commencer par ici
+    // console.log(updatedStudents); // Commencer par ici
     const updatedList = {
       ...currentList,
       students: updatedStudents
@@ -337,22 +346,13 @@ const StudentListEditor = ({
             <Save size={20} />
           </motion.button>
 
-          <PDFDownloadLink
-            document={
-              <StudentListPDF
-                list={currentList}
-                db={db}
-              />
-            }
-            fileName={`${currentList.name.replace(/\s+/g, '_')}.pdf`}
-            className={`${buttonPrimary} p-2 rounded-lg flex items-center`}
-          >
+          <>
             {({ blob, url, loading, error }) =>
               loading ?
                 <Download size={20} className="animate-pulse" /> :
                 <Download size={20} />
             }
-          </PDFDownloadLink>
+          </>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Trash, Check, X } from 'lucide-react';
+import { getClasseName } from "../../utils/helpers";
 
 const StudentListPreview = ({
   list,
@@ -42,9 +43,10 @@ const StudentListPreview = ({
   }
 
   // Get student data for a specific header
-  const getStudentData = (student, header) => {
+  const getStudentData = (student, header, index) => {
+    // console.log(student.first_name + ' ' student.last_name + ' ' + index);
     if (header === 'N°') {
-      return list.students.indexOf(student) + 1;
+      return index + 1;
     }
 
     if (header === 'Prénom') return student.first_name || '';
@@ -53,9 +55,9 @@ const StudentListPreview = ({
     if (header === 'Père') return student.father_name || '';
     if (header === 'Mère') return student.mother_name || '';
     if (header === 'Contact') return student.parents_contact || '';
-    if (header === 'Date de naissance') return student.birth_date || '';
-    if (header === 'Moyenne') return student.average || '';
-    if (header === 'Classe') return student.classe || '';
+    if (header === 'Date de naissance') return new Date(student.birth_date).toLocaleDateString() || '';
+    if (header === 'Moyenne') return student.Moyenne || '';
+    if (header === 'Classe') return getClasseName(student.classe) || '';
     if (header === 'Âge') {
       if (!student.birth_date) return '';
       const birthDate = new Date(student.birth_date);
@@ -71,16 +73,16 @@ const StudentListPreview = ({
     if (header === 'Signature') return '';
 
     // Custom header - Modifié pour mieux gérer les données personnalisées
-    return student.customData && student.customData[header] !== undefined 
-      ? student.customData[header] 
+    return student.header && student.header !== undefined 
+      ? student.header 
       : '';
   };
 
   // Handle cell click for custom data
-  const handleCellClick = (student, header) => {
+  const handleCellClick = (student, header, index) => {
     // Only allow editing custom headers or empty standard fields
     const isCustomHeader = list.customHeaders.includes(header);
-    const value = getStudentData(student, header);
+    const value = getStudentData(student, header, index);
 
     if (isCustomHeader || value === '') {
       setEditingCell({ studentId: student.id, header });
@@ -123,7 +125,6 @@ const StudentListPreview = ({
 
   // Calculate page dimensions based on orientation
   const pageWidth = list.orientation === 'portrait' ? '210mm' : '297mm';
-  const pageHeight = list.orientation === 'portrait' ? '297mm' : '210mm';
 
   // Styles based on theme
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
@@ -146,143 +147,139 @@ const StudentListPreview = ({
     return firstNameA.localeCompare(firstNameB);
   });
 
-  // Split students into pages (approximately 25 students per page)
-  const studentsPerPage = list.orientation === 'portrait' ? 25 : 30;
-  const pages = [];
-  for (let i = 0; i < sortedStudents.length; i += studentsPerPage) {
-    pages.push(sortedStudents.slice(i, i + studentsPerPage));
-  }
-
-  // Add an empty page if needed for the custom message
-  if (list.customMessage.show && sortedStudents.length > 0 && sortedStudents.length % studentsPerPage === 0) {
-    pages.push([]);
-  }
 
   return (
     <div className="flex flex-col items-center">
-      {pages.map((pageStudents, pageIndex) => (
+      <div
+        className={`mb-8 shadow-lg bg-white ${theme === "dark" ? "text-black" : ""}`}
+        style={{
+          width: pageWidth,
+          padding: '10mm',
+          position: 'relative',
+          overflow: 'hidden',
+          breakInside: 'avoid',
+          pageBreakAfter: 'always',
+        }}
+      >
+        {/* Title */}
         <div
-          key={pageIndex}
-          className={`mb-8 shadow-lg bg-white ${theme === "dark" ? "text-black" : ""}`}
           style={{
-            width: pageWidth,
-            height: pageHeight,
-            padding: '10mm',
-            position: 'relative',
-            overflow: 'hidden',
-            breakInside: 'avoid',
-            pageBreakAfter: 'always',
+            ...list.title.style,
+            marginBottom: '10mm',
           }}
         >
-          {/* Title */}
-          <div
-            style={{
-              ...list.title.style,
-              marginBottom: '10mm',
-            }}
-          >
-            {list.title.text}
-          </div>
-
-          {/* Table */}
-          {pageStudents.length > 0 && (
-            <table className={`w-full border-collapse ${tableBorderColor} border`}>
-              <thead>
-                <tr className={`${tableHeaderBgColor}`}>
-                  {allHeaders.map(header => (
-                    <th
-                      key={header}
-                      className={`border ${tableBorderColor} p-2 text-left`}
-                      style={{
-                        minWidth: header === 'N°' ? '50px' : 'auto',
-                        maxWidth: header === 'Prénom' || header === 'Nom' ? '150px' : 'auto'
-                      }}
-                    >
-                      {header}
-                    </th>
-                  ))}
-                  <th className={`border ${tableBorderColor} p-2 text-center w-12`}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pageStudents.map((student, index) => (
-                  <tr
-                    key={student.id}
-                    className={`${index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor}`}
-                  >
-                    {allHeaders.map(header => (
-                      <td
-                        key={`${student.id}-${header}`}
-                        className={`border ${tableBorderColor} p-2`}
-                        onClick={() => handleCellClick(student, header)}
-                        style={{ cursor: list.customHeaders.includes(header) || getStudentData(student, header) === '' ? 'pointer' : 'default' }}
-                      >
-                        {editingCell &&
-                          editingCell.studentId === student.id &&
-                          editingCell.header === header ? (
-                          <div className="flex items-center" ref={inputRef} onClick={(e) => e.stopPropagation()}>
-                            <input
-                              type="text"
-                              value={editValue}
-                              onChange={(e) => setEditValue(e.target.value)}
-                              onKeyDown={handleKeyPress}
-                              className={`flex-1 p-1 border ${theme === "dark" ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white"} rounded`}
-                              autoFocus
-                            />
-                            <div className="flex ml-1">
-                              <motion.button
-                                onClick={(e) => handleSaveCell(e)}
-                                className="p-1 bg-green-600 text-white rounded mr-1"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                              >
-                                <Check size={16} />
-                              </motion.button>
-                              <motion.button
-                                onClick={(e) => handleCancelEdit(e)}
-                                className="p-1 bg-red-600 text-white rounded"
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.9 }}
-                              >
-                                <X size={16} />
-                              </motion.button>
-                            </div>
-                          </div>
-                        ) : (
-                          getStudentData(student, header)
-                        )}
-                      </td>
-                    ))}
-                    <td className={`border ${tableBorderColor} p-2 text-center`}>
-                      <motion.button
-                        onClick={() => onRemoveStudent(student.id)}
-                        className={`${buttonDanger} p-1 rounded`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Trash size={16} />
-                      </motion.button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-
-          {/* Custom message (only on the last page) */}
-          {list.customMessage.show && pageIndex === pages.length - 1 && (
-            <div className="absolute bottom-10 right-10 text-right">
-              <div className="text-lg font-bold mb-2">{list.customMessage.text}</div>
-              <div>Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
-            </div>
-          )}
-
-          {/* Page number */}
-          <div className="absolute bottom-5 text-center w-full left-0">
-            Page {pageIndex + 1} / {pages.length}
-          </div>
+          {list.title.text}
         </div>
-      ))}
+
+        {/* Table */}
+        {list.students.length > 0 && (
+          <table className={`w-full border-collapse ${tableBorderColor} border`}>
+            <thead>
+              <tr className={`${tableHeaderBgColor}`}>
+                {allHeaders.map(header => (
+                  <th
+                    key={header}
+                    className={`border ${tableBorderColor} p-2 text-left`}
+                    style={{
+                      minWidth: header === 'N°' ? '50px' : 'auto',
+                      maxWidth: header === 'Prénom' || header === 'Nom' ? '150px' : 'auto'
+                    }}
+                  >
+                    {header}
+                  </th>
+                ))}
+                <th className={`border ${tableBorderColor} p-2 text-center w-12`}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {list.students.map((student, index) => (
+                <tr
+                  key={student.id}
+                  className={`${index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor}`}
+                >
+                  {allHeaders.map(header => (
+                    <td
+                      key={`${student.id}-${header}`}
+                      className={`
+                        border p-2 
+                        ${tableBorderColor} 
+                        ${
+                          header === "Sexe" || 
+                          header === "Classe" ||
+                          header === "Moyenne" ||
+                          header === "Date de naissance" ||
+                          header === "Âge" ||
+                          header === "Contact" ||
+                          header === "Matricule"
+                          ? "text-center" : ""
+                        }
+                      `}
+                      onClick={() => {
+                        if(header === "Signature" || header === "signature") return;
+                        handleCellClick(student, header, index);
+                      }}
+                      style={{ cursor: list.customHeaders.includes(header) || getStudentData(student, header, index) === '' ? 'pointer' : 'default' }}
+                    >
+                      {editingCell &&
+                        editingCell.studentId === student.id &&
+                        editingCell.header === header && 
+                        header !== "Signature" &&
+                        header !== "signature" ? (
+                        <div className="flex items-center" ref={inputRef} onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                            className={`flex-1 p-1 border ${theme === "dark" ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white"} rounded`}
+                            autoFocus
+                          />
+                          <div className="flex ml-1">
+                            <motion.button
+                              onClick={(e) => handleSaveCell(e)}
+                              className="p-1 bg-green-600 text-white rounded mr-1"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <Check size={16} />
+                            </motion.button>
+                            <motion.button
+                              onClick={(e) => handleCancelEdit(e)}
+                              className="p-1 bg-red-600 text-white rounded"
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <X size={16} />
+                            </motion.button>
+                          </div>
+                        </div>
+                      ) : (
+                        getStudentData(student, header, index)
+                      )}
+                    </td>
+                  ))}
+                  <td className={`border ${tableBorderColor} p-2 text-center`}>
+                    <motion.button
+                      onClick={() => onRemoveStudent(student.id)}
+                      className={`${buttonDanger} p-1 rounded`}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
+                      <Trash size={16} />
+                    </motion.button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {/* Custom message (only on the last page) */}
+        <div className="mt-5 ml-20">
+          <div className="text-lg font-bold mb-40">{list.customMessage.text}</div>
+          <div className="mb-10">Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
+        </div>
+      </div>
 
       {list.students.length === 0 && (
         <div className="text-center p-8">
