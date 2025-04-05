@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Save, Settings, Download, Users } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
@@ -6,6 +6,7 @@ import { useFlashNotification } from "../contexts.js";
 import StudentListSidebar from './StudentListSidebar.jsx';
 import StudentListPreview from './StudentListPreview.jsx';
 import StudentListAddStudents from './StudentListAddStudents.jsx';
+import { addPdfStyles } from './pdfStyles.js';
 
 const StudentListEditor = ({
   list,
@@ -22,6 +23,7 @@ const StudentListEditor = ({
   const [showAddStudents, setShowAddStudents] = useState(false);
   const [saving, setSaving] = useState(false);
   const [customHeaderInput, setCustomHeaderInput] = useState('');
+  const [pdfIsGenerating, setPdfIsGenerating] = useState(false);
 
   // Load custom headers from local storage
   useEffect(() => {
@@ -29,6 +31,9 @@ const StudentListEditor = ({
     if (savedCustomHeaders && Array.isArray(savedCustomHeaders)) {
       // We don't need to set them to the list, just make them available in the sidebar
     }
+    
+    // Add PDF styles to document
+    addPdfStyles();
   }, []);
 
   // Handle saving the list
@@ -75,8 +80,8 @@ const StudentListEditor = ({
     const newStudents = selectedStudents.filter(s => !existingStudentIds.includes(s.id));
     const all_students = [...currentList.students, ...newStudents];
     const filter_students = all_students.sort((a, b) => {
-      const lastNameA = (a.last_name || '').toLowerCase();
-      const lastNameB = (b.last_name || '').toLowerCase();
+      const lastNameA = (`${a.last_name} ${a.sure_name} ${a.first_name}` || '').toLowerCase();
+      const lastNameB = (`${b.last_name} ${a.sure_name} ${b.first_name}` || '').toLowerCase();
 
       if (lastNameA !== lastNameB) {
         return lastNameA.localeCompare(lastNameB);
@@ -271,7 +276,7 @@ const StudentListEditor = ({
     const updatedStudents = currentList.students.map(student => {
       if (student.id === studentId) {
         // Créer une copie profonde pour s'assurer que React détecte le changement
-        const new_header = {}
+        // const new_header = {}
         const updatedStudent = {
           ...student,
           [headerName]: value,
@@ -293,6 +298,105 @@ const StudentListEditor = ({
     // Mettre à jour l'état local et propager la mise à jour au parent
     setCurrentList(updatedList);
     onUpdateList(updatedList);
+  };
+
+  // Handle PDF generation
+  const handleGeneratePDF = async () => {
+    try {
+      setPdfIsGenerating(true);
+      
+      // Import required libraries
+      const { jsPDF } = await import('jspdf');
+      const { default: html2canvas } = await import('html2canvas-pro');
+      
+      // Set PDF options based on orientation
+      const orientation = currentList.orientation === 'portrait' ? 'p' : 'l';
+      const pdf = new jsPDF(orientation, 'mm', 'a4');
+      
+      // Get all page containers
+      const pageContainers = document.querySelectorAll('.student-list-preview-container');
+      
+      if (pageContainers.length === 0) {
+        throw new Error("No pages found to generate PDF");
+      }
+      
+      // Process each page
+      for (let i = 0; i < pageContainers.length; i++) {
+        const pageContainer = pageContainers[i];
+        
+        // Create a clone to avoid modifying the original
+        const clonedPage = pageContainer.cloneNode(true);
+        
+        // Remove all elements with the "no-print" class
+        const noPrintElements = clonedPage.querySelectorAll('.no-print');
+        noPrintElements.forEach(el => el.remove());
+        
+        // Create a temporary container for the cloned page
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.left = '-9999px';
+        tempDiv.style.background = 'white';
+        tempDiv.appendChild(clonedPage);
+        document.body.appendChild(tempDiv);
+        
+        // Render the page to canvas
+        const canvas = await html2canvas(clonedPage, {
+          scale: 2, // Higher scale for better quality
+          useCORS: true,
+          logging: false,
+          allowTaint: true,
+          backgroundColor: '#ffffff'
+        });
+        
+        console.log(orientation);
+        // Calculate dimensions
+        const imgData = canvas.toDataURL('image/png');
+        const pdfWidth = orientation === 'p' ? 210 : 297;
+        const pdfHeight = orientation === 'p' ? 297 : 210;
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+        const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+        const imgX = (pdfWidth - imgWidth * ratio) / 2;
+        const imgY = 0;
+        
+        // Add new page if not the first page
+        if (i > 0) {
+          pdf.addPage();
+        }
+        
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        // const margin = 10;
+        const img_x = 10;
+        const img_width = pageWidth - 20;
+        
+        // Add image to PDF
+        pdf.addImage(imgData, 'PNG', img_x, imgY, img_width, imgHeight * ratio);
+        
+        // Clean up
+        document.body.removeChild(tempDiv);
+      }
+      
+      // Generate filename
+      const fileName = `${currentList.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Save the PDF
+      pdf.save(fileName);
+      
+      setFlashMessage({
+        message: "PDF généré avec succès",
+        type: "success",
+        duration: 3000,
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      setFlashMessage({
+        message: "Erreur lors de la génération du PDF",
+        type: "error",
+        duration: 5000,
+      });
+    } finally {
+      setPdfIsGenerating(false);
+    }
   };
 
   // Styles based on theme
@@ -346,13 +450,18 @@ const StudentListEditor = ({
             <Save size={20} />
           </motion.button>
 
-          <>
-            {({ blob, url, loading, error }) =>
-              loading ?
-                <Download size={20} className="animate-pulse" /> :
-                <Download size={20} />
+          <motion.button
+            onClick={handleGeneratePDF}
+            className={`${buttonPrimary} p-2 rounded-lg flex items-center`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            disabled={pdfIsGenerating}
+          >
+            {pdfIsGenerating ?
+              <Download size={20} className="animate-pulse" /> :
+              <Download size={20} />
             }
-          </>
+          </motion.button>
         </div>
       </div>
 
@@ -383,7 +492,7 @@ const StudentListEditor = ({
           )}
         </AnimatePresence>
 
-        {/* Preview */}
+        {/* Preview : LIST STUDENTS */}
         <div className="flex-1 overflow-auto p-4">
           <StudentListPreview
             list={currentList}

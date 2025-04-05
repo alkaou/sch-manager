@@ -73,8 +73,8 @@ const StudentListPreview = ({
     if (header === 'Signature') return '';
 
     // Custom header - Modifié pour mieux gérer les données personnalisées
-    return student.header && student.header !== undefined 
-      ? student.header 
+    return student.header && student.header !== undefined
+      ? student.header
       : '';
   };
 
@@ -98,7 +98,7 @@ const StudentListPreview = ({
     if (editingCell) {
       // Appeler la fonction de mise à jour avec les bonnes valeurs
       onUpdateStudentCustomData(editingCell.studentId, editingCell.header, editValue);
-      
+
       // Fermer l'éditeur après la sauvegarde
       setEditingCell(null);
       setEditValue('');
@@ -125,6 +125,21 @@ const StudentListPreview = ({
 
   // Calculate page dimensions based on orientation
   const pageWidth = list.orientation === 'portrait' ? '210mm' : '297mm';
+  
+  // Define students per page
+  const STUDENTS_PER_PAGE = 20;
+  
+  // Calculate number of pages needed
+  const totalStudents = list.students.length;
+  const totalPages = Math.ceil(totalStudents / STUDENTS_PER_PAGE);
+  
+  // Split students into pages
+  const studentPages = [];
+  for (let i = 0; i < totalPages; i++) {
+    const startIndex = i * STUDENTS_PER_PAGE;
+    const endIndex = Math.min(startIndex + STUDENTS_PER_PAGE, totalStudents);
+    studentPages.push(list.students.slice(startIndex, endIndex));
+  }
 
   // Styles based on theme
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
@@ -133,153 +148,156 @@ const StudentListPreview = ({
   const tableRowAltBgColor = theme === "dark" ? "bg-gray-750" : "bg-gray-50";
   const buttonDanger = "bg-red-600 hover:bg-red-700 text-white";
 
-  // Sort students alphabetically by last_name then first_name
-  const sortedStudents = [...list.students].sort((a, b) => {
-    const lastNameA = (a.last_name || '').toLowerCase();
-    const lastNameB = (b.last_name || '').toLowerCase();
-
-    if (lastNameA !== lastNameB) {
-      return lastNameA.localeCompare(lastNameB);
-    }
-
-    const firstNameA = (a.first_name || '').toLowerCase();
-    const firstNameB = (b.first_name || '').toLowerCase();
-    return firstNameA.localeCompare(firstNameB);
-  });
-
-
   return (
     <div className="flex flex-col items-center">
-      <div
-        className={`mb-8 shadow-lg bg-white ${theme === "dark" ? "text-black" : ""}`}
-        style={{
-          width: pageWidth,
-          padding: '10mm',
-          position: 'relative',
-          overflow: 'hidden',
-          breakInside: 'avoid',
-          pageBreakAfter: 'always',
-        }}
-      >
-        {/* Title */}
+      {studentPages.map((pageStudents, pageIndex) => (
         <div
+          key={`page-${pageIndex}`}
+          className="mb-8 shadow-lg bg-white student-list-preview-container"
           style={{
-            ...list.title.style,
-            marginBottom: '10mm',
+            width: pageWidth,
+            padding: '10mm',
+            position: 'relative',
+            overflow: 'hidden',
+            breakInside: 'avoid',
+            pageBreakAfter: 'always',
           }}
+          data-page={pageIndex + 1}
+          data-total-pages={totalPages}
         >
-          {list.title.text}
-        </div>
+          {/* Title - Only on first page */}
+          {pageIndex === 0 && (
+            <div
+              style={{
+                ...list.title.style,
+                marginBottom: '10mm',
+              }}
+            >
+              {list.title.text}
+            </div>
+          )}
 
-        {/* Table */}
-        {list.students.length > 0 && (
-          <table className={`w-full border-collapse ${tableBorderColor} border`}>
-            <thead>
-              <tr className={`${tableHeaderBgColor}`}>
-                {allHeaders.map(header => (
-                  <th
-                    key={header}
-                    className={`border ${tableBorderColor} p-2 text-left`}
-                    style={{
-                      minWidth: header === 'N°' ? '50px' : 'auto',
-                      maxWidth: header === 'Prénom' || header === 'Nom' ? '150px' : 'auto'
-                    }}
-                  >
-                    {header}
-                  </th>
-                ))}
-                <th className={`border ${tableBorderColor} p-2 text-center w-12`}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {list.students.map((student, index) => (
-                <tr
-                  key={student.id}
-                  className={`${index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor}`}
-                >
+          {/* Table */}
+          {pageStudents.length > 0 && (
+            <table className={`w-full border-collapse ${tableBorderColor} border`}>
+              <thead>
+                <tr className={`${tableHeaderBgColor}`}>
                   {allHeaders.map(header => (
-                    <td
-                      key={`${student.id}-${header}`}
-                      className={`
-                        border p-2 
-                        ${tableBorderColor} 
-                        ${
-                          header === "Sexe" || 
-                          header === "Classe" ||
-                          header === "Moyenne" ||
-                          header === "Date de naissance" ||
-                          header === "Âge" ||
-                          header === "Contact" ||
-                          header === "Matricule"
-                          ? "text-center" : ""
-                        }
-                      `}
-                      onClick={() => {
-                        if(header === "Signature" || header === "signature") return;
-                        handleCellClick(student, header, index);
+                    <th
+                      key={header}
+                      className={`border ${tableBorderColor} p-2 text-left`}
+                      style={{
+                        minWidth: header === 'N°' ? '50px' : 'auto',
+                        maxWidth: header === 'Prénom' || header === 'Nom' ? '150px' : 'auto'
                       }}
-                      style={{ cursor: list.customHeaders.includes(header) || getStudentData(student, header, index) === '' ? 'pointer' : 'default' }}
                     >
-                      {editingCell &&
-                        editingCell.studentId === student.id &&
-                        editingCell.header === header && 
-                        header !== "Signature" &&
-                        header !== "signature" ? (
-                        <div className="flex items-center" ref={inputRef} onClick={(e) => e.stopPropagation()}>
-                          <input
-                            type="text"
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                            onKeyDown={handleKeyPress}
-                            className={`flex-1 p-1 border ${theme === "dark" ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white"} rounded`}
-                            autoFocus
-                          />
-                          <div className="flex ml-1">
-                            <motion.button
-                              onClick={(e) => handleSaveCell(e)}
-                              className="p-1 bg-green-600 text-white rounded mr-1"
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                            >
-                              <Check size={16} />
-                            </motion.button>
-                            <motion.button
-                              onClick={(e) => handleCancelEdit(e)}
-                              className="p-1 bg-red-600 text-white rounded"
-                              whileHover={{ scale: 1.1 }}
-                              whileTap={{ scale: 0.9 }}
-                            >
-                              <X size={16} />
-                            </motion.button>
-                          </div>
-                        </div>
-                      ) : (
-                        getStudentData(student, header, index)
-                      )}
-                    </td>
+                      {header}
+                    </th>
                   ))}
-                  <td className={`border ${tableBorderColor} p-2 text-center`}>
-                    <motion.button
-                      onClick={() => onRemoveStudent(student.id)}
-                      className={`${buttonDanger} p-1 rounded`}
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                    >
-                      <Trash size={16} />
-                    </motion.button>
-                  </td>
+                  <th className={`border ${tableBorderColor} p-2 text-center w-12 no-print`}>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {pageStudents.map((student, index) => {
+                  // Calculate the actual student index across all pages
+                  const globalIndex = pageIndex * STUDENTS_PER_PAGE + index;
+                  
+                  return (
+                    <tr
+                      key={student.id}
+                      className={`${index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor}`}
+                    >
+                      {allHeaders.map(header => (
+                        <td
+                          key={`${student.id}-${header}`}
+                          className={`
+                            border p-2 
+                            ${tableBorderColor} 
+                            ${header === "Sexe" ||
+                              header === "Classe" ||
+                              header === "Moyenne" ||
+                              header === "Date de naissance" ||
+                              header === "Âge" ||
+                              header === "Contact" ||
+                              header === "Matricule"
+                              ? "text-center" : ""
+                            }
+                          `}
+                          onClick={() => {
+                            if (header === "Signature" || header === "signature") return;
+                            handleCellClick(student, header, globalIndex);
+                          }}
+                          style={{ cursor: list.customHeaders.includes(header) || getStudentData(student, header, globalIndex) === '' ? 'pointer' : 'default' }}
+                        >
+                          {editingCell &&
+                            editingCell.studentId === student.id &&
+                            editingCell.header === header &&
+                            header !== "Signature" &&
+                            header !== "signature" ? (
+                            <div className="flex items-center" ref={inputRef} onClick={(e) => e.stopPropagation()}>
+                              <input
+                                type="text"
+                                value={editValue}
+                                onChange={(e) => setEditValue(e.target.value)}
+                                onKeyDown={handleKeyPress}
+                                className={`flex-1 p-1 border ${theme === "dark" ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white"} rounded`}
+                                autoFocus
+                              />
+                              <div className="flex ml-1">
+                                <motion.button
+                                  onClick={(e) => handleSaveCell(e)}
+                                  className="p-1 bg-green-600 text-white rounded mr-1"
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                >
+                                  <Check size={16} />
+                                </motion.button>
+                                <motion.button
+                                  onClick={(e) => handleCancelEdit(e)}
+                                  className="p-1 bg-red-600 text-white rounded"
+                                  whileHover={{ scale: 1.1 }}
+                                  whileTap={{ scale: 0.9 }}
+                                >
+                                  <X size={16} />
+                                </motion.button>
+                              </div>
+                            </div>
+                          ) : (
+                            getStudentData(student, header, globalIndex)
+                          )}
+                        </td>
+                      ))}
+                      <td className={`border ${tableBorderColor} p-2 text-center no-print`}>
+                        <motion.button
+                          onClick={() => onRemoveStudent(student.id)}
+                          className={`${buttonDanger} p-1 rounded`}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Trash size={16} />
+                        </motion.button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
 
-        {/* Custom message (only on the last page) */}
-        <div className="mt-5 ml-20">
-          <div className="text-lg font-bold mb-40">{list.customMessage.text}</div>
-          <div className="mb-10">Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
+          {/* Custom message (only on the last page) */}
+          {pageIndex === totalPages - 1 && (
+            <div className="mt-5 ml-20">
+              <div className="text-lg font-bold mb-40">{list.customMessage.text}</div>
+              <div className="mb-10">Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
+            </div>
+          )}
+          
+          {/* Page number */}
+          <div className="text-center text-sm mt-4">
+            Page {pageIndex + 1} / {totalPages}
+          </div>
         </div>
-      </div>
+      ))}
 
       {list.students.length === 0 && (
         <div className="text-center p-8">

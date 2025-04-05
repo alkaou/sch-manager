@@ -59,7 +59,7 @@ const StudentListSidebar = ({
   ];
 
   // Count selected headers
-  const selectedHeadersCount = list.headers.length + list.customHeaders.length;
+  const selectedHeadersCount = list.headers.length;
 
   // Add this new function to handle custom header deletion
   const handleDeleteCustomHeader = (header) => {
