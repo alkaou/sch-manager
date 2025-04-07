@@ -13,6 +13,7 @@ const StudentListSidebar = ({
   onUpdateTitle,
   onUpdateOrientation,
   onUpdateCustomMessage,
+  onUpdatecountryInfosHeader,
   theme,
   textClass
 }) => {
@@ -21,7 +22,8 @@ const StudentListSidebar = ({
     customHeaders: false,
     titleStyle: false,
     orientation: false,
-    customMessage: false
+    customMessage: false,
+    countryInfosHeader: true,
   });
   const [savedCustomHeaders, setSavedCustomHeaders] = useState([]);
   // Add this new state for color picker
@@ -740,7 +742,7 @@ const StudentListSidebar = ({
                 <motion.button
                   onClick={() => {
                     onAddCustomHeader(customHeaderInput);
-                    if (!savedCustomHeaders.includes(customHeaderInput)){
+                    if (!savedCustomHeaders.includes(customHeaderInput)) {
                       setSavedCustomHeaders([...savedCustomHeaders, customHeaderInput])
                     }
                   }}
@@ -824,6 +826,47 @@ const StudentListSidebar = ({
                   Paysage
                 </motion.button>
               </div>
+            </div>
+          )}
+        </div>
+
+        {/* Custom Country INFOS Header Section */}
+        <div className={`mb-4 border ${borderColor} rounded-lg overflow-hidden`}>
+          <div
+            className={`${sectionBgColor} p-3 flex justify-between items-center cursor-pointer`}
+            onClick={() => toggleSection('countryInfosHeader')}
+          >
+            <h3 className="font-medium">Les informations de la fiche</h3>
+            {expandedSections.countryInfosHeader ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
+
+          {expandedSections.countryInfosHeader && (
+            <div className="p-3 space-y-3">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="show-custom-message"
+                  checked={list.countryInfosHeader.show}
+                  onChange={(e) => onUpdatecountryInfosHeader({ ...list.countryInfosHeader, show: e.target.checked })}
+                  className="mr-2 h-4 w-4"
+                />
+                <label htmlFor="show-custom-message">Afficher informations</label>
+              </div>
+
+              {list.countryInfosHeader.show && (
+                <>
+                  <div className='flex items-center'>
+                    <input
+                      type="checkbox"
+                      id="show-custom-message"
+                      checked={list.countryInfosHeader.isCAP}
+                      onChange={(e) => onUpdatecountryInfosHeader({ ...list.countryInfosHeader, isCAP: e.target.checked })}
+                      className="mr-2 h-4 w-4"
+                    />
+                    <label htmlFor="show-custom-message">CAP ?</label>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>

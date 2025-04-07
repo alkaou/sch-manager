@@ -13,21 +13,21 @@ const ListeElevesPageContent = ({
 }) => {
   const { live_language } = useLanguage();
   const { setFlashMessage } = useFlashNotification();
-  
+
   const [db, setDb] = useState(null);
   const [studentLists, setStudentLists] = useState([]);
   const [showMenu, setShowMenu] = useState(true);
   const [showNamePopup, setShowNamePopup] = useState(false);
   const [currentList, setCurrentList] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Fetch database and student lists
   useEffect(() => {
     const fetchData = async () => {
       try {
         const database = await window.electron.getDatabase();
         setDb(database);
-        
+
         const lists = await window.electron.getStudentLists();
         setStudentLists(lists);
       } catch (error) {
@@ -41,21 +41,21 @@ const ListeElevesPageContent = ({
         setIsLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
-  
+
   // Handle creating a new list
   const handleCreateNewList = () => {
     setShowNamePopup(true);
   };
-  
+
   // Handle editing an existing list
   const handleEditList = (list) => {
     setCurrentList(list);
     setShowMenu(false);
   };
-  
+
   // Handle saving a list name from popup
   const handleSaveListName = (name) => {
     const newList = {
@@ -83,14 +83,18 @@ const ListeElevesPageContent = ({
         show: false,
         text: "Le Directeur",
         date: new Date().toISOString().split('T')[0]
+      },
+      countryInfosHeader: {
+        show: true,
+        isCAP: true,
       }
     };
-    
+
     setCurrentList(newList);
     setShowNamePopup(false);
     setShowMenu(false);
   };
-  
+
   // Handle returning to menu and saving changes
   const handleReturnToMenu = async () => {
     if (currentList) {
@@ -101,13 +105,13 @@ const ListeElevesPageContent = ({
           ...currentList,
           updatedAt: new Date().toISOString()
         };
-        
+
         await window.electron.saveStudentList(updatedList);
-        
+
         // Refresh the list of student lists
         const lists = await window.electron.getStudentLists();
         setStudentLists(lists);
-        
+
         setFlashMessage({
           message: "Liste sauvegardée avec succès",
           type: "success",
@@ -124,21 +128,21 @@ const ListeElevesPageContent = ({
         setIsLoading(false);
       }
     }
-    
+
     setCurrentList(null);
     setShowMenu(true);
   };
-  
+
   // Handle deleting a list
   const handleDeleteList = async (listId) => {
     try {
       setIsLoading(true);
       await window.electron.deleteStudentList(listId);
-      
+
       // Refresh the list of student lists
       const lists = await window.electron.getStudentLists();
       setStudentLists(lists);
-      
+
       setFlashMessage({
         message: "Liste supprimée avec succès",
         type: "success",
@@ -155,12 +159,12 @@ const ListeElevesPageContent = ({
       setIsLoading(false);
     }
   };
-  
+
   // Handle updating the current list (from editor)
   const handleUpdateCurrentList = (updatedList) => {
     setCurrentList(updatedList);
   };
-  
+
   return (
     <div className={`p-4 mt-20 ml-20 ${app_bg_color}`}>
       {isLoading ? (
@@ -190,7 +194,7 @@ const ListeElevesPageContent = ({
                 />
               </motion.div>
             )}
-            
+
             {!showMenu && currentList && (
               <motion.div
                 key="editor"
@@ -212,7 +216,7 @@ const ListeElevesPageContent = ({
               </motion.div>
             )}
           </AnimatePresence>
-          
+
           <AnimatePresence>
             {showNamePopup && (
               <StudentListNamePopup

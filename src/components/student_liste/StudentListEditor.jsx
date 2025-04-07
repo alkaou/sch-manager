@@ -206,9 +206,9 @@ const StudentListEditor = ({
         updatedCustomHeaders = updatedCustomHeaders.filter(h => h !== header);
       } else {
         // Add header, but check if we're at the limit
-        if (updatedHeaders.length + updatedCustomHeaders.length >= 6) {
+        if (updatedHeaders.length + updatedCustomHeaders.length >= 10) {
           setFlashMessage({
-            message: "Vous ne pouvez pas sélectionner plus de 6 en-têtes",
+            message: "Vous ne pouvez pas sélectionner plus de 10 en-têtes",
             type: "error",
             duration: 3000,
           });
@@ -265,6 +265,17 @@ const StudentListEditor = ({
     const updatedList = {
       ...currentList,
       customMessage
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+  };
+
+  // Handle updating Country Info Header
+  const onUpdatecountryInfosHeader = (countryInfosHeader) => {
+    const updatedList = {
+      ...currentList,
+      countryInfosHeader
     };
 
     setCurrentList(updatedList);
@@ -366,8 +377,8 @@ const StudentListEditor = ({
         
         const pageWidth = pdf.internal.pageSize.getWidth();
         // const margin = 10;
-        const img_x = 10;
-        const img_width = pageWidth - 20;
+        const img_x = 5;
+        const img_width = pageWidth - 10;
         
         // Add image to PDF
         pdf.addImage(imgData, 'PNG', img_x, imgY, img_width, imgHeight * ratio);
@@ -485,6 +496,7 @@ const StudentListEditor = ({
                 onUpdateTitle={handleUpdateTitle}
                 onUpdateOrientation={handleUpdateOrientation}
                 onUpdateCustomMessage={handleUpdateCustomMessage}
+                onUpdatecountryInfosHeader={onUpdatecountryInfosHeader}
                 theme={theme}
                 textClass={textClass}
               />
@@ -500,6 +512,7 @@ const StudentListEditor = ({
             onUpdateStudentCustomData={handleUpdateStudentCustomData}
             theme={theme}
             textClass={textClass}
+            db={db}
           />
         </div>
       </div>

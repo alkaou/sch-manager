@@ -2,17 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Trash, Check, X } from 'lucide-react';
 import { getClasseName } from "../../utils/helpers";
+import { useLanguage } from "../contexts";
+import CountryInfosHeader from '../CountryInfosHeader.jsx';
 
 const StudentListPreview = ({
   list,
   onRemoveStudent,
   onUpdateStudentCustomData,
   theme,
-  textClass
+  textClass,
+  db={db}
 }) => {
   const [editingCell, setEditingCell] = useState(null);
   const [editValue, setEditValue] = useState('');
   const inputRef = useRef(null);
+
+  const { live_language } = useLanguage();
 
   // Handle click outside to cancel editing
   useEffect(() => {
@@ -67,7 +72,8 @@ const StudentListPreview = ({
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-      return age.toString();
+      const student_age = `${age.toString()} ${live_language.years_text}`;
+      return student_age;
     }
     if (header === 'Sexe') return student.sexe || '';
     if (header === 'Signature') return '';
@@ -125,14 +131,14 @@ const StudentListPreview = ({
 
   // Calculate page dimensions based on orientation
   const pageWidth = list.orientation === 'portrait' ? '210mm' : '297mm';
-  
+
   // Define students per page
-  const STUDENTS_PER_PAGE = 20;
-  
+  const STUDENTS_PER_PAGE = 15;
+
   // Calculate number of pages needed
   const totalStudents = list.students.length;
   const totalPages = Math.ceil(totalStudents / STUDENTS_PER_PAGE);
-  
+
   // Split students into pages
   const studentPages = [];
   for (let i = 0; i < totalPages; i++) {
@@ -167,14 +173,30 @@ const StudentListPreview = ({
         >
           {/* Title - Only on first page */}
           {pageIndex === 0 && (
-            <div
-              style={{
-                ...list.title.style,
-                marginBottom: '10mm',
-              }}
-            >
-              {list.title.text}
-            </div>
+            <>
+              {list.countryInfosHeader.show &&
+                <div className='mb-10'>
+                  <CountryInfosHeader
+                    live_language={live_language}
+                    centerType={list.countryInfosHeader.isCAP ? "CAP" : "ACADEMIE"}
+                    school_name={db.name}
+                    school_short_name={db.short_name}
+                    school_zone_name={db.zone}
+                    padding=""
+                    margLeft=""
+                  />
+                </div>
+              }
+
+              <div
+                style={{
+                  ...list.title.style,
+                  marginBottom: '10mm',
+                }}
+              >
+                {list.title.text}
+              </div>
+            </>
           )}
 
           {/* Table */}
@@ -201,7 +223,7 @@ const StudentListPreview = ({
                 {pageStudents.map((student, index) => {
                   // Calculate the actual student index across all pages
                   const globalIndex = pageIndex * STUDENTS_PER_PAGE + index;
-                  
+
                   return (
                     <tr
                       key={student.id}
@@ -285,16 +307,20 @@ const StudentListPreview = ({
           )}
 
           {/* Custom message (only on the last page) */}
-          {pageIndex === totalPages - 1 && (
-            <div className="mt-5 ml-20">
-              <div className="text-lg font-bold mb-40">{list.customMessage.text}</div>
-              <div className="mb-10">Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
-            </div>
-          )}
-          
+          {list.customMessage.show &&
+            <>
+              {pageIndex === totalPages - 1 && (
+                <div className="mt-5 ml-20">
+                  <div className="text-lg font-bold mb-40">{list.customMessage.text}</div>
+                  <div className="mb-10">Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
+                </div>
+              )}
+            </>
+          }
+
           {/* Page number */}
           <div className="text-center text-sm mt-4">
-            Page {pageIndex + 1} / {totalPages}
+            {/* Page {pageIndex + 1} / {totalPages} */}
           </div>
         </div>
       ))}
