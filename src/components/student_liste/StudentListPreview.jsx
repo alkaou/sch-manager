@@ -11,7 +11,7 @@ const StudentListPreview = ({
   onUpdateStudentCustomData,
   theme,
   textClass,
-  db={db}
+  db = { db }
 }) => {
   const [editingCell, setEditingCell] = useState(null);
   const [editValue, setEditValue] = useState('');
@@ -60,7 +60,10 @@ const StudentListPreview = ({
     if (header === 'Père') return student.father_name || '';
     if (header === 'Mère') return student.mother_name || '';
     if (header === 'Contact') return student.parents_contact || '';
-    if (header === 'Date de naissance') return new Date(student.birth_date).toLocaleDateString() || '';
+    if (header === 'Date de naissance') {
+      const _birth_date = new Date(student.birth_date).toLocaleDateString() || '';
+      return `${_birth_date} à Bamako`;
+    };
     if (header === 'Moyenne') return student.Moyenne || '';
     if (header === 'Classe') return getClasseName(student.classe) || '';
     if (header === 'Âge') {
@@ -132,18 +135,28 @@ const StudentListPreview = ({
   // Calculate page dimensions based on orientation
   const pageWidth = list.orientation === 'portrait' ? '210mm' : '297mm';
 
-  // Define students per page
-  const STUDENTS_PER_PAGE = 15;
+  // Nombre d'élèves à afficher
+  const FIRST_PAGE_COUNT = list.orientation === 'portrait' ? 15 : 12;
+  const OTHER_PAGE_COUNT = 20;
 
-  // Calculate number of pages needed
   const totalStudents = list.students.length;
-  const totalPages = Math.ceil(totalStudents / STUDENTS_PER_PAGE);
 
-  // Split students into pages
+  // Calcul du nombre de pages supplémentaires après la première page
+  const remainingStudents = Math.max(0, totalStudents - FIRST_PAGE_COUNT);
+  const additionalPages = Math.ceil(remainingStudents / OTHER_PAGE_COUNT);
+
+  // Nombre total de pages = 1 (pour la première page) + pages supplémentaires
+  const totalPages = 1 + additionalPages;
+
   const studentPages = [];
-  for (let i = 0; i < totalPages; i++) {
-    const startIndex = i * STUDENTS_PER_PAGE;
-    const endIndex = Math.min(startIndex + STUDENTS_PER_PAGE, totalStudents);
+
+  // Première page : 12 élèves (ou moins si le total est inférieur)
+  studentPages.push(list.students.slice(0, FIRST_PAGE_COUNT));
+
+  // Pages suivantes : 15 élèves par page
+  for (let i = 0; i < additionalPages; i++) {
+    const startIndex = FIRST_PAGE_COUNT + i * OTHER_PAGE_COUNT;
+    const endIndex = Math.min(startIndex + OTHER_PAGE_COUNT, totalStudents);
     studentPages.push(list.students.slice(startIndex, endIndex));
   }
 
@@ -222,7 +235,8 @@ const StudentListPreview = ({
               <tbody>
                 {pageStudents.map((student, index) => {
                   // Calculate the actual student index across all pages
-                  const globalIndex = pageIndex * STUDENTS_PER_PAGE + index;
+                  const globalIndex = pageIndex === 0 ? index :
+                                      FIRST_PAGE_COUNT + (OTHER_PAGE_COUNT * (pageIndex-1)) + index;
 
                   return (
                     <tr

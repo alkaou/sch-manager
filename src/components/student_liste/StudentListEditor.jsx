@@ -31,7 +31,7 @@ const StudentListEditor = ({
     if (savedCustomHeaders && Array.isArray(savedCustomHeaders)) {
       // We don't need to set them to the list, just make them available in the sidebar
     }
-    
+
     // Add PDF styles to document
     addPdfStyles();
   }, []);
@@ -315,33 +315,33 @@ const StudentListEditor = ({
   const handleGeneratePDF = async () => {
     try {
       setPdfIsGenerating(true);
-      
+
       // Import required libraries
       const { jsPDF } = await import('jspdf');
       const { default: html2canvas } = await import('html2canvas-pro');
-      
+
       // Set PDF options based on orientation
       const orientation = currentList.orientation === 'portrait' ? 'p' : 'l';
       const pdf = new jsPDF(orientation, 'mm', 'a4');
-      
+
       // Get all page containers
       const pageContainers = document.querySelectorAll('.student-list-preview-container');
-      
+
       if (pageContainers.length === 0) {
         throw new Error("No pages found to generate PDF");
       }
-      
+
       // Process each page
       for (let i = 0; i < pageContainers.length; i++) {
         const pageContainer = pageContainers[i];
-        
+
         // Create a clone to avoid modifying the original
         const clonedPage = pageContainer.cloneNode(true);
-        
+
         // Remove all elements with the "no-print" class
         const noPrintElements = clonedPage.querySelectorAll('.no-print');
         noPrintElements.forEach(el => el.remove());
-        
+
         // Create a temporary container for the cloned page
         const tempDiv = document.createElement('div');
         tempDiv.style.position = 'absolute';
@@ -349,7 +349,7 @@ const StudentListEditor = ({
         tempDiv.style.background = 'white';
         tempDiv.appendChild(clonedPage);
         document.body.appendChild(tempDiv);
-        
+
         // Render the page to canvas
         const canvas = await html2canvas(clonedPage, {
           scale: 2, // Higher scale for better quality
@@ -358,8 +358,8 @@ const StudentListEditor = ({
           allowTaint: true,
           backgroundColor: '#ffffff'
         });
-        
-        console.log(orientation);
+
+        // console.log(orientation);
         // Calculate dimensions
         const imgData = canvas.toDataURL('image/png');
         const pdfWidth = orientation === 'p' ? 210 : 297;
@@ -369,30 +369,37 @@ const StudentListEditor = ({
         const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
         const imgX = (pdfWidth - imgWidth * ratio) / 2;
         const imgY = 0;
-        
+
         // Add new page if not the first page
         if (i > 0) {
           pdf.addPage();
         }
-        
+
         const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
         // const margin = 10;
         const img_x = 5;
         const img_width = pageWidth - 10;
-        
+        let imagHeight;
+        if (orientation !== "p") {
+          imagHeight = pageContainers.length > i + 1 ? pageHeight : imgHeight * ratio;
+        } else {
+          imagHeight = imgHeight * ratio;
+        }
+
         // Add image to PDF
-        pdf.addImage(imgData, 'PNG', img_x, imgY, img_width, imgHeight * ratio);
-        
+        pdf.addImage(imgData, 'PNG', img_x, imgY, img_width, imagHeight);
+
         // Clean up
         document.body.removeChild(tempDiv);
       }
-      
+
       // Generate filename
       const fileName = `${currentList.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${new Date().toISOString().split('T')[0]}.pdf`;
-      
+
       // Save the PDF
       pdf.save(fileName);
-      
+
       setFlashMessage({
         message: "PDF généré avec succès",
         type: "success",
