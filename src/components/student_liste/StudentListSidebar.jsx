@@ -24,6 +24,7 @@ const StudentListSidebar = ({
     orientation: false,
     customMessage: false,
     countryInfosHeader: true,
+    lang: 'fr', // en, br
   });
   const [savedCustomHeaders, setSavedCustomHeaders] = useState([]);
   // Add this new state for color picker
@@ -156,7 +157,7 @@ const StudentListSidebar = ({
                   <div className="flex items-center">
                     <motion.button
                       onClick={() => {
-                        const currentSize = list.title.style.fontSize;
+                        const currentSize = parseInt(list.title.style.fontSize) || 16;
                         if (currentSize > 12) {
                           onUpdateTitle({ style: { ...list.title.style, fontSize: currentSize - 2 } });
                         }
@@ -164,12 +165,12 @@ const StudentListSidebar = ({
                       className={`p-2 rounded-l-lg ${buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      disabled={list.title.style.fontSize <= 12}
+                      disabled={(parseInt(list.title.style.fontSize) || 16) <= 12}
                     >
                       <Minus size={16} />
                     </motion.button>
                     <select
-                      value={list.title.style.fontSize}
+                      value={parseInt(list.title.style.fontSize) || 16}
                       onChange={(e) => onUpdateTitle({ style: { ...list.title.style, fontSize: parseInt(e.target.value) } })}
                       className={`flex-1 p-2 border-t border-b ${borderColor} ${inputBgColor} text-center`}
                     >
@@ -179,7 +180,7 @@ const StudentListSidebar = ({
                     </select>
                     <motion.button
                       onClick={() => {
-                        const currentSize = list.title.style.fontSize;
+                        const currentSize = parseInt(list.title.style.fontSize) || 16;
                         if (currentSize < 48) {
                           onUpdateTitle({ style: { ...list.title.style, fontSize: currentSize + 2 } });
                         }
@@ -187,7 +188,7 @@ const StudentListSidebar = ({
                       className={`p-2 rounded-r-lg ${buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      disabled={list.title.style.fontSize >= 48}
+                      disabled={(parseInt(list.title.style.fontSize) || 16) >= 48}
                     >
                       <Plus size={16} />
                     </motion.button>
@@ -284,201 +285,152 @@ const StudentListSidebar = ({
                 {/* Title Border/Frame Styles - NEW SECTION */}
                 <div>
                   <label className="block mb-1 text-sm font-medium">Encadrement du titre</label>
-                  <div className="grid grid-cols-3 gap-2 mb-2">
+                  <div className="grid grid-cols-2 gap-2 mb-2">
                     <motion.button
                       onClick={() => onUpdateTitle({
                         style: {
                           ...list.title.style,
-                          border: 'none',
-                          borderRadius: '0',
-                          padding: '0',
-                          boxShadow: 'none',
-                          background: 'none'
+                          border: list.title.style.border ? undefined : '2px solid black',
+                          padding: list.title.style.border ? undefined : '8px',
+                          borderRadius: list.title.style.border ? undefined : '0px'
                         }
                       })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${!list.title.style.border && !list.title.style.boxShadow ? buttonPrimary : buttonSecondary
-                        }`}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.border ? buttonPrimary : buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      title="Aucun"
                     >
-                      <div className="w-12 h-6 flex items-center justify-center text-xs">Aucun</div>
-                      <span className="text-xs mt-1">Aucun</span>
+                      <div className="w-5 h-5 border-2 border-current mr-2"></div>
+                      Cadre complet
                     </motion.button>
 
                     <motion.button
                       onClick={() => onUpdateTitle({
                         style: {
                           ...list.title.style,
-                          border: `1px solid ${list.title.style.color || '#000000'}`,
-                          borderRadius: '0',
-                          padding: '5px 10px',
-                          boxShadow: 'none',
-                          background: 'none'
+                          border: undefined,
+                          borderBottom: list.title.style.borderBottom ? undefined : '2px solid black',
+                          borderTop: undefined,
+                          padding: list.title.style.borderBottom ? undefined : '4px 0',
                         }
                       })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${list.title.style.border && !list.title.style.boxShadow ? buttonPrimary : buttonSecondary
-                        }`}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.borderBottom ? buttonPrimary : buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      title="Bordure simple"
                     >
-                      <div className="w-12 h-6 border border-current flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Simple</span>
+                      <div className="w-5 h-5 border-b-2 border-current mr-2"></div>
+                      Souligné
                     </motion.button>
 
                     <motion.button
                       onClick={() => onUpdateTitle({
                         style: {
                           ...list.title.style,
-                          border: 'none',
-                          borderRadius: '4px',
-                          padding: '5px 10px',
-                          boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
-                          background: 'none'
+                          border: undefined,
+                          borderBottom: undefined,
+                          borderTop: list.title.style.borderTop ? undefined : '2px solid black',
+                          padding: list.title.style.borderTop ? undefined : '4px 0',
                         }
                       })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${!list.title.style.border && list.title.style.boxShadow ? buttonPrimary : buttonSecondary
-                        }`}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.borderTop ? buttonPrimary : buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      title="Ombre portée"
                     >
-                      <div className="w-12 h-6 shadow-md flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Ombre</span>
+                      <div className="w-5 h-5 border-t-2 border-current mr-2"></div>
+                      Ligne supérieure
                     </motion.button>
 
                     <motion.button
                       onClick={() => onUpdateTitle({
                         style: {
                           ...list.title.style,
-                          border: `2px solid ${list.title.style.color || '#000000'}`,
-                          borderRadius: '8px',
-                          padding: '5px 10px',
-                          boxShadow: 'none',
-                          background: 'none'
+                          border: undefined,
+                          borderBottom: undefined,
+                          borderTop: undefined,
+                          borderRadius: undefined,
+                          boxShadow: list.title.style.boxShadow ? undefined : '0 2px 10px rgba(0,0,0,0.2)',
+                          padding: list.title.style.boxShadow ? undefined : '8px',
                         }
                       })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${list.title.style.border && list.title.style.borderRadius === '8px' ? buttonPrimary : buttonSecondary
-                        }`}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.boxShadow ? buttonPrimary : buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      title="Bordure arrondie"
                     >
-                      <div className="w-12 h-6 border-2 border-current rounded-lg flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Arrondi</span>
-                    </motion.button>
-
-                    <motion.button
-                      onClick={() => onUpdateTitle({
-                        style: {
-                          ...list.title.style,
-                          border: `1px solid ${list.title.style.color || '#000000'}`,
-                          borderRadius: '4px',
-                          padding: '5px 10px',
-                          boxShadow: '0 3px 10px rgba(0,0,0,0.2)',
-                          background: 'none'
-                        }
-                      })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${list.title.style.border && list.title.style.boxShadow ? buttonPrimary : buttonSecondary
-                        }`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      title="Bordure avec ombre"
-                    >
-                      <div className="w-12 h-6 border border-current rounded shadow-md flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Complet</span>
-                    </motion.button>
-
-                    <motion.button
-                      onClick={() => onUpdateTitle({
-                        style: {
-                          ...list.title.style,
-                          border: 'none',
-                          borderRadius: '0',
-                          padding: '5px 10px',
-                          boxShadow: 'none',
-                          borderBottom: `2px solid ${list.title.style.color || '#000000'}`
-                        }
-                      })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${list.title.style.borderBottom && !list.title.style.borderTop ? buttonPrimary : buttonSecondary
-                        }`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      title="Souligné épais"
-                    >
-                      <div className="w-12 h-6 border-b-2 border-current flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Souligné</span>
+                      <div className="w-5 h-5 shadow-md mr-2 bg-current opacity-20"></div>
+                      Ombre
                     </motion.button>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     <motion.button
                       onClick={() => onUpdateTitle({
                         style: {
                           ...list.title.style,
-                          border: 'none',
-                          borderRadius: '0',
-                          padding: '5px 10px',
-                          boxShadow: 'none',
-                          borderTop: `2px solid ${list.title.style.color || '#000000'}`,
-                          borderBottom: `2px solid ${list.title.style.color || '#000000'}`
+                          border: list.title.style.border && list.title.style.borderRadius === '8px' ? undefined : '2px solid black',
+                          borderRadius: '8px',
+                          padding: list.title.style.border && list.title.style.borderRadius === '8px' ? undefined : '8px',
                         }
                       })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${list.title.style.borderTop && list.title.style.borderBottom ? buttonPrimary : buttonSecondary
-                        }`}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.border && list.title.style.borderRadius === '8px' ? buttonPrimary : buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      title="Double ligne"
                     >
-                      <div className="w-12 h-6 border-t-2 border-b-2 border-current flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Double</span>
+                      <div className="w-5 h-5 border-2 border-current rounded-lg mr-2"></div>
+                      Arrondi
                     </motion.button>
 
                     <motion.button
                       onClick={() => onUpdateTitle({
                         style: {
                           ...list.title.style,
-                          border: 'none',
-                          borderRadius: '0',
-                          padding: '5px 15px',
-                          boxShadow: 'none',
-                          background: `linear-gradient(to right, ${list.title.style.color || '#000000'}, transparent)`
+                          backgroundColor: list.title.style.backgroundColor ? undefined : theme === 'dark' ? '#374151' : '#f3f4f6',
+                          padding: list.title.style.backgroundColor ? undefined : '8px',
+                          borderRadius: list.title.style.backgroundColor ? undefined : '4px',
                         }
                       })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${list.title.style.background && list.title.style.background.includes('linear-gradient') ? buttonPrimary : buttonSecondary
-                        }`}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.backgroundColor ? buttonPrimary : buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      title="Dégradé"
                     >
-                      <div className="w-12 h-6 bg-gradient-to-r from-current to-transparent flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Dégradé</span>
+                      <div className={`w-5 h-5 ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'} mr-2`}></div>
+                      Fond coloré
                     </motion.button>
 
                     <motion.button
                       onClick={() => onUpdateTitle({
                         style: {
                           ...list.title.style,
-                          border: 'none',
-                          borderRadius: '0',
-                          padding: '5px 10px',
-                          boxShadow: 'none',
-                          background: list.title.style.color || '#000000',
-                          color: theme === 'dark' ? '#000000' : '#ffffff'
+                          border: list.title.style.border && list.title.style.borderStyle === 'double' ? undefined : '4px double black',
+                          padding: list.title.style.border && list.title.style.borderStyle === 'double' ? undefined : '6px',
                         }
                       })}
-                      className={`p-2 rounded-lg flex flex-col items-center justify-center ${list.title.style.background && !list.title.style.background.includes('linear-gradient') ? buttonPrimary : buttonSecondary
-                        }`}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.border && list.title.style.border.includes('double') ? buttonPrimary : buttonSecondary}`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      title="Fond plein"
                     >
-                      <div className="w-12 h-6 bg-current text-white flex items-center justify-center text-xs">Abc</div>
-                      <span className="text-xs mt-1">Fond</span>
+                      <div className="w-5 h-5 border-4 border-double border-current mr-2"></div>
+                      Double ligne
+                    </motion.button>
+
+                    <motion.button
+                      onClick={() => onUpdateTitle({
+                        style: {
+                          ...list.title.style,
+                          background: list.title.style.background && list.title.style.background.includes('gradient') ? undefined :
+                            `linear-gradient(to right, ${theme === 'dark' ? '#4B5563, #1F2937' : '#E5E7EB, #D1D5DB'})`,
+                          padding: list.title.style.background && list.title.style.background.includes('gradient') ? undefined : '8px',
+                          borderRadius: list.title.style.background && list.title.style.background.includes('gradient') ? undefined : '4px',
+                        }
+                      })}
+                      className={`p-2 rounded-lg flex items-center justify-center ${list.title.style.background && list.title.style.background.includes('gradient') ? buttonPrimary : buttonSecondary}`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <div className={`w-5 h-5 bg-gradient-to-r ${theme === 'dark' ? 'from-gray-600 to-gray-800' : 'from-gray-200 to-gray-400'} mr-2`}></div>
+                      Dégradé
                     </motion.button>
                   </div>
                 </div>
+
 
                 {/* Border Width/Style - NEW SECTION */}
                 {(list.title.style.border || list.title.style.borderBottom || list.title.style.borderTop) && (

@@ -31,26 +31,6 @@ const AdvancedLayout = () => {
   const [classes, setClasses] = useState([]);
   const [studentsForUpdate, setStudentsForUpdate] = useState([]);
 
-  // Mock user authentication state
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [userProfile, setUserProfile] = useState({
-    displayName: "John Doe",
-    email: "john.doe@example.com",
-    photoURL: null // Add a URL to a profile image if available
-  });
-
-  const handleLogout = () => {
-    // Implement your logout logic here
-    setIsAuthenticated(false);
-    console.log("User logged out");
-  };
-
-  const handleLogin = () => {
-    // Implement your logout logic here
-    setIsAuthenticated(true);
-    console.log("User logged in");
-  };
-
   const dropdownRef = useRef(null);
   const { app_bg_color, text_color, theme } = useTheme();
   const navigate = useNavigate();
@@ -118,12 +98,7 @@ const AdvancedLayout = () => {
       <div ref={dropdownRef} />
 
       {/* Navbar */}
-      <Navbar
-        isAuthenticated={isAuthenticated}
-        userProfile={userProfile}
-        onLogout={handleLogout}
-        onLogin={handleLogin}
-      />
+      <Navbar />
 
       {/* Sidebar */}
       <SideBar

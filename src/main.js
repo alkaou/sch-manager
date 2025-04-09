@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, session } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -15,14 +15,37 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY, // Assure-toi que tu définis ceci dans ton config Webpack
-      nodeIntegration: false, // Désactiver l'intégration du Node.js dans le rendu
-      contextIsolation: true, // Activer l'isolement du contexte
+      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY, // Assurez-vous de définir correctement cette constante dans votre config Webpack
+      nodeIntegration: false, // Désactive l'intégration de Node.js dans le rendu
+      contextIsolation: true, // Active l'isolation du contexte
     },
     autoHideMenuBar: true,
   });
 
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY); // Charge l'URL de ton application React
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": [
+          "default-src 'self'; " +
+          // Pour les scripts : autorise les scripts inline, unsafe-eval et les domaines externes nécessaires
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ssl.gstatic.com https://accounts.google.com https://apis.google.com; " +
+          // Pour les styles : autorise les styles inline et ceux hébergés sur ssl.gstatic.com et accounts.google.com
+          "style-src 'self' 'unsafe-inline' https://ssl.gstatic.com https://accounts.google.com; " +
+          // Pour les images : autorise les images depuis 'self', data:, www.google.com, lh3.googleusercontent.com et ssl.gstatic.com
+          "img-src 'self' data: https://www.google.com https://lh3.googleusercontent.com https://ssl.gstatic.com; " +
+          // Pour les frames : accès autorisé à votre domaine firebase
+          "frame-src 'self' https://*.youtube.com https://schoolmanager-c228f.firebaseapp.com; " +
+          // Pour les connexions : autorise les connexions vers les domaines définis, y compris les WebSockets
+          "connect-src 'self' https://schoolmanager-c228f.firebaseapp.com https://identitytoolkit.googleapis.com https://*.google.com https://*.firebaseio.com https://*.googleapis.com ws://0.0.0.0:3000 wss://schoolmanager-c228f.firebaseapp.com:3000 wss://accounts.google.com:3000; " +
+          // Pour les polices : autorise les polices provenant notamment de Google Fonts
+          "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;"
+        ]
+      }
+    });
+  });
+
+  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY); // Charge l'URL de votre application (React)
   mainWindow.webContents.openDevTools(); // Ouvre les DevTools
 };
 
@@ -35,7 +58,7 @@ const readDatabase = () => {
   if (fs.existsSync(dbPath)) {
     return JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
   }
-  return {}; // Si le fichier n'existe pas, retourner un objet vide
+  return {}; // Si le fichier n'existe pas, retourne un objet vide
 };
 
 // Sauvegarder la base de données dans le fichier JSON
@@ -44,7 +67,7 @@ const saveDatabase = (db) => {
   fs.writeFileSync(dbPath, JSON.stringify(db, null, 4), 'utf-8');
 };
 
-// Gestion des événements IPC pour communiquer avec le renderer process (React)
+// Gestion des événements IPC pour communiquer avec le renderer (React)
 ipcMain.handle('get-database', () => {
   return readDatabase();
 });
@@ -54,26 +77,23 @@ ipcMain.handle('save-database', (event, db) => {
   return { success: true };
 });
 
-// Nouvelles fonctions pour les listes d'élèves
+// Fonctions pour la gestion des listes d'élèves
 ipcMain.handle('saveStudentList', (event, listData) => {
   const db = readDatabase();
-  
+
   // Initialiser le tableau student_lists s'il n'existe pas
   if (!db.student_lists) {
     db.student_lists = [];
   }
-  
-  // Vérifier si la liste existe déjà (mise à jour) ou s'il faut l'ajouter
+
+  // Mise à jour ou ajout d'une nouvelle liste
   const existingListIndex = db.student_lists.findIndex(list => list.id === listData.id);
-  
   if (existingListIndex >= 0) {
-    // Mise à jour d'une liste existante
     db.student_lists[existingListIndex] = listData;
   } else {
-    // Ajout d'une nouvelle liste
     db.student_lists.push(listData);
   }
-  
+
   saveDatabase(db);
   return { success: true, id: listData.id };
 });
@@ -85,12 +105,10 @@ ipcMain.handle('getStudentLists', () => {
 
 ipcMain.handle('deleteStudentList', (event, listId) => {
   const db = readDatabase();
-  
   if (db.student_lists) {
     db.student_lists = db.student_lists.filter(list => list.id !== listId);
     saveDatabase(db);
   }
-  
   return { success: true };
 });
 
@@ -98,7 +116,7 @@ ipcMain.handle('deleteStudentList', (event, listId) => {
 app.whenReady().then(() => {
   createWindow();
 
-  // Gérer le cas où l'application est activée sur macOS
+  // Sur macOS, recréer une fenêtre si aucune n'est ouverte
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
@@ -112,4 +130,3 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
