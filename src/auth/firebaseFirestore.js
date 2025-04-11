@@ -6,26 +6,24 @@ import { db } from './firebaseService';
 /**
  * Crée ou met à jour l'utilisateur dans Firestore.
  * Par défaut, isPremium est défini sur false pour un nouvel utilisateur.
- */
+*/
+// Fonction pour créer ou mettre à jour l'utilisateur dans Firestore
 export const createOrUpdateUser = async (user, additionalData = {}) => {
   if (!user) return;
-
+  
   const userRef = doc(db, 'users', user.uid);
   const snapshot = await getDoc(userRef);
 
   const userData = {
     displayName: user.displayName,
     email: user.email,
-    // Pour les nouveaux utilisateurs, on définit isPremium à false
     isPremium: false,
     ...additionalData,
   };
 
   if (!snapshot.exists()) {
-    // Création du document
     await setDoc(userRef, userData);
   } else {
-    // On peut fusionner les données existantes
     await updateDoc(userRef, userData);
   }
 };
@@ -48,11 +46,12 @@ export const getUserPremiumData = async (uid) => {
 * @param {Date} paymentStartedAt - Date de début du paiement.
 * @param {Date} paymentEndedAt - Date d'expiration de l'abonnement.
 */
-export const updatePremiumStatus = async (uid, isPremium, paymentStartedAt, paymentEndedAt) => {
+export const updatePremiumStatus = async (uid, isPremium, buyed_times, paymentStartedAt, paymentEndedAt) => {
   const userRef = doc(db, 'users', uid);
   
   await updateDoc(userRef, {
     isPremium,
+    buyed_times: buyed_times || 0,
     payment_startedAt: paymentStartedAt || null,
     payment_endedAt: paymentEndedAt || null
   });

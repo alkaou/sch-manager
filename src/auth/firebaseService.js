@@ -25,6 +25,9 @@ export const db = getFirestore(app);
 
 // Provider Google
 const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: 'select_account' // Force l'affichage du popup pour sélectionner un compte
+});
 
 // Connexion avec Google via pop-up
 export const signInWithGoogle = async () => {
@@ -32,42 +35,17 @@ export const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
   } catch (error) {
-    console.error("Erreur lors du signInWithPopup:", error);
+    alert("Erreur lors de la connexion à votre compte !");
     throw error;
   }
 };
-
-// Fonction pour créer ou mettre à jour l'utilisateur dans Firestore
-export const createOrUpdateUser = async (user, additionalData = {}) => {
-  if (!user) return;
-  
-  const userRef = doc(db, 'users', user.uid);
-  const snapshot = await getDoc(userRef);
-
-  const userData = {
-    displayName: user.displayName,
-    email: user.email,
-    // Par défaut, isPremium est false ; cette valeur pourra être mise à jour ultérieurement (ex. via un paiement validé)
-    isPremium: false,
-    ...additionalData,
-  };
-
-  if (!snapshot.exists()) {
-    // Création du document utilisateur
-    await setDoc(userRef, userData);
-  } else {
-    // Mise à jour (merge) du document utilisateur
-    await updateDoc(userRef, userData);
-  }
-};
-
 
 // Déconnexion
 export const logoutUser = async () => {
   try {
     await signOut(auth);
   } catch (error) {
-    console.error("Erreur lors de la déconnexion:", error);
+    alert("Erreur lors de la déconnexion !");
     throw error;
   }
 };

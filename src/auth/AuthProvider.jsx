@@ -1,19 +1,63 @@
-// AuthProvider.js
+// AuthProvider.jsx
 import React, { useState, useEffect } from 'react';
 import AuthContext from './AuthContext';
 import {
   subscribeToAuthChanges,
-  createOrUpdateUser,
   signInWithGoogle,
-  logoutUser
+  logoutUser,
 } from './firebaseService';
-import { getUserPremiumData } from './firebaseFirestore';
+import { getUserPremiumData, createOrUpdateUser } from './firebaseFirestore';
 import secureLocalStorage from 'react-secure-storage';
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isOnline, setIsOnline] = useState(false);
+
+  // Fonction de vérification de la connectivité via une requête de test
+  const checkInternetConnection = async () => {
+    // Vérifier d'abord l'état du navigateur pour éviter un fetch inutile
+    if (!navigator.onLine) {
+      setIsOnline(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('https://example.com', {
+        method: 'GET',
+        // Décommentez le mode suivant si vous rencontrez des problèmes de CORS
+        mode: "no-cors",
+      });
+
+      // console.log(response.status);
+
+      // On considère que la connexion est bonne si le status est dans la plage 200-299
+      if (response && response.status === 0) {
+        setIsOnline(true);
+        return true;
+      } else {
+        setIsOnline(false);
+        return false;
+      }
+    } catch (err) {
+      // L'erreur est normale si l'internet est coupé, évitant ainsi des logs trop verbeux en prod.
+      // console.error('Erreur lors de la vérification de la connexion Internet :', err);
+      setIsOnline(false);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    // Vérification initiale dès le montage du composant
+    checkInternetConnection();
+
+    // Planification périodique de la vérification de la connexion (par exemple, toutes les 10 secondes)
+    // const intervalId = setInterval(checkInternetConnection, 10000);
+
+    // Nettoyage lors du démontage du composant
+    // return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     // Vérification du cache local (optionnel)
@@ -22,47 +66,55 @@ const AuthProvider = ({ children }) => {
       setCurrentUser(cachedUser);
     }
 
-    // Abonnement aux changements d'authentification
-    const unsubscribe = subscribeToAuthChanges(async (user) => {
-      setLoading(true);
-      if (user) {
-        // Créer ou mettre à jour le document utilisateur dans Firestore
-        await createOrUpdateUser(user);
-        // Récupérer les données premium stockées dans Firestore
-        const firestoreUserData = await getUserPremiumData(user.uid);
-        // Fusionner les informations provenant de Firebase Auth et de Firestore
-        const userData = {
-          uid: user.uid,
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          isPremium: firestoreUserData?.isPremium ?? false,
-          payment_startedAt: firestoreUserData?.payment_startedAt || null,
-          payment_endedAt: firestoreUserData?.payment_endedAt || null,
-        };
-        setCurrentUser(userData);
-        secureLocalStorage.setItem('authUser', userData);
-      } else {
-        setCurrentUser(null);
-        secureLocalStorage.removeItem('authUser');
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
+    // Exécuter l'abonnement aux changements d'authentification uniquement si la connexion est détectée.
+    if (isOnline) {
+      const unsubscribe = subscribeToAuthChanges(async (user) => {
+        setLoading(true);
+        // console.log(user);
+        if (user) {
+          // Créer ou mettre à jour le document utilisateur dans Firestore
+          await createOrUpdateUser(user);
+          // Récupérer les données premium stockées dans Firestore
+          const firestoreUserData = await getUserPremiumData(user.uid);
+          // Fusionner les informations provenant de Firebase Auth et de Firestore
+          const userData = {
+            uid: user.uid,
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            isPremium: firestoreUserData?.isPremium ?? false,
+            buyed_times: firestoreUserData?.buyed_times || 0,
+            payment_startedAt: firestoreUserData?.payment_startedAt || null,
+            payment_endedAt: firestoreUserData?.payment_endedAt || null,
+          };
+          setCurrentUser(userData);
+          secureLocalStorage.setItem('authUser', userData);
+        } else {
+          setCurrentUser(null);
+          secureLocalStorage.removeItem('authUser');
+        }
+        setLoading(false);
+      });
+      return () => unsubscribe();
+    }
+  }, [isOnline]);
 
   // Fonction de connexion via Google
   const login = async () => {
+    const isInternet = await checkInternetConnection();
+    // console.log("internet est : " + isInternet);
+    if(!isInternet) {
+      alert("Veuillez s'il vous plaît vérifier votre connexion internet !");
+      return;
+    }
     try {
       setError(null);
       setLoading(true);
-      // L'appel à signInWithGoogle déclenche la redirection vers Google et,
-      // le callback de subscribeToAuthChanges prendra ensuite le relais
       await signInWithGoogle();
     } catch (err) {
       setError(err.message);
-      console.error("Erreur lors de la connexion:", err);
+      alert('Erreur lors de la connexion');
+      // console.error('Erreur lors de la connexion:', err);
     } finally {
       setLoading(false);
     }
@@ -70,12 +122,18 @@ const AuthProvider = ({ children }) => {
 
   // Fonction de déconnexion
   const logout = async () => {
+    const isInternet = await checkInternetConnection();
+    if(!isInternet) {
+      alert("Veuillez s'il vous plaît vérifier votre connexion internet !");
+      return;
+    }
     try {
       setLoading(true);
       await logoutUser();
     } catch (err) {
       setError(err.message);
-      console.error("Erreur lors de la déconnexion:", err);
+      alert("Erreur lors de la déconnexion !");
+      // console.error('Erreur lors de la déconnexion:', err);
     } finally {
       setLoading(false);
     }
@@ -89,7 +147,8 @@ const AuthProvider = ({ children }) => {
     loading,
     error,
     login,
-    logout
+    logout,
+    checkInternetConnection,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
