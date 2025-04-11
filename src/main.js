@@ -37,7 +37,7 @@ const createWindow = () => {
           // Pour les frames : accès autorisé à votre domaine firebase
           "frame-src 'self' https://*.youtube.com https://schoolmanager-c228f.firebaseapp.com; " +
           // Pour les connexions : autorise les connexions vers les domaines définis, y compris les WebSockets
-          "connect-src 'self' https://schoolmanager-c228f.firebaseapp.com https://identitytoolkit.googleapis.com https://*.google.com https://*.firebaseio.com https://*.googleapis.com ws://0.0.0.0:3000 wss://schoolmanager-c228f.firebaseapp.com:3000 wss://accounts.google.com:3000; " +
+          "connect-src 'self' https://schoolmanager-c228f.firebaseapp.com https://schoolmanager-c228f-default-rtdb.firebaseio.com schoolmanager-c228f.firebasestorage.app https://identitytoolkit.googleapis.com https://*.google.com https://*.firebaseio.com https://*.googleapis.com ws://0.0.0.0:3000 wss://schoolmanager-c228f.firebaseapp.com:3000 wss://accounts.google.com:3000; " +
           // Pour les polices : autorise les polices provenant notamment de Google Fonts
           "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;"
         ]

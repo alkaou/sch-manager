@@ -1,10 +1,13 @@
+// AuthProvider.js
 import React, { useState, useEffect } from 'react';
 import AuthContext from './AuthContext';
 import {
   subscribeToAuthChanges,
+  createOrUpdateUser,
   signInWithGoogle,
   logoutUser
 } from './firebaseService';
+import { getUserPremiumData } from './firebaseFirestore';
 import secureLocalStorage from 'react-secure-storage';
 
 const AuthProvider = ({ children }) => {
@@ -12,7 +15,6 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Mise en place de l'abonnement aux changements d'authentification
   useEffect(() => {
     // Vérification du cache local (optionnel)
     const cachedUser = secureLocalStorage.getItem('authUser');
@@ -21,16 +23,22 @@ const AuthProvider = ({ children }) => {
     }
 
     // Abonnement aux changements d'authentification
-    const unsubscribe = subscribeToAuthChanges((user) => {
+    const unsubscribe = subscribeToAuthChanges(async (user) => {
       setLoading(true);
       if (user) {
-        // Simplification de l'objet utilisateur
+        // Créer ou mettre à jour le document utilisateur dans Firestore
+        await createOrUpdateUser(user);
+        // Récupérer les données premium stockées dans Firestore
+        const firestoreUserData = await getUserPremiumData(user.uid);
+        // Fusionner les informations provenant de Firebase Auth et de Firestore
         const userData = {
           uid: user.uid,
           displayName: user.displayName,
           email: user.email,
           photoURL: user.photoURL,
-          isPremium: false // Vous pouvez le mettre à jour via votre backend si nécessaire
+          isPremium: firestoreUserData?.isPremium ?? false,
+          payment_startedAt: firestoreUserData?.payment_startedAt || null,
+          payment_endedAt: firestoreUserData?.payment_endedAt || null,
         };
         setCurrentUser(userData);
         secureLocalStorage.setItem('authUser', userData);
@@ -44,14 +52,14 @@ const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  // Connexion avec Google via popup
+  // Fonction de connexion via Google
   const login = async () => {
     try {
       setError(null);
       setLoading(true);
-      // L'appel renverra l'utilisateur authentifié via signInWithGoogle
+      // L'appel à signInWithGoogle déclenche la redirection vers Google et,
+      // le callback de subscribeToAuthChanges prendra ensuite le relais
       await signInWithGoogle();
-      // Le listener onAuthStateChanged mettra à jour currentUser
     } catch (err) {
       setError(err.message);
       console.error("Erreur lors de la connexion:", err);
@@ -60,12 +68,11 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Déconnexion
+  // Fonction de déconnexion
   const logout = async () => {
     try {
       setLoading(true);
       await logoutUser();
-      // Le listener mettra à jour l'état de currentUser
     } catch (err) {
       setError(err.message);
       console.error("Erreur lors de la déconnexion:", err);
@@ -85,11 +92,7 @@ const AuthProvider = ({ children }) => {
     logout
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;
