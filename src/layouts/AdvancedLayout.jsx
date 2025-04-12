@@ -30,6 +30,7 @@ const AdvancedLayout = () => {
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [studentsForUpdate, setStudentsForUpdate] = useState([]);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
 
   const dropdownRef = useRef(null);
   const { app_bg_color, text_color, theme } = useTheme();
@@ -98,7 +99,10 @@ const AdvancedLayout = () => {
       <div ref={dropdownRef} />
 
       {/* Navbar */}
-      <Navbar />
+      <Navbar
+        loginModalOpen={loginModalOpen}
+        setLoginModalOpen={setLoginModalOpen}
+      />
 
       {/* Sidebar */}
       <SideBar
@@ -151,6 +155,8 @@ const AdvancedLayout = () => {
             text_color,
             theme,
             OpenThePopup,
+            loginModalOpen,
+            setLoginModalOpen,
             school_name,
             school_short_name,
             school_zone_name,

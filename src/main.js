@@ -67,6 +67,22 @@ const saveDatabase = (db) => {
   fs.writeFileSync(dbPath, JSON.stringify(db, null, 4), 'utf-8');
 };
 
+// Créer une sauvegarde de la base de données
+ipcMain.handle('backup-database', () => {
+  try {
+    const dbPath = getDbPath();
+    if (fs.existsSync(dbPath)) {
+      const backupPath = `${dbPath}.backup-${new Date().toISOString().replace(/:/g, '-')}`;
+      fs.copyFileSync(dbPath, backupPath);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error backing up database:', error);
+    return false;
+  }
+});
+
 // Gestion des événements IPC pour communiquer avec le renderer (React)
 ipcMain.handle('get-database', () => {
   return readDatabase();

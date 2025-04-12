@@ -9,10 +9,9 @@ import { useAuth } from "../auth/AuthContext";
 import LoginModal from "../auth/LoginModal.jsx";
 import PremiumModal from "../auth/PremiumModal.jsx";
 
-const Navbar = () => {
+const Navbar = ({loginModalOpen, setLoginModalOpen}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, currentUser, logout } = useAuth();

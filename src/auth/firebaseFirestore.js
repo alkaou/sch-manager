@@ -1,5 +1,5 @@
 // firebaseFirestore.js
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from './firebaseService';
 
 
@@ -55,6 +55,27 @@ export const updatePremiumStatus = async (uid, isPremium, buyed_times, paymentSt
     payment_startedAt: paymentStartedAt || null,
     payment_endedAt: paymentEndedAt || null
   });
+};
+
+/**
+ * Récupère les bases de données de l'utilisateur.
+ * @param {string} uid - L'uid de l'utilisateur.
+ * @returns {Promise<Array>} - Liste des bases de données.
+ */
+export const getUserDatabases = async (uid) => {
+  if (!uid) return [];
+  
+  try {
+    const databasesRef = collection(db, 'users', uid, 'databases');
+    const snapshot = await getDocs(databasesRef);
+    return snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+  } catch (error) {
+    console.error("Error fetching user databases:", error);
+    return [];
+  }
 };
 
 /**
