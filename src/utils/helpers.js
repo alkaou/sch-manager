@@ -74,7 +74,7 @@ function getClasseName(chaine, lang = "Français") {
     classeName = `${number}${grade} ${restText}`;
   } else {
     // Pour toute autre langue, ici exemple avec "Bambara"
-    classeName = `${number} nan ${restText}`;
+    classeName = `${number} nan ${restText}`.trim();
   }
 
   return classeName;

@@ -92,30 +92,30 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
         newErr[`${index}-level`] = "Le niveau doit être entre 1 et 12.";
         valid = false;
       }
-      if (!cls.name.trim()) {
-        newErr[`${index}-name`] = "Le nom de la classe est obligatoire.";
+      // if (!cls.name.trim()) {
+      //   newErr[`${index}-name`] = "Le nom de la classe est obligatoire.";
+      //   valid = false;
+      // } else {
+      // Vérification dans la DB sur la combinaison niveau + nom
+      const duplicateInDB = classes.find(c =>
+        Number(c.level) === Number(cls.level) &&
+        c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
+      );
+      if (duplicateInDB) {
+        newErr[`${index}-name`] = "Cette classe existe déjà.";
         valid = false;
-      } else {
-        // Vérification dans la DB sur la combinaison niveau + nom
-        const duplicateInDB = classes.find(c =>
-          Number(c.level) === Number(cls.level) &&
-          c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
-        );
-        if (duplicateInDB) {
-          newErr[`${index}-name`] = "Cette classe existe déjà.";
-          valid = false;
-        }
-        // Vérification dans la liste des nouvelles classes
-        const duplicateInNew = newClasses.filter((c, i) =>
-          i !== index &&
-          Number(c.level) === Number(cls.level) &&
-          c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
-        );
-        if (duplicateInNew.length > 0) {
-          newErr[`${index}-name`] = "Cette classe a déjà été ajoutée.";
-          valid = false;
-        }
       }
+      // Vérification dans la liste des nouvelles classes
+      const duplicateInNew = newClasses.filter((c, i) =>
+        i !== index &&
+        Number(c.level) === Number(cls.level) &&
+        c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
+      );
+      if (duplicateInNew.length > 0) {
+        newErr[`${index}-name`] = "Cette classe a déjà été ajoutée.";
+        valid = false;
+      }
+      // }
     });
     setErrors(newErr);
     return valid;
@@ -174,10 +174,10 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setGlobalError("Le niveau doit être entre 1 et 12.");
       return;
     }
-    if (!editedClass.name.trim()) {
-      setGlobalError("Le nom de la classe est obligatoire.");
-      return;
-    }
+    // if (!editedClass.name.trim()) {
+    //   setGlobalError("Le nom de la classe est obligatoire.");
+    //   return;
+    // }
     // Vérification de la duplication sur la combinaison niveau + nom pour l'édition
     const duplicate = classes.find(
       cls => cls.id !== editingClassId &&
@@ -302,7 +302,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
                         className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${textClass}`}
                       />
                     ) : (
-                      cls.name
+                      cls.name === "" ? "-" : cls.name
                     )}
                   </td>
                   <td className="px-2 py-1 border text-center">{getStudentCount(`${cls.level} ${cls.name}`)}</td>
