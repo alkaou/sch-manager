@@ -79,6 +79,7 @@ const ListeElevesPageContent = ({
         }
       },
       orientation: "portrait",
+      langue: "Français",
       customMessage: {
         show: false,
         text: "Le Directeur",

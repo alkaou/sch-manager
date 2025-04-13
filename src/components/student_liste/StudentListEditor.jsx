@@ -1,12 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Save, Settings, Download, Users } from 'lucide-react';
+import { ArrowLeft, Save, Settings, Download, Users, Globe } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
 import { useFlashNotification } from "../contexts.js";
 import StudentListSidebar from './StudentListSidebar.jsx';
 import StudentListPreview from './StudentListPreview.jsx';
 import StudentListAddStudents from './StudentListAddStudents.jsx';
 import { addPdfStyles } from './pdfStyles.js';
+
+// Available languages
+const AVAILABLE_LANGUAGES = [
+  { id: "Français", label: "Français" },
+  { id: "English", label: "English" },
+  { id: "Bamanankan", label: "Bamanankan" }
+];
 
 const StudentListEditor = ({
   list,
@@ -21,9 +28,11 @@ const StudentListEditor = ({
   const [currentList, setCurrentList] = useState(list);
   const [showSidebar, setShowSidebar] = useState(true);
   const [showAddStudents, setShowAddStudents] = useState(false);
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [saving, setSaving] = useState(false);
   const [customHeaderInput, setCustomHeaderInput] = useState('');
   const [pdfIsGenerating, setPdfIsGenerating] = useState(false);
+  const languageSelectorRef = useRef(null);
 
   // Load custom headers from local storage
   useEffect(() => {
@@ -35,6 +44,24 @@ const StudentListEditor = ({
     // Add PDF styles to document
     addPdfStyles();
   }, []);
+
+  // Handle clicking outside language selector
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        showLanguageSelector &&
+        languageSelectorRef.current &&
+        !languageSelectorRef.current.contains(event.target)
+      ) {
+        setShowLanguageSelector(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showLanguageSelector]);
 
   // Handle saving the list
   const handleSave = async () => {
@@ -65,6 +92,24 @@ const StudentListEditor = ({
     } finally {
       setSaving(false);
     }
+  };
+
+  // Handle language change
+  const handleLanguageChange = (language) => {
+    const updatedList = {
+      ...currentList,
+      langue: language
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+    setShowLanguageSelector(false);
+
+    setFlashMessage({
+      message: `Langue changée en ${language}`,
+      type: "success",
+      duration: 3000,
+    });
   };
 
   // Handle returning to menu (with auto-save)
@@ -210,7 +255,7 @@ const StudentListEditor = ({
           setFlashMessage({
             message: "Vous ne pouvez pas sélectionner plus de 10 en-têtes",
             type: "error",
-            duration: 3000,
+            duration: 5000,
           });
           return;
         }
@@ -422,6 +467,9 @@ const StudentListEditor = ({
   const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
   const buttonDanger = "bg-red-600 hover:bg-red-700 text-white";
   const buttonSuccess = "bg-green-600 hover:bg-green-700 text-white";
+  const dropdownBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+  const dropdownBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
+  const dropdownHoverBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100";
 
   return (
     <div className="flex flex-col h-full">
@@ -440,6 +488,42 @@ const StudentListEditor = ({
         </div>
 
         <div className="flex items-center space-x-2">
+          {/* Language selector button */}
+          <div className="relative">
+            <motion.button
+              onClick={() => setShowLanguageSelector(!showLanguageSelector)}
+              className={`${buttonSecondary} p-2 rounded-lg flex items-center`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Globe size={20} />
+              <span className="ml-2 hidden sm:inline">{currentList.langue || "Français"}</span>
+            </motion.button>
+
+            {/* Language dropdown */}
+            {showLanguageSelector && (
+              <div 
+                ref={languageSelectorRef}
+                className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg ${dropdownBgColor} ${dropdownBorderColor} border z-10`}
+              >
+                <div className="py-1">
+                  {AVAILABLE_LANGUAGES.map((language) => (
+                    <button
+                      key={language.id}
+                      onClick={() => handleLanguageChange(language.id)}
+                      className={`${
+                        currentList.langue === language.id ? 
+                        (theme === "dark" ? "bg-gray-700" : "bg-gray-100") : ""
+                      } ${dropdownHoverBgColor} ${textClass} block w-full text-left px-4 py-2`}
+                    >
+                      {language.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           <motion.button
             onClick={() => setShowSidebar(!showSidebar)}
             className={`${buttonSecondary} p-2 rounded-lg flex items-center`}

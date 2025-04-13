@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, Settings, Palette, ChevronDown, Menu, Edit2, Check, X,
-  Layout, FileText, Star, DollarSign, BarChart, Database as DatabaseIcon
+  Layout, FileText, Star, DollarSign, BarChart, Database as DatabaseIcon, 
+  LucideBookOpenText
 } from "lucide-react";
 
 import { useTheme, useLanguage, useFlashNotification } from "./contexts";
@@ -150,6 +151,7 @@ const SideBar = ({
     { icon: <DollarSign size={22} />, label: "Finance", path: "/payements", index: 6 },
     { icon: <BarChart size={22} />, label: "Analytics", path: "/statistiques", index: 7 },
     { icon: <DatabaseIcon size={22} />, label: "Database", path: "/database", index: 8 },
+    { icon: <LucideBookOpenText size={22} />, label: "Read", path: "/read", index: 9 },
   ];
 
   // Dynamic colors based on theme

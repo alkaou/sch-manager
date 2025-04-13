@@ -285,7 +285,7 @@ const PayementsSidebar = ({
                           ) : (
                             <div className="grid grid-cols-1 gap-2">
                               {systemClasses.map((cls) => {
-                                const className = `${cls.level} ${cls.name}`;
+                                const className = `${cls.level} ${cls.name}`.trim();
                                 const isActive = selectedClass && selectedClass.id === cls.id
                                   && selectedPaymentSystem.id === system.id;
                                 const studentCount = countStudentsInClass(className);

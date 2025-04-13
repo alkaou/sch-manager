@@ -166,7 +166,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
 
         // Count students in this class
         const studentsInClass = db.students.filter(student =>
-          student.classe === `${cls.level} ${cls.name}` && student.status === "actif"
+          student.classe === `${cls.level} ${cls.name}`.trim() && student.status === "actif"
         );
 
         if (studentsInClass.length === 0) return; // Skip classes without students

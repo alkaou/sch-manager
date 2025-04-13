@@ -8,6 +8,7 @@ import BulletinsPage from "../pages/BulletinsPage.jsx";
 import ListeElevesPage from "../pages/ListeElevesPage.jsx";
 import PayementsPage from "../pages/PayementsPage.jsx";
 import StatistiquesPage from "../pages/StatistiquesPage.jsx";
+import ReadPage from "../pages/ReadPage.jsx";
 import DatabasePage from "../pages/DatabasePage.jsx";
 import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
 import ThemeProvider from "../providers/ThemeProvider.jsx";
@@ -35,6 +36,7 @@ const RoutesManager = () => {
                     <Route path="/payements" element={<PayementsPage />} />
                     <Route path="/statistiques" element={<StatistiquesPage />} />
                     <Route path="/database" element={<DatabasePage />} />
+                    <Route path="/read" element={<ReadPage />} />
                   </Route>
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

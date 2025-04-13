@@ -3,7 +3,7 @@ const path = require("path");
 module.exports = [
   // Add support for native node modules
   {
-    test: /\.(png|jpe?g|gif|svg)$/i, // Tous les types d'images supportés
+    test: /\.(png|jpe?g|gif|svg|pdf|docx|mp3|mp4|webm)$/i, // Tous les types d'images supportés
     type: 'asset/resource', // Utilisation de Webpack 5+ (alternative à file-loader)
   },
   {
