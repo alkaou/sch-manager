@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, Save, RefreshCcw, Search, CheckSquare, Square } from 'lucide-react';
-import { useLanguage, useFlashNotification } from './contexts.js';
+import { Save, RefreshCcw, Search, CheckSquare, Square } from 'lucide-react';
+import { useLanguage, useFlashNotification } from './contexts';
 
 const GetBulletinStudents = ({
     selectedComposition,
@@ -30,7 +30,6 @@ const GetBulletinStudents = ({
     const tableHeaderBg = theme === "dark" ? "bg-gray-700" : "bg-blue-50";
     const tableRowHoverBg = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-blue-50";
     const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
-    const checkboxBgColor = theme === "dark" ? "bg-gray-600" : "bg-white";
     const whileHoverbackgroundColor = theme === "dark" ? "rgba(55, 65, 81, 0.7)" : "rgba(239, 246, 255, 0.7)";
 
     // Récupérer les élèves de la classe sélectionnée
@@ -47,7 +46,7 @@ const GetBulletinStudents = ({
         }
 
         // Construire le nom complet de la classe
-        const className = `${classObj.level} ${classObj.name}`;
+        const className = `${classObj.level} ${classObj.name}`.trim();
 
         // Filtrer les élèves actifs de cette classe
         const classStudents = db.students

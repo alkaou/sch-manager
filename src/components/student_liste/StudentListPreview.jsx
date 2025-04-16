@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Trash, Check, X } from 'lucide-react';
-import { getClasseName } from "../../utils/helpers";
+import { getClasseName, getBornInfos } from "../../utils/helpers";
 import { useLanguage } from "../contexts";
 import CountryInfosHeader from '../CountryInfosHeader.jsx';
 
@@ -17,7 +17,8 @@ const StudentListPreview = ({
   const [editValue, setEditValue] = useState('');
   const inputRef = useRef(null);
 
-  const { live_language } = useLanguage();
+  const { live_language, language } = useLanguage();
+  const list_lang = list.langue;
 
   // Handle click outside to cancel editing
   useEffect(() => {
@@ -62,7 +63,7 @@ const StudentListPreview = ({
     if (header === 'Contact') return student.parents_contact || '';
     if (header === 'Date de naissance') {
       const _birth_date = new Date(student.birth_date).toLocaleDateString() || '';
-      return `${_birth_date} à Bamako`;
+      return `${_birth_date} ${getBornInfos(student.birth_date,student.birth_place, list_lang)}`.trim();
     };
     if (header === 'Moyenne') return student.Moyenne || '';
     if (header === 'Classe') return getClasseName(student.classe) || '';
@@ -75,7 +76,7 @@ const StudentListPreview = ({
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-      const student_age = `${age.toString()} ${live_language.years_text}`;
+      const student_age = `${age.toString()} ${language[list_lang].years_text}`;
       return student_age;
     }
     if (header === 'Sexe') return student.sexe || '';
@@ -190,7 +191,7 @@ const StudentListPreview = ({
               {list.countryInfosHeader.show &&
                 <div className='mb-10'>
                   <CountryInfosHeader
-                    live_language={live_language}
+                    Head_language={list_lang}
                     centerType={list.countryInfosHeader.isCAP ? "CAP" : "ACADEMIE"}
                     school_name={db.name}
                     school_short_name={db.short_name}

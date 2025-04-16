@@ -85,13 +85,34 @@ const delay = (ms) => {
 }
 
 const areArraysEqual = (arr1, arr2) => {
-    if (arr1.length !== arr2.length) return false;
-    
-    return arr1.every(item1 => 
-        arr2.some(item2 => JSON.stringify(item1) === JSON.stringify(item2))
-    );
+  if (arr1.length !== arr2.length) return false;
+
+  return arr1.every(item1 =>
+    arr2.some(item2 => JSON.stringify(item1) === JSON.stringify(item2))
+  );
 }
 
+const getBornInfos = (init_born_date, born_lieu="", lang = "Français") => {
+  const born_date = new Date(init_born_date).toLocaleDateString();
+  if(lang === "Français" || lang === "Anglais"){
+    const langText = lang === "Français" ? " à " : " in ";
+    const infos = `${born_date}${langText}${born_lieu}`.trim();
+    return infos;
+  }
+  const fixBornLieu = born_lieu.trim() !== "" ? `${born_lieu} kɔnɔ` : "";
+  const infos = `${born_date} ${fixBornLieu}`.trim();
+  return infos;
+}
 
-export { getFormattedDateTime, getAge, getDateTime, getClasseName, delay, areArraysEqual }
+const textToUppercase = (text) => {
+  return text.toUpperCase();
+}
+
+export { 
+  getFormattedDateTime,
+  getAge, getDateTime,
+  getClasseName, delay,
+  areArraysEqual, getBornInfos,
+  textToUppercase
+}
 

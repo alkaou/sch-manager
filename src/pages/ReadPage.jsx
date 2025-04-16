@@ -51,6 +51,7 @@ const ReadPageContent = ({
         width: "95%",
         maxWidth: "95%",
         minWidth: "95%",
+        overflow: "hidden",
       }}
     >
       <div
@@ -58,6 +59,7 @@ const ReadPageContent = ({
           width: "100%",
           maxWidth: "100%",
           minWidth: "100%",
+          overflow: "hidden"
         }}
       >
         <motion.div
@@ -100,16 +102,27 @@ const ReadPageContent = ({
                 theme={theme}
                 textColor={text_color}
               />
-              <PDFViewer
-                pdfFile={selectedPdf}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                setTotalPages={setTotalPages}
-                zoomLevel={zoomLevel}
-                isSpeaking={isSpeaking}
-                speakingRate={speakingRate}
-                theme={theme}
-              />
+              <div
+                style={{
+                  width: "100%",
+                  maxWidth: "100%",
+                  minWidth: "100%",
+                  height: "calc(100vh - 150px)",
+                  overflowY: "auto"
+                }}
+              >
+                <PDFViewer
+                  pdfFile={selectedPdf}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  setTotalPages={setTotalPages}
+                  totalPages={totalPages}
+                  zoomLevel={zoomLevel}
+                  isSpeaking={isSpeaking}
+                  speakingRate={speakingRate}
+                  theme={theme}
+                />
+            </div>
             </>
           ) : (
             <div className={`flex justify-center items-center h-full ${text_color}`}>

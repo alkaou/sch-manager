@@ -48,11 +48,15 @@ const suggestLastNames = [
   "Bonkoungou", "N'Guessan", "N'Dour", "Sall", "Sambou", "Bocoum", "Djiré", "Sinayoko"
 ];
 
-
+const suggCitiesNames = [
+  "San", "Katala", "Karaba", "Ségou", "Bamako", "Mopti", "Kayes", "Kidal", "Kati", "Koro", "Sikasso",
+  "Koutiala", "Bougouni", "Ténéni", "Koulikoro", "Da", "Niono", "Nioro", "Coro", "Badjangara", "Sofara",
+  "Kimparana", "Bla", "Marakala", "Kôrô", "Nampasso", "Worofanasso", "Tombouctou", "Gao", "Diola", "Fana"
+];
 
 // Génération dynamique de toutes les combinaisons "Prénom Nom"
 const suggNameComplete = suggestNames.flatMap(firstName =>
   suggestLastNames.map(lastName => `${firstName} ${lastName}`)
 );
 
-export { suggestLastNames, suggestNames, suggNameComplete };
+export { suggestLastNames, suggestNames, suggNameComplete, suggCitiesNames };

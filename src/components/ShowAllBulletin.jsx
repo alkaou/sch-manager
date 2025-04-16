@@ -75,7 +75,7 @@ const ShowAllBulletin = ({
     // Get class name
     const classObj = db.classes?.find(cls => cls.id === selectedClass);
     if (classObj) {
-      setClassName(`${classObj.level} ${classObj.name}`);
+      setClassName(`${classObj.level} ${classObj.name}`.trim());
     }
 
     setLoading(false);

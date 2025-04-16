@@ -11,8 +11,8 @@ import { addPdfStyles } from './pdfStyles.js';
 // Available languages
 const AVAILABLE_LANGUAGES = [
   { id: "Français", label: "Français" },
-  { id: "English", label: "English" },
-  { id: "Bamanankan", label: "Bamanankan" }
+  { id: "Anglais", label: "Anglais" },
+  { id: "Bambara", label: "Bambara" }
 ];
 
 const StudentListEditor = ({

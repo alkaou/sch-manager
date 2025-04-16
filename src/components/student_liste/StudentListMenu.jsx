@@ -62,7 +62,6 @@ const StudentListMenu = ({
 
   // Styles based on theme
   const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const cardHoverBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-50";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
   const buttonDanger = "bg-red-600 hover:bg-red-700";

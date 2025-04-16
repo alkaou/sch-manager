@@ -27,15 +27,23 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
   const buttonAdd = "bg-green-600 hover:bg-green-700";
   const shinyBorderColor = theme === "dark" ? "border-blue-400" : "border-purple-400";
 
+  const loadDatabase = async () => {
+    try {
+      await window.electron.getDatabase().then((data) => {
+        setDb(data);
+        if (!data.classes) {
+          data.classes = [];
+        }
+        setClasses(data.classes);
+      });
+    } catch (error) {
+      console.error("Erreur lors du chargement de la base de données:", error);
+    }
+  };
+  
   // Charger la DB et initialiser classes
   useEffect(() => {
-    window.electron.getDatabase().then((data) => {
-      setDb(data);
-      if (!data.classes) {
-        data.classes = [];
-      }
-      setClasses(data.classes);
-    });
+    loadDatabase();
   }, []);
 
   // Disparition automatique des messages de succès et d'erreur après 5 secondes
@@ -188,13 +196,38 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setGlobalError("Cette classe existe déjà.");
       return;
     }
+    
+    // Trouver la classe originale avant modification
+    const originalClass = classes.find(cls => cls.id === editingClassId);
+    const originalClassName = `${originalClass.level} ${originalClass.name}`.trim();
+    const newClassName = `${editedClass.level} ${editedClass.name}`.trim();
+    
     const updatedClasses = classes.map((cls) => {
       if (cls.id === editingClassId) {
         return { ...cls, level: Number(editedClass.level), name: editedClass.name.trim() };
       }
       return cls;
     });
-    const updatedDB = { ...db, classes: updatedClasses };
+    
+    // Mettre à jour les élèves associés à cette classe
+    let updatedStudents = [];
+    if (db.students && originalClassName !== newClassName) {
+      updatedStudents = db.students.map(student => {
+        if (student.classe === originalClassName) {
+          return { ...student, classe: newClassName, updated_at: Date.now() };
+        }
+        return student;
+      });
+    } else {
+      updatedStudents = db.students || [];
+    }
+    
+    const updatedDB = { 
+      ...db, 
+      classes: updatedClasses,
+      students: updatedStudents
+    };
+    
     try {
       await window.electron.saveDatabase(updatedDB);
       setClasses(updatedClasses);
@@ -202,6 +235,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setEditedClass({});
       setSuccess("La classe a été modifiée avec succès!");
       setGlobalError(null);
+      loadDatabase();
     } catch (error) {
       setGlobalError("Erreur lors de la mise à jour de la classe.");
     }
@@ -293,7 +327,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
               {sortedClasses.map((cls) => (
                 <tr key={cls.id} className={`hover:bg-gray-50 hover:text-gray-500 ${textClass}`}>
                   <td className="px-2 py-1 border text-center">{cls.level}</td>
-                  <td className="px-2 py-1 border">
+                  <td className="px-2 py-1 border text-center">
                     {editingClassId === cls.id ? (
                       <input
                         type="text"
@@ -302,10 +336,10 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
                         className={`w-full px-2 py-1 text-sm rounded ${inputBgColor} ${inputBorderColor} ${textClass}`}
                       />
                     ) : (
-                      cls.name === "" ? "-" : cls.name
+                      getClasseName(`${cls.level} ${cls.name}`.trim())
                     )}
                   </td>
-                  <td className="px-2 py-1 border text-center">{getStudentCount(`${cls.level} ${cls.name}`)}</td>
+                  <td className="px-2 py-1 border text-center">{getStudentCount(`${cls.level} ${cls.name}`.trim())}</td>
                   <td className="px-2 py-1 border text-center">
                     {editingClassId === cls.id ? (
                       <>

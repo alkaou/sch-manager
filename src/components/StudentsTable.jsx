@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { MoreVertical, User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2, CheckCircle, XCircle } from "lucide-react";
+import { User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2, CheckCircle, XCircle } from "lucide-react";
 import { gradients } from "../utils/colors";
-import { useLanguage, useFlashNotification } from "./contexts.js";
-import { getAge, getClasseName } from "../utils/helpers.js";
+import { useLanguage, useFlashNotification } from "./contexts";
+import { getAge, getClasseName, getBornInfos } from "../utils/helpers";
 import { deleteStudent, activateStudent, deactivateStudent } from "../utils/database_methods";
 
 const StudentsTable = ({
   students,
   classes,
-  openDropdown,
-  setOpenDropdown,
   app_bg_color,
   text_color,
   theme,
   setIsAddStudentActive,
   setIsManageClassesActive,
-  OpenThePopup,
   refreshData, // Fonction de rafraîchissement des données depuis la database
   database,
   setStudentsForUpdate,
@@ -133,6 +130,7 @@ const StudentsTable = ({
         classe: s.classe || '',
         sexe: s.sexe || '',
         birth_date: s.birth_date || '',
+        birth_place: s.birth_place || '',
         matricule: s.matricule || '',
         father_name: s.father_name || '',
         mother_name: s.mother_name || '',
@@ -147,11 +145,6 @@ const StudentsTable = ({
   const handleAddClasses = () => {
     setStudentsForUpdate([]);
     setIsManageClassesActive(true);
-  };
-
-  // Gestion du dropdown (menu d'options) sur chaque ligne
-  const toggleDropdown = (index) => {
-    setOpenDropdown(openDropdown === index ? null : index);
   };
 
   // Suppression des élèves sélectionnés via la méthode deleteStudent importée
@@ -205,10 +198,6 @@ const StudentsTable = ({
   };
 
   // Couleurs et styles de base
-  const popup_bg_hover_color =
-    app_bg_color === gradients[1] || theme === "dark"
-      ? "hover:bg-gray-500"
-      : "hover:bg-blue-400";
   const _head_bg_color = app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
   const head_bg_color = _head_bg_color === gradients[2] ? "bg-gray-500" : _head_bg_color;
   const _text_color = app_bg_color === gradients[2] ? "text-gray-500" : text_color;
@@ -218,17 +207,14 @@ const StudentsTable = ({
   // Enhanced styling for expert view
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const tableHeaderBg = theme === "dark" ? "bg-gray-800" : head_bg_color;
-  const tableRowHoverBg = theme === "dark"
-    ? "hover:bg-gray-700"
+
+  const controlsPanelBg = theme === "dark"
+    ? `${app_bg_color} border`
     : app_bg_color === gradients[1]
-      ? "hover:bg-white"
+      ? "bg-white bg-opacity-90 border"
       : app_bg_color === gradients[2]
-        ? "hover:bg-gray-100"
-        : "hover:bg-gray-50";
-  const buttonHoverBg = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-green-400";
-  const controlsPanelBg = theme === "dark" ? "bg-gray-800 bg-opacity-90" : "bg-white bg-opacity-90";
-  const statusActiveBg = theme === "dark" ? "#2d9d5a" : "green";
-  const statusInactiveBg = theme === "dark" ? "#6b7280" : "gray";
+        ? "bg-gray-100 border"
+        : `${app_bg_color} border`;
 
   return (
     <div
@@ -260,7 +246,7 @@ const StudentsTable = ({
             </>
           }
           <button
-            className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded hover:bg-blue-700 transition duration-300 transform hover:scale-105"
+            className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded bg-blue-700 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
             onClick={classes.length <= 0 ? handleAddClasses : handleAddStudent}
           >
             <svg
@@ -281,24 +267,24 @@ const StudentsTable = ({
           <div className={`flex flex-wrap items-center justify-between mb-4 p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
             <div className="flex items-center space-x-10">
               <p className={`${_text_color} font-bold text-base transition-transform duration-300 transform hover:scale-105`}>
-                {live_language.students_number_text} : <span className="text-blue-600 dark:text-blue-400">{filteredStudents.length}</span>
+                {live_language.students_number_text} : <span className={`${_text_color}`}>{filteredStudents.length}</span>
               </p>
               <span className={`${_text_color}`}>|</span>
               <p className={`${_text_color} font-bold text-base transition-transform duration-300 transform hover:scale-105`}>
-                {live_language.classe_number_text} : <span className="text-blue-600 dark:text-blue-400">{totalClassesAvailable}</span>
+                {live_language.classe_number_text} : <span className={`${_text_color}`}>{totalClassesAvailable}</span>
               </p>
             </div>
             <div className="flex items-center space-x-2">
               {/* Bouton refresh - Enhanced with better hover effect */}
               <button
                 onClick={handleRefresh}
-                className={`p-2 rounded-full border ${tableBorderColor} ${buttonHoverBg} transition-all duration-300 transform hover:scale-105 hover:shadow-md`}
+                className={`p-2 rounded-full border bg-blue-500 hover:bg-blue-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
                 title={live_language.refresh_text || "Rafraîchir"}
               >
                 {isRefreshing ? (
-                  <RefreshCcw className={`${_text_color} animate-spin hover:text-white`} size={20} />
+                  <RefreshCcw className={`animate-spin text-white`} size={20} />
                 ) : (
-                  <RefreshCcw className={`${_text_color} hover:text-white`} size={20} />
+                  <RefreshCcw className={`text-white`} size={20} />
                 )}
               </button>
 
@@ -306,10 +292,10 @@ const StudentsTable = ({
               {selected.length > 0 && (
                 <button
                   onClick={handleDeleteSelected}
-                  className="p-2 rounded-full border border-red-300 hover:bg-red-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                  className="p-2 rounded-full border border-red-300 bg-red-500 hover:bg-red-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
                   title={live_language.delete_selected_text || "Supprimer la sélection"}
                 >
-                  <Trash size={20} className="text-red-600 hover:text-white" />
+                  <Trash size={20} className="text-white" />
                 </button>
               )}
 
@@ -317,36 +303,36 @@ const StudentsTable = ({
               {selected.length > 0 && allActive && (
                 <button
                   onClick={handleDeactivateSelected}
-                  className="p-2 rounded-full border border-yellow-300 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                  className="p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
                   title={live_language.deactivate_selected_text || "Désactiver la sélection"}
                 >
-                  <XCircle size={20} className={`${_text_color} hover:text-white`} />
+                  <XCircle size={20} className={`text-white`} />
                 </button>
               )}
               {selected.length > 0 && allInactive && (
                 <button
                   onClick={handleActivateSelected}
-                  className="p-2 rounded-full border border-green-300 hover:bg-green-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                  className="p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
                   title={live_language.activate_selected_text || "Activer la sélection"}
                 >
-                  <CheckCircle size={20} className={`${_text_color} hover:text-white`} />
+                  <CheckCircle size={20} className={`text-white`} />
                 </button>
               )}
               {selected.length > 0 && !allActive && !allInactive && (
                 <>
                   <button
                     onClick={handleDeactivateSelected}
-                    className="p-2 rounded-full border border-yellow-300 hover:bg-yellow-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                    className="p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
                     title={live_language.deactivate_selected_text || "Désactiver la sélection"}
                   >
-                    <XCircle size={20} className={`${_text_color} hover:text-white`} />
+                    <XCircle size={20} className={`text-white`} />
                   </button>
                   <button
                     onClick={handleActivateSelected}
-                    className="p-2 rounded-full border border-green-300 hover:bg-green-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md"
+                    className="p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
                     title={live_language.activate_selected_text || "Activer la sélection"}
                   >
-                    <CheckCircle size={20} className={`${_text_color} hover:text-white`} />
+                    <CheckCircle size={20} className={`text-white`} />
                   </button>
                 </>
               )}
@@ -354,29 +340,29 @@ const StudentsTable = ({
               {/* Bouton ajouter un élève - Enhanced with better hover effect */}
               <button
                 onClick={handleAddStudent}
-                className={`p-2 rounded-full border ${tableBorderColor} ${buttonHoverBg} transition-all duration-300 transform hover:scale-105 hover:shadow-md`}
+                className={`p-2 rounded-full border ${tableBorderColor} bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
                 title={live_language.add_student_text || "Ajouter un élève"}
               >
-                <UserPlus size={20} className={`${_text_color} hover:text-white`} />
+                <UserPlus size={20} className={`text-white`} />
               </button>
 
               {/* Bouton ajouter une classe - Enhanced with better hover effect */}
               <button
                 onClick={handleAddClasses}
-                className={`p-2 rounded-full border ${tableBorderColor} ${buttonHoverBg} transition-all duration-300 transform hover:scale-105 hover:shadow-md`}
+                className={`p-2 rounded-full border ${tableBorderColor} bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
                 title={live_language.add_class_text || "Ajouter une classe"}
               >
-                <PlusSquare size={20} className={`${_text_color} hover:text-white`} />
+                <PlusSquare size={20} className={`text-white`} />
               </button>
 
               {/* Bouton modifier des élèves sélectionnés - Enhanced with better hover effect */}
               {selected.length > 0 && (
                 <button
                   onClick={handleEditStudentSelected}
-                  className={`p-2 rounded-full border ${tableBorderColor} hover:bg-blue-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md`}
+                  className={`p-2 rounded-full border ${tableBorderColor} bg-blue-500 hover:bg-blue-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
                   title={live_language.edit_selected_text || "Modifier la sélection"}
                 >
-                  <Edit2 size={20} className={`${_text_color} hover:text-white`} />
+                  <Edit2 size={20} className={`text-white`} />
                 </button>
               )}
             </div>
@@ -540,13 +526,13 @@ const StudentsTable = ({
                 {filteredStudents.map((student, index) => (
                   <tr
                     title="Double Clique"
-                    onDoubleClick={() => console.log(student)}
+                    onDoubleClick={() => { }}
                     key={student.id}
                     className={`${_text_color} divide-x divide-gray-300 ${app_bg_color === gradients[1]
-                        ? "hover:bg-white"
-                        : app_bg_color === gradients[2]
-                          ? "hover:bg-gray-100"
-                          : "hover:bg-gray-50"
+                      ? "hover:bg-white"
+                      : app_bg_color === gradients[2]
+                        ? "hover:bg-gray-100"
+                        : "hover:bg-gray-50"
                       } hover:text-gray-700 transition-colors duration-300 cursor-pointer`}
                   >
                     <td className="py-1 px-2 text-center">
@@ -565,7 +551,7 @@ const StudentsTable = ({
                     <td className="py-1 px-2 text-center">{student.name_complet}</td>
                     <td className="py-1 px-2 text-center">{getClasseName(student.classe, language)}</td>
                     <td className="py-1 px-2 text-center">
-                      {new Date(student.birth_date).toLocaleDateString()}
+                      {getBornInfos(student.birth_date, student.birth_place, language)}
                     </td>
                     <td className="py-1 px-2 text-center">
                       {getAge(student.birth_date)}
@@ -615,18 +601,18 @@ const StudentsTable = ({
             <div className="fixed bottom-8 right-8 z-50">
               {language === "Français" ?
                 <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
-                                animate-bounce transition-transform duration-300 transform hover:scale-110">
+                                animate-bounce transition-transform duration-300 transform hover:scale-150 hover:shadow-md">
                   {selected.length} élève{selected.length > 1 ? "s" : ""} sélectionné{selected.length > 1 ? "s" : ""}
                 </div>
                 :
                 language === "Anglais" ?
                   <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
-                                animate-bounce transition-transform duration-300 transform hover:scale-110">
+                                animate-bounce transition-transform duration-300 transform hover:scale-150 hover:shadow-md">
                     {selected.length} student{selected.length > 1 ? "s" : ""} selected
                   </div>
                   :
                   <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
-                                animate-bounce transition-transform duration-300 transform hover:scale-110">
+                                animate-bounce transition-transform duration-300 transform hover:scale-150 hover:shadow-md">
                     Kaladen {selected.length} sugandi le don
                   </div>
               }

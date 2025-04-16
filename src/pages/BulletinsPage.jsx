@@ -3,7 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import { gradients } from '../utils/colors';
 import { getClasseName } from '../utils/helpers';
-import { useLanguage, useFlashNotification } from '../components/contexts.js';
+import { useLanguage, useFlashNotification } from '../components/contexts';
 import { Search, Filter, Plus, Edit, Trash, Eye, FileText, CheckSquare, RefreshCcw, Unlock, Lock } from 'lucide-react';
 
 import CreateBulletin from "../components/CreateBulletin.jsx";
@@ -153,7 +153,7 @@ const BulletinsPageContent = ({
     const classObj = db.classes.find(cls => cls.id === classId);
     if (!classObj) return 0;
 
-    const className = `${classObj.level} ${classObj.name}`;
+    const className = `${classObj.level} ${classObj.name}`.trim();
     return db.students.filter(student =>
       student.classe === className &&
       student.status === "actif"
@@ -394,9 +394,10 @@ const BulletinsPageContent = ({
                       if (!classObj) return null;
 
                       const bulletinExistsForClass = bulletinExists(composition.id, classId);
-                      const totalStudents = getStudentCount(classId);
                       const composedStudents = getComposedStudentCount(composition.id, classId);
                       const bullettinIsLocked = getBulletin(composition.id, classId)?.isLocked;
+                      const currentTtotalStudents = getStudentCount(classId);
+                      const totalStudents = bullettinIsLocked ? composedStudents : currentTtotalStudents;
                       // console.log(bullettinIsLocked);
 
                       return (
@@ -408,7 +409,7 @@ const BulletinsPageContent = ({
                         >
                           <div className="flex justify-between items-center mb-3">
                             <h4 className={`font-bold ${textClass}`}>
-                              {getClasseName(`${classObj.level} ${classObj.name}`, language)}
+                              {getClasseName(`${classObj.level} ${classObj.name}`.trim(), language)}
                             </h4>
                             <div className="flex space-x-1">
                               {bullettinIsLocked ?

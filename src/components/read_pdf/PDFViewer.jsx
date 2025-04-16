@@ -1,18 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
 import { motion } from "framer-motion";
+import { GlobalWorkerOptions } from "pdfjs-dist";
+
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 // Set the worker source for react-pdf
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
+GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
   import.meta.url,
 ).toString();
+
+const workerUrl = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
+
 
 const PDFViewer = ({ 
   pdfFile, 
   currentPage, 
   setCurrentPage, 
   setTotalPages, 
+  totalPages,
   zoomLevel,
   isSpeaking,
   speakingRate,
@@ -52,7 +65,7 @@ const PDFViewer = ({
         // If we're still in speaking mode, move to next page
         if (isSpeaking) {
           setCurrentPage(prev => {
-            if (prev < totalNumPages) {
+            if (prev < totalPages) {
               return prev + 1;
             } else {
               return prev;
@@ -85,22 +98,12 @@ const PDFViewer = ({
     setTotalPages(numPages);
   };
 
-  const onPageLoadSuccess = async (page) => {
-    if (pdfFile && pdfFile.url) {
-      try {
-        const loadingTask = pdfjs.getDocument(pdfFile.url);
-        const pdf = await loadingTask.promise;
-        extractTextFromPage(pdf, currentPage);
-      } catch (error) {
-        console.error("Error loading PDF for text extraction:", error);
-      }
-    }
-  };
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   return (
     <motion.div 
       ref={containerRef}
-      className={`flex-1 overflow-auto flex justify-center p-4 ${
+      className={`flex-1 overflow-auto scrollbar-custom flex justify-center p-4 ${
         theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
       }`}
       initial={{ opacity: 0 }}
@@ -108,29 +111,21 @@ const PDFViewer = ({
       transition={{ duration: 0.3 }}
     >
       <div className="pdf-container" style={{ transform: `scale(${zoomLevel})`, transformOrigin: 'top center' }}>
-        <Document
-          file={pdfFile?.url}
-          onLoadSuccess={onDocumentLoadSuccess}
-          loading={
-            <div className="flex justify-center items-center h-96">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            </div>
-          }
-          error={
-            <div className="flex justify-center items-center h-96 text-red-500">
-              <p>Error loading PDF. Please try again.</p>
-            </div>
-          }
-          className="shadow-xl"
-        >
-          <Page 
-            pageNumber={currentPage} 
-            renderTextLayer={false}
-            renderAnnotationLayer={false}
-            onLoadSuccess={onPageLoadSuccess}
-            className={`${theme === 'dark' ? 'bg-white' : ''}`}
-          />
-        </Document>
+        <Worker workerUrl={workerUrl}>
+          <div
+              style={{
+                  height: '750px',
+                  width: '900px',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+              }}
+          >
+              <Viewer 
+                fileUrl={pdfFile?.url}
+                plugins={[defaultLayoutPluginInstance]}
+              />
+          </div>
+        </Worker>
       </div>
     </motion.div>
   );
