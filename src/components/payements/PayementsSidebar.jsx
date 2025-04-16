@@ -37,7 +37,12 @@ const PayementsSidebar = ({
   }, [db]);
 
   // Fonction pour compter les élèves dans une classe
-  const countStudentsInClass = (className) => {
+  const countStudentsInClass = (className, classId, systemId) => {
+    const the_system = `students_${systemId}_${classId}`;
+    const sys_students = db.payments[the_system] || [];
+    if(sys_students && sys_students.length > 0){
+      return sys_students.length;
+    }
     if (!db || !db.students) return 0;
     return db.students.filter(student =>
       student.classe === className && student.status === "actif"
@@ -288,7 +293,7 @@ const PayementsSidebar = ({
                                 const className = `${cls.level} ${cls.name}`.trim();
                                 const isActive = selectedClass && selectedClass.id === cls.id
                                   && selectedPaymentSystem.id === system.id;
-                                const studentCount = countStudentsInClass(className);
+                                const studentCount = countStudentsInClass(className, cls.id, system.id);
 
                                 return (
                                   <motion.div

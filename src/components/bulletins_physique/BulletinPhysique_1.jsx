@@ -180,7 +180,7 @@ const BulletinPhysique1 = ({
                             const moyenneCoef = moyenne !== "-"
                                 ? (parseFloat(moyenne) * subject.coefficient).toFixed(2)
                                 : "-";
-                            const appreciation = getAppreciation(moyenne);
+                            const appreciation = getAppreciation(moyenne, language);
 
                             return (
                                 <tr key={subject.name} className={`border-b border-black ${index % 2 === 0 ? tableRowBg : tableRowAltBg}`}>
@@ -250,8 +250,8 @@ const BulletinPhysique1 = ({
                             return (
                                 <tr key={subject.name} className={`border-b border-black ${index % 2 === 0 ? tableRowBg : tableRowAltBg}`}>
                                     <td className="border-r border-black p-2 text-left">{subject.name}</td>
-                                    <td className="border-r border-black p-2 text-center">{classeNote !== "-" ? parseFloat(classeNote).toFixed(2) : "-"}</td>
-                                    <td className="border-r border-black p-2 text-center">{compoNote !== "-" ? parseFloat(compoNote).toFixed(2) : "-"}</td>
+                                    <td className="border-r border-black p-2 text-center">{classeNote !== "-" && classeNote !== undefined ? parseFloat(classeNote).toFixed(2) : "-"}</td>
+                                    <td className="border-r border-black p-2 text-center">{compoNote !== "-" && compoNote !== undefined ? parseFloat(compoNote).toFixed(2) : "-"}</td>
                                     <td className="border-r border-black p-2 text-center">{moyenne}</td>
                                     <td className="border-r border-black p-2 text-center">{subject.coefficient}</td>
                                     <td className="border-r border-black p-2 text-center">{moyenneCoef}</td>
@@ -315,10 +315,10 @@ const BulletinPhysique1 = ({
                             {topAverageSexe === "F" ? 
                                 (language === "Français" ? "MOY. DE LA PREMIERE :" : 
                                  language === "Anglais" ? "TOP FEMALE AVERAGE:" : 
-                                 "MUSOKƆRƆBAW LA HAKƐ:") : 
+                                 "KALANDENFƆLƆ KA HAKƐ:") : 
                                 (language === "Français" ? "MOY. DU PREMIER :" : 
                                  language === "Anglais" ? "TOP MALE AVERAGE:" : 
-                                 "CƐKƆRƆBAW LA HAKƐ:")}
+                                 "KALANDENFƆLƆ KA HAKƐ:")}
                         </div>
                         <div className="text-xl font-bold">{topAverage}</div>
                     </div>
@@ -326,7 +326,7 @@ const BulletinPhysique1 = ({
                         <div className="font-bold mb-2">
                             {language === "Français" ? "CONTACT :" : 
                              language === "Anglais" ? "CONTACT:" : 
-                             "JOSIRAW:"}
+                             "NƐKƐJURUSIRA:"}
                         </div>
                         <div className="text-xl font-bold">
                             {student.parents_contact}

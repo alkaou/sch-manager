@@ -6,9 +6,10 @@ import BulletinCard from './bulletin_components/BulletinCard.jsx';
 import BulletinSettings from './bulletin_components/BulletinSettings.jsx';
 import BulletinFilters from './bulletin_components/BulletinFilters.jsx';
 import BulletinPagination from './bulletin_components/BulletinPagination.jsx';
-import { generateMultipleBulletinsPDF } from './bulletin_utils/BulletinPDFGenerator.js';
+import { generateMultipleBulletinsPDF } from './bulletin_utils/BulletinPDFGenerator';
 import { sortStudentsByAverage, sortStudentsByName } from './bulletin_utils/BulletinMethods';
 import { getClasseName } from "../utils/helpers";
+import { useLanguage } from "./contexts";
 
 const ShowAllBulletin = ({
   selectedComposition,
@@ -41,7 +42,7 @@ const ShowAllBulletin = ({
 
   // Refs
   const containerRef = useRef(null);
-  const printRef = useRef(null);
+  const { language } = useLanguage();
 
   // Styles based on theme
   const bgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-100";
@@ -53,7 +54,8 @@ const ShowAllBulletin = ({
   const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300";
 
   // Get translations based on selected language
-  const t = translations[bulletinLanguage] || translations.Français;
+  // const t = translations[bulletinLanguage] || translations.Français;
+  const live_language = translations[language] || translations.Français;
 
   // Load bulletin data
   useEffect(() => {
@@ -214,7 +216,7 @@ const ShowAllBulletin = ({
           >
             <X size={20} />
           </button>
-          <h2 className={`text-2xl font-bold ${textClass}`}>{t.title}</h2>
+          <h2 className={`text-2xl font-bold ${textClass}`}>{live_language.title}</h2>
           <div className={`px-3 py-1 rounded-full text-sm font-medium ${theme === "dark" ? "bg-blue-900 text-blue-200" : "bg-blue-100 text-blue-800"}`}>
             {selectedComposition?.label} - {getClasseName(className)}
           </div>
@@ -228,7 +230,7 @@ const ShowAllBulletin = ({
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={t.search}
+              placeholder={live_language.search}
               className={`ml-2 bg-transparent outline-none ${textClass} w-40 md:w-60`}
             />
           </div>
@@ -239,7 +241,7 @@ const ShowAllBulletin = ({
             className={`p-2 rounded-lg ${buttonSecondary} ${textClass} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
           >
             <Filter size={18} />
-            <span className="hidden sm:inline">{t.filters}</span>
+            <span className="hidden sm:inline">{live_language.filters}</span>
           </button>
 
           {/* Settings button */}
@@ -248,7 +250,7 @@ const ShowAllBulletin = ({
             className={`p-2 rounded-lg ${buttonSecondary} ${textClass} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
           >
             <Settings size={18} />
-            <span className="hidden sm:inline">{t.settings}</span>
+            <span className="hidden sm:inline">{live_language.settings}</span>
           </button>
 
           {/* Generate PDF button */}
@@ -260,12 +262,12 @@ const ShowAllBulletin = ({
             {generating ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
-                <span>{t.generating}</span>
+                <span>{live_language.generating}</span>
               </>
             ) : (
               <>
                 <Download size={18} />
-                <span>{t.generatePDF}</span>
+                <span>{live_language.generatePDF}</span>
               </>
             )}
           </button>
@@ -286,7 +288,7 @@ const ShowAllBulletin = ({
             setBulletinLanguage={setBulletinLanguage}
             bulletinType={bulletinType}
             setBulletinType={setBulletinType}
-            t={t}
+            t={live_language}
           />
         )}
       </AnimatePresence>
@@ -304,7 +306,7 @@ const ShowAllBulletin = ({
             selectedStudents={selectedStudents}
             filteredStudents={filteredStudents}
             selectAllStudents={selectAllStudents}
-            t={t}
+            t={live_language}
           />
         )}
       </AnimatePresence>
@@ -314,7 +316,7 @@ const ShowAllBulletin = ({
         {loading ? (
           <div className="flex justify-center items-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            <span className={`ml-3 ${textClass} text-lg`}>{t.loading}</span>
+            <span className={`ml-3 ${textClass} text-lg`}>{live_language.loading}</span>
           </div>
         ) : filteredStudents.length === 0 ? (
           <div className={`text-center ${textClass} p-10`}>
@@ -378,9 +380,9 @@ const ShowAllBulletin = ({
       {/* Status bar */}
       <div className={`${headerBgColor} border-t ${borderColor} px-6 py-3 flex justify-between items-center`}>
         <div className={textClass}>
-          <span className="font-medium">{filteredStudents.length}</span> {t.studentsFound}
+          <span className="font-medium">{filteredStudents.length}</span> {live_language.studentsFound}
           {selectedStudents.length > 0 && (
-            <span className="ml-2">• <span className="font-medium">{selectedStudents.length}</span> {t.selected}</span>
+            <span className="ml-2">• <span className="font-medium">{selectedStudents.length}</span> {live_language.selected}</span>
           )}
         </div>
         <div className="flex items-center gap-4">

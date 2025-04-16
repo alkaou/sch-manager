@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Filter, CheckSquare, SortAsc, SortDesc } from 'lucide-react';
 
 const BulletinFilters = ({
-  theme,
   textClass,
   cardBgColor,
   borderColor,

@@ -83,16 +83,44 @@ export const calculateMainPoints = (mainSubjects = [], students, student) => {
 };
 
 // Fonction pour déterminer l'appréciation basée sur la note
-export const getAppreciation = (note) => {
+export const getAppreciation = (note, lang="Français") => {
   if (note === "-") return "-";
   const numNote = parseFloat(note);
-  if (numNote >= 18) return "Excellent";
-  if (numNote >= 16) return "Très-Bien";
-  if (numNote >= 14) return "Bien";
-  if (numNote >= 12) return "Assez-Bien";
-  if (numNote >= 10) return "Passable";
-  if (numNote >= 5) return "Insuffisant";
-  return "Très-Faible";
+  
+  if (numNote >= 18) {
+    return lang === "Français" ? "Excellent" : 
+           lang === "Anglais" ? "Excellent" : 
+           "A Ɲɛnan Kojugun";
+  }
+  if (numNote >= 16) {
+    return lang === "Français" ? "Très-Bien" : 
+           lang === "Anglais" ? "Very Good" : 
+           "A Ɲɛnan Kosɛbɛ";
+  }
+  if (numNote >= 14) {
+    return lang === "Français" ? "Bien" : 
+           lang === "Anglais" ? "Good" : 
+           "A Ɲɛnan";
+  }
+  if (numNote >= 12) {
+    return lang === "Français" ? "Assez-Bien" : 
+           lang === "Anglais" ? "Fairly Good" : 
+           "A Ka Ɲi";
+  }
+  if (numNote >= 10) {
+    return lang === "Français" ? "Passable" : 
+           lang === "Anglais" ? "Satisfactory" : 
+           "A Bɛ Tɛmɛ";
+  }
+  if (numNote >= 5) {
+    return lang === "Français" ? "Insuffisant" : 
+           lang === "Anglais" ? "Insufficient" : 
+           "A Ma Ɲi";
+  }
+  
+  return lang === "Français" ? "Très-Faible" : 
+         lang === "Anglais" ? "Very Poor" : 
+         "A Ka Dɔgɔ Kosɛbɛ";
 };
 
 // Obtenir l'année scolaire actuelle
