@@ -4,6 +4,7 @@ import { gradients } from "../utils/colors";
 import { useLanguage, useFlashNotification } from "./contexts";
 import { getAge, getClasseName, getBornInfos } from "../utils/helpers";
 import { deleteStudent, activateStudent, deactivateStudent } from "../utils/database_methods";
+import ActionConfirmePopup from "./ActionConfirmePopup.jsx";
 
 const StudentsTable = ({
   students,
@@ -29,6 +30,12 @@ const StudentsTable = ({
   // Nouveaux états pour les filtres
   const [filterStatus, setFilterStatus] = useState("actif"); // "All", "actif", "desactif"
   const [filterMatricule, setFilterMatricule] = useState("All"); // "All", "With", "Without"
+
+  // État pour la popup de confirmation
+  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null); // 'delete', 'activate', 'deactivate'
+  const [confirmTitle, setConfirmTitle] = useState("");
+  const [confirmMessage, setConfirmMessage] = useState("");
 
   // Calcul des classes disponibles (uniques et triées ASC)
   const availableClasses = Array.from(new Set(students.map((s) => s.classe))).sort((a, b) =>
@@ -147,14 +154,9 @@ const StudentsTable = ({
     setIsManageClassesActive(true);
   };
 
-  // Suppression des élèves sélectionnés via la méthode deleteStudent importée
-  const handleDeleteSelected = async () => {
-    if (
-      window.confirm(
-        live_language.confirm_delete_selected ||
-        "Êtes-vous sûr de vouloir supprimer les élèves sélectionnés ?"
-      )
-    ) {
+  // Fonction pour gérer les confirmations
+  const handleConfirmAction = async () => {
+    if (confirmAction === 'delete') {
       for (const id of selected) {
         try {
           await deleteStudent(id, database, setFlashMessage);
@@ -162,14 +164,7 @@ const StudentsTable = ({
           console.error("Erreur lors de la suppression de l'étudiant:", err);
         }
       }
-      setSelected([]);
-      await refreshData();
-    }
-  };
-
-  // Activation des élèves sélectionnés
-  const handleActivateSelected = async () => {
-    if (window.confirm("Êtes-vous sûr de vouloir activer les élèves sélectionnés ?")) {
+    } else if (confirmAction === 'activate') {
       for (const id of selected) {
         try {
           await activateStudent(id, database, setFlashMessage);
@@ -177,14 +172,7 @@ const StudentsTable = ({
           console.error("Erreur lors de l'activation de l'étudiant:", err);
         }
       }
-      setSelected([]);
-      await refreshData();
-    }
-  };
-
-  // Désactivation des élèves sélectionnés
-  const handleDeactivateSelected = async () => {
-    if (window.confirm("Êtes-vous sûr de vouloir désactiver les élèves sélectionnés ?")) {
+    } else if (confirmAction === 'deactivate') {
       for (const id of selected) {
         try {
           await deactivateStudent(id, database, setFlashMessage);
@@ -192,9 +180,35 @@ const StudentsTable = ({
           console.error("Erreur lors de la désactivation de l'étudiant:", err);
         }
       }
-      setSelected([]);
-      await refreshData();
     }
+
+    setSelected([]);
+    await refreshData();
+    setShowConfirmPopup(false);
+  };
+
+  // Suppression des élèves sélectionnés
+  const handleDeleteSelected = () => {
+    setConfirmAction('delete');
+    setConfirmTitle(live_language.confirm_delete_title || "Confirmer la suppression");
+    setConfirmMessage(live_language.confirm_delete_selected || "Êtes-vous sûr de vouloir supprimer les élèves sélectionnés ?");
+    setShowConfirmPopup(true);
+  };
+
+  // Activation des élèves sélectionnés
+  const handleActivateSelected = () => {
+    setConfirmAction('activate');
+    setConfirmTitle(live_language.confirm_activate_title || "Confirmer l'activation");
+    setConfirmMessage(live_language.confirm_activate_selected || "Êtes-vous sûr de vouloir activer les élèves sélectionnés ?");
+    setShowConfirmPopup(true);
+  };
+
+  // Désactivation des élèves sélectionnés
+  const handleDeactivateSelected = () => {
+    setConfirmAction('deactivate');
+    setConfirmTitle(live_language.confirm_deactivate_title || "Confirmer la désactivation");
+    setConfirmMessage(live_language.confirm_deactivate_selected || "Êtes-vous sûr de vouloir désactiver les élèves sélectionnés ?");
+    setShowConfirmPopup(true);
   };
 
   // Couleurs et styles de base
@@ -581,46 +595,34 @@ const StudentsTable = ({
                         marginLeft: "35%",
                       }}></div>
                     </td>
-                    <td className="py-1 px-2 text-center">{student.father_name}</td>
-                    <td className="py-1 px-2 text-center">{student.mother_name}</td>
-                    <td className="py-1 px-2 text-center">{student.parents_contact}</td>
+                    <td className="py-1 px-2 text-center">{student.father_name || "-"}</td>
+                    <td className="py-1 px-2 text-center">{student.mother_name || "-"}</td>
+                    <td className="py-1 px-2 text-center">{student.parents_contact || "-"}</td>
                     <td className="py-1 px-2 text-center">
                       {new Date(student.added_at).toLocaleDateString()}
                     </td>
                     <td className="py-1 px-2 text-center">
-                      {new Date(student.updated_at).toLocaleDateString()}
+                      {student.updated_at
+                        ? new Date(student.updated_at).toLocaleDateString()
+                        : "-"}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-          {/* Badge animé affichant le nombre d'élèves sélectionnés */}
-          {selected.length > 0 && (
-            <div className="fixed bottom-8 right-8 z-50">
-              {language === "Français" ?
-                <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
-                                animate-bounce transition-transform duration-300 transform hover:scale-150 hover:shadow-md">
-                  {selected.length} élève{selected.length > 1 ? "s" : ""} sélectionné{selected.length > 1 ? "s" : ""}
-                </div>
-                :
-                language === "Anglais" ?
-                  <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
-                                animate-bounce transition-transform duration-300 transform hover:scale-150 hover:shadow-md">
-                    {selected.length} student{selected.length > 1 ? "s" : ""} selected
-                  </div>
-                  :
-                  <div className="px-4 py-2 bg-green-600 text-white font-semibold rounded-full shadow-lg 
-                                animate-bounce transition-transform duration-300 transform hover:scale-150 hover:shadow-md">
-                    Kaladen {selected.length} sugandi le don
-                  </div>
-              }
-            </div>
-          )}
-
         </div>
       )}
+
+      {/* Un seul popup de confirmation pour toutes les actions */}
+      <ActionConfirmePopup
+        isOpenConfirmPopup={showConfirmPopup}
+        setIsOpenConfirmPopup={setShowConfirmPopup}
+        handleConfirmeAction={handleConfirmAction}
+        title={confirmTitle}
+        message={confirmMessage}
+        actionType={confirmAction === 'delete' ? "danger" : "primary"}
+      />
     </div>
   );
 };

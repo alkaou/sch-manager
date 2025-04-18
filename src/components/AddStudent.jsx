@@ -184,7 +184,7 @@ const AddStudent = ({
     const valid_response = await validateStudents();
     if (!valid_response.valid) {
       const startParticuleErrorText = `Veuillez Vérifier les informations de l'élève ${valid_response.st_id}`;
-      console.log(startParticuleErrorText);
+      // console.log(startParticuleErrorText);
       setParticuleError(startParticuleErrorText);
       return;
     };

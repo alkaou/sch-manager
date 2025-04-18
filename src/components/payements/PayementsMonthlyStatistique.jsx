@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts';
-import { getClasseName } from "../../utils/helpers";
+import { getClasseName, getClasseById } from "../../utils/helpers";
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -32,7 +32,12 @@ ChartJS.register(
   Filler
 );
 
-const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) => {
+const PayementsMonthlyStatistique = ({ 
+  db,
+  theme, 
+  app_bg_color,
+  text_color
+}) => {
   const { language } = useLanguage();
   const [monthlyData, setMonthlyData] = useState([]);
   const [selectedClass, setSelectedClass] = useState('all');
@@ -58,6 +63,7 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
   const months = language === 'Français'
     ? ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
     : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 
   useEffect(() => {
     if (db && db.paymentSystems) {
@@ -121,15 +127,27 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
     }
   }, [db]);
 
+
   // Mettre à jour les classes disponibles lorsque le système de paiement change
+  const all_classes = []; // Mettre à jour les classes.
   useEffect(() => {
-    if (db && db.classes && selectedPaymentSystem) {
+    if (db && selectedPaymentSystem) {
       // Trouver le système de paiement sélectionné
       const paymentSystem = db.paymentSystems.find(system => system.id === selectedPaymentSystem);
 
-      if (paymentSystem && paymentSystem.classes) {
+      db.paymentSystems.map(sys => {
+          sys.classes.map(cls => {
+            const real_classe = getClasseById(db.classes, cls, language);
+            if(!all_classes.includes(real_classe)){
+              all_classes.push(real_classe);
+            }
+          });
+      });
+      // console.log(all_classes);
+
+      if (paymentSystem && paymentSystem.classes && all_classes.length > 0) {
         // Filtrer uniquement les classes qui sont dans le système de paiement
-        const filteredClasses = db.classes
+        const filteredClasses = all_classes
           .filter(cls => paymentSystem.classes.includes(cls.id))
           .sort((a, b) => a.level - b.level);
 
@@ -191,7 +209,7 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
   const calculateMonthlyData = () => {
     setIsLoading(true);
 
-    if (!db || !db.classes || !db.students || !db.paymentSystems || schoolMonths.length === 0) {
+    if (!db || !db.paymentSystems || schoolMonths.length === 0) {
       setMonthlyData([]);
       setIsLoading(false);
       return;
@@ -229,11 +247,11 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
     // Filtrer les classes selon la sélection
     let classesToProcess = [];
     if (selectedClass === 'all') {
-      classesToProcess = db.classes.filter(cls =>
+      classesToProcess = all_classes.filter(cls =>
         paymentSystem.classes && paymentSystem.classes.includes(cls.id)
       );
     } else {
-      classesToProcess = db.classes.filter(cls => cls.id === selectedClass);
+      classesToProcess = all_classes.filter(cls => cls.id === selectedClass);
     }
 
     // Initialiser les données mensuelles basées sur les mois scolaires
@@ -254,22 +272,20 @@ const PayementsMonthlyStatistique = ({ db, theme, app_bg_color, text_color }) =>
 
     // Calculer les statistiques pour chaque classe
     classesToProcess.forEach(cls => {
+
+      // Clé pour les paiements de cette classe
+      const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
+
       // Compter les élèves dans cette classe
-      const studentsInClass = db.students.filter(student =>
-        student.classe === `${cls.level} ${cls.name}`.trim() && student.status === "actif"
-      );
+      // Récupérer les paiements pour cette classe
+      const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
+      const studentsInClass = classPayments;
 
       if (studentsInClass.length === 0) return;
 
       // Frais mensuels et annuels
       const monthlyFee = Number(paymentSystem.monthlyFee);
       const yearlyFee = Number(paymentSystem.yearlyFee || 0);
-
-      // Clé pour les paiements de cette classe
-      const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
-
-      // Récupérer les paiements pour cette classe
-      const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
 
       // Pour chaque mois, calculer les montants attendus et reçus
       monthlyStats.forEach(stat => {

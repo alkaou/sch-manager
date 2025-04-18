@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { getClasseName } from '../../utils/helpers';
+import { getClasseName, getClasseById } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { Calendar, DollarSign, TrendingUp, Users, ArrowLeft, ArrowRight, Filter } from 'lucide-react';
 
@@ -127,7 +127,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
     const calculateMonthlyData = () => {
         setIsLoading(true);
 
-        if (!db || !db.classes || !db.students || !db.paymentSystems || schoolMonths.length === 0 || !selectedSystemGroup) {
+        if (!db || !db.paymentSystems || schoolMonths.length === 0 || !selectedSystemGroup) {
             setMonthlyData([]);
             setIsLoading(false);
             return;
@@ -163,10 +163,22 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
         let expectedTotal = 0;
         let receivedTotal = 0;
 
-        db.classes.forEach(cls => {
+        // console.log(db.paymentSystems);
+        // Récupérer toutes les classes des modes de payement 'paymentSystems'
+        const classes = [];
+        db.paymentSystems.map(sys => {
+            sys.classes.map(cls => {
+                if(!classes.includes(cls)){
+                    classes.push(cls);
+                }
+            });
+        });
+        // console.log(classes);
+
+        classes.forEach(cls => {
             // Trouver le système de paiement actif pour cette classe qui appartient au groupe sélectionné
             const paymentSystem = activeSystems.find(system =>
-                system.classes && system.classes.includes(cls.id)
+                system.classes && system.classes.includes(cls)
             );
 
             if (!paymentSystem) {
@@ -174,9 +186,8 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             }
 
             // Compter les élèves dans cette classe
-            const studentsInClass = db.students.filter(student =>
-                student.classe === `${cls.level} ${cls.name}`.trim() && student.status === "actif"
-            );
+            const the_system = `students_${paymentSystem.id}_${cls}`;
+            const studentsInClass = db.payments[the_system] || [];
 
             if (studentsInClass.length === 0) {
                 return; // Ignorer les classes sans élèves
@@ -191,7 +202,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             const registrationFee = Number(paymentSystem.registrationFee);
 
             // Clé pour les frais d'inscription de cette classe
-            const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls.id}`;
+            const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls}`;
             const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey]
                 ? db.registrationFees[registrationFeeKey]
                 : {};
@@ -210,7 +221,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             expectedTotal += totalExpectedBudget;
 
             // Clé pour les paiements de cette classe
-            const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
+            const paymentKey = `students_${paymentSystem.id}_${cls}`;
 
             // Récupérer les paiements pour cette classe
             const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
@@ -241,12 +252,12 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
             const paymentPercentage = totalExpectedBudget > 0
                 ? Math.round((totalReceivedAmount / totalExpectedBudget) * 100)
                 : 0;
-
+            const this_classe = getClasseById(db.classes, cls, language);
             data.push({
-                id: cls.id,
-                className: getClasseName(`${cls.level} ${cls.name}`, language),
-                level: cls.level,
-                name: cls.name,
+                id: this_classe.id,
+                className: getClasseName(`${this_classe.level} ${this_classe.name}`, language),
+                level: this_classe.level,
+                name: this_classe.name,
                 studentCount: studentsInClass.length,
                 paidStudentCount: paidStudents.length,
                 monthlyFee: monthlyFee,

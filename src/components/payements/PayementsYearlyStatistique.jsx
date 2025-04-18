@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts";
-import { getClasseName } from "../../utils/helpers";
+import { getClasseName, getClasseById } from "../../utils/helpers";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -115,7 +115,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
   const calculateYearlyData = () => {
     setIsLoading(true);
 
-    if (!db || !db.classes || !db.students || !db.paymentSystems || selectedYears.length === 0) {
+    if (!db || !db.paymentSystems || selectedYears.length === 0) {
       setYearlyData([]);
       setComparisonData([]);
       setIsLoading(false);
@@ -155,19 +155,31 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
         }))
       };
 
+      // Récupérer toutes les classes des modes de payement 'paymentSystems'
+      const classes = [];
+      db.paymentSystems.map(sys => {
+          sys.classes.map(cls => {
+              if(!classes.includes(cls)){
+                  classes.push(cls);
+              }
+          });
+      });
+
       // Process each class for this year
-      db.classes.forEach(cls => {
+      classes.forEach(cls => {
         // Find the payment system for this class in the selected year
         const paymentSystem = yearSystems.find(system =>
-          system.classes && system.classes.includes(cls.id)
+          system.classes && system.classes.includes(cls)
         );
 
         if (!paymentSystem) return; // Skip classes without a payment system for this year
 
+        // Key for payments for this class
+        const paymentKey = `students_${paymentSystem.id}_${cls}`;
+        // Get payments for this class
+        const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
         // Count students in this class
-        const studentsInClass = db.students.filter(student =>
-          student.classe === `${cls.level} ${cls.name}`.trim() && student.status === "actif"
-        );
+        const studentsInClass = classPayments;
 
         if (studentsInClass.length === 0) return; // Skip classes without students
 
@@ -188,7 +200,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
         const registrationFee = Number(paymentSystem.registrationFee);
 
         // Key for registration fees for this class
-        const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls.id}`;
+        const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls}`;
         const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey]
           ? db.registrationFees[registrationFeeKey]
           : {};
@@ -210,12 +222,6 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
         yearData.registrationFees += registrationTotal;
         yearData.monthlyFees += monthlyTotal;
         yearData.yearlyFees += yearlyTotal;
-
-        // Key for payments for this class
-        const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
-
-        // Get payments for this class
-        const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
 
         // Calculate total amount received for all months
         let receivedAmount = 0;
@@ -255,12 +261,14 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           ? Math.round((receivedAmount / expectedAmount) * 100)
           : 0;
 
+        const this_classe = getClasseById(db.classes, cls, language);
+
         // Add class stats
         yearData.classeStats.push({
-          id: cls.id,
-          className: getClasseName(`${cls.level} ${cls.name}`, language),
-          level: cls.level,
-          name: cls.name,
+          id: this_classe.id,
+          className: getClasseName(`${this_classe.level} ${this_classe.name}`, language),
+          level: this_classe.level,
+          name: this_classe.name,
           studentCount: studentsInClass.length,
           expectedAmount,
           receivedAmount,

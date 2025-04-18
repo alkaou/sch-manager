@@ -151,7 +151,7 @@ const SideBar = ({
     { icon: <DollarSign size={22} />, label: "Finance", path: "/payements", index: 6 },
     { icon: <BarChart size={22} />, label: "Analytics", path: "/statistiques", index: 7 },
     { icon: <DatabaseIcon size={22} />, label: "Database", path: "/database", index: 8 },
-    { icon: <LucideBookOpenText size={22} />, label: "Read", path: "/read", index: 9 },
+    { icon: <LucideBookOpenText size={22} />, label: "Read", path: "/read", index: 10 },
   ];
 
   // Dynamic colors based on theme
@@ -291,7 +291,7 @@ const SideBar = ({
         </div>
 
         {/* Navigation section */}
-        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 pr-1">
+        <div className="flex-1 overflow-y-auto scrollbar-custom scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 pr-1">
           <nav className="space-y-1.5">
             {navigationItems.map((item) => (
               <motion.button

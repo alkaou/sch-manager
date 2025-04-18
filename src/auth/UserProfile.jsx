@@ -12,7 +12,6 @@ const UserProfile = () => {
   // Theme-based styles
   const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
   const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-800';
-  const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
   const cardBg = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50';
 
   const handleLogout = async () => {

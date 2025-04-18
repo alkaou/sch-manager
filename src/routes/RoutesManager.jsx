@@ -15,7 +15,7 @@ import ThemeProvider from "../providers/ThemeProvider.jsx";
 import FlashNotificationProvider from "../providers/FlashNotificationProvider.jsx";
 import LoaderPageProvider from "../providers/LoaderPageContext.jsx";
 import LanguageProvider from "../providers/LanguageProvider.jsx";
-import { AuthProvider } from "../auth";
+import { AuthProvider, UserProfile } from "../auth";
 
 const RoutesManager = () => {
   return (
@@ -37,6 +37,7 @@ const RoutesManager = () => {
                     <Route path="/statistiques" element={<StatistiquesPage />} />
                     <Route path="/database" element={<DatabasePage />} />
                     <Route path="/read" element={<ReadPage />} />
+                    <Route path="/profile-auth" element={<UserProfile />} />
                   </Route>
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

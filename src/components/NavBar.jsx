@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LogOut, User, Settings, Bell, ChevronDown,
@@ -15,6 +16,8 @@ const Navbar = ({loginModalOpen, setLoginModalOpen}) => {
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, currentUser, logout } = useAuth();
+
+  const navigate = useNavigate();
 
   // Mock notifications for demo
   const [notifications, setNotifications] = useState([
@@ -260,6 +263,7 @@ const Navbar = ({loginModalOpen, setLoginModalOpen}) => {
 
                       <div className="py-1">
                         <button
+                          onClick={() => navigate("/profile-auth")}
                           className={`flex items-center w-full px-4 py-2 text-sm ${textColor} ${hoverBg}`}
                         >
                           <User size={16} className="mr-2" />

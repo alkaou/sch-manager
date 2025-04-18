@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getClasseName } from '../../utils/helpers';
+import { getClasseName, getClasseById } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
-import { Calendar, X, DollarSign, TrendingUp, Users, ArrowLeft, ArrowRight, PieChart, BarChart2, CreditCard, Award } from 'lucide-react';
+import { Calendar, X, DollarSign, TrendingUp, Users, ArrowRight, PieChart } from 'lucide-react';
 
 const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
     const { language } = useLanguage();
     const [yearlyData, setYearlyData] = useState([]);
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-    const [availableYears, setAvailableYears] = useState([]);
     const [availableSchoolYears, setAvailableSchoolYears] = useState([]);
     const [currentSchoolYear, setCurrentSchoolYear] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +22,6 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
     const textColorClass = theme === "dark" ? text_color : "text-gray-700";
     const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
     const selectBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-    const cardHoverEffect = theme === "dark" ? "hover:bg-gray-750" : "hover:bg-gray-50";
 
     useEffect(() => {
         if (db && db.paymentSystems) {
@@ -85,7 +83,6 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
             });
 
             const sortedYears = Array.from(years).sort((a, b) => b - a);
-            setAvailableYears(sortedYears);
         }
     }, [db]);
 
@@ -108,7 +105,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
     const calculateYearlyData = () => {
         setIsLoading(true);
 
-        if (!db || !db.classes || !db.students || !db.paymentSystems) {
+        if (!db || !db.paymentSystems) {
             setYearlyData([]);
             setIsLoading(false);
             return;
@@ -143,10 +140,20 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
         let expectedTotalSum = 0;
         let receivedTotalSum = 0;
 
-        db.classes.forEach(cls => {
+        // Récupérer toutes les classes des modes de payement 'paymentSystems'
+        const classes = [];
+        db.paymentSystems.map(sys => {
+            sys.classes.map(cls => {
+                if (!classes.includes(cls)) {
+                    classes.push(cls);
+                }
+            });
+        });
+
+        classes.forEach(cls => {
             // Trouver le système de paiement pour cette classe dans l'année sélectionnée
             const paymentSystem = selectedYearSystems.find(system =>
-                system.classes && system.classes.includes(cls.id)
+                system.classes && system.classes.includes(cls)
             );
 
             if (!paymentSystem) {
@@ -154,9 +161,8 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
             }
 
             // Compter les élèves dans cette classe
-            const studentsInClass = db.students.filter(student =>
-                student.classe === `${cls.level} ${cls.name}`.trim() && student.status === "actif"
-            );
+            const the_system = `students_${paymentSystem.id}_${cls}`;
+            const studentsInClass = db.payments[the_system] || [];
 
             if (studentsInClass.length === 0) {
                 return; // Ignorer les classes sans élèves
@@ -178,7 +184,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
             const registrationFee = Number(paymentSystem.registrationFee);
 
             // Clé pour les frais d'inscription de cette classe
-            const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls.id}`;
+            const registrationFeeKey = `registration_fee_${paymentSystem.id}_${cls}`;
             const registrationFeeData = db.registrationFees && db.registrationFees[registrationFeeKey]
                 ? db.registrationFees[registrationFeeKey]
                 : {};
@@ -196,7 +202,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
             expectedTotalSum += expectedAmount;
 
             // Clé pour les paiements de cette classe
-            const paymentKey = `students_${paymentSystem.id}_${cls.id}`;
+            const paymentKey = `students_${paymentSystem.id}_${cls}`;
 
             // Récupérer les paiements pour cette classe
             const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
@@ -226,11 +232,13 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                 ? Math.round((receivedAmount / expectedAmount) * 100)
                 : 0;
 
+            const this_classe = getClasseById(db.classes, cls, language);
+
             data.push({
-                id: cls.id,
-                className: getClasseName(`${cls.level} ${cls.name}`, language),
-                level: cls.level,
-                name: cls.name,
+                id: this_classe.id,
+                className: getClasseName(`${this_classe.level} ${this_classe.name}`, language),
+                level: this_classe.level,
+                name: this_classe.name,
                 studentCount: studentsInClass.length,
                 monthlyFee: monthlyFee,
                 monthCount: monthDiff,
@@ -539,7 +547,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                 onClick={() => setShowDetails(false)}
                             >
                                 <motion.div
-                                    className={`${cardBgColor} rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto`}
+                                    className={`${cardBgColor} rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto scrollbar-custom`}
                                     initial={{ scale: 0.9, y: 20 }}
                                     animate={{ scale: 1, y: 0 }}
                                     exit={{ scale: 0.9, y: 20 }}
@@ -634,8 +642,8 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                                 <div className="flex justify-between mb-2">
                                                     <span className={`${textColorClass}`}>Taux de recouvrement:</span>
                                                     <span className={`font-bold ${selectedClass.paymentPercentage >= 70 ? 'text-green-600' :
-                                                            selectedClass.paymentPercentage >= 40 ? 'text-yellow-500' :
-                                                                'text-red-500'
+                                                        selectedClass.paymentPercentage >= 40 ? 'text-yellow-500' :
+                                                            'text-red-500'
                                                         }`}>
                                                         {selectedClass.paymentPercentage}%
                                                     </span>

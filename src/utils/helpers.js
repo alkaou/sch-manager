@@ -108,11 +108,22 @@ const textToUppercase = (text) => {
   return text.toUpperCase();
 }
 
+const getClasseById = (classes, id, lang = "Français") => {
+  const inconnuText = lang === "Français" ? "Inconnu" : lang === "Anglais" ? "Unknow" : "A ma sidɔn";
+  if(!classes || classes.length <= 0 ) return {id:id, level: inconnuText, name: inconnuText};
+  const this_classe = classes.find(cls => {
+    return cls.id === id;
+  });
+  if (!this_classe) return {id:id, level: inconnuText, name: inconnuText};
+  return this_classe;
+}
+
 export { 
   getFormattedDateTime,
   getAge, getDateTime,
   getClasseName, delay,
   areArraysEqual, getBornInfos,
-  textToUppercase
+  textToUppercase,
+  getClasseById
 }
 
