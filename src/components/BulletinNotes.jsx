@@ -13,6 +13,7 @@ const BulletinNotes = ({
   selectedClass,
   db,
   textClass,
+  app_bg_color,
   theme,
   getClasseName,
   handleCloseComponent,
@@ -43,15 +44,14 @@ const BulletinNotes = ({
   const coefDropdownRef = useRef(null);
 
   // Styles conditionnels
-  const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const tableHeaderBg = theme === "dark" ? "bg-gray-700" : "bg-blue-50";
-  const tableSubHeaderBg = theme === "dark" ? "bg-gray-600" : "bg-blue-100";
-  const tableRowHoverBg = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-blue-50";
+  const tableBgColor = `${app_bg_color} ${textClass}`;
+  const tableHeaderBg = `${app_bg_color} ${textClass}`;
+  const tableSubHeaderBg = `${app_bg_color} ${textClass}`;
+  const tableRowHoverBg = "hover:bg-opacity-80";
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
-  const cellBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
-  const cellActiveBgColor = theme === "dark" ? "bg-blue-700" : "bg-blue-100";
-  const dropdownBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const dropdownHoverBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-blue-50";
+  const cellActiveBgColor = "bg-white text-gray-700";
+  const dropdownBgColor = theme === "dark" ? tableBgColor : "bg-gray-50 text-gray-700";
+  const dropdownHoverBgColor = theme === "dark" ? tableBgColor : "bg-gray-50 text-gray-700";
 
   // Générer les options pour les notes
   const wholeNumberOptions = Array.from({ length: 21 }, (_, i) => i);
@@ -452,7 +452,7 @@ const BulletinNotes = ({
 
   return (
     <motion.div
-      className={`${textClass} fixed inset-0 z-50 overflow-hidden bg-black bg-opacity-50 flex items-center justify-center`}
+      className={`${textClass} ${app_bg_color} fixed inset-0 z-50 overflow-hidden bg-black bg-opacity-50 flex items-center justify-center`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -469,12 +469,6 @@ const BulletinNotes = ({
         {/* En-tête global */}
         <div
           className="sticky top-0 z-10 bg-opacity-95 p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-          style={{
-            backgroundColor:
-              theme === "dark"
-                ? "rgba(31, 41, 55, 0.95)"
-                : "rgba(255, 255, 255, 0.95)",
-          }}
         >
           <div>
             <h3 className="text-xl font-semibold mb-2">
@@ -501,7 +495,7 @@ const BulletinNotes = ({
               <select
                 value={sortType}
                 onChange={(e) => setSortType(e.target.value)}
-                className={`px-3 py-2 rounded border ${tableBorderColor} ${cellBgColor} ${textClass} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-3 py-2 rounded border ${tableBorderColor} ${dropdownBgColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
                 <option value="default">Tri par défaut</option>
                 <option value="alpha">Tri alphabétique</option>

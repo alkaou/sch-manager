@@ -17,6 +17,7 @@ const ShowAllBulletin = ({
   db,
   theme,
   textClass,
+  app_bg_color,
   handleCloseComponent,
   school_name,
   school_short_name,
@@ -45,7 +46,7 @@ const ShowAllBulletin = ({
   const { language } = useLanguage();
 
   // Styles based on theme
-  const bgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-100";
+  const bgColor = `${app_bg_color} ${textClass}`;
   const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
   const headerBgColor = theme === "dark" ? "bg-gray-800 bg-opacity-90" : "bg-white bg-opacity-90";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
@@ -312,7 +313,7 @@ const ShowAllBulletin = ({
       </AnimatePresence>
 
       {/* Main content */}
-      <div className="flex-1 overflow-auto p-6">
+      <div className="flex-1 overflow-auto p-6 scrollbar-custom">
         {loading ? (
           <div className="flex justify-center items-center h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>

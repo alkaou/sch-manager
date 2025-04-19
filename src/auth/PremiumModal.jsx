@@ -3,11 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check, Crown, AlertCircle } from 'lucide-react';
 import { useTheme } from '../components/contexts';
 import { useAuth } from './AuthContext';
+import AlertPopup from '../components/AlertPopup.jsx';
 
 const PremiumModal = ({ isOpen, onClose }) => {
   const { theme } = useTheme();
   const { isAuthenticated, currentUser } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState('monthly');
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
   
   // Theme-based styles
   const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -59,9 +62,15 @@ const PremiumModal = ({ isOpen, onClose }) => {
   // Handle subscription
   const handleSubscribe = () => {
     // Here you would implement your payment processing logic
-    // For now, we'll just close the modal
-    alert(`Subscription to ${selectedPlan} plan initiated. This would connect to a payment processor in production.`);
-    onClose();
+    // Show custom alert popup instead of using alert()
+    setAlertMessage(`Subscription to ${selectedPlan} plan initiated. This would connect to a payment processor in production.`);
+    setIsAlertOpen(true);
+  };
+  
+  // Handle alert close
+  const handleAlertClose = () => {
+    setIsAlertOpen(false);
+    onClose(); // Close the modal after alert is dismissed
   };
   
   return (
@@ -175,6 +184,14 @@ const PremiumModal = ({ isOpen, onClose }) => {
               </div>
             </motion.div>
           </motion.div>
+          
+          {/* Custom Alert Popup */}
+          <AlertPopup 
+            isOpenAlertPopup={isAlertOpen}
+            setIsOpenAlertPopup={handleAlertClose}
+            title="Subscription Initiated"
+            message={alertMessage}
+          />
         </>
       )}
     </AnimatePresence>

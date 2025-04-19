@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Plus, Trash, Check, X, Save } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
 import { useLanguage, useFlashNotification } from "./contexts.js";
+import { gradients } from '../utils/colors.js';
 
 const CreateBulletin = ({
     selectedComposition,
@@ -10,6 +11,8 @@ const CreateBulletin = ({
     language,
     db,
     textClass,
+    app_bg_color,
+    theme,
     getClasseName,
     handleCloseComponent,
     refreshData
@@ -329,6 +332,11 @@ const CreateBulletin = ({
 
     const authorizedSections = getAuthorizedSections();
 
+    const inputBgColor = theme === "dark" || app_bg_color === gradients[1] || 
+                app_bg_color === gradients[2] ? `${app_bg_color} ${textClass} bg-opacity-50` : 
+                "bg-gray-700 text-white bg-opacity-70"
+    
+
     return (
         <div className={`${textClass}`}>
             <div className="mb-6">
@@ -482,7 +490,7 @@ const CreateBulletin = ({
                             </div>
                         )}
                         {!deleteMode && (
-                            <div className="p-3 border rounded bg-gray-50">
+                            <div className={`p-3 border rounded ${app_bg_color} ${textClass}`}>
                                 <h5 className="font-medium mb-2">Ajouter une matière personnalisée</h5>
                                 <div className="flex flex-col md:flex-row gap-2">
                                     <div className="flex-grow">
@@ -491,14 +499,14 @@ const CreateBulletin = ({
                                             value={customSubject.name}
                                             onChange={(e) => setCustomSubject({ ...customSubject, name: e.target.value })}
                                             placeholder="Nom de la matière"
-                                            className="w-full px-3 py-2 border rounded"
+                                            className={`${inputBgColor} w-full px-3 py-2 border rounded`}
                                         />
                                     </div>
                                     <div>
                                         <select
                                             value={customSubject.coefficient}
                                             onChange={(e) => setCustomSubject({ ...customSubject, coefficient: parseFloat(e.target.value) })}
-                                            className="w-full px-3 py-2 border rounded"
+                                            className={`${inputBgColor} w-full px-3 py-2 border rounded bg-opacity-50`}
                                         >
                                             {coefficients.map((coef) => (
                                                 <option key={coef} value={coef}>Coef. {coef}</option>

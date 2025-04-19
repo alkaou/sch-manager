@@ -10,6 +10,7 @@ import PayementsPage from "../pages/PayementsPage.jsx";
 import StatistiquesPage from "../pages/StatistiquesPage.jsx";
 import ReadPage from "../pages/ReadPage.jsx";
 import DatabasePage from "../pages/DatabasePage.jsx";
+import HelpersPage from "../pages/HelpersPage.jsx";
 import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
 import ThemeProvider from "../providers/ThemeProvider.jsx";
 import FlashNotificationProvider from "../providers/FlashNotificationProvider.jsx";
@@ -37,6 +38,7 @@ const RoutesManager = () => {
                     <Route path="/statistiques" element={<StatistiquesPage />} />
                     <Route path="/database" element={<DatabasePage />} />
                     <Route path="/read" element={<ReadPage />} />
+                    <Route path="/helpers" element={<HelpersPage />} />
                     <Route path="/profile-auth" element={<UserProfile />} />
                   </Route>
                   <Route path="*" element={<Navigate to="/" />} />

@@ -11,8 +11,6 @@ const BulletinPhysique1 = ({
     mainSubjects,
     secondarySubjects,
     printRef,
-    tableBgColor,
-    textClass,
     tableRowBg,
     tableRowAltBg,
     mainCoefficients,
@@ -61,7 +59,7 @@ const BulletinPhysique1 = ({
     return (
         <div
             ref={printRef}
-            className={`${tableBgColor} ${textClass} p-4 rounded-lg shadow-lg print:shadow-none print:p-0`}
+            className={`bg-white text-gray-700 p-4 rounded-lg shadow-lg print:shadow-none print:p-0`}
         >
             {/* En-tête du bulletin */}
             <div className="border-2 border-black">

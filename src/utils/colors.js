@@ -2,16 +2,16 @@ import secureLocalStorage from "react-secure-storage";
 
 const BG_COLORS = {
     light: "bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white",
-    dark: "bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white",
+    dark: "bg-gray-900 text-white",
 }
 
 const APP_TEXT_COLORS = {
-    light: "black-500",
-    dark: "white",
+    light: "text-black-500",
+    dark: "text-white",
 }
 
 const checkThemeForBgColor = () => {
-    // secureLocalStorage.removeItem("ThemeColorSelect")
+    // secureLocalStorage.removeItem("ThemeColorSelect");
     let BgColorSelected = secureLocalStorage.getItem("ThemeColorSelect");
     if (BgColorSelected === undefined || BgColorSelected === null) {
         secureLocalStorage.setItem("ThemeColorSelect", BG_COLORS);

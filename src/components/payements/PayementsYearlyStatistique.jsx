@@ -50,7 +50,6 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
 
   // Styles based on theme
   const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const headerBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
   const textColorClass = theme === "dark" ? text_color : "text-gray-700";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
   const selectBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
@@ -680,13 +679,13 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
       transition={{ duration: 0.5 }}
     >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h2 className={`text-2xl font-bold ${textColorClass}`}>Statistiques Annuelles des Paiements</h2>
+        <h2 className={`text-2xl font-bold ${text_color}`}>Statistiques Annuelles des Paiements</h2>
 
         <div className="flex flex-wrap gap-3">
           <div className="flex flex-col">
             <div className="flex items-center mb-2">
-              <Calendar className={`h-5 w-5 mr-2 ${textColorClass}`} />
-              <span className={`text-sm font-medium ${textColorClass}`}>Années scolaires</span>
+              <Calendar className={`h-5 w-5 mr-2 ${text_color}`} />
+              <span className={`text-sm font-medium ${text_color}`}>Années scolaires</span>
             </div>
             <div className="flex flex-wrap gap-2 max-w-md">
               {availableYears.map(year => (
@@ -731,7 +730,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           </div>
 
           <div className="flex items-center">
-            <Filter className={`h-5 w-5 mr-2 ${textColorClass}`} />
+            <Filter className={`h-5 w-5 mr-2 ${text_color}`} />
             <select
               value={comparisonMetric}
               onChange={(e) => setComparisonMetric(e.target.value)}
@@ -747,7 +746,7 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
           </div>
 
           <div className="flex items-center">
-            <BarChart2 className={`h-5 w-5 mr-2 ${textColorClass}`} />
+            <BarChart2 className={`h-5 w-5 mr-2 ${text_color}`} />
             <select
               value={chartType}
               onChange={(e) => setChartType(e.target.value)}

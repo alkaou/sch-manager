@@ -221,6 +221,7 @@ const StudentsTable = ({
   // Enhanced styling for expert view
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const tableHeaderBg = theme === "dark" ? "bg-gray-800" : head_bg_color;
+  const table_head_text_color = app_bg_color === gradients[2] ? "text-white" : text_color;
 
   const controlsPanelBg = theme === "dark"
     ? `${app_bg_color} border`
@@ -476,7 +477,7 @@ const StudentsTable = ({
               }}
             >
               <thead
-                className={`sticky -top-5 ${tableHeaderBg} ${text_color} shadow-lg`}
+                className={`sticky -top-5 ${tableHeaderBg} ${table_head_text_color} shadow-lg`}
                 style={{
                   borderWidth: "2px",
                   borderRadius: 10,

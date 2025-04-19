@@ -102,6 +102,8 @@ const AdvancedLayout = () => {
       <Navbar
         loginModalOpen={loginModalOpen}
         setLoginModalOpen={setLoginModalOpen}
+        setIsShowParameters={setIsShowParameters}
+        setIsOpenPopup={setIsOpenPopup}
       />
 
       {/* Sidebar */}

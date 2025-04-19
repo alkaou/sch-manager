@@ -34,8 +34,7 @@ ChartJS.register(
 
 const PayementsMonthlyStatistique = ({ 
   db,
-  theme, 
-  app_bg_color,
+  theme,
   text_color
 }) => {
   const { language } = useLanguage();
@@ -547,11 +546,11 @@ const PayementsMonthlyStatistique = ({
       transition={{ duration: 0.5 }}
     >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-        <h2 className={`text-2xl font-bold ${textColorClass}`}>Statistiques Mensuelles des Paiements</h2>
+        <h2 className={`text-2xl font-bold ${text_color}`}>Statistiques Mensuelles des Paiements</h2>
 
         <div className="flex flex-wrap gap-3">
           <div className="flex items-center">
-            <Calendar className={`h-5 w-5 mr-2 ${textColorClass}`} />
+            <Calendar className={`h-5 w-5 mr-2 ${text_color}`} />
             <select
               value={currentSchoolYear}
               onChange={(e) => setCurrentSchoolYear(e.target.value)}
@@ -564,7 +563,7 @@ const PayementsMonthlyStatistique = ({
           </div>
 
           <div className="flex items-center">
-            <Filter className={`h-5 w-5 mr-2 ${textColorClass}`} />
+            <Filter className={`h-5 w-5 mr-2 ${text_color}`} />
             <select
               value={selectedPaymentSystem}
               onChange={(e) => setSelectedPaymentSystem(e.target.value)}
@@ -577,7 +576,7 @@ const PayementsMonthlyStatistique = ({
           </div>
 
           <div className="flex items-center">
-            <Filter className={`h-5 w-5 mr-2 ${textColorClass}`} />
+            <Filter className={`h-5 w-5 mr-2 ${text_color}`} />
             <select
               value={selectedClass}
               onChange={(e) => setSelectedClass(e.target.value)}
@@ -590,7 +589,7 @@ const PayementsMonthlyStatistique = ({
           </div>
 
           <div className="flex items-center">
-            <BarChart2 className={`h-5 w-5 mr-2 ${textColorClass}`} />
+            <BarChart2 className={`h-5 w-5 mr-2 ${text_color}`} />
             <select
               value={chartType}
               onChange={(e) => setChartType(e.target.value)}

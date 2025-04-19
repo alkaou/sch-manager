@@ -23,7 +23,7 @@ const ColorsSelector = ({ OpenThePopup }) => {
     const select_this_color = () => {
         const BG_COLORS = {
             light: selectedColor,
-            dark: "bg-gradient-to-r from-gray-800 via-gray-900 to-black",
+            dark: "bg-gray-900 text-white",
         }
         // console.log(BG_COLORS);
         setThemeColor(BG_COLORS);

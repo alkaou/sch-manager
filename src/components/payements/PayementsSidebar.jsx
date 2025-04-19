@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getClasseName, delay } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
+import { gradients } from '../../utils/colors';
 
 const PayementsSidebar = ({
   db,
@@ -20,6 +21,34 @@ const PayementsSidebar = ({
   const [expandedSystems, setExpandedSystems] = useState({});
   const [sortMethod, setSortMethod] = useState("date-desc"); // name-asc
   const [searchTerm, setSearchTerm] = useState("");
+  const [isYearExpired, setIsYearExpired] = useState([]);
+
+  // Apply the color logic you provided
+  const _text_color = text_color;
+
+  // Enhanced styling variables
+  const sidebarBgColor = app_bg_color;
+
+
+  const inputBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+  const inputTextColor = theme === "dark" ? _text_color : "text-gray-700";
+  const inputBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
+  const expiredBadgeBgColor = theme === "dark" ? "bg-red-900" : "bg-red-100";
+  const expiredBadgeTextColor = theme === "dark" ? "text-red-200" : "text-red-800";
+
+  const isWhiteOrGray = app_bg_color === gradients[1] || app_bg_color === gradients[2] ? true : false;
+
+  const activeClassBgColor = theme === "dark"
+    ? "bg-gradient-to-r from-blue-700 to-indigo-800"
+    : "bg-gradient-to-r from-blue-500 to-indigo-600";
+
+  const borderColor = app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "border-gray-400" : "border-white";
+
+  const buttonBgColor = theme === "dark"
+    ? "bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800"
+    : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700";
+
+  const cardShadow = "shadow-lg hover:shadow-xl transition-shadow duration-300";
 
   useEffect(() => {
     if (db && db.paymentSystems) {
@@ -36,11 +65,26 @@ const PayementsSidebar = ({
     }
   }, [db]);
 
+  // Check for expired years whenever paymentSystems changes
+  useEffect(() => {
+    if (paymentSystems && paymentSystems.length > 0) {
+      const expiredSystems = [];
+      paymentSystems.forEach(system => {
+        const endDate = new Date(system.endDate);
+        const currentDate = new Date();
+        if (endDate < currentDate) {
+          expiredSystems.push(system.id);
+        }
+      });
+      setIsYearExpired(expiredSystems);
+    }
+  }, [paymentSystems]);
+
   // Fonction pour compter les élèves dans une classe
   const countStudentsInClass = (className, classId, systemId) => {
     const the_system = `students_${systemId}_${classId}`;
     const sys_students = db.payments[the_system] || [];
-    if(sys_students && sys_students.length > 0){
+    if (sys_students && sys_students.length > 0) {
       return sys_students.length;
     }
     if (!db || !db.students) return 0;
@@ -85,98 +129,106 @@ const PayementsSidebar = ({
   // Vérifier si des systèmes de paiement existent
   const hasPaymentSystems = db?.paymentSystems && db.paymentSystems.length > 0;
 
-  // Styles en fonction du thème
-  const sidebarBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
-  const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
-  const inputTextColor = theme === "dark" ? text_color : "text-gray-600";
-  const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-  const activeClassBgColor = theme === "dark" ? "bg-blue-700" : "bg-blue-500";
-  const hoverClassBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200";
-  const borderRightColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
-  const buttonBgColor = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
-  const systemHeaderBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-  const systemHeaderHoverBgColor = theme === "dark" ? "hover:bg-gray-600" : "hover:bg-gray-200";
-  const cardBgColor = theme === "dark" ? "bg-gray-750" : "bg-white";
-  const cardBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-
   return (
-    <div className={`h-full ${sidebarBgColor} overflow-hidden flex flex-col border-b-2 border-r-2 ${borderRightColor} shadow-md`}>
-      <div className="p-4 border-b border-gray-700">
-        <h2 className={`text-xl mt-1 font-bold ${text_color} mb-4`}>Systèmes de paiement</h2>
+    <div className={`h-full ${sidebarBgColor} overflow-hidden flex flex-col border-b border-r border-r-2 ${borderColor} rounded-lg`}>
+      {/* Header Section with Glass Effect */}
+      <div className={`backdrop-filter backdrop-blur-sm bg-opacity-90 p-5 border-b ${borderColor}`}>
+        <h2 className={`text-xl font-bold ${_text_color} mb-4 flex items-center`}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Systèmes de paiement
+        </h2>
 
         {hasPaymentSystems && (
           <>
-            {/* Barre de recherche */}
-            <div className="mb-4">
+            {/* Barre de recherche avec design amélioré */}
+            <div className="mb-4 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
               <input
                 type="text"
                 placeholder="Rechercher un système..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                className={`w-full pl-10 pr-4 py-2.5 rounded-lg ${inputBgColor} ${inputTextColor} border ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200`}
               />
             </div>
 
-            {/* Options de tri */}
+            {/* Options de tri avec design amélioré */}
             <div className="mb-2">
-              <label className={`block ${text_color} mb-1 text-sm`}>Trier par:</label>
-              <select
-                value={sortMethod}
-                onChange={(e) => setSortMethod(e.target.value)}
-                className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-              >
-                <option value="date-desc">Date (récent → ancien)</option>
-                <option value="name-asc">Nom (A-Z)</option>
-                <option value="name-desc">Nom (Z-A)</option>
-                <option value="date-asc">Date (ancien → récent)</option>
-              </select>
+              <label className={`block ${_text_color} mb-1.5 text-sm font-medium`}>Trier par:</label>
+              <div className="relative">
+                <select
+                  value={sortMethod}
+                  onChange={(e) => setSortMethod(e.target.value)}
+                  className={`w-full pl-4 pr-10 py-2.5 rounded-lg appearance-none ${inputBgColor} ${inputTextColor} border ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200`}
+                >
+                  <option value="date-desc">Date (récent → ancien)</option>
+                  <option value="name-asc">Nom (A-Z)</option>
+                  <option value="name-desc">Nom (Z-A)</option>
+                  <option value="date-asc">Date (ancien → récent)</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </>
         )}
       </div>
 
-      {/* Liste des systèmes de paiement ou message */}
-      <div className="flex-1 overflow-y-auto scrollbar-custom p-2">
+      {/* Liste des systèmes de paiement avec design amélioré */}
+      <div className="flex-1 overflow-y-auto scrollbar-custom scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent p-4">
         {!hasPaymentSystems ? (
-          <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className={`${text_color} font-medium mb-2`}>Aucun système de paiement configuré</p>
-            <p className={`${text_color} opacity-70 mb-4 text-sm`}>
+          <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+            <div className={`p-4 rounded-full ${theme === "dark" ? "bg-gray-800" : "bg-blue-100"} mb-4`}>
+              <svg xmlns="http://www.w3.org/2000/svg" className={`h-14 w-14 ${theme === "dark" ? "text-blue-400" : "text-blue-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <p className={`${_text_color} font-semibold text-lg mb-2`}>Aucun système de paiement configuré</p>
+            <p className={`${_text_color} opacity-80 mb-6 text-sm max-w-xs`}>
               Veuillez configurer votre système de paiement pour voir les classes.
             </p>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setActiveTab(0)} // Rediriger vers l'onglet de configuration
-              className={`px-4 py-2 rounded ${buttonBgColor} text-white`}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setActiveTab(0)}
+              className={`px-6 py-2.5 rounded-lg ${buttonBgColor} text-white font-medium shadow-md`}
             >
               Configurer les paiements
             </motion.button>
           </div>
         ) : filteredPaymentSystems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full p-4 text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            <p className={`${text_color} font-medium mb-2`}>Aucun système trouvé</p>
-            <p className={`${text_color} opacity-70 mb-4 text-sm`}>
+          <div className="flex flex-col items-center justify-center h-full p-6 text-center">
+            <div className={`p-4 rounded-full ${theme === "dark" ? "bg-gray-800" : "bg-blue-100"} mb-4`}>
+              <svg xmlns="http://www.w3.org/2000/svg" className={`h-14 w-14 ${theme === "dark" ? "text-blue-400" : "text-blue-500"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </div>
+            <p className={`${_text_color} font-semibold text-lg mb-2`}>Aucun système trouvé</p>
+            <p className={`${_text_color} opacity-80 mb-6 text-sm max-w-xs`}>
               {searchTerm ? "Aucun système ne correspond à votre recherche." : "Veuillez ajouter des systèmes de paiement."}
             </p>
             {!searchTerm && (
               <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setActiveTab(0)} // Rediriger vers l'onglet de configuration
-                className={`px-4 py-2 rounded ${buttonBgColor} text-white`}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={() => setActiveTab(0)}
+                className={`px-6 py-2.5 rounded-lg ${buttonBgColor} text-white font-medium shadow-md`}
               >
                 Configurer les paiements
               </motion.button>
             )}
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className={`space-y-5 ${sidebarBgColor}`}>
             {filteredPaymentSystems.map((system) => {
               // Get classes for this payment system
               const _systemClasses = db?.classes?.filter(cls =>
@@ -187,81 +239,89 @@ const PayementsSidebar = ({
               return (
                 <div
                   key={system.id}
-                  className={`rounded-lg overflow-hidden shadow-md transition-all duration-300 ${expandedSystems[system.id]
+                  className={`rounded-xl overflow-hidden ${cardShadow} transition-all duration-300 ${expandedSystems[system.id]
                     ? 'border-l-4 border-blue-500'
-                    : `border ${cardBorderColor} hover:border-blue-400`
-                    }`}
-                  style={{
-                    backgroundColor: theme === "dark" ? "#1f2937" : "#ffffff"
-                  }}
+                    : `${isWhiteOrGray || theme === "dark" ? "border-2 border-gray-300" : "border-2 border-white"}`
+                    } `}
                 >
-                  {/* Header section with system name as title */}
-                  <div className={`w-full px-4 py-3 ${expandedSystems[system.id] ? 'bg-blue-50 dark:bg-gray-700' : ''}`}>
-                    <div className={`font-bold text-lg mb-1 ${expandedSystems[system.id]
-                      ? theme === "dark" ? 'text-blue-300' : 'text-blue-700'
-                      : text_color
-                      }`}>
+                  {/* Header section with system name as title - Glass morphism effect */}
+                  <div 
+                    className={`
+                      w-full px-2 py-2 ${sidebarBgColor} 
+                      ${expandedSystems[system.id]}
+                      ${isWhiteOrGray || theme === "dark" ? "border-2 border-gray-300" : "border-2 border-white"}
+                      ${isWhiteOrGray ? "hover:bg-green-50" : theme === "dark" ? "hover:bg-gray-700" : ""
+                    }`}
+                  >
+
+                    {isYearExpired.includes(system.id) && (
+                      <span className={`px-2 rounded-full text-xs font-medium ${expiredBadgeBgColor} ${expiredBadgeTextColor}`}>
+                        Année Scolaire Expirée
+                      </span>
+                    )}
+
+                    <div className={`font-bold text-lg mb-1 ${_text_color} ${expandedSystems[system.id]}`}>
                       {system.name}
                     </div>
 
-                    {/* Button section with details */}
+                    {/* Button section with details - Enhanced with better spacing and icons */}
                     <motion.button
                       onClick={() => toggleExpanded(system.id)}
                       className={`w-full text-left 
                         flex justify-between items-center transition-all duration-300
-                        py-2 rounded-md ${expandedSystems[system.id] ? 'bg-opacity-10' : ''}
+                        py-2.5 rounded-lg ${expandedSystems[system.id] ? 'bg-opacity-10' : ''}
                       `}
-                      whileHover={{
-                        backgroundColor: expandedSystems[system.id]
-                          ? theme === "dark" ? "rgba(75, 85, 99, 0.3)" : "rgba(219, 234, 254, 0.5)"
-                          : theme === "dark" ? "rgba(75, 85, 99, 0.3)" : "rgba(229, 231, 235, 0.5)"
-                      }}
                     >
-                      <div className="flex items-center">
-                        <div className={`mr-3 p-2 rounded-full ${expandedSystems[system.id]
-                          ? theme === "dark" ? 'bg-blue-600' : 'bg-blue-500'
-                          : theme === "dark" ? 'bg-gray-600' : 'bg-gray-200'
-                          } transition-colors duration-300`}>
-                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id] ? 'text-white' : theme === "dark" ? 'text-gray-300' : 'text-gray-600'
+                      <div className="flex items-center mr-1">
+                        <div className={`mr-3 p-2.5 rounded-full ${expandedSystems[system.id]
+                          ? theme === "dark"
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-700'
+                            : 'bg-gradient-to-r from-blue-500 to-indigo-600'
+                          : theme === "dark"
+                            ? 'bg-gradient-to-r from-blue-600 to-indigo-600'
+                            : 'bg-gradient-to-r from-blue-500 to-indigo-500'
+                          } transition-colors duration-300 shadow-sm`}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id] ? 'text-white' : theme === "dark" ? 'text-gray-200' : 'text-gray-200'
                             }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-xs opacity-80">
+                          <span className={`text-xs ${_text_color} font-medium`}>
                             {new Date(system.startDate).toLocaleDateString()} - {new Date(system.endDate).toLocaleDateString()}
                           </span>
                         </div>
                       </div>
                       <div className="flex items-center">
-                        <div className={`px-2 py-1 rounded-full text-center text-xs font-medium mr-3 ${expandedSystems[system.id]
-                          ? theme === "dark" ? 'bg-blue-800 text-blue-200' : 'bg-blue-100 text-blue-800'
-                          : theme === "dark" ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700 border border-gray-300'
-                          }`}>
-                          {systemClasses.length} classes
+
+                        {/* Nombre de classe par système */}
+                        <div className='px-1'>
+                          <div className={`
+                            py-1.5 px-1 rounded-full text-center text-xs 
+                            font-medium mr-3 bg-gradient-to-r from-blue-600 to-indigo-700 
+                            text-white
+                          `}>
+                            {systemClasses.length} classes
+                          </div>
                         </div>
+
                         <motion.div
                           initial={{ rotate: 0 }}
                           animate={{
                             rotate: expandedSystems[system.id] ? 180 : 0,
                             backgroundColor: expandedSystems[system.id]
-                              ? theme === "dark" ? 'rgba(37, 99, 235, 0.5)' : 'rgba(219, 234, 254, 1)'
+                              ? theme === "dark" ? 'rgba(37, 99, 235, 0.3)' : 'rgba(219, 234, 254, 1)'
                               : 'rgba(0, 0, 0, 0)'
                           }}
                           transition={{ duration: 0.3 }}
-                          className={`p-1 rounded-full ${expandedSystems[system.id]
-                            ? theme === "dark" ? 'bg-blue-800' : 'bg-blue-100'
+                          className={`p-1.5 rounded-full ${expandedSystems[system.id]
+                            ? theme === "dark" ? 'bg-blue-800/30' : 'bg-blue-100'
                             : ''
                             }`}
-                          style={{
-                            backgroundColor: expandedSystems[system.id]
-                              ? theme === "dark" ? 'rgba(37, 99, 235, 0.5)' : 'rgba(219, 234, 254, 1)'
-                              : 'rgba(0, 0, 0, 0)'
-                          }}
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${expandedSystems[system.id]
-                            ? theme === "dark" ? 'text-blue-200' : 'text-blue-600'
-                            : text_color
+                            ? theme === "dark" ? 'text-blue-300' : 'text-blue-600'
+                            : _text_color
                             }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
@@ -277,20 +337,20 @@ const PayementsSidebar = ({
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className={`overflow-hidden ${theme === "dark" ? 'bg-gray-800' : 'bg-white'}`}
+                        className={`overflow-hidden ${theme === "dark" ? 'bg-gray-800/80' : 'bg-gray-50/80'}`}
                       >
-                        <div className={`p-3 space-y-2 ${theme === "dark" ? 'border-t border-gray-700' : 'border-t border-gray-200'}`}>
+                        <div className={`p-4 space-y-2.5 ${theme === "dark" ? 'border-t border-gray-700' : 'border-t border-gray-200'}`}>
                           {systemClasses.length === 0 ? (
-                            <div className={`text-center ${text_color} opacity-70 py-4 flex flex-col items-center`}>
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <div className={`text-center ${_text_color} opacity-80 py-5 flex flex-col items-center rounded-lg ${app_bg_color}`}>
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                               </svg>
-                              <p className="text-sm">
+                              <p className="text-sm font-medium">
                                 Aucune classe associée à ce système. Vous avez dû supprimer des classes.
                               </p>
                             </div>
                           ) : (
-                            <div className="grid grid-cols-1 gap-2">
+                            <div className="grid grid-cols-1 gap-3">
                               {systemClasses.map((cls) => {
                                 const className = `${cls.level} ${cls.name}`.trim();
                                 const isActive = selectedClass && selectedClass.id === cls.id
@@ -308,11 +368,9 @@ const PayementsSidebar = ({
                                       onClick={() => {
                                         if (selectedClass?.id === cls.id && selectedPaymentSystem?.id === system.id) return;
                                         if (selectedClass?.id === cls.id) {
-                                          // console.log(system);
                                           setSelectedClass(null);
                                           setSelectedPaymentSystem(null);
                                           delay(500).then(() => {
-                                            // console.log("hello");
                                             setSelectedClass(cls);
                                             setSelectedPaymentSystem(system);
                                             if (!isActive) setActiveTab(-1);
@@ -323,18 +381,19 @@ const PayementsSidebar = ({
                                         setSelectedPaymentSystem(system);
                                         if (!isActive) setActiveTab(-1);
                                       }}
-                                      className={`w-full text-left px-4 py-3 rounded-lg flex justify-between items-center transition-all duration-200 ${isActive
-                                        ? `${activeClassBgColor} text-white shadow-md`
-                                        : `${theme === "dark" ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-300 hover:bg-gray-400'} ${text_color}`
+                                      className={`w-full text-left px-4 py-3.5 rounded-lg flex justify-between items-center transition-all duration-200 ${isActive
+                                        ? `${activeClassBgColor} text-white shadow-md border-2 border-white`
+                                        : `${isWhiteOrGray || theme === "dark" ? "border-2" : "border-2 border-white"} 
+                                            ${isWhiteOrGray ? "hover:bg-green-50" : theme === "dark" ? "hover:bg-gray-700" : ""} 
+                                            ${_text_color} ${app_bg_color}`
                                         }`}
                                     >
                                       <div className="flex items-center">
-                                        <div className={`mr-3 p-1.5 rounded-full ${isActive
-                                          ? 'bg-white bg-opacity-20'
-                                          : theme === "dark" ? 'bg-gray-600' : 'bg-white'
+                                        <div className={`mr-3 p-2 rounded-full ${isActive
+                                          ? 'bg-gradient-to-r from-orange-600 to-green-600'
+                                          : theme === "dark" ? 'bg-gradient-to-r from-blue-600 to-indigo-700' : 'bg-gradient-to-r from-blue-600 to-indigo-700'
                                           }`}>
-                                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${isActive ? 'text-white' : theme === "dark" ? 'text-gray-300' : 'text-gray-600'
-                                            }`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-white`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                           </svg>
                                         </div>
@@ -343,9 +402,9 @@ const PayementsSidebar = ({
                                           <span className="block text-xs opacity-80">Niveau {cls.level}</span>
                                         </div>
                                       </div>
-                                      <div className={`flex items-center px-3 py-1 rounded-full ${isActive
+                                      <div className={`flex border border-2 items-center px-3 py-1.5 rounded-full ${isActive
                                         ? 'bg-white bg-opacity-20 text-white'
-                                        : theme === "dark" ? 'bg-gray-800 text-gray-300' : 'bg-white text-gray-700 border border-gray-300'
+                                        : theme === "dark" ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
                                         }`}>
                                         <span className="text-sm font-semibold">{studentCount}</span>
                                         <span className="text-xs ml-1">élèves</span>
@@ -367,19 +426,24 @@ const PayementsSidebar = ({
         )}
       </div>
 
-      {/* Bouton pour revenir aux onglets */}
+      {/* Bouton pour revenir aux onglets - Enhanced with gradient and better styling */}
       {selectedClass && (
-        <div className="p-3 border-t border-gray-700">
+        <div className="p-4 border-t border-gray-700 bg-opacity-90">
           <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
             onClick={() => {
               setSelectedClass(null);
               setActiveTab(0);
             }}
-            className={`w-full py-2 rounded-lg bg-gray-600 hover:bg-gray-700 text-white transition-colors`}
+            className={`w-full py-2.5 rounded-lg ${buttonBgColor} text-white font-medium shadow-md transition-all duration-300`}
           >
-            Retour aux onglets
+            <div className="flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              Retour aux onglets
+            </div>
           </motion.button>
         </div>
       )}

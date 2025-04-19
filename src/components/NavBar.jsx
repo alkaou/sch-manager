@@ -10,7 +10,12 @@ import { useAuth } from "../auth/AuthContext";
 import LoginModal from "../auth/LoginModal.jsx";
 import PremiumModal from "../auth/PremiumModal.jsx";
 
-const Navbar = ({loginModalOpen, setLoginModalOpen}) => {
+const Navbar = ({
+  loginModalOpen,
+  setLoginModalOpen,
+  setIsShowParameters,
+  setIsOpenPopup
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
@@ -58,6 +63,12 @@ const Navbar = ({loginModalOpen, setLoginModalOpen}) => {
 
   // Count unread notifications
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Handle help button click
+  const handleHelpClick = () => {
+    navigate("/helpers");
+    setDropdownOpen(false);
+  };
 
   // Handle premium button click
   const handlePremiumClick = () => {
@@ -263,19 +274,29 @@ const Navbar = ({loginModalOpen, setLoginModalOpen}) => {
 
                       <div className="py-1">
                         <button
-                          onClick={() => navigate("/profile-auth")}
+                          onClick={() => {
+                            navigate("/profile-auth");
+                            setDropdownOpen(false);
+                          }}
                           className={`flex items-center w-full px-4 py-2 text-sm ${textColor} ${hoverBg}`}
                         >
                           <User size={16} className="mr-2" />
                           Profile
                         </button>
                         <button
+                          onClick={() => {
+                            setIsShowParameters(true);
+                            setIsOpenPopup(true);
+                            // console.log(setIsShowParameters);
+                            setDropdownOpen(false);
+                          }}
                           className={`flex items-center w-full px-4 py-2 text-sm ${textColor} ${hoverBg}`}
                         >
                           <Settings size={16} className="mr-2" />
                           Settings
                         </button>
                         <button
+                          onClick={handleHelpClick}
                           className={`flex items-center w-full px-4 py-2 text-sm ${textColor} ${hoverBg}`}
                         >
                           <HelpCircle size={16} className="mr-2" />

@@ -27,7 +27,7 @@ const UserProfile = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center p-8">
+      <div className="flex flex-col items-center justify-center mt-40 p-8">
         <div className={`${bgColor} rounded-lg shadow-lg p-8 max-w-md w-full`}>
           <div className="text-center">
             <User size={64} className={`mx-auto ${textColor} opacity-20`} />
@@ -42,7 +42,7 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-8">
+    <div className="flex flex-col items-center justify-center mt-20 p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

@@ -42,8 +42,14 @@ const BulletinsPageContent = ({
 
   // Couleurs et styles
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
-  const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
-  const textClass = theme === "dark" ? text_color : "text-gray-600";
+  const inputBgColor = theme === "dark" ? "bg-gray-700" : 
+      app_bg_color === gradients[1] || app_bg_color === gradients[2] ? app_bg_color : "bg-green-700 bg-opacity-40";
+  
+  const search_inputBgColor = theme === "dark" ? "bg-gray-700" : 
+        app_bg_color === gradients[1] || app_bg_color === gradients[2] ? app_bg_color : "bg-gray-700 bg-opacity-70";
+  
+
+  const textClass = text_color;
   // const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
   const buttonPrimary = app_bg_color === gradients[1] ? "bg-gray-600 hover:bg-gray-700" : "bg-blue-600 hover:bg-blue-700";
   const buttonDelete = "bg-red-600 hover:bg-red-700";
@@ -59,9 +65,9 @@ const BulletinsPageContent = ({
       ? "hover:bg-white"
       : app_bg_color === gradients[2]
         ? "hover:bg-gray-100"
-        : "hover:bg-gray-50";
-  const controlsPanelBg = theme === "dark" ? "bg-gray-800 bg-opacity-90" : "bg-white bg-opacity-90";
+        : "hover:bg-green-500 hover:bg-opacity-50";
 
+        
   // Charger la DB et initialiser compositions et bulletins
   useEffect(() => {
     window.electron.getDatabase().then((data) => {
@@ -297,7 +303,7 @@ const BulletinsPageContent = ({
         </div>
 
         {/* Filtres et recherche */}
-        <div className={`flex flex-wrap items-center justify-between gap-3 mb-6 p-3 rounded-lg shadow-sm ${controlsPanelBg}`}>
+        <div className={`flex flex-wrap items-center justify-between gap-3 mb-6 p-3 rounded-lg shadow-sm border border-2 border-gray-300`}>
           <div className="flex items-center space-x-2">
             <Search size={20} className={textClass} />
             <input
@@ -305,7 +311,7 @@ const BulletinsPageContent = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Rechercher une composition..."
-              className={`px-3 py-2 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+              className={`px-3 py-2 rounded ${search_inputBgColor} ${text_color} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
             />
           </div>
 
@@ -592,6 +598,8 @@ const BulletinsPageContent = ({
                     selectedClass={selectedClass}
                     language={language}
                     db={db}
+                    theme={theme}
+                    app_bg_color={app_bg_color}
                     textClass={textClass}
                     getClasseName={getClasseName}
                     handleCloseComponent={handleCloseComponent}
@@ -610,6 +618,7 @@ const BulletinsPageContent = ({
                       getClasseName={getClasseName}
                       handleCloseComponent={handleCloseComponent}
                       refreshData={refreshData}
+                      app_bg_color={app_bg_color}
                     />
                   </div>
                 )}
@@ -622,6 +631,7 @@ const BulletinsPageContent = ({
                       selectedClass={selectedClass}
                       db={db}
                       textClass={textClass}
+                      app_bg_color={app_bg_color}
                       theme={theme}
                       getClasseName={getClasseName}
                       handleCloseComponent={handleCloseComponent}
@@ -642,6 +652,7 @@ const BulletinsPageContent = ({
                       db={db}
                       theme={theme}
                       textClass={text_color}
+                      app_bg_color={app_bg_color}
                       handleCloseComponent={handleCloseComponent}
                       school_name={school_name}
                       school_short_name={school_short_name}

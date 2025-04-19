@@ -10,7 +10,6 @@ const PayementsStudentList = ({
 	db,
 	refreshData,
 	theme,
-	app_bg_color,
 	text_color,
 	system,
 }) => {
@@ -367,7 +366,6 @@ const PayementsStudentList = ({
 
 	// Styles based on theme
 	const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-	const headerBgColor = theme === "dark" ? "bg-gray-900" : app_bg_color;
 	const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
 	const inputTextColor = theme === "dark" ? text_color : "text-gray-700";
 	const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
@@ -466,27 +464,27 @@ const PayementsStudentList = ({
 						{/* Payment details */}
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 							<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-								<p className="text-sm opacity-70 mb-1">Frais mensuels</p>
+								<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Frais mensuels</p>
 								<p className={`${inputTextColor} text-xl font-bold`}>
 									{Number(paymentSystem?.monthlyFee).toLocaleString()} FCFA
 								</p>
 							</div>
 							{selectedMonth === 1 && paymentSystem?.registrationFee > 0 && (
 								<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-									<p className="text-sm opacity-70 mb-1">Frais d'inscription (nouveaux élèves)</p>
+									<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Frais d'inscription (nouveaux élèves)</p>
 									<p className={`${inputTextColor} text-xl font-bold`}>
 										{Number(paymentSystem?.registrationFee).toLocaleString()} FCFA
 									</p>
 								</div>
 							)}
 							<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-								<p className="text-sm opacity-70 mb-1">Total élèves</p>
+								<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Total élèves</p>
 								<p className={`${inputTextColor} text-xl font-bold`}>
 									{students.length}
 								</p>
 							</div>
 							<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-								<p className="text-sm opacity-70 mb-1">Paiements validés</p>
+								<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Paiements validés</p>
 								<p className={`text-green-500 text-xl font-bold`}>
 									{validatedPayments.length} / {students.length}
 								</p>
@@ -502,7 +500,7 @@ const PayementsStudentList = ({
 										onClick={() => setSelectedMonth(month.number)}
 										className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${selectedMonth === month.number
 											? `${buttonBgColor} text-white`
-											: `border ${borderColor} ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"}`
+											: `border ${borderColor} ${inputTextColor} ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200"}`
 											}`}
 									>
 										{month.name} {month.year}
@@ -906,19 +904,19 @@ const PayementsStudentList = ({
 						</h3>
 						<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 							<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-								<p className="text-sm opacity-70 mb-1">Total attendu (mois courant)</p>
+								<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Total attendu (mois courant)</p>
 								<p className={`${inputTextColor} text-xl font-bold`}>
 									{(Number(paymentSystem?.monthlyFee) * students.length).toLocaleString()} FCFA
 								</p>
 							</div>
 							<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-								<p className="text-sm opacity-70 mb-1">Total perçu (mois courant)</p>
+								<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Total perçu (mois courant)</p>
 								<p className={`text-green-500 text-xl font-bold`}>
 									{(Number(paymentSystem?.monthlyFee) * validatedPayments.length).toLocaleString()} FCFA
 								</p>
 							</div>
 							<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-								<p className="text-sm opacity-70 mb-1">Reste à percevoir (mois courant)</p>
+								<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Reste à percevoir (mois courant)</p>
 								<p className={`text-red-500 text-xl font-bold`}>
 									{(Number(paymentSystem?.monthlyFee) * pendingPayments.length).toLocaleString()} FCFA
 								</p>
@@ -927,19 +925,19 @@ const PayementsStudentList = ({
 							{selectedMonth === 1 && paymentSystem?.registrationFee > 0 && (
 								<>
 									<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-										<p className="text-sm opacity-70 mb-1">Total frais d'inscription attendu</p>
+										<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Total frais d'inscription attendu</p>
 										<p className={`${inputTextColor} text-xl font-bold`}>
 											{calculateTotalRegistrationFees().toLocaleString()} FCFA
 										</p>
 									</div>
 									<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-										<p className="text-sm opacity-70 mb-1">Total frais d'inscription perçu</p>
+										<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Total frais d'inscription perçu</p>
 										<p className={`text-green-500 text-xl font-bold`}>
 											{calculateValidatedRegistrationFees().toLocaleString()} FCFA
 										</p>
 									</div>
 									<div className={`p-4 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"}`}>
-										<p className="text-sm opacity-70 mb-1">Reste frais d'inscription à percevoir</p>
+										<p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Reste frais d'inscription à percevoir</p>
 										<p className={`text-red-500 text-xl font-bold`}>
 											{calculatePendingRegistrationFees().toLocaleString()} FCFA
 										</p>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp } from "lucide-react";
+import { gradients } from '../../utils/colors';
 
 const PayementsTabs = ({
   activeTab,
@@ -59,11 +60,15 @@ const PayementsTabs = ({
 
   // Styles en fonction du thème
   const tabsBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
-  const activeTabBgColor = theme === "dark" ? "bg-blue-700" : "bg-blue-500";
-  const hoverTabBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200";
-  const tabTextColor = theme === "dark" ? text_color : "text-gray-600";
-  const activeTextColor = theme === "dark" ? "text-white" : "text-gray-800";
-  const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
+  const activeTabBgColor = app_bg_color === gradients[1] || app_bg_color === gradients[2] || theme === "dark" ?
+    "bg-gradient-to-r from-blue-500 to-indigo-600" :
+    "bg-gradient-to-r from-white to-white";
+  const hoverTabBgColor = theme === "dark" ? "hover:bg-gray-700" : 
+      app_bg_color === gradients[1] || app_bg_color === gradients[2] ?
+      "hover:bg-gray-200" : "hover:hover:bg-gray-400";
+  const tabTextColor = text_color;
+  const activeTextColor = text_color;
+  const borderColor = app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "border-gray-400" : "border-white";
 
   return (
     <div className={`${tabsBgColor} border-b-2 mt-5 ${borderColor} shadow-md`}>

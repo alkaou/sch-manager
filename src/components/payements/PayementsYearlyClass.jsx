@@ -317,10 +317,10 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
             transition={{ duration: 0.5 }}
         >
             <div className="flex justify-between items-center mb-6">
-                <h2 className={`text-2xl font-bold ${textColorClass}`}>Budget Annuel par Classe</h2>
+                <h2 className={`text-2xl font-bold ${text_color}`}>Budget Annuel par Classe</h2>
 
                 <div className="flex items-center">
-                    <Calendar className={`h-5 w-5 mr-2 ${textColorClass}`} />
+                    <Calendar className={`h-5 w-5 mr-2 ${text_color}`} />
                     <select
                         value={currentSchoolYear}
                         onChange={(e) => setCurrentSchoolYear(e.target.value)}

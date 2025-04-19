@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Save, RefreshCcw, Search, CheckSquare, Square } from 'lucide-react';
 import { useLanguage, useFlashNotification } from './contexts';
+import { gradients } from '../utils/colors';
 
 const GetBulletinStudents = ({
     selectedComposition,
@@ -11,7 +12,8 @@ const GetBulletinStudents = ({
     theme,
     getClasseName,
     handleCloseComponent,
-    refreshData
+    refreshData,
+    app_bg_color
 }) => {
     const { live_language, language } = useLanguage();
     const { setFlashMessage } = useFlashNotification();
@@ -26,6 +28,7 @@ const GetBulletinStudents = ({
 
     // Styles conditionnels
     const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+    const inputTextColor = theme === "dark" || app_bg_color === gradients[1] || app_bg_color === gradients[2] ? textClass : "text-gray-700"
     const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
     const tableHeaderBg = theme === "dark" ? "bg-gray-700" : "bg-blue-50";
     const tableRowHoverBg = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-blue-50";
@@ -198,7 +201,7 @@ const GetBulletinStudents = ({
 
     return (
         <motion.div
-            className={`${textClass} w-full`}
+            className={`${inputTextColor} w-full`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -206,13 +209,13 @@ const GetBulletinStudents = ({
         >
             {/* En-tête */}
             <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-2">Sélection des élèves pour le bulletin :</h3>
+                <h3 className={`text-xl font-semibold mb-2 ${textClass}`}>Sélection des élèves pour le bulletin :</h3>
                 <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                    <div>
-                        <span className="font-medium">Composition :</span> {selectedComposition.label}
+                    <div className={`${textClass}`}>
+                        <span className={`font-medium`}>Composition :</span> {selectedComposition.label}
                     </div>
-                    <div>
-                        <span className="font-medium">Classe :</span> {className}
+                    <div className={`${textClass}`}>
+                        <span className={`font-medium`}>Classe :</span> {className}
                     </div>
                 </div>
             </div>
@@ -220,14 +223,14 @@ const GetBulletinStudents = ({
             {/* Barre de recherche */}
             <div className="mb-4 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search size={18} className={textClass} />
+                    <Search size={18} className={inputTextColor} />
                 </div>
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Rechercher un élève..."
-                    className={`pl-10 pr-4 py-2 w-full rounded-lg border ${tableBorderColor} ${inputBgColor} ${textClass} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300`}
+                    className={`pl-10 pr-4 py-2 w-full rounded-lg border ${tableBorderColor} ${inputBgColor} ${inputTextColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300`}
                 />
             </div>
 
@@ -263,7 +266,7 @@ const GetBulletinStudents = ({
                                                     exit={{ opacity: 0 }}
                                                     transition={{ duration: 0.2 }}
                                                 >
-                                                    <Square size={20} className={textClass} />
+                                                    <Square size={20} className={inputTextColor} />
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
@@ -330,7 +333,7 @@ const GetBulletinStudents = ({
                                                             exit={{ opacity: 0 }}
                                                             transition={{ duration: 0.2 }}
                                                         >
-                                                            <Square size={20} className={textClass} />
+                                                            <Square size={20} className={inputTextColor} />
                                                         </motion.div>
                                                     )}
                                                 </AnimatePresence>

@@ -4,13 +4,12 @@ import { getClasseName, getClasseById } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { Calendar, DollarSign, TrendingUp, Users, ArrowLeft, ArrowRight, Filter } from 'lucide-react';
 
-const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshData }) => {
+const PayementsMonthlyClass = ({ db, theme, text_color }) => {
     const { language } = useLanguage();
     const [monthlyData, setMonthlyData] = useState([]);
     const [schoolMonths, setSchoolMonths] = useState([]);
     const [selectedSchoolMonth, setSelectedSchoolMonth] = useState(1); // Default to first school month
     const [isLoading, setIsLoading] = useState(true);
-    const [activePaymentSystems, setActivePaymentSystems] = useState([]);
     const [totalExpected, setTotalExpected] = useState(0);
     const [totalReceived, setTotalReceived] = useState(0);
     const [paymentSystemGroups, setPaymentSystemGroups] = useState([]);
@@ -19,15 +18,10 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
     // Styles en fonction du thème
     const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
     const headerBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-    const textColorClass = theme === "dark" ? text_color : "text-gray-700";
-    const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+    const textColorClass = "text-gray-700";
     const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-    const tableBgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-50";
-    const tableHeaderBgColor = theme === "dark" ? "bg-gray-800" : "bg-gray-200";
-    const tableRowHoverBgColor = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100";
-    const buttonPrimary = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
-    const buttonSecondary = theme === "dark" ? "bg-gray-600 hover:bg-gray-700" : "bg-gray-400 hover:bg-gray-500";
     const selectBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+    const _text_color = theme !== "dark" ? textColorClass : text_color;
 
     useEffect(() => {
         if (db) {
@@ -38,7 +32,6 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                 return endDate >= now && system.isActive;
             }) || [];
 
-            setActivePaymentSystems(activeSystems);
 
             // Grouper les systèmes de paiement par dates de début et de fin
             const groups = groupPaymentSystemsByDate(activeSystems);
@@ -339,11 +332,11 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                         <div className={`p-4 ${headerBgColor} rounded-lg shadow-md`}>
                             <div className="flex items-center mb-3">
                                 <Filter className="h-5 w-5 mr-2 text-blue-500" />
-                                <h3 className={`font-semibold ${textColorClass}`}>Sélectionner une période de paiement</h3>
+                                <h3 className={`font-semibold ${_text_color}`}>Sélectionner une période de paiement</h3>
                             </div>
                             <div className="flex flex-col md:flex-row md:items-center gap-4">
                                 <select
-                                    className={`${selectBgColor} ${textColorClass} border ${inputBorderColor} rounded-md p-2 flex-grow`}
+                                    className={`${selectBgColor} ${_text_color} border ${inputBorderColor} rounded-md p-2 flex-grow`}
                                     value={selectedSystemGroup?.id || ''}
                                     onChange={(e) => handleSystemGroupChange(e.target.value)}
                                 >
@@ -363,7 +356,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                 )}
 
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                    <h2 className={`text-2xl font-bold ${textColorClass} flex items-center`}>
+                    <h2 className={`text-2xl font-bold ${_text_color} flex items-center`}>
                         <DollarSign className="h-6 w-6 mr-2 text-blue-500" />
                         Budget Mensuel par Classe
                     </h2>
@@ -514,7 +507,7 @@ const PayementsMonthlyClass = ({ db, theme, app_bg_color, text_color, refreshDat
                                 <div className="p-5">
                                     <div className="mb-5">
                                         <div className="flex justify-between mb-2">
-                                            <span className={`text-sm font-medium ${textColorClass}`}>Progression des paiements</span>
+                                            <span className={`text-sm font-medium ${_text_color}`}>Progression des paiements</span>
                                             <span className={`text-sm font-bold ${classData.paymentPercentage < 30 ? 'text-red-500' :
                                                     classData.paymentPercentage < 70 ? 'text-yellow-500' : 'text-green-500'
                                                 }`}>{classData.paymentPercentage}%</span>

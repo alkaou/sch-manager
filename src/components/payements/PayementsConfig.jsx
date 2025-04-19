@@ -4,6 +4,8 @@ import { getClasseName } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { useFlashNotification } from "../contexts";
 import { X } from "lucide-react";
+import ActionConfirmePopup from "../ActionConfirmePopup.jsx";
+import { gradients } from '../../utils/colors.js';
 
 const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) => {
     const { language } = useLanguage();
@@ -13,6 +15,10 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     const [showNewSystemForm, setShowNewSystemForm] = useState(false);
     const [editingSystemId, setEditingSystemId] = useState(null);
     const [availableClasses, setAvailableClasses] = useState([]);
+
+    // État pour la popup de confirmation
+    const [showConfirmPopup, setShowConfirmPopup] = useState(false);
+    const [systemToDelete, setSystemToDelete] = useState(null);
 
     // Les date pour Input Date
     const DateForInputs = new Date().getFullYear();
@@ -316,24 +322,25 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     };
 
     // Supprimer un système
-    const handleDeleteSystem = async (systemId) => {
-        if (!confirm("Êtes-vous sûr de vouloir supprimer ce système de paiement ?")) {
-            return;
-        }
+    const handleDeleteSystem = (systemId) => {
+        setSystemToDelete(systemId);
+        setShowConfirmPopup(true);
+    };
+
+    // Fonction pour confirmer la suppression
+    const handleConfirmDelete = async () => {
+        if (!systemToDelete) return;
 
         setIsLoading(true);
 
         try {
-            // Récupérer le système à supprimer pour connaître ses classes
-            const systemToDelete = paymentSystems.find(system => system.id === systemId);
-
             // Mettre à jour la liste des systèmes en supprimant celui dont l'id correspond à systemId
-            const updatedSystems = paymentSystems.filter(system => system.id !== systemId);
+            const updatedSystems = paymentSystems.filter(system => system.id !== systemToDelete);
 
             // Supprimer les paiements liés à ce système
             const updatedPayments = { ...db.payments };
             Object.keys(updatedPayments).forEach(key => {
-                if (key.startsWith(`students_${systemId}_`)) {
+                if (key.startsWith(`students_${systemToDelete}_`)) {
                     delete updatedPayments[key];
                 }
             });
@@ -341,7 +348,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             // Supprimer les frais d'inscription liés à ce système
             const updatedRegistrationFees = { ...db.registrationFees };
             Object.keys(updatedRegistrationFees).forEach(key => {
-                if (key.startsWith(`registration_fee_${systemId}_`)) {
+                if (key.startsWith(`registration_fee_${systemToDelete}_`)) {
                     delete updatedRegistrationFees[key];
                 }
             });
@@ -375,6 +382,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             });
         } finally {
             setIsLoading(false);
+            setShowConfirmPopup(false);
+            setSystemToDelete(null);
         }
     };
 
@@ -387,10 +396,11 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     // Styles en fonction du thème
     const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
     const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-    const inputTextColor = theme === "dark" ? text_color : "text-gray-700";
+    const inputTextColor = app_bg_color === gradients[1] || 
+                            app_bg_color === gradients[2] || 
+                            theme === "dark" ? text_color : "text-gray-700";
     const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
     const buttonBgColor = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
-    const buttonDeleteColor = "bg-red-600 hover:bg-red-700";
     const buttonAddColor = "bg-green-600 hover:bg-green-700";
     const dividerColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
     const pastSystemBgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-200";
@@ -412,16 +422,16 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
             transition={{ duration: 0.5 }}
         >
             <div className="flex justify-between items-center mb-6">
-                <h2 className={`text-2xl font-bold ${inputTextColor}`}>Configuration des Paiements</h2>
+                <h2 className={`text-2xl font-bold ${text_color}`}>Configuration des Paiements</h2>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Partie gauche: Liste des systèmes de paiement */}
                 <div>
-                    <h3 className={`text-xl font-semibold ${inputTextColor} mb-4`}>Systèmes de paiement</h3>
+                    <h3 className={`text-xl font-semibold ${text_color} mb-4`}>Systèmes de paiement</h3>
 
                     {activeSystems.length === 0 ? (
-                        <div className={`${cardBgColor} rounded-lg shadow-md p-6 text-center ${inputTextColor} border ${borderColor}`}>
+                        <div className={`${cardBgColor} rounded-lg shadow-md p-6 text-center ${text_color} border ${borderColor}`}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -464,13 +474,13 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                     <div className="p-4">
                                         <div className="grid grid-cols-2 gap-4 mb-4">
                                             <div>
-                                                <p className="text-sm opacity-70 mb-1">Période</p>
+                                                <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Période</p>
                                                 <p className={`${inputTextColor} font-medium`}>
                                                     {new Date(system.startDate).toLocaleDateString()} - {new Date(system.endDate).toLocaleDateString()}
                                                 </p>
                                             </div>
                                             <div>
-                                                <p className="text-sm opacity-70 mb-1">Frais mensuels</p>
+                                                <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Frais mensuels</p>
                                                 <p className={`${inputTextColor} font-medium`}>
                                                     {system.monthlyFee.toLocaleString()} FCFA
                                                 </p>
@@ -478,7 +488,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         </div>
 
                                         <div className="mb-4">
-                                            <p className="text-sm opacity-70 mb-1">Classes concernées</p>
+                                            <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Classes concernées</p>
                                             <div className="flex flex-wrap gap-2">
                                                 {/* Trier par level avant le map */}
                                                 {system.classes.sort((a, b) => {
@@ -559,7 +569,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         </div>
                                         <div className="p-4">
                                             <div className="mb-4">
-                                                <p className="text-sm opacity-70 mb-1">Classes concernées</p>
+                                                <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Classes concernées</p>
                                                 <div className="flex flex-wrap gap-2">
                                                     {system.classes.map(classId => {
                                                         const classObj = db?.classes?.find(c => c.id === classId);
@@ -632,10 +642,10 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
-                                <span className="text-lg font-medium">Créer un nouveau système de paiement</span>
+                                <span className={`text-lg font-medium text-white`}>Créer un nouveau système de paiement</span>
                             </motion.button>
 
-                            <p className={`mt-4 text-center ${inputTextColor} opacity-70 max-w-md`}>
+                            <p className={`mt-4 text-center ${text_color} opacity-70 max-w-md`}>
                                 Créez un nouveau système de paiement pour définir les frais scolaires et les associer à des classes.
                             </p>
                         </motion.div>
@@ -945,6 +955,16 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                     )}
                 </div>
             </div>
+
+            {/* Ajouter le composant ActionConfirmePopup à la fin du composant */}
+            <ActionConfirmePopup
+                isOpenConfirmPopup={showConfirmPopup}
+                setIsOpenConfirmPopup={() => setShowConfirmPopup(false)}
+                handleConfirmeAction={handleConfirmDelete}
+                title="Confirmer la suppression"
+                message="Êtes-vous sûr de vouloir supprimer ce système de paiement ?"
+                actionType="danger"
+            />
         </motion.div>
     );
 };

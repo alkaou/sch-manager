@@ -101,8 +101,8 @@ const PayementsPage = () => {
   };
 
   // Styles en fonction du thème
-  const mainBgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-100";
-  const textColorClass = theme === "dark" ? text_color : "text-gray-800";
+  const mainBgColor = app_bg_color;
+  const textColorClass = text_color;
 
   return (
     <div
