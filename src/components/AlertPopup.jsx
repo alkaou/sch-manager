@@ -38,7 +38,7 @@ const AlertPopup = ({
               <motion.button
                 type="button"
                 onClick={setIsOpenAlertPopup}
-                className={`text-white px-4 py-2 rounded ${buttonColor}`}
+                className={`text-white px-4 py-2 rounded border border-2 ${buttonColor}`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >

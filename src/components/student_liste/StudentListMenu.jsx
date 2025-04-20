@@ -12,7 +12,6 @@ const StudentListMenu = ({
   onDeleteList,
   theme,
   textClass,
-  appBgColor
 }) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [listToDelete, setListToDelete] = useState(null);
@@ -20,7 +19,7 @@ const StudentListMenu = ({
   const [newName, setNewName] = useState('');
 
   // Sort lists by updatedAt (most recent first)
-  const sortedLists = [...studentLists].sort((a, b) => 
+  const sortedLists = [...studentLists].sort((a, b) =>
     new Date(b.updatedAt) - new Date(a.updatedAt)
   );
 
@@ -51,9 +50,9 @@ const StudentListMenu = ({
   // Format date for display
   const formatDate = (dateString) => {
     try {
-      return formatDistanceToNow(new Date(dateString), { 
+      return formatDistanceToNow(new Date(dateString), {
         addSuffix: true,
-        locale: fr 
+        locale: fr
       });
     } catch (error) {
       return "Date inconnue";
@@ -61,16 +60,17 @@ const StudentListMenu = ({
   };
 
   // Styles based on theme
-  const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+  const cardBgColor = theme === "dark" ? `bg-gray-800 ${textClass}` : "bg-white text-gray-700";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
   const buttonDanger = "bg-red-600 hover:bg-red-700";
-  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300";
+  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-700";
 
+  
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className={`text-2xl font-bold ${textClass}`}>Listes d'élèves</h1>
+        <h1 className={`text-2xl font-bold`}>Listes d'élèves</h1>
         <motion.button
           className={`${buttonPrimary} text-white px-4 py-2 rounded-lg flex items-center space-x-2`}
           onClick={onCreateNew}
@@ -85,8 +85,8 @@ const StudentListMenu = ({
       {sortedLists.length === 0 ? (
         <div className={`${cardBgColor} rounded-lg p-8 text-center ${borderColor} border`}>
           <FileText size={48} className="mx-auto mb-4 text-gray-400" />
-          <h2 className={`text-xl font-semibold mb-2 ${textClass}`}>Aucune liste d'élèves</h2>
-          <p className={`${textClass} opacity-75 mb-6`}>
+          <h2 className={`text-xl font-semibold mb-2`}>Aucune liste d'élèves</h2>
+          <p className={`opacity-75 mb-6`}>
             Créez votre première liste d'élèves en cliquant sur le bouton "Nouvelle liste"
           </p>
           <motion.button
@@ -115,7 +115,7 @@ const StudentListMenu = ({
                       type="text"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      className={`w-full px-3 py-2 rounded border ${borderColor} ${theme === "dark" ? "bg-gray-700" : "bg-white"} ${textClass}`}
+                      className={`w-full px-3 py-2 rounded border ${borderColor} ${theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-gray-700"}`}
                       placeholder="Nom de la liste (6-60 caractères)"
                       minLength={6}
                       maxLength={60}
@@ -136,7 +136,7 @@ const StudentListMenu = ({
                       </motion.button>
                       <motion.button
                         onClick={() => setEditingName(null)}
-                        className={`${buttonSecondary} text-gray-800 dark:text-white px-3 py-1 rounded`}
+                        className={`${buttonSecondary} px-3 py-1 rounded`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
@@ -145,19 +145,19 @@ const StudentListMenu = ({
                     </div>
                   </div>
                 ) : (
-                  <h2 className={`text-xl font-semibold mb-2 ${textClass}`}>{list.name}</h2>
+                  <h2 className={`text-xl font-semibold mb-2`}>{list.name}</h2>
                 )}
-                
+
                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
                   <Clock size={16} className="mr-1" />
                   <span>Modifié {formatDate(list.updatedAt)}</span>
                 </div>
-                
+
                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
                   <Calendar size={16} className="mr-1" />
                   <span>Créé le {new Date(list.createdAt).toLocaleDateString()}</span>
                 </div>
-                
+
                 <div className="flex space-x-2 mt-4">
                   <motion.button
                     onClick={() => onEditList(list)}
@@ -168,11 +168,11 @@ const StudentListMenu = ({
                     <FileText size={16} className="mr-1" />
                     Ouvrir
                   </motion.button>
-                  
+
                   {editingName !== list.id && (
                     <motion.button
                       onClick={() => handleEditName(list)}
-                      className={`${buttonSecondary} text-gray-800 dark:text-white px-3 py-2 rounded flex items-center`}
+                      className={`${buttonSecondary} px-3 py-2 rounded flex items-center`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
@@ -180,7 +180,7 @@ const StudentListMenu = ({
                       Renommer
                     </motion.button>
                   )}
-                  
+
                   <motion.button
                     onClick={() => {
                       setListToDelete(list);

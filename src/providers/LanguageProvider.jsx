@@ -19,7 +19,7 @@ export default function LanguageProvider({ children }) {
     const live_language = Translator[language];
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, live_language }}>
+        <LanguageContext.Provider value={{ language, setLanguage, live_language, Translator }}>
             <>
                 {children}
             </>

@@ -66,13 +66,14 @@ const ReadPageContent = ({
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className={`w-64 h-screen fixed top-0 pt-20 shadow-lg z-10 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'}`}
+          className={`w-64 h-screen fixed top-0 pt-20 shadow-lg z-10 ${app_bg_color}`}
         >
           <PDFSidebar
             pdfFiles={pdfFiles}
             selectedPdf={selectedPdf}
             onSelectPdf={handlePdfSelect}
             theme={theme}
+            app_bg_color={app_bg_color}
             textColor={text_color}
           />
         </motion.div>
@@ -101,6 +102,7 @@ const ReadPageContent = ({
                 setSpeakingRate={setSpeakingRate}
                 theme={theme}
                 textColor={text_color}
+                app_bg_color={app_bg_color}
               />
               <div
                 style={{
@@ -110,6 +112,7 @@ const ReadPageContent = ({
                   height: "calc(100vh - 150px)",
                   overflowY: "auto"
                 }}
+                className="scrollbar-custom"
               >
                 <PDFViewer
                   pdfFile={selectedPdf}
@@ -120,6 +123,7 @@ const ReadPageContent = ({
                   zoomLevel={zoomLevel}
                   isSpeaking={isSpeaking}
                   speakingRate={speakingRate}
+                  app_bg_color={app_bg_color}
                   theme={theme}
                 />
             </div>

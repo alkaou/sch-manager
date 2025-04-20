@@ -35,6 +35,7 @@ const CompositionsPageContent = ({
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const textClass = theme === "dark" ? text_color : "text-gray-600";
+  const gestion_text_color = app_bg_color !== gradients[1] && app_bg_color !== gradients[2] ? "text-white" : textClass;
   const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
   const buttonPrimary = app_bg_color === gradients[1] ? "bg-gray-600 hover:bg-gray-700" : "bg-blue-600 hover:bg-blue-700";
   const buttonDelete = "bg-red-600 hover:bg-red-700";
@@ -334,7 +335,7 @@ const CompositionsPageContent = ({
         style={{ boxShadow: theme === "dark" ? "0 0 15px rgba(66, 153, 225, 0.5)" : "0 0 15px rgba(159, 122, 234, 0.5)" }}
       >
         <div className="flex justify-between items-center mb-6">
-          <h2 className={`text-2xl font-bold ${textClass}`}>Gestion des Compositions</h2>
+          <h2 className={`text-2xl font-bold ${gestion_text_color}`}>Gestion des Compositions</h2>
           {isCreateMode && (
             <button
               onClick={resetForm}
@@ -377,6 +378,7 @@ const CompositionsPageContent = ({
           setSortMethod={setSortMethod}
           inputBgColor={inputBgColor}
           textClass={textClass}
+          app_bg_color={app_bg_color}
           inputBorderColor={inputBorderColor}
           buttonAdd={buttonAdd}
           setCompositionToDelete={setCompositionToDelete}

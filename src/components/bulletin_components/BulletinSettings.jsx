@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Sliders } from 'lucide-react';
 
 const BulletinSettings = ({
-  // theme,
+  theme,
   textClass,
   cardBgColor,
   borderColor,
@@ -73,7 +73,10 @@ const BulletinSettings = ({
           <select
             value={bulletinLanguage}
             onChange={(e) => setBulletinLanguage(e.target.value)}
-            className={`w-full p-2 rounded border ${borderColor} ${cardBgColor} ${textClass}`}
+            className={`
+              w-full p-2 rounded border ${borderColor} 
+              ${theme === "dark" ? `${cardBgColor} ${textClass}` : "bg-gray-200 text-gray-700"} 
+            `}
           >
             <option value="Français">Français</option>
             <option value="Anglais">English</option>

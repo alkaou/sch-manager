@@ -15,7 +15,8 @@ const StudentListSidebar = ({
   onUpdateCustomMessage,
   onUpdatecountryInfosHeader,
   theme,
-  textClass
+  textClass,
+  appBgColor
 }) => {
   const [expandedSections, setExpandedSections] = useState({
     headers: true,
@@ -51,7 +52,7 @@ const StudentListSidebar = ({
     "Nom",
     "Matricule",
     "Classe",
-    "Date de naissance",
+    "Date & Lieu de naissance",
     "Âge",
     "Sexe",
     "Père",
@@ -101,14 +102,14 @@ const StudentListSidebar = ({
   const fontSizes = [12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 40, 48];
 
   // Styles based on theme
-  const sectionBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+  const sectionBgColor = `${appBgColor} ${textClass}`;
   const borderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-  const inputBgColor = theme === "dark" ? "bg-gray-600" : "bg-white";
+  const inputBgColor = theme === "dark" ? "bg-gray-600" : "bg-gray-300 bg-opacity-50 text-gray-700";
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700 text-white";
   const buttonSecondary = theme === "dark" ? "bg-gray-600 hover:bg-gray-500 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
 
   return (
-    <div className={`p-4 ${textClass} h-full`}>
+    <div className={`p-4 ${textClass} ${appBgColor} h-full`}>
       <h2 className="text-lg font-semibold mb-4">Paramètres de la liste</h2>
 
       <div className="max-h-500 overflow-y-auto scrollbar-custom">

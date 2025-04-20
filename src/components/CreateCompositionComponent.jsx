@@ -1,5 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from 'framer-motion';
+import { gradients } from "../utils/colors";
 
 const CreateCompositionComponent = ({
   compositions,
@@ -9,6 +10,7 @@ const CreateCompositionComponent = ({
   setSortMethod,
   inputBgColor,
   textClass,
+  app_bg_color,
   inputBorderColor,
   buttonAdd,
   setCompositionToDelete,
@@ -59,6 +61,8 @@ const CreateCompositionComponent = ({
     }
   };
 
+  const _text_color = app_bg_color !== gradients[1] && app_bg_color !== gradients[2] ? "text-white" : textClass;
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -73,10 +77,10 @@ const CreateCompositionComponent = ({
             {/* Section de liste des compositions */}
             <div className="mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className={`text-xl font-semibold ${textClass}`}>Liste des Compositions</h3>
+                <h3 className={`text-xl font-semibold ${_text_color}`}>Liste des Compositions</h3>
                 <div className="flex items-center">
                   <div className="mr-4">
-                    <label htmlFor="sort" className={`mr-2 ${textClass}`}>Trier par :</label>
+                    <label htmlFor="sort" className={`mr-2 ${_text_color}`}>Trier par :</label>
                     <select
                       id="sort"
                       value={sortMethod}
@@ -108,7 +112,7 @@ const CreateCompositionComponent = ({
 
               {/* Rest of the list view code remains unchanged */}
               {compositions.length === 0 ? (
-                <div className={`p-8 text-center ${textClass} border ${inputBorderColor} rounded-lg`}>
+                <div className={`p-8 text-center ${_text_color} border ${inputBorderColor} rounded-lg`}>
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
@@ -120,10 +124,10 @@ const CreateCompositionComponent = ({
                   <table className="min-w-full border-collapse">
                     <thead>
                       <tr>
-                        <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Nom</th>
-                        <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Date</th>
-                        <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Classes</th>
-                        <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Actions</th>
+                        <th className={`px-2 py-2 border ${inputBorderColor} ${_text_color}`}>Nom</th>
+                        <th className={`px-2 py-2 border ${inputBorderColor} ${_text_color}`}>Date</th>
+                        <th className={`px-2 py-2 border ${inputBorderColor} ${_text_color}`}>Classes</th>
+                        <th className={`px-2 py-2 border ${inputBorderColor} ${_text_color}`}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -137,7 +141,7 @@ const CreateCompositionComponent = ({
                           compositionBulletins.every(bulletin => bulletin.isLocked === true);
 
                         return (
-                          <tr key={composition.id} className={`hover:bg-gray-50 hover:text-gray-500 ${textClass}`}>
+                          <tr key={composition.id} className={`hover:bg-gray-50 hover:text-gray-500 ${_text_color}`}>
                             <td className="px-2 py-1 border text-center">{composition.label}</td>
                             <td className="px-2 py-1 border text-center">{formatDate(composition.date)}</td>
                             <td className="px-2 py-1 border text-center">{getClassesNames(composition.classes)}</td>
@@ -193,7 +197,7 @@ const CreateCompositionComponent = ({
             {/* Formulaire de création/édition de composition */}
             <div className="mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className={`text-xl font-semibold ${textClass}`}>
+                <h3 className={`text-xl font-semibold ${_text_color}`}>
                   {editingCompositionId ? "Modifier la composition" : "Nouvelle composition"}
                 </h3>
                 {/* <motion.button
@@ -211,7 +215,7 @@ const CreateCompositionComponent = ({
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className={`block mb-2 ${textClass}`}>Numéro de composition</label>
+                  <label className={`block mb-2 ${_text_color}`}>Numéro de composition</label>
                   <select
                     value={newComposition.name}
                     onChange={(e) => {
@@ -231,7 +235,7 @@ const CreateCompositionComponent = ({
                   </select>
                 </div>
                 <div>
-                  <label className={`block mb-2 ${textClass}`}>Date de la composition</label>
+                  <label className={`block mb-2 ${_text_color}`}>Date de la composition</label>
                   <input
                     type="date"
                     value={newComposition.date}
@@ -243,7 +247,7 @@ const CreateCompositionComponent = ({
               </div>
 
               <div className="mt-6">
-                <label className={`block mb-2 ${textClass}`}>Classes concernées</label>
+                <label className={`block mb-2 ${_text_color}`}>Classes concernées</label>
                 {db && db.classes && db.classes.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {[...db.classes]
@@ -268,7 +272,7 @@ const CreateCompositionComponent = ({
                             />
                             <label
                               htmlFor={`class-${cls.id}`}
-                              className={`${textClass} ${hasLockedBulletin ? 'opacity-60' : ''}`}
+                              className={`${_text_color} ${hasLockedBulletin ? 'opacity-60' : ''}`}
                               title={hasLockedBulletin ? "Bulletin verrouillé - impossible de retirer cette classe" : ""}
                             >
                               {getClasseName(`${cls.level} ${cls.name}`, language)}
@@ -279,7 +283,7 @@ const CreateCompositionComponent = ({
                       })}
                   </div>
                 ) : (
-                  <p className={`${textClass} italic`}>
+                  <p className={`${_text_color} italic`}>
                     Aucune classe disponible. Veuillez d'abord créer des classes.
                   </p>
                 )}

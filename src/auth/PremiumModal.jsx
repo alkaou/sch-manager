@@ -13,7 +13,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
   const [alertMessage, setAlertMessage] = useState('');
   
   // Theme-based styles
-  const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+  const bgColor = theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700';
   const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-800';
   const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
   
@@ -166,7 +166,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-end">
                   <button
                     onClick={onClose}
-                    className={`px-6 py-3 rounded-lg ${borderColor} border ${textColor} hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors`}
+                    className={`px-6 py-3 rounded-lg ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"} ${borderColor} border ${textColor} transition-colors`}
                   >
                     Cancel
                   </button>

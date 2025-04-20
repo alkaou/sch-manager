@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaFilePdf, FaSearch } from "react-icons/fa";
 
-const PDFSidebar = ({ pdfFiles, selectedPdf, onSelectPdf, theme, textColor }) => {
+const PDFSidebar = ({ pdfFiles, selectedPdf, onSelectPdf, theme, textColor, app_bg_color }) => {
   const [searchTerm, setSearchTerm] = React.useState("");
   
   const filteredFiles = pdfFiles.filter(file => 
@@ -10,10 +10,10 @@ const PDFSidebar = ({ pdfFiles, selectedPdf, onSelectPdf, theme, textColor }) =>
   );
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={`flex flex-col h-full ${app_bg_color}`}>
       <div className="p-4">
         <h2 className={`text-xl font-bold mb-4 ${textColor}`}>Documents</h2>
-        <div className={`relative mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-700'}`}>
+        <div className={`relative mb-4`}>
           <input
             type="text"
             placeholder="Search documents..."
@@ -29,7 +29,7 @@ const PDFSidebar = ({ pdfFiles, selectedPdf, onSelectPdf, theme, textColor }) =>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 pb-4">
+      <div className="flex-1 overflow-y-auto scrollbar-custom px-4 pb-4">
         {filteredFiles.length > 0 ? (
           <ul className="space-y-2">
             {filteredFiles.map((file, index) => (
@@ -47,13 +47,13 @@ const PDFSidebar = ({ pdfFiles, selectedPdf, onSelectPdf, theme, textColor }) =>
                         : 'bg-blue-100 text-blue-700'
                       : theme === 'dark'
                         ? 'hover:bg-gray-700 text-gray-200'
-                        : 'hover:bg-gray-200 text-gray-700'
+                        : `hover:bg-gray-500 hover:bg-opacity-70 ${textColor}`
                   } transition-colors duration-200`}
                 >
                   <FaFilePdf className={`mr-2 ${
                     selectedPdf && selectedPdf.name === file.name
                       ? 'text-current'
-                      : theme === 'dark' ? 'text-blue-400' : 'text-blue-500'
+                      : theme === 'dark' ? 'text-blue-400' : "text-blue-600"
                   }`} />
                   <span className="truncate">{file.name}</span>
                 </button>

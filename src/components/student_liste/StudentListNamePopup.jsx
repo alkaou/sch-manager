@@ -24,11 +24,12 @@ const StudentListNamePopup = ({ onSave, onCancel, theme, textClass, appBgColor }
   };
 
   // Styles based on theme
-  const popupBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
-  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300";
-  const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-700";
+
+  const popupBgColor = theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700';
+  const inputBgColor = popupBgColor;
 
   return (
     <motion.div
@@ -45,7 +46,7 @@ const StudentListNamePopup = ({ onSave, onCancel, theme, textClass, appBgColor }
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className={`text-xl font-semibold ${textClass}`}>Nouvelle liste d'élèves</h2>
+          <h2 className={`text-xl font-semibold`}>Nouvelle liste d'élèves</h2>
           <motion.button
             onClick={onCancel}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -58,7 +59,7 @@ const StudentListNamePopup = ({ onSave, onCancel, theme, textClass, appBgColor }
         
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="listName" className={`block mb-2 ${textClass}`}>
+            <label htmlFor="listName" className={`block mb-2`}>
               Nom de la liste
             </label>
             <input
@@ -69,7 +70,7 @@ const StudentListNamePopup = ({ onSave, onCancel, theme, textClass, appBgColor }
                 setName(e.target.value);
                 setError('');
               }}
-              className={`w-full px-4 py-2 rounded-lg border ${borderColor} ${inputBgColor} ${textClass}`}
+              className={`w-full px-4 py-2 rounded-lg border ${borderColor} ${inputBgColor}`}
               placeholder="Entrez un nom pour votre liste (6-60 caractères)"
               minLength={6}
               maxLength={60}
@@ -85,7 +86,7 @@ const StudentListNamePopup = ({ onSave, onCancel, theme, textClass, appBgColor }
             <motion.button
               type="button"
               onClick={onCancel}
-              className={`${buttonSecondary} px-4 py-2 rounded-lg text-gray-800 dark:text-white`}
+              className={`${buttonSecondary} px-4 py-2 rounded-lg`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >

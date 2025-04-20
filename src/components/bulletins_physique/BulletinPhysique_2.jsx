@@ -11,8 +11,6 @@ const BulletinPhysique2 = ({
     mainSubjects,
     secondarySubjects,
     printRef,
-    tableRowBg,
-    tableRowAltBg,
     topAverage,
     topAverageSexe,
     studentRank,
@@ -180,7 +178,7 @@ const BulletinPhysique2 = ({
                             const appreciation = getAppreciation(moyenne, language);
 
                             return (
-                                <tr key={subject.name} className={`border-b border-black ${index % 2 === 0 ? tableRowBg : tableRowAltBg}`}>
+                                <tr key={subject.name} className={`border-b border-black ${index % 2 === 0 ? "bg-ray-100" : "bg-gray-200"}`}>
                                     <td className="border-r border-black p-2 text-left">{subject.name}</td>
                                     <td className="border-r border-black p-2 text-center">{classeNote !== "-" && classeNote !== undefined ? parseFloat(classeNote).toFixed(2) : "-"}</td>
                                     <td className="border-r border-black p-2 text-center">{compoNote !== "-" && compoNote !== undefined ? parseFloat(compoNote).toFixed(2) : "-"}</td>

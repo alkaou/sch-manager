@@ -10,6 +10,7 @@ import { generateMultipleBulletinsPDF } from './bulletin_utils/BulletinPDFGenera
 import { sortStudentsByAverage, sortStudentsByName } from './bulletin_utils/BulletinMethods';
 import { getClasseName } from "../utils/helpers";
 import { useLanguage } from "./contexts";
+import { gradients } from '../utils/colors';
 
 const ShowAllBulletin = ({
   selectedComposition,
@@ -46,13 +47,13 @@ const ShowAllBulletin = ({
   const { language } = useLanguage();
 
   // Styles based on theme
+  const opacity = theme === "dark" || app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "bg-opacity-30" : "bg-opacity-50";
   const bgColor = `${app_bg_color} ${textClass}`;
   const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const headerBgColor = theme === "dark" ? "bg-gray-800 bg-opacity-90" : "bg-white bg-opacity-90";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
   const buttonDanger = "bg-red-600 hover:bg-red-700";
-  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300";
+  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-700";
 
   // Get translations based on selected language
   // const t = translations[bulletinLanguage] || translations.Français;
@@ -206,7 +207,7 @@ const ShowAllBulletin = ({
     >
       {/* Header */}
       <motion.div
-        className={`sticky top-0 z-10 ${headerBgColor} shadow-md px-6 py-4 flex flex-wrap justify-between items-center gap-4 border-b ${borderColor}`}
+        className={`sticky top-0 z-10 ${bgColor} shadow-md px-6 py-4 flex flex-wrap justify-between items-center gap-4 border-b ${borderColor}`}
         variants={itemVariants}
       >
         <div className="flex items-center gap-4">
@@ -225,7 +226,7 @@ const ShowAllBulletin = ({
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
-          <div className={`flex items-center px-3 py-2 rounded-lg border ${borderColor} ${cardBgColor}`}>
+          <div className={`flex items-center bg-gray-700 px-3 py-2 rounded-lg border ${opacity} border-radius-10 ${borderColor}`}>
             <Search size={18} className={textClass} />
             <input
               type="text"
@@ -239,7 +240,7 @@ const ShowAllBulletin = ({
           {/* Filters button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`p-2 rounded-lg ${buttonSecondary} ${textClass} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
+            className={`p-2 rounded-lg ${buttonSecondary} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
           >
             <Filter size={18} />
             <span className="hidden sm:inline">{live_language.filters}</span>
@@ -248,7 +249,7 @@ const ShowAllBulletin = ({
           {/* Settings button */}
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className={`p-2 rounded-lg ${buttonSecondary} ${textClass} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
+            className={`p-2 rounded-lg ${buttonSecondary} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
           >
             <Settings size={18} />
             <span className="hidden sm:inline">{live_language.settings}</span>
@@ -258,7 +259,7 @@ const ShowAllBulletin = ({
           <button
             onClick={handleGeneratePDF}
             disabled={generating}
-            className={`p-2 rounded-lg ${buttonPrimary} text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${generating ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`p-2 rounded-lg ${buttonPrimary} border border-2 border-white text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${generating ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
             {generating ? (
               <>
@@ -281,7 +282,7 @@ const ShowAllBulletin = ({
           <BulletinSettings
             theme={theme}
             textClass={textClass}
-            cardBgColor={cardBgColor}
+            cardBgColor={app_bg_color}
             borderColor={borderColor}
             bulletinsPerPage={bulletinsPerPage}
             setBulletinsPerPage={setBulletinsPerPage}
@@ -300,7 +301,7 @@ const ShowAllBulletin = ({
           <BulletinFilters
             theme={theme}
             textClass={textClass}
-            cardBgColor={cardBgColor}
+            cardBgColor={app_bg_color}
             borderColor={borderColor}
             sortOption={sortOption}
             setSortOption={setSortOption}
@@ -350,8 +351,6 @@ const ShowAllBulletin = ({
                   className={className}
                   theme={theme}
                   textClass={textClass}
-                  cardBgColor={cardBgColor}
-                  borderColor={borderColor}
                   language={bulletinLanguage}
                   school_name={school_name}
                   school_short_name={school_short_name}
@@ -379,7 +378,7 @@ const ShowAllBulletin = ({
       )}
 
       {/* Status bar */}
-      <div className={`${headerBgColor} border-t ${borderColor} px-6 py-3 flex justify-between items-center`}>
+      <div className={`${bgColor} border-t ${borderColor} px-6 py-3 flex justify-between items-center`}>
         <div className={textClass}>
           <span className="font-medium">{filteredStudents.length}</span> {live_language.studentsFound}
           {selectedStudents.length > 0 && (

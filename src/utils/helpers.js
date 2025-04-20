@@ -92,7 +92,8 @@ const areArraysEqual = (arr1, arr2) => {
   );
 }
 
-const getBornInfos = (init_born_date, born_lieu="", lang = "Français") => {
+const getBornInfos = (init_born_date, _born_lieu="", lang = "Français") => {
+  const born_lieu = _born_lieu.trim() !== "" ? _born_lieu : lang === "Français" ? "*Inconnu*" : lang === "Anglais" ? "*Unknow*" : "*A ma sidɔn*";
   const born_date = new Date(init_born_date).toLocaleDateString();
   if(lang === "Français" || lang === "Anglais"){
     const langText = lang === "Français" ? " à " : " in ";

@@ -63,8 +63,8 @@ const DatabasePageContent = ({
         ) : (
           <NotConnectedView 
             theme={theme} 
-            textColor={text_color}
             setLoginModalOpen={setLoginModalOpen}
+            isAuthenticated={isAuthenticated}
           />
         )}
       </motion.div>

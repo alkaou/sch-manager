@@ -1,45 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { 
-  FaArrowLeft, 
-  FaArrowRight, 
-  FaPlay, 
-  FaPause, 
+import {
   FaSearchPlus, 
-  FaSearchMinus,
-  FaDownload,
-  FaExpand,
-  FaCompress,
-  FaCog
+  FaSearchMinus
 } from "react-icons/fa";
 
 const PDFControls = ({
-  currentPage,
-  totalPages,
-  setCurrentPage,
   zoomLevel,
   setZoomLevel,
-  isSpeaking,
-  setIsSpeaking,
-  speakingRate,
-  setSpeakingRate,
   theme,
-  textColor
+  textColor,
+  app_bg_color
 }) => {
-  const [isFullscreen, setIsFullscreen] = React.useState(false);
-  const [showSettings, setShowSettings] = React.useState(false);
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
 
   const handleZoomIn = () => {
     setZoomLevel(prev => Math.min(prev + 0.1, 2.5));
@@ -49,41 +22,12 @@ const PDFControls = ({
     setZoomLevel(prev => Math.max(prev - 0.1, 0.5));
   };
 
-  const toggleSpeech = () => {
-    setIsSpeaking(!isSpeaking);
-  };
-
-  const handlePageInputChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value >= 1 && value <= totalPages) {
-      setCurrentPage(value);
-    }
-  };
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-      setIsFullscreen(true);
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-        setIsFullscreen(false);
-      }
-    }
-  };
-
   return (
     <motion.div
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className={`p-4 border-b ${
-        theme === 'dark' 
-          ? 'bg-gray-800 border-gray-700' 
-          : 'bg-white border-gray-200'
-      } shadow-md`}
+      className={`p-4 border-b ${app_bg_color} ${textColor} shadow-md`}
       style={{
         width: "99.6%",
         maxWidth: "99.6%",

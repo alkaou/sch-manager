@@ -465,7 +465,6 @@ const StudentListEditor = ({
   // Styles based on theme
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700 text-white";
   const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
-  const buttonDanger = "bg-red-600 hover:bg-red-700 text-white";
   const buttonSuccess = "bg-green-600 hover:bg-green-700 text-white";
   const dropdownBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
   const dropdownBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
@@ -474,7 +473,7 @@ const StudentListEditor = ({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={`flex items-center justify-between p-4 border-b ${theme === "dark" ? "border-gray-700" : "border-gray-200"}`}>
+      <div className={`flex items-center justify-between p-4 border-b ${appBgColor}`}>
         <div className="flex items-center">
           <motion.button
             onClick={handleReturn}
@@ -590,6 +589,7 @@ const StudentListEditor = ({
                 onUpdatecountryInfosHeader={onUpdatecountryInfosHeader}
                 theme={theme}
                 textClass={textClass}
+                appBgColor={appBgColor}
               />
             </motion.div>
           )}
@@ -601,8 +601,6 @@ const StudentListEditor = ({
             list={currentList}
             onRemoveStudent={handleRemoveStudent}
             onUpdateStudentCustomData={handleUpdateStudentCustomData}
-            theme={theme}
-            textClass={textClass}
             db={db}
           />
         </div>
@@ -616,7 +614,6 @@ const StudentListEditor = ({
             onClose={() => setShowAddStudents(false)}
             onAddStudents={handleAddStudents}
             theme={theme}
-            textClass={textClass}
             currentStudents={currentList.students}
           />
         )}

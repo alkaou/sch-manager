@@ -42,12 +42,12 @@ const BulletinsPageContent = ({
 
   // Couleurs et styles
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
-  const inputBgColor = theme === "dark" ? "bg-gray-700" : 
-      app_bg_color === gradients[1] || app_bg_color === gradients[2] ? app_bg_color : "bg-green-700 bg-opacity-40";
-  
-  const search_inputBgColor = theme === "dark" ? "bg-gray-700" : 
-        app_bg_color === gradients[1] || app_bg_color === gradients[2] ? app_bg_color : "bg-gray-700 bg-opacity-70";
-  
+  const inputBgColor = theme === "dark" ? "bg-gray-700" :
+    app_bg_color === gradients[1] || app_bg_color === gradients[2] ? app_bg_color : "bg-green-700 bg-opacity-40";
+
+  const search_inputBgColor = theme === "dark" ? "bg-gray-700" :
+    app_bg_color === gradients[1] || app_bg_color === gradients[2] ? app_bg_color : "bg-gray-700 bg-opacity-70";
+
 
   const textClass = text_color;
   // const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
@@ -67,7 +67,7 @@ const BulletinsPageContent = ({
         ? "hover:bg-gray-100"
         : "hover:bg-green-500 hover:bg-opacity-50";
 
-        
+
   // Charger la DB et initialiser compositions et bulletins
   useEffect(() => {
     window.electron.getDatabase().then((data) => {

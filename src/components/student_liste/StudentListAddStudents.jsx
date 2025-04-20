@@ -9,7 +9,6 @@ const StudentListAddStudents = ({
   onClose,
   onAddStudents,
   theme,
-  textClass,
   currentStudents = [] // Add this prop to receive currently selected students
 }) => {
   const [students, setStudents] = useState([]);
@@ -94,10 +93,10 @@ const StudentListAddStudents = ({
   });
   
   // Styles based on theme
+  const textClass = theme === "dark" ? "text-white" : "text-gray-700";
   const modalBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
-  const buttonPrimary = "bg-blue-600 hover:bg-blue-700 text-white";
   const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
   const buttonSuccess = "bg-green-600 hover:bg-green-700 text-white";
   
@@ -178,7 +177,7 @@ const StudentListAddStudents = ({
         </div>
         
         {/* Students list */}
-        <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex-1 overflow-y-auto scrollbar-custom p-4">
           <div className="mb-4 flex justify-between items-center">
             <div className="flex items-center">
               <button

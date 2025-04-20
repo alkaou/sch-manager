@@ -9,16 +9,15 @@ const StudentListPreview = ({
   list,
   onRemoveStudent,
   onUpdateStudentCustomData,
-  theme,
-  textClass,
   db = { db }
 }) => {
   const [editingCell, setEditingCell] = useState(null);
   const [editValue, setEditValue] = useState('');
   const inputRef = useRef(null);
 
-  const { live_language, language } = useLanguage();
-  const list_lang = list.langue;
+  const { live_language, language, Translator } = useLanguage();
+  const list_lang = list.langue ? list.langue : "Français";
+  console.log(list_lang);
 
   // Handle click outside to cancel editing
   useEffect(() => {
@@ -61,9 +60,9 @@ const StudentListPreview = ({
     if (header === 'Père') return student.father_name || '';
     if (header === 'Mère') return student.mother_name || '';
     if (header === 'Contact') return student.parents_contact || '';
-    if (header === 'Date de naissance') {
-      const _birth_date = new Date(student.birth_date).toLocaleDateString() || '';
-      return `${_birth_date} ${getBornInfos(student.birth_date,student.birth_place, list_lang)}`.trim();
+    if (header === 'Date & Lieu de naissance') {
+      // const _birth_date = new Date(student.birth_date).toLocaleDateString() || '';
+      return `${getBornInfos(student.birth_date, student.birth_place, list_lang)}`.trim();
     };
     if (header === 'Moyenne') return student.Moyenne || '';
     if (header === 'Classe') return getClasseName(student.classe) || '';
@@ -76,7 +75,7 @@ const StudentListPreview = ({
       if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-      const student_age = `${age.toString()} ${language[list_lang].years_text}`;
+      const student_age = list_lang === "Bambara" ? `${Translator[list_lang].years_text} ${age.toString()}` : `${age.toString()} ${Translator[list_lang].years_text}`;
       return student_age;
     }
     if (header === 'Sexe') return student.sexe || '';
@@ -162,14 +161,14 @@ const StudentListPreview = ({
   }
 
   // Styles based on theme
-  const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
-  const tableHeaderBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-  const tableRowBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
-  const tableRowAltBgColor = theme === "dark" ? "bg-gray-750" : "bg-gray-50";
+  const tableBorderColor = "border-gray-300";
+  const tableHeaderBgColor = "bg-gray-100";
+  const tableRowBgColor = "bg-white";
+  const tableRowAltBgColor = "bg-gray-50";
   const buttonDanger = "bg-red-600 hover:bg-red-700 text-white";
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center text-gray-700">
       {studentPages.map((pageStudents, pageIndex) => (
         <div
           key={`page-${pageIndex}`}
@@ -237,7 +236,7 @@ const StudentListPreview = ({
                 {pageStudents.map((student, index) => {
                   // Calculate the actual student index across all pages
                   const globalIndex = pageIndex === 0 ? index :
-                                      FIRST_PAGE_COUNT + (OTHER_PAGE_COUNT * (pageIndex-1)) + index;
+                    FIRST_PAGE_COUNT + (OTHER_PAGE_COUNT * (pageIndex - 1)) + index;
 
                   return (
                     <tr
@@ -277,7 +276,7 @@ const StudentListPreview = ({
                                 value={editValue}
                                 onChange={(e) => setEditValue(e.target.value)}
                                 onKeyDown={handleKeyPress}
-                                className={`flex-1 p-1 border ${theme === "dark" ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white"} rounded`}
+                                className={`flex-1 p-1 border border-gray-300 bg-white rounded`}
                                 autoFocus
                               />
                               <div className="flex ml-1">
@@ -342,8 +341,8 @@ const StudentListPreview = ({
 
       {list.students.length === 0 && (
         <div className="text-center p-8">
-          <p className={`text-lg ${textClass}`}>Aucun élève dans cette liste</p>
-          <p className={`${textClass} opacity-75`}>Cliquez sur le bouton "Ajouter des élèves" pour commencer</p>
+          <p className={`text-lg text-gray-700`}>Aucun élève dans cette liste</p>
+          <p className={`text-gray-700 opacity-75`}>Cliquez sur le bouton "Ajouter des élèves" pour commencer</p>
         </div>
       )}
     </div>

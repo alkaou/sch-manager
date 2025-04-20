@@ -49,6 +49,8 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
     fetchDatabases();
   };
 
+  const _textColor = theme === "dark" ? textColor : "text-gray-700";
+  
   return (
     <div className="space-y-6">
       <motion.div
@@ -61,8 +63,8 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
       >
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center">
-            <FaDatabase className={`mr-3 text-2xl ${textColor}`} />
-            <h2 className={`text-2xl font-bold ${textColor}`}>
+            <FaDatabase className={`mr-3 text-2xl ${_textColor}`} />
+            <h2 className={`text-2xl font-bold ${_textColor}`}>
               Mes Bases de Données
             </h2>
           </div>
@@ -91,7 +93,7 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
             databases={databases} 
             onSelect={handleDatabaseSelect} 
             theme={theme}
-            textColor={textColor}
+            textColor={_textColor}
           />
         )}
       </motion.div>
@@ -103,7 +105,7 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
             onClose={handleCloseDetails}
             onUpdate={fetchDatabases}
             theme={theme}
-            textColor={textColor}
+            textColor={_textColor}
             user={user}
           />
         )}
@@ -115,7 +117,7 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
             onClose={() => setIsCreating(false)}
             onDatabaseCreated={handleDatabaseCreated}
             theme={theme}
-            textColor={textColor}
+            textColor={_textColor}
             user={user}
           />
         )}
