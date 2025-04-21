@@ -253,6 +253,7 @@ const StudentListPreview = ({
                               header === "Classe" ||
                               header === "Moyenne" ||
                               header === "Date de naissance" ||
+                              header === "Date & Lieu de naissance" ||
                               header === "Âge" ||
                               header === "Contact" ||
                               header === "Matricule"
@@ -324,7 +325,7 @@ const StudentListPreview = ({
           {list.customMessage.show &&
             <>
               {pageIndex === totalPages - 1 && (
-                <div className="mt-5 ml-20">
+                <div className="mt-5 text-right">
                   <div className="text-lg font-bold mb-40">{list.customMessage.text}</div>
                   <div className="mb-10">Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
                 </div>

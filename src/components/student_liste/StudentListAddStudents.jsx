@@ -76,7 +76,7 @@ const StudentListAddStudents = ({
       // Find the class object that matches the student's class
       const classObj = db?.classes?.find(c => {
         // Format the class name to match the student's class format (e.g., "4 A")
-        const className = `${c.level} ${c.name}`;
+        const className = `${c.level} ${c.name}`.trim();
         return student.classe === className;
       });
       return classObj ? classObj.id === selectedClass : false;

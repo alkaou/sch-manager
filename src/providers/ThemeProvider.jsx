@@ -33,7 +33,7 @@ const ThemeProvider = ({ children }) => {
     };
 
     const app_bg_color = themeColorSelect[theme];
-    const text_color = app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "text-gray-600" : "text-white";
+    const text_color = app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "text-gray-700" : "text-white";
 
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme, setThemeColor, app_bg_color, text_color }}>

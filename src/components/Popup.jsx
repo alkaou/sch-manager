@@ -6,8 +6,15 @@ import { BG_COLORS, gradients } from "../utils/colors";
 import { useTheme } from "./contexts";
 
 
-const Popup = ({ isOpenPopup, setIsOpenPopup, children, btnActiveVal = 1, setActiveSideBarBtn = (() => { }) }) => {
+const Popup = ({ 
+    isOpenPopup, setIsOpenPopup,
+    children,
+    btnActiveVal = 1, 
+    setActiveSideBarBtn = (() => { }),
+    style={}
+}) => {
 
+    const Tailwindclasse = style === {} ? "max-w-xl w-full max-h-[80vh]" : ""
     const { theme, app_bg_color } = useTheme();
 
     const color = theme === "light" ? "bg-gray-100 text-black" : BG_COLORS.dark;
@@ -24,16 +31,18 @@ const Popup = ({ isOpenPopup, setIsOpenPopup, children, btnActiveVal = 1, setAct
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() => {
+                        if(style !== {}) return;
                         setIsOpenPopup(false);
                         setActiveSideBarBtn(btnActiveVal);
                     }}
                 >
                     <motion.div
-                        className={`relative ${popup_bg_color} dark:bg-gray-900 p-6 rounded-2xl shadow-2xl max-w-xl w-full max-h-[80vh] overflow-auto`}
+                        className={`relative ${popup_bg_color} ${Tailwindclasse} dark:bg-gray-900 p-6 rounded-2xl shadow-2xl overflow-auto scrollbar-custom`}
                         initial={{ scale: 0.5, opacity: 0, y: -50 }}
                         animate={{ scale: 1, opacity: 1, y: 0, transition: { type: "spring", stiffness: 200, damping: 20 } }}
                         exit={{ scale: 0.5, opacity: 0, y: 50, transition: { duration: 0.3 } }}
                         onClick={(e) => e.stopPropagation()}
+                        style={style}
                     >
                         {/* Bouton de fermeture */}
                         <button

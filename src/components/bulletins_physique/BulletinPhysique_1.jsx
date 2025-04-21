@@ -220,7 +220,7 @@ const BulletinPhysique1 = ({
                                         "HAKƐ"}
                             </td>
                             <td colSpan="3" className="border-r border-black p-2 text-center">
-                                {calculateGeneralAverage(students, student.id, subjects)}
+                                {calculateGeneralAverage(students, student.id, mainSubjects)}
                             </td>
                             <td className="p-2"></td>
                         </tr>

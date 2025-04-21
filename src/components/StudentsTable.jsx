@@ -618,7 +618,7 @@ const StudentsTable = ({
       {/* Un seul popup de confirmation pour toutes les actions */}
       <ActionConfirmePopup
         isOpenConfirmPopup={showConfirmPopup}
-        setIsOpenConfirmPopup={setShowConfirmPopup}
+        setIsOpenConfirmPopup={() => setShowConfirmPopup(false)}
         handleConfirmeAction={handleConfirmAction}
         title={confirmTitle}
         message={confirmMessage}

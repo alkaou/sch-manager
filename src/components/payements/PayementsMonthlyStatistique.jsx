@@ -35,7 +35,8 @@ ChartJS.register(
 const PayementsMonthlyStatistique = ({ 
   db,
   theme,
-  text_color
+  text_color,
+  all_classes = []
 }) => {
   const { language } = useLanguage();
   const [monthlyData, setMonthlyData] = useState([]);
@@ -48,6 +49,8 @@ const PayementsMonthlyStatistique = ({
   const [schoolMonths, setSchoolMonths] = useState([]);
   const [availableClasses, setAvailableClasses] = useState([]);
   const [availablePaymentSystems, setAvailablePaymentSystems] = useState([]);
+  // const [all_classes, set_all_classes] = useState([]);
+  const [classesToProcess, set_classesToProcess] = useState([]);
 
   // Styles en fonction du thème
   const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -65,6 +68,10 @@ const PayementsMonthlyStatistique = ({
 
 
   useEffect(() => {
+    if(!db || !db.paymentSystems){
+      setIsLoading(false);
+      return;
+    }
     if (db && db.paymentSystems) {
       // Extraire toutes les années scolaires uniques des systèmes de paiement
       const schoolYears = new Map();
@@ -128,7 +135,6 @@ const PayementsMonthlyStatistique = ({
 
 
   // Mettre à jour les classes disponibles lorsque le système de paiement change
-  const all_classes = []; // Mettre à jour les classes.
   useEffect(() => {
     if (db && selectedPaymentSystem) {
       // Trouver le système de paiement sélectionné
@@ -165,7 +171,10 @@ const PayementsMonthlyStatistique = ({
 
   // Générer les mois scolaires à partir des systèmes de paiement
   const generateSchoolMonths = (systems) => {
-    if (!systems || systems.length === 0) return;
+    if (!systems || systems.length === 0){ 
+      setIsLoading(false);
+      return;
+    }
 
     // Utiliser le premier système pour déterminer les mois scolaires
     const system = systems[0];
@@ -213,7 +222,6 @@ const PayementsMonthlyStatistique = ({
       setIsLoading(false);
       return;
     }
-
     // Filtrer les systèmes de paiement pour l'année scolaire sélectionnée
     let selectedYearSystems = [];
 
@@ -244,14 +252,26 @@ const PayementsMonthlyStatistique = ({
     }
 
     // Filtrer les classes selon la sélection
-    let classesToProcess = [];
     if (selectedClass === 'all') {
-      classesToProcess = all_classes.filter(cls =>
-        paymentSystem.classes && paymentSystem.classes.includes(cls.id)
-      );
+      all_classes.forEach(cls => {
+        if(paymentSystem.classes && 
+          paymentSystem.classes.includes(cls.id) &&
+          !classesToProcess.includes(cls)
+        ){
+          classesToProcess.push(cls);
+        }
+      });
     } else {
-      classesToProcess = all_classes.filter(cls => cls.id === selectedClass);
+      all_classes.forEach(cls => {
+        if(cls.id === selectedClass){
+          set_classesToProcess([cls]);
+        }
+      });
     }
+
+    // console.log(all_classes);
+    // console.log(classesToProcess);
+    // console.log(selectedClass);
 
     // Initialiser les données mensuelles basées sur les mois scolaires
     const monthlyStats = schoolMonths.map((schoolMonth) => ({
@@ -280,7 +300,10 @@ const PayementsMonthlyStatistique = ({
       const classPayments = db.payments && db.payments[paymentKey] ? db.payments[paymentKey] : [];
       const studentsInClass = classPayments;
 
-      if (studentsInClass.length === 0) return;
+      if (studentsInClass.length === 0) {
+        setIsLoading(false);
+        return;
+      }
 
       // Frais mensuels et annuels
       const monthlyFee = Number(paymentSystem.monthlyFee);
@@ -350,7 +373,7 @@ const PayementsMonthlyStatistique = ({
         ? Math.round((totalReceived / totalExpected) * 100)
         : 0;
     });
-
+    // console.log(monthlyStats);
     setMonthlyData(monthlyStats);
     setIsLoading(false);
   };

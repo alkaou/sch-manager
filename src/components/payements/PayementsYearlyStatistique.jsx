@@ -59,6 +59,10 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
 
   // Extract available school years from payment systems
   useEffect(() => {
+    if(!db || !db.paymentSystems){
+      setIsLoading(false);
+      return;
+    }
     if (db && db.paymentSystems) {
       // Extract unique school years from payment systems
       const schoolYears = new Map();

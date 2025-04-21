@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-import { ThemeContext, LanguageContext } from "../components/contexts";
+import { useTheme, LanguageContext } from "../components/contexts";
 import ThemeSwitcher from "../components/ThemeSwitcher.jsx";
 import LanguageSelector from "../components/LanguageSelector.jsx";
 import ColorPalette from "../components/ColorPalette.jsx";
@@ -13,13 +13,15 @@ import DatabaseCreator from "../components/DatabaseCreator.jsx";
 import { Translator } from "../utils/Translator.js";
 import { useNavigate } from "react-router";
 
-const useTheme = () => useContext(ThemeContext);
 const useLanguage = () => useContext(LanguageContext);
 
 
-const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, OpenThePopup, theme }) => {
+const Navbar = ({ 
+    showLangPanel, showPanel, setShowPanel, onHover,
+    setOnHover, OpenThePopup, theme, app_bg_color
+}) => {
 
-    const bg_colors = checkThemeForBgColor();
+    // const bg_colors = checkThemeForBgColor();
 
     const hide_all_panel = () => {
         if (onHover === false) {
@@ -28,7 +30,7 @@ const Navbar = ({ showLangPanel, showPanel, setShowPanel, onHover, setOnHover, O
     }
     return (
         <nav onClick={hide_all_panel} className={`fixed top-0 left-0 w-full border-b border-b-2 border-white flex items-center justify-between px-6 py-3 dark:border-white/70
-            ${bg_colors[theme]}`
+            ${app_bg_color}`
         }>
             {/* Icône de langue à gauche */}
             <LanguageSelector
@@ -60,7 +62,7 @@ const HomePage = () => {
 
     const navigate = useNavigate()
 
-    const { theme, text_color } = useTheme();
+    const { theme, text_color, app_bg_color } = useTheme();
 
     useEffect(() => {
         window.electron.getDatabase().then((data) => {
@@ -78,8 +80,13 @@ const HomePage = () => {
         setIsOpenPopup(popup_bool);
     };
 
+    const popupstyle = isOpenPopup === "DB_CREATOR" ? {
+        width: "80%",
+        height: "90vh",
+    } : {};
+
     return (
-        <div>
+        <div className={`${app_bg_color}`}>
             <Navbar
                 showLangPanel={showLangPanel}
                 showPanel={showPanel}
@@ -88,6 +95,7 @@ const HomePage = () => {
                 setOnHover={setOnHover}
                 OpenThePopup={OpenThePopup}
                 theme={theme}
+                app_bg_color={app_bg_color}
             />
 
             <div className="grid place-items-center min-h-screen p-4 text-white">
@@ -150,6 +158,7 @@ const HomePage = () => {
             <Popup
                 isOpenPopup={isOpenPopup}
                 setIsOpenPopup={setIsOpenPopup}
+                style={popupstyle}
                 children={
                     isOpenPopup === "DB_CREATOR" ? <DatabaseCreator setIsOpenPopup={setIsOpenPopup} /> : <ColorsSelector OpenThePopup={OpenThePopup} />
                 }

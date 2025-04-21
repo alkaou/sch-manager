@@ -82,7 +82,7 @@ const PayementsStudentList = ({
 
 			// Récupérer les étudiants actifs de la classe
 			const classStudents = db.students.filter(
-				student => student.classe === `${selectedClass.level} ${selectedClass.name}` && student.status === "actif"
+				student => student.classe === `${selectedClass.level} ${selectedClass.name}`.trim() && student.status === "actif"
 			);
 
 			// Clé unique pour les paiements de cette classe et de ce système

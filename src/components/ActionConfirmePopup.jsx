@@ -6,13 +6,13 @@ import { useTheme } from "./contexts";
 
 const ActionConfirmePopup = ({
   isOpenConfirmPopup, setIsOpenConfirmPopup, handleConfirmeAction, title,
-  message, actionType = "danger", element_info
+  message, actionType = "danger", element_info, text_color
 }) => {
 
   const { theme, app_bg_color } = useTheme();
 
   const popup_bg_color = theme === "dark" ? "bg-gray-800" : app_bg_color;
-  const textClass = theme === "dark" ? "text-white" : "text-gray-600";
+  const textClass = text_color ? text_color : theme === "dark" ? "text-white" : "text-gray-600";
   const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
   const confirmeButtonColor = actionType === "danger" ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700";
 
