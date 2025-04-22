@@ -8,11 +8,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth';
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc
+  getFirestore
 } from 'firebase/firestore';
 import firebaseConfig from './firebaseConfig';
 

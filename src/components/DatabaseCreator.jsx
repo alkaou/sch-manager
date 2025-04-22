@@ -4,27 +4,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BsCheckCircleFill, BsDatabaseAdd } from 'react-icons/bs';
 import { FaSchool, FaMapMarkerAlt, FaBookOpen } from 'react-icons/fa';
 import { HiOutlineArrowNarrowLeft, HiOutlineArrowNarrowRight } from 'react-icons/hi';
+import { X } from "lucide-react";
 
 import TextInput from './TextInput.jsx';
-import { useLanguage as useLang, useTheme, usePageLoader, useFlashNotification } from "./contexts";
+import { useLanguage as useLang, useTheme, useFlashNotification } from "./contexts";
 import Error from './Error.jsx';
 import { getFormattedDateTime, getDateTime } from '../utils/helpers';
 
 function DatabaseCreator({ setIsOpenPopup }) {
-	const [dbName, setDbName] = useState("Compexe-Scolaire-Dembele");
-	const [shortName, setShortName] = useState("GSALKD");
-	const [academie, setAcademie] = useState("Kati");
-	const [zone, setZone] = useState("Kati");
+	const [dbName, setDbName] = useState("GROUPE-SCOLAIRE-FATOUMATA-DEMBELE");
+	const [shortName, setShortName] = useState("GSFD");
+	const [academie, setAcademie] = useState("SAN");
+	const [zone, setZone] = useState("SAN");
 	const [error, setError] = useState("");
+	const [messageIndication, setMessageIndication] = useState("");
 	const [currentStep, setCurrentStep] = useState(0);
-	const { app_bg_color, text_color, primary_color, secondary_color } = useTheme();
+	const { theme } = useTheme();
 	const { live_language } = useLang();
 	const [db, setDb] = useState(null);
 	const [isCreating, setIsCreating] = useState(false);
 	const [progress, setProgress] = useState(0);
 
 	const navigate = useNavigate();
-	const { setIsLoading, setTypeLoader, setText } = usePageLoader();
 	const { setFlashMessage } = useFlashNotification();
 
 	useEffect(() => {
@@ -39,15 +40,15 @@ function DatabaseCreator({ setIsOpenPopup }) {
 		if (isCreating && progress < 100) {
 			const timer = setTimeout(() => {
 				setProgress(prev => Math.min(prev + 1, 100));
-			}, 100);
+			}, 350);
 			return () => clearTimeout(timer);
 		}
 	}, [isCreating, progress]);
 
 	const changeInputVal = (field, value) => {
 		setError("");
-		
-		switch(field) {
+
+		switch (field) {
 			case 'dbName':
 				setDbName(value);
 				break;
@@ -66,7 +67,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 	}
 
 	const validateStep = () => {
-		switch(currentStep) {
+		switch (currentStep) {
 			case 0:
 				return validateDbName();
 			case 1:
@@ -110,7 +111,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 
 	const validateShortName = () => {
 		const name = shortName.trim();
-		
+
 		if (!name) {
 			setError(live_language.error_empty);
 			return false;
@@ -162,7 +163,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 	const createNewDatabase = () => {
 		setIsCreating(true);
 		setProgress(0);
-		
+
 		const created_hour = getFormattedDateTime();
 		const created_date = getDateTime();
 
@@ -183,32 +184,28 @@ function DatabaseCreator({ setIsOpenPopup }) {
 		};
 
 		window.electron.saveDatabase(updatedDb).then(() => {
-			setText(live_language.creating_db_message);
-			setTypeLoader(2);
-			setIsLoading(true);
+			setMessageIndication(live_language.creating_db_message);
 
 			setTimeout(() => {
-				setText(live_language.loading_patient_message);
+				setMessageIndication(live_language.loading_patient_message);
 
 				setTimeout(() => {
-					setText(live_language.created_db_message);
+					setMessageIndication(live_language.created_db_message);
 
 					setTimeout(() => {
 						setIsOpenPopup(false);
-						setIsLoading(false);
-						setText("");
-						setTypeLoader(0);
+						setMessageIndication("");
 						setFlashMessage({
 							message: `${live_language.database_created_success} ${dbName}`,
 							type: "success",
-							duration: 5000,
+							duration: 15000,
 						});
 						navigate("/started_page");
-					}, 5000);
+					}, 10000);
 
-				}, 5000);
+				}, 10000);
 
-			}, 5000);
+			}, 15000);
 		});
 	};
 
@@ -227,11 +224,12 @@ function DatabaseCreator({ setIsOpenPopup }) {
 	];
 
 	const renderStepContent = () => {
-		switch(currentStep) {
+		switch (currentStep) {
 			case 0:
 				return (
 					<TextInput
 						name={live_language.create_input_info_text}
+						holderExp="GROUPE-SCOLAIRE-FATOUMATA-DEMBELE"
 						type='text'
 						value={dbName}
 						setValue={(e) => changeInputVal('dbName', e.target.value)}
@@ -242,6 +240,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 				return (
 					<TextInput
 						name={live_language.short_name}
+						holderExp="GSFD"
 						type='text'
 						value={shortName}
 						setValue={(e) => changeInputVal('shortName', e.target.value)}
@@ -252,6 +251,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 				return (
 					<TextInput
 						name={live_language.academie}
+						holderExp="SAN"
 						type='text'
 						value={academie}
 						setValue={(e) => changeInputVal('academie', e.target.value)}
@@ -262,6 +262,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 				return (
 					<TextInput
 						name={live_language.zone}
+						holderExp="SAN"
 						type='text'
 						value={zone}
 						setValue={(e) => changeInputVal('zone', e.target.value)}
@@ -274,7 +275,261 @@ function DatabaseCreator({ setIsOpenPopup }) {
 	};
 
 	return (
-		<div />
+		<AnimatePresence>
+			<motion.div
+				className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30"
+				initial={{ opacity: 0 }}
+				animate={{ opacity: 1 }}
+				exit={{ opacity: 0 }}
+			>
+				<div
+					style={{
+						width: "70%",
+						height: "80vh",
+					}}
+					className={`
+						relative border border-2 p-6 rounded-2xl shadow-2xl overflow-auto scrollbar-custom
+						${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-800'}
+					`}
+				>
+					{isCreating ? (
+						<motion.div
+							initial={{ opacity: 0, y: 10 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5 }}
+							className="flex flex-col items-center justify-center py-8 px-4"
+						>
+							<motion.div
+								initial={{ scale: 0 }}
+								animate={{ scale: 1 }}
+								transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+								className="w-32 h-32 mb-6 relative"
+							>
+								<svg className="w-full h-full" viewBox="0 0 100 100">
+									<motion.circle
+										cx="50"
+										cy="50"
+										r="45"
+										fill="none"
+										stroke={theme === 'dark' ? "#1E3A8A" : "#3B82F6"}
+										strokeWidth="8"
+										initial={{ pathLength: 0 }}
+										animate={{ pathLength: progress / 100 }}
+										transition={{ duration: 0.5 }}
+									/>
+									<circle
+										cx="50"
+										cy="50"
+										r="45"
+										fill="none"
+										stroke={theme === 'dark' ? "#4B5563" : "#E5E7EB"}
+										strokeWidth="2"
+									/>
+								</svg>
+								<motion.div
+									className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl font-bold"
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									transition={{ delay: 0.5 }}
+								>
+									{progress}%
+								</motion.div>
+							</motion.div>
+
+							<motion.h2
+								className="text-2xl font-bold mb-4 text-center bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ delay: 0.6 }}
+							>
+								{live_language.create_db_text}
+							</motion.h2>
+
+							<motion.div
+								className={`
+									w-full max-w-md border border-2 ${theme === "dark" ? "bg-gray-700" : "bg-gray-200"}
+									p-4 rounded-lg mb-6
+								`}
+								initial={{ opacity: 0, y: 20 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ delay: 0.7 }}
+							>
+								<motion.p
+									className="text-center font-medium"
+									style={{fontSize: "25", fontWeight: "bold", fontStyle: "italic"}}
+									animate={{
+										scale: [1, 1.02, 1],
+										color: theme === 'dark' ? ['#D1D5DB', '#4ADE80', '#D1D5DB'] : ['#1F2937', '#6366F1', '#1F2937']
+									}}
+									transition={{
+										duration: 2,
+										repeat: Infinity,
+										repeatType: "reverse"
+									}}
+								>
+									{messageIndication}
+								</motion.p>
+							</motion.div>
+
+							<motion.div
+								className="flex justify-center items-center space-x-4"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ delay: 0.9 }}
+							>
+								<motion.div
+									className="h-3 w-3 rounded-full bg-blue-500"
+									animate={{ scale: [1, 1.5, 1] }}
+									transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.2 }}
+								/>
+								<motion.div
+									className="h-3 w-3 rounded-full bg-indigo-500"
+									animate={{ scale: [1, 1.5, 1] }}
+									transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.4 }}
+								/>
+								<motion.div
+									className="h-3 w-3 rounded-full bg-purple-500"
+									animate={{ scale: [1, 1.5, 1] }}
+									transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.6 }}
+								/>
+							</motion.div>
+						</motion.div>
+					) : (
+						<>
+							{/* Bouton de fermeture */}
+							<button
+								className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-800 rounded-full shadow-md hover:scale-110 transition-all duration-300"
+								onClick={() => {
+									setIsOpenPopup(false);
+								}}
+							>
+								<X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+							</button>
+
+							<h2 className="text-center text-2xl font-bold mb-8">
+								<span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+									{live_language.create_db_text}
+								</span>
+							</h2>
+
+							{/* Step indicators */}
+							<div className="flex justify-center mb-10">
+								{[0, 1, 2, 3].map((step) => (
+									<div key={step} className="flex items-center">
+										<motion.div
+											className={`flex items-center justify-center w-12 h-12 rounded-full ${currentStep >= step
+												? 'bg-blue-600 text-white'
+												: theme === 'dark' ? 'bg-gray-700 text-gray-400' : 'bg-gray-200 text-gray-500'
+												} transition-colors duration-300`}
+											whileHover={{ scale: 1.1 }}
+											whileTap={{ scale: 0.95 }}
+											onClick={() => currentStep > step && setCurrentStep(step)}
+										>
+											{currentStep > step ? (
+												<BsCheckCircleFill className="w-6 h-6" />
+											) : (
+												stepIcons[step]
+											)}
+										</motion.div>
+
+										{/* Line connector */}
+										{step < 3 && (
+											<div className={`w-16 h-1 mx-1 ${currentStep > step
+												? 'bg-blue-600'
+												: theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'
+												} transition-colors duration-300`} />
+										)}
+									</div>
+								))}
+							</div>
+
+							{/* Step labels */}
+							<div className="text-center mb-8">
+								<AnimatePresence mode="wait">
+									<motion.h3
+										key={currentStep}
+										className="text-xl font-semibold"
+										initial={{ opacity: 0, y: 10 }}
+										animate={{ opacity: 1, y: 0 }}
+										exit={{ opacity: 0, y: -10 }}
+										transition={{ duration: 0.3 }}
+									>
+										{stepLabels[currentStep]}
+									</motion.h3>
+								</AnimatePresence>
+							</div>
+
+							{/* Error display */}
+							{error && (
+								<motion.div
+									initial={{ opacity: 0, scale: 0.9 }}
+									animate={{ opacity: 1, scale: 1 }}
+									transition={{ duration: 0.1 }}
+									className="w-80 mx-auto"
+								>
+									<Error text={error} />
+								</motion.div>
+							)}
+
+							{/* Step content */}
+							<AnimatePresence mode="wait">
+								<motion.div
+									key={currentStep}
+									initial={{ opacity: 0, x: 20 }}
+									animate={{ opacity: 1, x: 0 }}
+									exit={{ opacity: 0, x: -20 }}
+									transition={{ duration: 0.3 }}
+									className="mb-10 w-80 mx-auto"
+								>
+									{renderStepContent()}
+								</motion.div>
+							</AnimatePresence>
+
+							{/* Navigation buttons */}
+							<div className="flex justify-between pt-4">
+								<motion.button
+									whileHover={{ scale: 1.05 }}
+									whileTap={{ scale: 0.95 }}
+									className={`flex items-center px-6 py-2 rounded-lg ${currentStep === 0
+										? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+										: theme === 'dark'
+											? 'bg-gray-700 text-white hover:bg-gray-600'
+											: 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+										} transition-colors duration-300`}
+									onClick={prevStep}
+									disabled={currentStep === 0}
+								>
+									<HiOutlineArrowNarrowLeft className="mr-2" />
+									{live_language.previous}
+								</motion.button>
+
+								<motion.button
+									whileHover={{ scale: 1.05 }}
+									whileTap={{ scale: 0.95 }}
+									className={`flex items-center px-6 py-2 rounded-lg ${theme === 'dark'
+										? 'bg-blue-600 text-white hover:bg-blue-700'
+										: 'bg-blue-500 text-white hover:bg-blue-600'
+										} transition-colors duration-300`}
+									onClick={nextStep}
+								>
+									{currentStep === 3 ? (
+										<>
+											{live_language.create_btn_text}
+											<BsCheckCircleFill className="ml-2" />
+										</>
+									) : (
+										<>
+											{live_language.next}
+											<HiOutlineArrowNarrowRight className="ml-2" />
+										</>
+									)}
+								</motion.button>
+							</div>
+						</>
+					)}
+				</div>
+			</motion.div>
+		</AnimatePresence>
 	);
 };
 

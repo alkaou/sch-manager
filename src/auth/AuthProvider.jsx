@@ -122,11 +122,11 @@ const AuthProvider = ({ children }) => {
 
   // Fonction de déconnexion
   const logout = async () => {
-    const isInternet = await checkInternetConnection();
-    if(!isInternet) {
-      alert("Veuillez s'il vous plaît vérifier votre connexion internet !");
-      return;
-    }
+    // const isInternet = await checkInternetConnection();
+    // if(!isInternet) {
+      // alert("Veuillez s'il vous plaît vérifier votre connexion internet !");
+      // return;
+    // }
     try {
       setLoading(true);
       await logoutUser();

@@ -17,7 +17,7 @@ const StudentListPreview = ({
 
   const { live_language, language, Translator } = useLanguage();
   const list_lang = list.langue ? list.langue : "Français";
-  console.log(list_lang);
+  // console.log(list_lang);
 
   // Handle click outside to cancel editing
   useEffect(() => {

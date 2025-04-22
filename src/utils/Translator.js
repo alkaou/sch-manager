@@ -90,7 +90,7 @@ const Translator = {
         
         // SideBar school info section
         school_name_label: "Kalanso tɔgɔ",
-        short_name_label: "Tɔgɔ surunya",
+        short_name_label: "Tɔgɔ surunmani",
         save_btn: "A maara",
         cancel_btn: "A boli",
         
@@ -187,12 +187,12 @@ const Translator = {
         confirm_delete_message: "I b'a fɛ ka nin sɛbɛn jɔsi wa?",
         unknown_date: "Don mako tɛ",
         db_name: "Database tɔgɔ",
-        short_name: "Tɔgɔ surunya",
+        short_name: "Tɔgɔ surunmani",
         academie: "Kalansoba",
-        zone: "Sigiyɔrɔ mara la",
-        error_shortname_length: "⚠️ Tɔgɔ surunya ka kan ka kɛ ni taamasiyɛn 2 ka se 10 ma",
+        zone: "Sigiyɔrɔ mara C.A.P",
+        error_shortname_length: "⚠️ Tɔgɔ surunmani ka kan ka kɛ ni taamasiyɛn 2 ka se 10 ma",
         error_academie_empty: "⚠️ Kalansoba tɔgɔ dili wajibiyalen don",
-        error_zone_empty: "⚠️ Sigiyɔrɔ tɔgɔ dili wajibiyalen don",
+        error_zone_empty: "⚠️ Sigiyɔrɔ C.A.P tɔgɔ dili wajibiyalen don",
         previous: "Kɔsegi",
         next: "Taa ɲɛfɛ",
         database_created_success: "Database labɛnna kɛra ka ɲɛ:"
@@ -387,10 +387,10 @@ const Translator = {
         db_name: "Nom de la base",
         short_name: "Nom court",
         academie: "Académie",
-        zone: "Zone",
+        zone: "C.A.P",
         error_shortname_length: "⚠️ Le nom court doit contenir entre 2 et 10 caractères",
         error_academie_empty: "⚠️ L'académie est obligatoire",
-        error_zone_empty: "⚠️ La zone est obligatoire",
+        error_zone_empty: "⚠️ Le C.A.P est obligatoire",
         previous: "Précédent",
         next: "Suivant",
         database_created_success: "Base de données créée avec succès :"
@@ -585,10 +585,10 @@ const Translator = {
         db_name: "Database name",
         short_name: "Short name",
         academie: "Academy",
-        zone: "Area",
+        zone: "CAP",
         error_shortname_length: "⚠️ Short name must be between 2 and 10 characters",
         error_academie_empty: "⚠️ Academy is required",
-        error_zone_empty: "⚠️ Area is required",
+        error_zone_empty: "⚠️ CAP is required",
         previous: "Previous",
         next: "Next",
         database_created_success: "Database created successfully:"

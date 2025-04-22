@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts';
-import { getClasseName, getClasseById } from "../../utils/helpers";
+import { getClasseName, getClasseById, delay } from "../../utils/helpers";
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -32,11 +32,13 @@ ChartJS.register(
   Filler
 );
 
-const PayementsMonthlyStatistique = ({ 
+
+
+const PayementsMonthlyStatistique = ({
   db,
   theme,
   text_color,
-  all_classes = []
+  all_classes = [],
 }) => {
   const { language } = useLanguage();
   const [monthlyData, setMonthlyData] = useState([]);
@@ -49,8 +51,8 @@ const PayementsMonthlyStatistique = ({
   const [schoolMonths, setSchoolMonths] = useState([]);
   const [availableClasses, setAvailableClasses] = useState([]);
   const [availablePaymentSystems, setAvailablePaymentSystems] = useState([]);
-  // const [all_classes, set_all_classes] = useState([]);
-  const [classesToProcess, set_classesToProcess] = useState([]);
+  let [classesToProcess, setClassesToProcess] = useState([]);
+
 
   // Styles en fonction du thème
   const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -68,7 +70,7 @@ const PayementsMonthlyStatistique = ({
 
 
   useEffect(() => {
-    if(!db || !db.paymentSystems){
+    if (!db || !db.paymentSystems) {
       setIsLoading(false);
       return;
     }
@@ -141,12 +143,12 @@ const PayementsMonthlyStatistique = ({
       const paymentSystem = db.paymentSystems.find(system => system.id === selectedPaymentSystem);
 
       db.paymentSystems.map(sys => {
-          sys.classes.map(cls => {
-            const real_classe = getClasseById(db.classes, cls, language);
-            if(!all_classes.includes(real_classe)){
-              all_classes.push(real_classe);
-            }
-          });
+        sys.classes.map(cls => {
+          const real_classe = getClasseById(db.classes, cls, language);
+          if (!all_classes.includes(real_classe)) {
+            all_classes.push(real_classe);
+          }
+        });
       });
       // console.log(all_classes);
 
@@ -171,7 +173,7 @@ const PayementsMonthlyStatistique = ({
 
   // Générer les mois scolaires à partir des systèmes de paiement
   const generateSchoolMonths = (systems) => {
-    if (!systems || systems.length === 0){ 
+    if (!systems || systems.length === 0) {
       setIsLoading(false);
       return;
     }
@@ -254,20 +256,24 @@ const PayementsMonthlyStatistique = ({
     // Filtrer les classes selon la sélection
     if (selectedClass === 'all') {
       all_classes.forEach(cls => {
-        if(paymentSystem.classes && 
+        if (paymentSystem.classes &&
           paymentSystem.classes.includes(cls.id) &&
           !classesToProcess.includes(cls)
-        ){
+        ) {
           classesToProcess.push(cls);
         }
       });
     } else {
-      all_classes.forEach(cls => {
-        if(cls.id === selectedClass){
-          set_classesToProcess([cls]);
-        }
+      setIsLoading(true);
+      // console.log(selectedClass);
+      const the_classe = getClasseById(db.classes, selectedClass, language);
+      // console.log([the_classe]);
+      classesToProcess = [the_classe];
+      delay(1000).then(() => {
+        setIsLoading(false);
       });
     }
+
 
     // console.log(all_classes);
     // console.log(classesToProcess);

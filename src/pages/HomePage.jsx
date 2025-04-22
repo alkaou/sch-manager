@@ -16,7 +16,7 @@ import { useNavigate } from "react-router";
 const useLanguage = () => useContext(LanguageContext);
 
 
-const Navbar = ({ 
+const Navbar = ({
     showLangPanel, showPanel, setShowPanel, onHover,
     setOnHover, OpenThePopup, theme, app_bg_color
 }) => {
@@ -155,14 +155,16 @@ const HomePage = () => {
                 </motion.div>
             </div>
 
-            <Popup
-                isOpenPopup={isOpenPopup}
-                setIsOpenPopup={setIsOpenPopup}
-                style={popupstyle}
-                children={
-                    isOpenPopup === "DB_CREATOR" ? <DatabaseCreator setIsOpenPopup={setIsOpenPopup} /> : <ColorsSelector OpenThePopup={OpenThePopup} />
-                }
-            />
+            {isOpenPopup === "DB_CREATOR" ?
+                <DatabaseCreator setIsOpenPopup={setIsOpenPopup} /> 
+                :
+                <Popup
+                    isOpenPopup={isOpenPopup}
+                    setIsOpenPopup={setIsOpenPopup}
+                    style={popupstyle}
+                    children={<ColorsSelector OpenThePopup={OpenThePopup} />}
+                />
+            }
         </div>
     );
 };
