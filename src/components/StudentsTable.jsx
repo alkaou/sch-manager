@@ -6,6 +6,7 @@ import { getAge, getClasseName, getBornInfos } from "../utils/helpers";
 import { deleteStudent, activateStudent, deactivateStudent } from "../utils/database_methods";
 import ActionConfirmePopup from "./ActionConfirmePopup.jsx";
 
+
 const StudentsTable = ({
   students,
   classes,
@@ -611,6 +612,26 @@ const StudentsTable = ({
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {selected.length > 0 && (
+        <div className="fixed right-40 bottom-5">
+          <div
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg transform transition-all duration-500 ease-in-out animate-bounce-subtle hover:scale-105"
+            style={{
+              borderLeft: "4px solid #FFF",
+              borderWidth: "2px",
+              borderColor: "#FFF",
+            }}
+          >
+            <p>
+              {language === "Français" ? `${selected.length} élève(s) sélectionné(s)` :
+                language === "Anglais" ? `${selected.length} student(s) selected` :
+                  `Kalanden sugandilen : ${selected.length}`
+              }
+            </p>
           </div>
         </div>
       )}

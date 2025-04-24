@@ -140,6 +140,9 @@ const CreateCompositionComponent = ({
                         const isFullyLocked = compositionBulletins.length > 2 &&
                           compositionBulletins.every(bulletin => bulletin.isLocked === true);
 
+                        const someBulletinsAreLocked = compositionBulletins.length > 1 &&
+                          compositionBulletins.every(bulletin => bulletin.isLocked === true);
+
                         return (
                           <tr key={composition.id} className={`hover:bg-gray-50 hover:text-gray-500 ${_text_color}`}>
                             <td className="px-2 py-1 border text-center">{composition.label}</td>
@@ -164,15 +167,17 @@ const CreateCompositionComponent = ({
                                   >
                                     Modifier
                                   </motion.button>
-                                  <motion.button
-                                    type="button"
-                                    onClick={() => setCompositionToDelete(composition)}
-                                    className={`text-white px-3 py-1 rounded ${buttonDelete}`}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                  >
-                                    Supprimer
-                                  </motion.button>
+                                  {!someBulletinsAreLocked && (
+                                    <motion.button
+                                      type="button"
+                                      onClick={() => setCompositionToDelete(composition)}
+                                      className={`text-white px-3 py-1 rounded ${buttonDelete}`}
+                                      whileHover={{ scale: 1.05 }}
+                                      whileTap={{ scale: 0.95 }}
+                                    >
+                                      Supprimer
+                                    </motion.button>
+                                  )}
                                 </>
                               )}
                             </td>

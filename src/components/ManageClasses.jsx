@@ -257,13 +257,20 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       transition={{ duration: 0.5 }}
       style={{ boxShadow: theme === "dark" ? "0 0 15px rgba(66, 153, 225, 0.5)" : "0 0 15px rgba(159, 122, 234, 0.5)" }}
     >
-      <div className="flex justify-between items-center mb-6">
-        <h2 className={`text-2xl font-bold ${textClass}`}>Gestion des classes</h2>
+      <div className="
+        flex justify-between items-center mb-6"
+      >
+        <h2 className={`text-2xl font-bold ${text_color}`}>Gestion des classes</h2>
         <button
           onClick={() => setIsManageClassesActive(false)}
-          className="text-gray-500 hover:text-gray-700 transition-colors"
+          className={`text-white transition-colors
+            border border-2 w-10 h-10 bg-red-500/80
+            justify-between items-center text-center
+            hover:bg-red-700/80
+          `}
+          style={{borderRadius: "100%"}}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
@@ -293,9 +300,9 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
 
       {/* Section de tri des classes */}
       <div className="mb-4 flex items-center justify-between">
-        <h3 className={`text-xl font-semibold ${textClass}`}>Classes existantes</h3>
+        <h3 className={`text-xl font-semibold ${text_color}`}>Classes existantes</h3>
         <div>
-          <label htmlFor="sort" className={`mr-2 ${textClass}`}>Trier par niveau :</label>
+          <label htmlFor="sort" className={`mr-2 ${text_color}`}>Trier par niveau :</label>
           <select
             id="sort"
             value={sortMethod}
@@ -312,20 +319,20 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       {/* Liste des classes existantes */}
       <div className="mb-8">
         {classes.length === 0 ? (
-          <p className={textClass}>Aucune classe enregistrée.</p>
+          <p className={text_color}>Aucune classe enregistrée.</p>
         ) : (
           <table className="min-w-full border-collapse">
             <thead>
               <tr>
-                <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Niveau</th>
-                <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Nom de la classe</th>
-                <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Nombre d'élèves</th>
-                <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Actions</th>
+                <th className={`px-2 py-2 border ${inputBorderColor} ${text_color}`}>Niveau</th>
+                <th className={`px-2 py-2 border ${inputBorderColor} ${text_color}`}>Nom de la classe</th>
+                <th className={`px-2 py-2 border ${inputBorderColor} ${text_color}`}>Nombre d'élèves</th>
+                <th className={`px-2 py-2 border ${inputBorderColor} ${text_color}`}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {sortedClasses.map((cls) => (
-                <tr key={cls.id} className={`hover:bg-gray-50 hover:text-gray-500 ${textClass}`}>
+                <tr key={cls.id} className={`hover:bg-gray-50 hover:text-gray-500 ${text_color}`}>
                   <td className="px-2 py-1 border text-center">{cls.level}</td>
                   <td className="px-2 py-1 border text-center">
                     {editingClassId === cls.id ? (
@@ -394,13 +401,13 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
 
       {/* Formulaire d'ajout de nouvelles classes */}
       <div className="mb-8">
-        <h3 className={`text-xl font-semibold mb-2 ${textClass}`}>Ajouter de nouvelles classes</h3>
+        <h3 className={`text-xl font-semibold mb-2 ${text_color}`}>Ajouter de nouvelles classes</h3>
         <table className="min-w-full border-collapse">
           <thead>
             <tr>
-              <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Niveau (1-12)</th>
-              <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Nom de la classe</th>
-              <th className={`px-2 py-2 border ${inputBorderColor} ${textClass}`}>Actions</th>
+              <th className={`px-2 py-2 border ${inputBorderColor} ${text_color}`}>Niveau (1-12)</th>
+              <th className={`px-2 py-2 border ${inputBorderColor} ${text_color}`}>Nom de la classe</th>
+              <th className={`px-2 py-2 border ${inputBorderColor} ${text_color}`}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -484,7 +491,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
             exit={{ opacity: 0 }}
           >
             <motion.div
-              className={`bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl ${inputBorderColor} border`}
+              className={`${app_bg_color} ${text_color} p-6 rounded-lg shadow-xl ${inputBorderColor} border`}
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.8 }}

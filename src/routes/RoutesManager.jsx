@@ -14,7 +14,7 @@ import HelpersPage from "../pages/HelpersPage.jsx";
 import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
 import ThemeProvider from "../providers/ThemeProvider.jsx";
 import FlashNotificationProvider from "../providers/FlashNotificationProvider.jsx";
-import LoaderPageProvider from "../providers/LoaderPageContext.jsx";
+import ProtectionsProvider from "../providers/ProtectionsProvider.jsx";
 import LanguageProvider from "../providers/LanguageProvider.jsx";
 import { AuthProvider, UserProfile } from "../auth";
 
@@ -23,7 +23,7 @@ const RoutesManager = () => {
     <Router>
       <ThemeProvider>
         <FlashNotificationProvider>
-          <LoaderPageProvider>
+          <ProtectionsProvider>
             <LanguageProvider>
               <AuthProvider>
                 <Routes>
@@ -45,7 +45,7 @@ const RoutesManager = () => {
                 </Routes>
               </AuthProvider>
             </LanguageProvider>
-          </LoaderPageProvider>
+          </ProtectionsProvider>
         </FlashNotificationProvider>
       </ThemeProvider>
     </Router>

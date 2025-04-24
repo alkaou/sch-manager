@@ -205,18 +205,26 @@ const CompositionsPageContent = ({
     setIsCreateMode(true);
   };
 
+  const compostionBuelletinsAreLocked = async (my_compostion) => {
+    const compositionBulletins = db?.bulletins?.filter(bulletin =>
+      bulletin.compositionId === my_compostion.id
+    ) || [];
+
+    // console.log(compositionBulletins);
+
+    const isFullyLocked = compositionBulletins.length > 1 &&
+      compositionBulletins.every(bulletin => bulletin.isLocked === true);
+
+    return isFullyLocked;
+  }
+
   const confirmDeleteComposition = async () => {
     if (!compositionToDelete) return;
 
     try {
       // Check if this composition has more than 2 bulletins and all are locked
-      const compositionBulletins = db?.bulletins?.filter(bulletin =>
-        bulletin.compositionId === compositionToDelete.id
-      ) || [];
-
-      const isFullyLocked = compositionBulletins.length > 2 &&
-        compositionBulletins.every(bulletin => bulletin.isLocked === true);
-
+      const isFullyLocked = await compostionBuelletinsAreLocked(compositionToDelete);
+        
       // If fully locked, don't allow deletion
       if (isFullyLocked) {
         setGlobalError("Cette composition ne peut pas être supprimée car tous ses bulletins sont verrouillés.");
@@ -228,14 +236,25 @@ const CompositionsPageContent = ({
       const updatedCompositions = compositions.filter(comp => comp.id !== compositionToDelete.id);
 
       // Also filter out all bulletins related to this composition
-      const updatedBulletins = db.bulletins.filter(bulletin => bulletin.compositionId !== compositionToDelete.id);
+      const updatedBulletins = db?.bulletins?.filter(bulletin => bulletin.compositionId !== compositionToDelete.id);
+
+      // console.log(updatedBulletins);
 
       // Update the database with both changes
-      const updatedDB = {
-        ...db,
-        compositions: updatedCompositions,
-        bulletins: updatedBulletins
-      };
+      let updatedDB;
+
+      if(db.bulletins && db.bulletins.length > 0 && updatedBulletins){
+        updatedDB = {
+          ...db,
+          compositions: updatedCompositions,
+          bulletins: updatedBulletins
+        };
+      } else {
+        updatedDB = {
+          ...db,
+          compositions: updatedCompositions
+        };
+      }
 
       await window.electron.saveDatabase(updatedDB);
       setCompositions(updatedCompositions);
@@ -243,6 +262,7 @@ const CompositionsPageContent = ({
       setCompositionToDelete(null);
     } catch (error) {
       setGlobalError("Erreur lors de la suppression de la composition.");
+      setCompositionToDelete(null);
     }
   };
 
@@ -399,6 +419,7 @@ const CompositionsPageContent = ({
           handleSaveComposition={handleSaveComposition}
           language={language}
           sortedCompositions={sortedCompositions}
+          compostionBuelletinsAreLocked={compostionBuelletinsAreLocked}
         />
       </motion.div>
 

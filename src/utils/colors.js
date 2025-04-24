@@ -27,7 +27,7 @@ const gradients = [
     "bg-[#2D5A27] text-white",
     "bg-[#1B4F72] text-white",
     "bg-emerald-600 text-white",
-    "bg-purple-600 text-white",
+    "bg-orange-600 text-white",
     "bg-[#1877F2] text-white",
     "bg-[#0088CC] text-white",
     "bg-[#25D366] text-white",

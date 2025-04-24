@@ -676,6 +676,7 @@ const BulletinsPageContent = ({
           set_the_classId(null);
           set_popup_action(null);
         }}
+        actionType={popup_action === 1 ? "info" : "danger"}
         handleConfirmeAction={
           popup_action === 1 ? handleLokedBulletin :
             popup_action === 2 ? handleDeleteBulletin : () => { }

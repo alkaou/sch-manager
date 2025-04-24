@@ -181,8 +181,8 @@ const BulletinPhysique1 = ({
                             return (
                                 <tr key={subject.name} className={`border-b border-black ${index % 2 === 0 ? "bg-ray-100" : "bg-gray-200"}`}>
                                     <td className="border-r border-black p-2 text-left">{subject.name}</td>
-                                    <td className="border-r border-black p-2 text-center">{classeNote !== "-" ? parseFloat(classeNote).toFixed(2) : "-"}</td>
-                                    <td className="border-r border-black p-2 text-center">{compoNote !== "-" ? parseFloat(compoNote).toFixed(2) : "-"}</td>
+                                    <td className="border-r border-black p-2 text-center">{classeNote !== "-" && classeNote !== undefined ? parseFloat(classeNote).toFixed(2) : "-"}</td>
+                                    <td className="border-r border-black p-2 text-center">{compoNote !== "-" && compoNote !== undefined ? parseFloat(compoNote).toFixed(2) : "-"}</td>
                                     <td className="border-r border-black p-2 text-center">{moyenne}</td>
                                     <td className="border-r border-black p-2 text-center">{subject.coefficient}</td>
                                     <td className="border-r border-black p-2 text-center">{moyenneCoef}</td>
@@ -200,7 +200,14 @@ const BulletinPhysique1 = ({
                             </td>
                             <td className="border-r border-black p-2 text-center">{mainCoefficients}</td>
                             <td className="border-r border-black p-2 text-center">{calculateMainPoints(mainSubjects, students, student)}</td>
-                            <td className="p-2"></td>
+                            <td className="p-2 text-center">
+                                { 
+                                    calculateMainPoints(mainSubjects, students, student) >= 10 ? 
+                                        language === "Français" ? student.sexe === "F" ? "ADMISE" : "ADMIS" : language === "Anglais" ? "ALLOWED" : "A TƐMƐNA"
+                                    : 
+                                        language === "Français" ? student.sexe === "F" ? "ÉCHOUÉE" : "ÉCHOUÉ" : language === "Anglais" ? "FAILED" : "A MA SE KA TƐMƐ"
+                                }
+                            </td>
                         </tr>
 
                         {/* Moyenne dans les matières */}
@@ -342,7 +349,7 @@ const BulletinPhysique1 = ({
                             {parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 16 ?
                                 (language === "Français" ? "Excellent Travail" :
                                     language === "Anglais" ? "Excellent Work" :
-                                        "Baara Ɲuman Kosɛbɛ") :
+                                        "Baara Ɲɛnna Kosɛbɛ") :
                                 parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 14 ?
                                     (language === "Français" ? "Très Bon Travail" :
                                         language === "Anglais" ? "Very Good Work" :
