@@ -22,28 +22,22 @@ const createWindow = () => {
     autoHideMenuBar: true,
   });
 
-  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        "Content-Security-Policy": [
-          "default-src 'self'; " +
-          // Pour les scripts : autorise les scripts inline, unsafe-eval et les domaines externes nécessaires
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://ssl.gstatic.com https://accounts.google.com https://apis.google.com; " +
-          // Pour les styles : autorise les styles inline et ceux hébergés sur ssl.gstatic.com et accounts.google.com
-          "style-src 'self' 'unsafe-inline' https://ssl.gstatic.com https://accounts.google.com; " +
-          // Pour les images : autorise les images depuis 'self', data:, www.google.com, lh3.googleusercontent.com et ssl.gstatic.com
-          "img-src 'self' data: https://www.google.com https://lh3.googleusercontent.com https://ssl.gstatic.com; " +
-          // Pour les frames : accès autorisé à votre domaine firebase
-          "frame-src 'self' https://*.youtube.com https://schoolmanager-c228f.firebaseapp.com; " +
-          // Pour les connexions : autorise les connexions vers les domaines définis, y compris les WebSockets
-          "connect-src 'self' https://example.com https://schoolmanager-c228f.firebaseapp.com https://schoolmanager-c228f-default-rtdb.firebaseio.com schoolmanager-c228f.firebasestorage.app https://identitytoolkit.googleapis.com https://*.google.com https://*.firebaseio.com https://*.googleapis.com ws://0.0.0.0:3000 wss://schoolmanager-c228f.firebaseapp.com:3000 wss://accounts.google.com:3000; " +
-          // Pour les polices : autorise les polices provenant notamment de Google Fonts
-          "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;"
-        ]
-      }
-    });
+  session.defaultSession.webRequest.onHeadersReceived({ urls: ['<all_urls>'] }, (details, callback) => {
+  callback({
+    responseHeaders: {
+      ...details.responseHeaders,
+      'Content-Security-Policy': [ 
+        "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;" +
+        "connect-src *;" +
+        "script-src * 'unsafe-inline' 'unsafe-eval';" +
+        "style-src * 'unsafe-inline';" +
+        "img-src * data:;" +
+        "font-src * data:;" +
+        "frame-src *;"
+      ]
+    }
   });
+});
 
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY); // Charge l'URL de votre application (React)
   mainWindow.webContents.openDevTools(); // Ouvre les DevTools

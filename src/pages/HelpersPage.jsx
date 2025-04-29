@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useOutletContext, Link } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { Search, ChevronDown, ChevronRight, ExternalLink, Mail, Github } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, ExternalLink, Mail, Github, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../components/contexts';
 
 const HelpersPageContent = ({
@@ -382,6 +382,14 @@ const HelpersPageContent = ({
     }
   ];
 
+  // Language-specific text content
+  const getContent = (fr, en, bm) => {
+    if (language === 'Français') return fr;
+    if (language === 'Anglais') return en;
+    if (language === 'Bambara') return bm;
+    return fr; // Default to French
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
       <motion.div
@@ -389,8 +397,18 @@ const HelpersPageContent = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
+
+        <Link to="/" className={`inline-flex items-center mb-6 btn btn-primary`}>
+          <ArrowLeft className="mr-2" size={18} />
+          {getContent(
+            'Retour à l\'accueil', 
+            'Back to Home',
+            'Segin so kɔnɔ'
+          )}
+        </Link>
+
         <div className="flex justify-between items-center mb-6">
-          <h1 className={`text-2xl font-bold ${inputTextColor}`}>
+          <h1 className={`text-2xl font-bold ${text_color}`}>
             {language === "Français" ? "Aide et Documentation" : 
              language === "Bambara" ? "Dɛmɛ ni Sɛbɛnw" : 
              "Help and Documentation"}
@@ -445,28 +463,6 @@ const HelpersPageContent = ({
                 <a href="mailto:support@schoolmanager.com" className={`flex items-center ${linkColor}`}>
                   <Mail size={16} className="mr-2" />
                   support@schoolmanager.com
-                </a>
-              </div>
-            </div>
-            
-            <div>
-              <h3 className={`font-semibold mb-2 ${inputTextColor}`}>
-                {language === "Français" ? "Liens utiles" : 
-                 language === "Bambara" ? "Sira nafamaw" : 
-                 "Useful Links"}
-              </h3>
-              <div className="space-y-2">
-                <a href="#" className={`flex items-center ${linkColor}`}>
-                  <ExternalLink size={16} className="mr-2" />
-                  {language === "Français" ? "Documentation complète" : 
-                   language === "Bambara" ? "Sɛbɛn dafalen" : 
-                   "Complete Documentation"}
-                </a>
-                <a href="#" className={`flex items-center ${linkColor}`}>
-                  <Github size={16} className="mr-2" />
-                  {language === "Français" ? "Code source" : 
-                   language === "Bambara" ? "Kode jɔyɔrɔ" : 
-                   "Source Code"}
                 </a>
               </div>
             </div>

@@ -11,6 +11,10 @@ import StatistiquesPage from "../pages/StatistiquesPage.jsx";
 import ReadPage from "../pages/ReadPage.jsx";
 import DatabasePage from "../pages/DatabasePage.jsx";
 import HelpersPage from "../pages/HelpersPage.jsx";
+import PrivacyPolicy from "../pages/PrivacyPolicy.jsx";
+import TermsOfUse from "../pages/TermsOfUse.jsx";
+
+
 import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
 import ThemeProvider from "../providers/ThemeProvider.jsx";
 import FlashNotificationProvider from "../providers/FlashNotificationProvider.jsx";
@@ -28,6 +32,9 @@ const RoutesManager = () => {
               <AuthProvider>
                 <Routes>
                   <Route path="/" element={<HomePage />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms-of-use" element={<TermsOfUse />} />
+                  <Route path="/tuto_helpers" element={<HelpersPage />} />
                   {/* Route parent pour le layout avancé */}
                   <Route element={<AdvancedLayout />}>
                     <Route path="/started_page" element={<StartedPage />} />

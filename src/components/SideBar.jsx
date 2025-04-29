@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, Settings, Palette, Menu, Edit2, Check, X,
-  Layout, FileText, Star, DollarSign, BarChart, Database as DatabaseIcon, 
-  LucideBookOpenText
+  Layout, FileText, Star, DollarSign, BarChart, Database as DatabaseIcon,
+  LucideBookOpenText, ArrowBigLeft
 } from "lucide-react";
 
 import { useTheme, useLanguage, useFlashNotification } from "./contexts";
@@ -275,7 +275,7 @@ const SideBar = ({
                     >
                       <span className="text-sm opacity-75">({editedShortName})</span>
                       <motion.button
-                        whileHover={{ scale: 1.1, backgroundColor: theme === "dark" ? "rgba(59, 130, 246, 0.2)" : "rgba(219, 234, 254, 1)" }}
+                        whileHover={{ scale: 1.1, ArrowBigLeftgroundColor: theme === "dark" ? "rgba(59, 130, 246, 0.2)" : "rgba(219, 234, 254, 1)" }}
                         whileTap={{ scale: 0.95 }}
                         onClick={handleEditToggle}
                         className="ml-2 p-1.5 rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
@@ -327,6 +327,32 @@ const SideBar = ({
 
         {/* Settings section */}
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <motion.button
+            onClick={() => navigate("/")}
+            className={`w-full flex items-center rounded-lg px-3 py-2.5 transition-all duration-200
+              ${activeSideBarBtn === 20 ? activeBg : hoverBg}
+              ${activeSideBarBtn === 20 ? 'font-medium' : 'font-normal'}
+            `}
+            whileHover={{ x: 3 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className={`${activeSideBarBtn === 20 ? 'text-blue-600 dark:text-blue-400' : ''}`}>
+              <ArrowBigLeft size={22} />
+            </span>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.span
+                  initial={{ opacity: 0, width: 0 }}
+                  animate={{ opacity: 1, width: "auto" }}
+                  exit={{ opacity: 0, width: 0 }}
+                  className="ml-3 whitespace-nowrap overflow-hidden"
+                >
+                  Accueil
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+
           <motion.button
             onClick={toggleSettings}
             className={`w-full flex items-center rounded-lg px-3 py-2.5 transition-all duration-200

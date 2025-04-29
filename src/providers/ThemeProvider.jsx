@@ -36,7 +36,7 @@ const ThemeProvider = ({ children }) => {
     const text_color = app_bg_color === gradients[1] || app_bg_color === gradients[2] ? "text-gray-700" : "text-white";
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, setThemeColor, app_bg_color, text_color }}>
+        <ThemeContext.Provider value={{ theme, toggleTheme, setThemeColor, app_bg_color, text_color, gradients }}>
             <div
                 className={`min-h-screen flex flex-col transition-all duration-500 ${app_bg_color}`}
             >
