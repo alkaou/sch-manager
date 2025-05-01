@@ -219,8 +219,8 @@ const Translator = {
         // TestimonialsSection translations
         testimonials_title: "Anw ka baarakɛlaw ka fɔcogo",
         testimonials_subtitle: "Kalansoɲɛmɔgɔw, karamɔgɔw ani ɲɛmɔgɔ wɛrɛw ka fɔli minnu bɛ anw ka baarada ninw labara don o don.",
-        principal_text: "Kalansotigiɲɛmɔgɔ, Lycée Excellence",
-        administrator_text: "Ɲɛmɔgɔ, Groupe Scolaire Avenir",
+        principal_text: "Kalansotigiɲɛmɔgɔ, Groupe Scolaire Cheicknè Dembélé",
+        administrator_text: "Ɲɛmɔgɔ, Complexe Scolaire Charles Yanaba",
         teacher_text: "Karamɔgɔ, École Primaire Lumière",
         tech_director_text: "Daɲɛgafe Ɲɛmɔgɔ, Académie Moderne",
         parent_text: "Kalandenbanaw",
@@ -575,8 +575,8 @@ const Translator = {
         // TestimonialsSection translations
         testimonials_title: "Ce que disent nos utilisateurs",
         testimonials_subtitle: "Découvrez l'expérience de directeurs, enseignants et administrateurs qui utilisent notre solution au quotidien.",
-        principal_text: "Directrice, Lycée Excellence",
-        administrator_text: "Administrateur, Groupe Scolaire Avenir",
+        principal_text: "Directrice, Groupe Scolaire Cheicknè Dembélé",
+        administrator_text: "Administrateur, Complexe Scolaire Charles Yanaba",
         teacher_text: "Enseignante, École Primaire Lumière",
         tech_director_text: "Directeur Informatique, Académie Moderne",
         parent_text: "Parent d'élève",
@@ -931,8 +931,8 @@ const Translator = {
         // TestimonialsSection translations
         testimonials_title: "What Our Users Say",
         testimonials_subtitle: "Discover the experience of principals, teachers, and administrators who use our solution daily.",
-        principal_text: "Principal, Excellence High School",
-        administrator_text: "Administrator, Future School Group",
+        principal_text: "Principal, Group School Cheickne Dembele",
+        administrator_text: "Administrator, Complex School Charles Yanaba",
         teacher_text: "Teacher, Light Primary School",
         tech_director_text: "IT Director, Modern Academy",
         parent_text: "Parent",

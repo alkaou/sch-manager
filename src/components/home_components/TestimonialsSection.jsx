@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 
 import { useLanguage, useTheme } from '../contexts';
+import Logo from "../../assets/logo.png";
 
 const TestimonialsSection = ({ isOthersBGColors }) => {
   const { live_language } = useLanguage();
@@ -14,48 +15,48 @@ const TestimonialsSection = ({ isOthersBGColors }) => {
   const testimonials = [
     {
       id: 1,
-      name: "Marie Diallo",
-      role: live_language.principal_text || "Directrice, Lycée Excellence",
-      image: "https://randomuser.me/api/portraits/women/79.jpg",
+      name: "Aïssa Founè Dembélé",
+      role: live_language.principal_text || "Directrice, Groupe Scolaire Cheicknè Dembélé",
+      image: Logo,
       quote: live_language.testimonial_1 || "SchoolManager a révolutionné notre gestion administrative. La génération automatique des bulletins nous fait gagner des heures précieuses. Le support technique est également exemplaire.",
       rating: 5,
-      location: "Bamako, Mali"
+      location: "San, Mali"
     },
     {
       id: 2,
-      name: "Amadou Touré",
-      role: live_language.administrator_text || "Administrateur, Groupe Scolaire Avenir",
-      image: "https://randomuser.me/api/portraits/men/54.jpg",
+      name: "Gouanon Coulibaly",
+      role: live_language.administrator_text || "Administrateur, Complexe Scolaire Charles Yanaba",
+      image: Logo,
       quote: live_language.testimonial_2 || "Depuis que nous utilisons cette plateforme, nos processus administratifs sont beaucoup plus efficaces. Les parents apprécient particulièrement la présentation professionnelle des bulletins.",
       rating: 5,
-      location: "Dakar, Sénégal"
+      location: "Kati, Mali"
     },
     {
       id: 3,
-      name: "Fatou Camara",
+      name: "Fatoumata Dembélé",
       role: live_language.teacher_text || "Enseignante, École Primaire Lumière",
-      image: "https://randomuser.me/api/portraits/women/45.jpg",
+      image: Logo,
       quote: live_language.testimonial_3 || "L'interface est intuitive même pour les moins technophiles d'entre nous. Je peux gérer mes notes et évaluations sans difficulté, et les statistiques m'aident à améliorer mon enseignement.",
       rating: 4,
-      location: "Conakry, Guinée"
+      location: "Sikasso, Mali"
     },
     {
       id: 4,
-      name: "Ibrahim Koné",
+      name: "Yacouba C Dembélé",
       role: live_language.tech_director_text || "Directeur Informatique, Académie Moderne",
-      image: "https://randomuser.me/api/portraits/men/29.jpg",
+      image: Logo,
       quote: live_language.testimonial_4 || "La sécurité et la fiabilité de SchoolManager sont impressionnantes. Nous gérons 1 500 élèves sans aucun problème de performance, et les sauvegardes automatiques nous rassurent.",
       rating: 5,
-      location: "Abidjan, Côte d'Ivoire"
+      location: "Ségou, Mali"
     },
     {
       id: 5,
-      name: "Aisha Bamba",
+      name: "Hawa Coulibaly",
       role: live_language.parent_text || "Parent d'élève",
-      image: "https://randomuser.me/api/portraits/women/33.jpg",
+      image: Logo,
       quote: live_language.testimonial_5 || "En tant que parent, j'apprécie la clarté des bulletins et la facilité de suivre les progrès de mes enfants. Je recommande vivement cette solution à toutes les écoles.",
       rating: 5,
-      location: "Niamey, Niger"
+      location: "Bamako, Mali"
     }
   ];
 

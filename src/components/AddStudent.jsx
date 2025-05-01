@@ -629,7 +629,7 @@ const AddStudent = ({
 
   return (
     <motion.div
-      className={`max-w-7xl mx-auto p-6 ${formBgColor} mt-10 rounded-xl shadow-2xl border-2 ${shinyBorderColor}`}
+      className={`mx-auto p-6 ${formBgColor} mt-10 rounded-xl shadow-2xl border-2 ${shinyBorderColor}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -637,7 +637,8 @@ const AddStudent = ({
         marginTop: "6em",
         boxShadow: theme === "dark"
           ? "0 0 25px rgba(66, 153, 225, 0.6)"
-          : "0 0 25px rgba(159, 122, 234, 0.6)"
+          : "0 0 25px rgba(159, 122, 234, 0.6)",
+        width: "90%",
       }}
     >
       <div className="flex justify-between items-center mb-6">

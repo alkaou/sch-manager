@@ -57,7 +57,7 @@ const StudentListAddStudents = ({
   };
   
   // Get unique class IDs from the classes array in the database
-  const classIds = db?.classes ? [...new Set(db.classes.map(c => c.id))] : [];
+  // const classIds = db?.classes ? [...new Set(db.classes.map(c => c.id))] : [];
   
   // Get unique levels from the classes array in the database
   const levels = db?.classes ? [...new Set(db.classes.map(c => c.level))] : [];
@@ -68,6 +68,7 @@ const StudentListAddStudents = ({
     const searchMatch = 
       searchTerm === '' || 
       student.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.sure_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.matricule?.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -223,7 +224,7 @@ const StudentListAddStudents = ({
                     </div>
                     <div className="flex-1">
                       <h3 className={`font-semibold ${textClass}`}>
-                        {student.first_name} {student.last_name}
+                        {student.name_complet}
                       </h3>
                       <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-500"}`}>
                         {getClasseName(student.classe) || 'Classe non assignée'}

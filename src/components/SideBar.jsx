@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Home, Settings, Palette, Menu, Edit2, Check, X,
   Layout, FileText, Star, DollarSign, BarChart, Database as DatabaseIcon,
-  LucideBookOpenText, ArrowBigLeft
+  LucideBookOpenText, ArrowBigLeft, Users2Icon, Receipt
 } from "lucide-react";
 
 import { useTheme, useLanguage, useFlashNotification } from "./contexts";
@@ -145,10 +145,12 @@ const SideBar = ({
   // Navigation items configuration
   const navigationItems = [
     { icon: <Home size={22} />, label: "Dashboard", path: "/started_page", index: 1 },
+    { icon: <Users2Icon size={22} />, label: "Employés", path: "/employes", index: 11 },
     { icon: <Star size={22} />, label: "Compostions", path: "/compositions", index: 5 },
     { icon: <Layout size={22} />, label: "Bulletins", path: "/bulletins", index: 2 },
     { icon: <FileText size={22} />, label: "Listes", path: "/liste_eleves", index: 4 },
     { icon: <DollarSign size={22} />, label: "Finance", path: "/payements", index: 6 },
+    { icon: <Receipt size={22} />, label: "Depenses", path: "/depenses", index: 12 },
     { icon: <BarChart size={22} />, label: "Analytics", path: "/statistiques", index: 7 },
     { icon: <DatabaseIcon size={22} />, label: "Database", path: "/database", index: 8 },
     { icon: <LucideBookOpenText size={22} />, label: "Read", path: "/read", index: 10 },
@@ -179,9 +181,9 @@ const SideBar = ({
 
       {/* Sidebar */}
       <motion.aside
-        initial={{ width: 80 }}
+        initial={{ width: 90 }}
         animate={{
-          width: isOpen ? 250 : 80,
+          width: isOpen ? 250 : 90,
           boxShadow: isOpen ? "0 4px 20px rgba(0, 0, 0, 0.1)" : "0 2px 10px rgba(0, 0, 0, 0.05)"
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}

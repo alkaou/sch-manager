@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
-const StudentListNamePopup = ({ onSave, onCancel, theme, textClass, appBgColor }) => {
+const StudentListNamePopup = ({ onSave, onCancel, theme }) => {
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 

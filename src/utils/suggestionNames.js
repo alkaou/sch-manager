@@ -41,11 +41,11 @@ const suggestNames = [
 // Tableau de noms de famille (environ 50 entrées)
 const suggestLastNames = [
   "Mallé", "Dé", "Sokanda", "Dianè", "Diané", "N'Diané", "N'Dianè", "Maïga", "Tall", "Wologuème", "Tessougé",
-  "Traoré", "Keïta", "Sissoko", "Tounkara", "Camara", "Sidibé", "Touré", "Bagayoko", "Seck", "Ndiaye",
-  "Fall", "Mbaye", "Guindo", "Barry", "Sow", "Kaba", "Koné", "Diarra", "Cissé", "Diallo",
-  "Coulibaly", "Ballo", "Demba", "Dembélé", "Fofana", "Kouyaté", "Goulamaly", "Sangaré", "Maiga", "Sy",
-  "Zongo", "Ouattara", "Diakite", "Niamké", "Kourouma", "N’Diaye", "Bambara", "Bougou", "Doumbia", "Kamara",
-  "Bonkoungou", "N'Guessan", "N'Dour", "Sall", "Sambou", "Bocoum", "Djiré", "Sinayoko"
+  "Traoré", "Keïta", "Sissoko", "Tounkara", "Camara", "Sidibé", "Touré", "Bagayoko", "Seck", "Ndiaye", "Doucouré",
+  "Fall", "Mbaye", "Guindo", "Barry", "Sow", "Kaba", "Koné", "Diarra", "Cissé", "Diallo", "Diabaté", "Diassana", "Togola",
+  "Coulibaly", "Ballo", "Demba", "Dembélé", "Fofana", "Kouyaté", "Goulamaly", "Sangaré", "Maiga", "Sy", "Goïta", "Togo",
+  "Zongo", "Ouattara", "Diakite", "Niamké", "Kourouma", "N’Diaye", "Bambara", "Bougou", "Doumbia", "Kamara", "Sogoba",
+  "Bonkoungou", "N'Guessan", "N'Dour", "Sall", "Sambou", "Bocoum", "Djiré", "Sinayoko", "Koïta", "Konaré", "Konaté", "Amara"
 ];
 
 const suggCitiesNames = [

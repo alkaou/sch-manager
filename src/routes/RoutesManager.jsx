@@ -13,6 +13,10 @@ import DatabasePage from "../pages/DatabasePage.jsx";
 import HelpersPage from "../pages/HelpersPage.jsx";
 import PrivacyPolicy from "../pages/PrivacyPolicy.jsx";
 import TermsOfUse from "../pages/TermsOfUse.jsx";
+import CommunityPage from "../pages/CommunityPage.jsx";
+import AboutPage from "../pages/AboutPage.jsx";
+import EmployesPage from "../pages/EmployesPage.jsx";
+import DepensesPage from "../pages/DepensesPage.jsx";
 
 
 import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
@@ -35,6 +39,8 @@ const RoutesManager = () => {
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/terms-of-use" element={<TermsOfUse />} />
                   <Route path="/tuto_helpers" element={<HelpersPage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/community" element={<CommunityPage />} />
                   {/* Route parent pour le layout avancé */}
                   <Route element={<AdvancedLayout />}>
                     <Route path="/started_page" element={<StartedPage />} />
@@ -47,6 +53,8 @@ const RoutesManager = () => {
                     <Route path="/read" element={<ReadPage />} />
                     <Route path="/helpers" element={<HelpersPage />} />
                     <Route path="/profile-auth" element={<UserProfile />} />
+                    <Route path="/employes" element={<EmployesPage />} />
+                    <Route path="/depenses" element={<DepensesPage />} />
                   </Route>
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

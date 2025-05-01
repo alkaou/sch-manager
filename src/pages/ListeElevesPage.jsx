@@ -167,7 +167,7 @@ const ListeElevesPageContent = ({
   };
 
   return (
-    <div className={`p-4 mt-20 ml-20 ${app_bg_color}`}>
+    <div style={{marginLeft: "7%"}} className={`p-4 mt-20 ${app_bg_color}`}>
       {isLoading ? (
         <div className="flex items-center justify-center h-full mt-40">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>

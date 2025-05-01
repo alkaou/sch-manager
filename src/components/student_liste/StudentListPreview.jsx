@@ -54,7 +54,7 @@ const StudentListPreview = ({
       return index + 1;
     }
 
-    if (header === 'Prénom') return student.first_name || '';
+    if (header === 'Prénom') return `${student?.first_name} ${student?.sure_name}`.trim() || '';
     if (header === 'Nom') return student.last_name || '';
     if (header === 'Matricule') return student.matricule || '';
     if (header === 'Père') return student.father_name || '';
@@ -256,7 +256,8 @@ const StudentListPreview = ({
                               header === "Date & Lieu de naissance" ||
                               header === "Âge" ||
                               header === "Contact" ||
-                              header === "Matricule"
+                              header === "Matricule" ||
+                              header === "Prénom" && student.sure_name !== ""
                               ? "text-center" : ""
                             }
                           `}

@@ -346,7 +346,10 @@ const CompositionsPageContent = ({
   ];
 
   return (
-    <div className="p-4 mt-20 ml-20">
+    <div 
+      className="p-4 mt-20"
+      style={{marginLeft: "7%"}}
+    >
       <motion.div
         className={`max-w-7xl mx-auto p-6 ${formBgColor} rounded-lg shadow-2xl border-2 ${shinyBorderColor}`}
         initial={{ opacity: 0, y: 20 }}

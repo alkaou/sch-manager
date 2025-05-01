@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Search, Play, ChevronRight, FileText,
@@ -20,6 +21,8 @@ const TutorialsSection = ({ isOthersBGColors }) => {
     { id: 'reports', name: live_language.bulletins_nav || 'Bulletins' },
     { id: 'analytics', name: live_language.analytics_nav || 'Analyses' }
   ];
+
+  const navigate = useNavigate();
 
   const [activeCategory, setActiveCategory] = useState('all');
 
@@ -159,7 +162,8 @@ const TutorialsSection = ({ isOthersBGColors }) => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className={`text-3xl md:text-4xl font-bold mb-6 inline-block  text-transparent 
+          <h2 className={`
+            text-3xl md:text-4xl font-bold mb-6 inline-block bg-clip-text text-transparent 
             ${isOthersBGColors ? text_color : "bg-gradient-to-r from-blue-600 to-purple-600"}
           `}>
             {live_language.tutorials_title || "Tutoriels et ressources"}
@@ -312,6 +316,7 @@ const TutorialsSection = ({ isOthersBGColors }) => {
             {live_language.help_center_message || "Consultez notre centre d'aide complet ou contactez directement notre équipe de support."}
           </p>
           <motion.button
+            onClick={() => navigate("/tuto_helpers")}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-lg inline-flex items-center"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

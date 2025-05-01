@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getClasseName, getClasseById } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
-import { Calendar, X, DollarSign, TrendingUp, Users, ArrowRight, PieChart } from 'lucide-react';
+import { Calendar, X, DollarSign, TrendingUp, Users, ArrowRight, PieChart, Timer } from 'lucide-react';
 
 const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
     const { language } = useLanguage();
@@ -390,6 +390,27 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                             <div className="mt-2">
                                 <p className={`text-xs ${textColorClass} opacity-60`}>
                                     Montant total reçu jusqu'à présent
+                                </p>
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-red-500`}
+                            variants={itemVariants}
+                            whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                        >
+                            <div className="flex items-center mb-4">
+                                <div className="p-3 rounded-full bg-red-100 mr-4">
+                                    <Timer className="h-6 w-6 text-red-500" />
+                                </div>
+                                <div>
+                                    <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Montant en Attente</h3>
+                                    <p className="text-2xl font-bold text-red-500">{formatCurrency(totalExpected - totalReceived)}</p>
+                                </div>
+                            </div>
+                            <div className="mt-2">
+                                <p className={`text-xs ${textColorClass} opacity-60`}>
+                                    Montant en attente jusqu'à présent
                                 </p>
                             </div>
                         </motion.div>

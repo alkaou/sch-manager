@@ -110,10 +110,10 @@ const PayementsPage = () => {
       style={{
         overflow: "hidden",
         marginTop: "4%",
-        marginLeft: "5%",
-        width: "95%",
-        maxWidth: "95%",
-        minWidth: "95%",
+        marginLeft: "7%",
+        width: "93%",
+        maxWidth: "93%",
+        minWidth: "93%",
         // height: "91vh",
       }}
     >

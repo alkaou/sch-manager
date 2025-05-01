@@ -69,10 +69,10 @@ const StartedPageContent = ({
         style={{
           overflow: "hidden",
           marginTop: "4%",
-          marginLeft: "5%",
-          width: "95%",
-          maxWidth: "95%",
-          minWidth: "95%",
+          marginLeft: "6%",
+          width: "94%",
+          maxWidth: "94%",
+          minWidth: "94%",
           height: "92vh",
         }}
       >

@@ -47,10 +47,10 @@ const ReadPageContent = ({
     <div
       className={`flex h-screen ${app_bg_color}`}
       style={{
-        marginLeft: "5%",
-        width: "95%",
-        maxWidth: "95%",
-        minWidth: "95%",
+        marginLeft: "7%",
+        width: "93%",
+        maxWidth: "93%",
+        minWidth: "93%",
         overflow: "hidden",
       }}
     >

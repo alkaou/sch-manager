@@ -251,11 +251,14 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
 
   return (
     <motion.div
-      className={`max-w-7xl mx-auto p-6 ${formBgColor} mt-20 rounded-lg shadow-2xl border-2 ${shinyBorderColor} shadow-lg`}
+      className={`mx-auto p-6 ${formBgColor} mt-20 rounded-lg shadow-2xl border-2 ${shinyBorderColor} shadow-lg`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ boxShadow: theme === "dark" ? "0 0 15px rgba(66, 153, 225, 0.5)" : "0 0 15px rgba(159, 122, 234, 0.5)" }}
+      style={{ 
+        boxShadow: theme === "dark" ? "0 0 15px rgba(66, 153, 225, 0.5)" : "0 0 15px rgba(159, 122, 234, 0.5)",
+        width: "90%",
+      }}
     >
       <div className="
         flex justify-between items-center mb-6"

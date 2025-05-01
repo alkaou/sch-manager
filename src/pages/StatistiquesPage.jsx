@@ -42,7 +42,7 @@ const StatistiquesPageContent = ({
   };
 
   return (
-    <div className={`p-4 mt-20 ml-20 flex justify-center items-center min-h-[80vh] ${app_bg_color} ${text_color}`}>
+    <div style={{marginLeft: "7%"}} className={`p-4 mt-20 flex justify-center items-center min-h-[80vh] ${app_bg_color} ${text_color}`}>
       <motion.div 
         className={`max-w-2xl p-8 rounded-lg shadow-lg border border-2 ${theme === 'dark' ? 'bg-gray-800' : 'bg-white text-gray-700'}`}
         initial="hidden"

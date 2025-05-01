@@ -29,7 +29,7 @@ const DatabasePageContent = ({
 
   if (loading) {
     return (
-      <div className={`p-4 mt-20 ml-20 min-h-screen ${app_bg_color}`}>
+      <div style={{marginLeft: "7%"}} className={`p-4 mt-20 min-h-screen ${app_bg_color}`}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -42,7 +42,7 @@ const DatabasePageContent = ({
   }
 
   return (
-    <div className={`p-4 mt-20 ml-20 min-h-screen ${app_bg_color}`}>
+    <div style={{marginLeft: "7%"}} className={`p-4 mt-20 ml-20 min-h-screen ${app_bg_color}`}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
