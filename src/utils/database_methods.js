@@ -508,4 +508,359 @@ const deleteStudent = (studentId, db, setFlashMessage) => {
 		});
 };
 
+// Employee Management Methods
+export const savePosition = async (positionData, db, setFlashMessage = null) => {
+	try {
+		// If positions array doesn't exist yet, create it
+		if (!db.positions) {
+			db.positions = [];
+		}
+		
+		// Check if position already exists by name
+		const positionExists = db.positions.some(
+			pos => pos.name.toLowerCase() === positionData.name.toLowerCase()
+		);
+		
+		if (positionExists) {
+			throw { field: "name", message: "Ce poste existe déjà" };
+		}
+		
+		// Add the new position
+		const newPosition = {
+			...positionData,
+			id: `pos-${Date.now()}`,
+			created_at: Date.now(),
+			updated_at: Date.now()
+		};
+		
+		db.positions.push(newPosition);
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Poste ajouté avec succès",
+			});
+		}
+		
+		return newPosition;
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de l'ajout du poste",
+			});
+		}
+		throw error;
+	}
+};
+
+export const updatePosition = async (positionId, positionData, db, setFlashMessage = null) => {
+	try {
+		// Prevent modification of Professeurs position
+		const position = db.positions.find(pos => pos.id === positionId);
+		if (position.name === "Professeurs" && positionData.name !== "Professeurs") {
+			throw { field: "name", message: "Le poste 'Professeurs' ne peut pas être modifié" };
+		}
+		
+		// Check if new name conflicts with existing position
+		const nameConflict = db.positions.some(
+			pos => pos.id !== positionId && pos.name.toLowerCase() === positionData.name.toLowerCase()
+		);
+		
+		if (nameConflict) {
+			throw { field: "name", message: "Ce nom de poste est déjà utilisé" };
+		}
+		
+		// Update the position
+		const updatedPositions = db.positions.map(pos => {
+			if (pos.id === positionId) {
+				return {
+					...pos,
+					...positionData,
+					updated_at: Date.now()
+				};
+			}
+			return pos;
+		});
+		
+		db.positions = updatedPositions;
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Poste mis à jour avec succès",
+			});
+		}
+		
+		return db.positions.find(pos => pos.id === positionId);
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de la mise à jour du poste",
+			});
+		}
+		throw error;
+	}
+};
+
+export const deletePosition = async (positionId, db, setFlashMessage = null) => {
+	try {
+		const position = db.positions.find(pos => pos.id === positionId);
+		
+		// Prevent deletion of Professeurs position
+		if (position.name === "Professeurs") {
+			throw { message: "Le poste 'Professeurs' ne peut pas être supprimé" };
+		}
+		
+		// Check if any employees have this position
+		const hasEmployees = db.employees && db.employees.some(
+			emp => emp.postes.includes(position.name)
+		);
+		
+		if (hasEmployees) {
+			throw { 
+				message: "Ce poste est occupé par des employés. Veuillez d'abord supprimer ou réaffecter ces employés." 
+			};
+		}
+		
+		// Delete the position
+		db.positions = db.positions.filter(pos => pos.id !== positionId);
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Poste supprimé avec succès",
+			});
+		}
+		
+		return true;
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de la suppression du poste",
+			});
+		}
+		throw error;
+	}
+};
+
+export const saveEmployee = async (employeeData, db, setFlashMessage = null) => {
+	try {
+		// If employees array doesn't exist yet, create it
+		if (!db.employees) {
+			db.employees = [];
+		}
+		
+		// Generate the name_complet field
+		const first_name = employeeData.first_name.trim();
+		const sure_name = employeeData.sure_name?.trim() || "";
+		const last_name = employeeData.last_name.trim();
+		const nameComplet = [first_name, sure_name, last_name].filter(Boolean).join(" ");
+		
+		// Create new employee object
+		const newEmployee = {
+			...employeeData,
+			id: `emp-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+			name_complet: nameComplet,
+			status: employeeData.status || "actif",
+			added_at: Date.now(),
+			updated_at: Date.now()
+		};
+		
+		db.employees.push(newEmployee);
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Employé ajouté avec succès",
+			});
+		}
+		
+		return newEmployee;
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de l'ajout de l'employé",
+			});
+		}
+		throw error;
+	}
+};
+
+export const updateEmployee = async (employeeId, employeeData, db, setFlashMessage = null) => {
+	try {
+		// Generate the name_complet field
+		const first_name = employeeData.first_name.trim();
+		const sure_name = employeeData.sure_name?.trim() || "";
+		const last_name = employeeData.last_name.trim();
+		const nameComplet = [first_name, sure_name, last_name].filter(Boolean).join(" ");
+		
+		// Update the employee
+		const updatedEmployees = db.employees.map(emp => {
+			if (emp.id === employeeId) {
+				return {
+					...emp,
+					...employeeData,
+					name_complet: nameComplet,
+					updated_at: Date.now()
+				};
+			}
+			return emp;
+		});
+		
+		db.employees = updatedEmployees;
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Employé mis à jour avec succès",
+			});
+		}
+		
+		return db.employees.find(emp => emp.id === employeeId);
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de la mise à jour de l'employé",
+			});
+		}
+		throw error;
+	}
+};
+
+export const deleteEmployee = async (employeeId, db, setFlashMessage = null) => {
+	try {
+		db.employees = db.employees.filter(emp => emp.id !== employeeId);
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Employé supprimé avec succès",
+			});
+		}
+		
+		return true;
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de la suppression de l'employé",
+			});
+		}
+		throw error;
+	}
+};
+
+export const activateEmployee = async (employeeId, db, setFlashMessage = null) => {
+	try {
+		const updatedEmployees = db.employees.map(emp => {
+			if (emp.id === employeeId) {
+				return {
+					...emp,
+					status: "actif",
+					updated_at: Date.now()
+				};
+			}
+			return emp;
+		});
+		
+		db.employees = updatedEmployees;
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Employé activé avec succès",
+			});
+		}
+		
+		return true;
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de l'activation de l'employé",
+			});
+		}
+		throw error;
+	}
+};
+
+export const deactivateEmployee = async (employeeId, db, setFlashMessage = null) => {
+	try {
+		const updatedEmployees = db.employees.map(emp => {
+			if (emp.id === employeeId) {
+				return {
+					...emp,
+					status: "inactif",
+					updated_at: Date.now()
+				};
+			}
+			return emp;
+		});
+		
+		db.employees = updatedEmployees;
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "success",
+				message: "Employé désactivé avec succès",
+			});
+		}
+		
+		return true;
+	} catch (error) {
+		if (setFlashMessage) {
+			setFlashMessage({
+				type: "error",
+				message: error.message || "Erreur lors de la désactivation de l'employé",
+			});
+		}
+		throw error;
+	}
+};
+
+export const initializePositions = async (db) => {
+	try {
+		// If positions array doesn't exist yet, create it
+		if (!db.positions) {
+			db.positions = [];
+		}
+		
+		// Check if Professeurs position already exists
+		const professorsExists = db.positions.some(
+			pos => pos.name.toLowerCase() === "professeurs"
+		);
+		
+		// If not, add it
+		if (!professorsExists) {
+			db.positions.push({
+				id: `pos-${Date.now()}`,
+				name: "Professeurs",
+				description: "Enseignants de l'établissement",
+				created_at: Date.now(),
+				updated_at: Date.now()
+			});
+			
+			await window.electron.saveDatabase(db);
+		}
+		
+		return db.positions;
+	} catch (error) {
+		console.error("Erreur lors de l'initialisation des postes:", error);
+		throw error;
+	}
+};
+
 export { generateUniqueId, saveStudent, updateStudent, activateStudent, deactivateStudent, deleteStudent, updateDatabaseNameAndShortName };
