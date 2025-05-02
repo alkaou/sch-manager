@@ -27,10 +27,10 @@ export const getAge = (birthDate) => {
 // Specialties for professors
 export const PROFESSOR_SPECIALTIES = [
   { value: "Généraliste", label: "Généraliste" },
-  { value: "LGH", label: "Langues et Humanités (LGH)" },
+  { value: "LHG", label: "Lettre, Histoire et Géographie (LHG)" },
   { value: "MPC", label: "Mathématiques, Physique et Chimie (MPC)" },
-  { value: "SPNC", label: "Science Physique et Naturelle (SPNC)" },
-  { value: "LDM", label: "Langues et Didactique Moderne (LDM)" },
+  { value: "SPNC", label: "Science Physique, Naturelle et Chimie (SPNC)" },
+  { value: "LDM", label: "Langue, Dessin et Musique (LDM)" },
   { value: "Autre", label: "Autre" }
 ];
 
@@ -49,8 +49,9 @@ export const getDefaultEmployee = () => ({
     salaire_hourly: 0
   },
   others_employe_config: {
-    salaire_monthly: 60000
+    salaire_monthly: 0
   },
+  classes: [],
   birth_date: "",
   contact: "",
   matricule: "",

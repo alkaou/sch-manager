@@ -572,6 +572,9 @@ export const updatePosition = async (positionId, positionData, db, setFlashMessa
 			throw { field: "name", message: "Ce nom de poste est déjà utilisé" };
 		}
 		
+		const oldName = position.name;
+		const newName = positionData.name;
+		
 		// Update the position
 		const updatedPositions = db.positions.map(pos => {
 			if (pos.id === positionId) {
@@ -585,6 +588,22 @@ export const updatePosition = async (positionId, positionData, db, setFlashMessa
 		});
 		
 		db.positions = updatedPositions;
+		
+		// Update all employees with this position to have the new position name
+		if (db.employees && db.employees.length > 0 && oldName !== newName) {
+			db.employees = db.employees.map(emp => {
+				if (emp.postes.includes(oldName)) {
+					// Replace old position name with new position name
+					return {
+						...emp,
+						postes: emp.postes.map(poste => poste === oldName ? newName : poste),
+						updated_at: Date.now()
+					};
+				}
+				return emp;
+			});
+		}
+		
 		await window.electron.saveDatabase(db);
 		
 		if (setFlashMessage) {
@@ -616,14 +635,32 @@ export const deletePosition = async (positionId, db, setFlashMessage = null) => 
 		}
 		
 		// Check if any employees have this position
-		const hasEmployees = db.employees && db.employees.some(
-			emp => emp.postes.includes(position.name)
-		);
+		// const hasEmployees = db.employees && db.employees.some(
+		// 	emp => emp.postes.includes(position.name)
+		// );
 		
-		if (hasEmployees) {
-			throw { 
-				message: "Ce poste est occupé par des employés. Veuillez d'abord supprimer ou réaffecter ces employés." 
-			};
+		// Update employees with this position
+		if (db.employees && db.employees.length > 0) {
+			// Get a list of employees to delete (those with only this position)
+			// const employeesToDelete = db.employees.filter(emp => 
+			// 	emp.postes.length === 1 && emp.postes[0] === position.name
+			// );
+			
+			// Remove the position from employees with multiple positions
+			db.employees = db.employees.map(emp => {
+				if (emp.postes.includes(position.name) && emp.postes.length > 1) {
+					// Remove this position from the employee's positions
+					return {
+						...emp,
+						postes: emp.postes.filter(poste => poste !== position.name),
+						updated_at: Date.now()
+					};
+				}
+				return emp;
+			}).filter(emp => 
+				// Keep only employees that don't have only this position
+				!(emp.postes.length === 1 && emp.postes[0] === position.name)
+			);
 		}
 		
 		// Delete the position
@@ -848,7 +885,7 @@ export const initializePositions = async (db) => {
 			db.positions.push({
 				id: `pos-${Date.now()}`,
 				name: "Professeurs",
-				description: "Enseignants de l'établissement",
+				description: "Enseignants de l'établissement.",
 				created_at: Date.now(),
 				updated_at: Date.now()
 			});

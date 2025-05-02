@@ -391,14 +391,14 @@ const HelpersPageContent = ({
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <div className="container mt-20 mx-auto px-4 py-8 max-w-5xl">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
 
-        <Link to="/" className={`inline-flex items-center mb-6 btn btn-primary`}>
+        <Link to="/" style={{fontWeight: "bold"}} className={`inline-flex items-center mb-6 btn btn-primary`}>
           <ArrowLeft className="mr-2" size={18} />
           {getContent(
             'Retour à l\'accueil', 

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, PlusCircle, Briefcase, Edit, Trash, CheckCircle, XCircle } from 'lucide-react';
+import { Search, PlusCircle, Briefcase, Edit, Trash, Info } from 'lucide-react';
 import { useTheme, useFlashNotification } from '../contexts';
 import { deletePosition } from '../../utils/database_methods';
 
@@ -18,6 +18,16 @@ const EmployeeSidebar = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [hoveredPosition, setHoveredPosition] = useState(null);
+  const [expandedDescriptions, setExpandedDescriptions] = useState({});
+
+  // Toggle position description
+  const toggleDescription = (positionId, e) => {
+    e.stopPropagation();
+    setExpandedDescriptions(prev => ({
+      ...prev,
+      [positionId]: !prev[positionId]
+    }));
+  };
 
   // Sort positions: Professeurs first, then by recency (newest first)
   const sortedPositions = [...positions].sort((a, b) => {
@@ -64,6 +74,16 @@ const EmployeeSidebar = ({
     }
   };
 
+  const descriptionVariants = {
+    hidden: { opacity: 0, height: 0, marginTop: 0 },
+    visible: { 
+      opacity: 1, 
+      height: 'auto',
+      marginTop: 8,
+      transition: { duration: 0.3 }
+    }
+  };
+
   // Get background color for sidebar
   const sidebarBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
   const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
@@ -71,6 +91,17 @@ const EmployeeSidebar = ({
   const _text_color = app_bg_color === gradients[1] ||
       app_bg_color === gradients[2] ||
       theme === "dark" ? text_color : "text-gray-700";
+  const descriptionBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50';
+
+  // Format description for display with paragraph breaks
+  const formatDescription = (description) => {
+    if (!description) return null;
+    return description.split('\n').map((line, index) => (
+      <p key={index} className={`${_text_color} text-xs ${line.trim() ? '' : 'h-2'}`}>
+        {line || ' '}
+      </p>
+    ));
+  };
 
   return (
     <motion.div 
@@ -129,52 +160,95 @@ const EmployeeSidebar = ({
                       : 'hover:bg-gray-100 hover:bg-opacity-30'
                   }`}
                 >
-                  <button
-                    onClick={() => setSelectedPosition(position.name)}
-                    className={`w-full p-3 text-left flex items-center justify-between ${_text_color}`}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <Briefcase size={18} className={selectedPosition === position.name ? 'text-blue-500' : ''} />
-                      <span className={selectedPosition === position.name ? 'font-semibold' : ''}>{position.name}</span>
-                    </div>
+                  <div className="flex flex-col">
+                    <button
+                      onClick={() => setSelectedPosition(position.name)}
+                      className={`w-full p-3 text-left flex items-center justify-between ${_text_color}`}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <Briefcase size={18} className={selectedPosition === position.name ? 'text-blue-500' : ''} />
+                        <span className={selectedPosition === position.name ? 'font-semibold' : ''}>{position.name}</span>
+                      </div>
+                      
+                      {/* Action buttons + description toggle if description exists */}
+                      <div className="flex items-center">
+                        
+                        {/* Show actions on hover */}
+                        <AnimatePresence>
+                          {hoveredPosition === position.id && position.name !== 'Professeurs' && (
+                            <motion.div 
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.8 }}
+                              className="flex space-x-1"
+                            >
+                              <motion.div
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPositionToEdit(position);
+                                }}
+                                className="text-blue-500 hover:text-blue-600 p-1 cursor-pointer"
+                                title="Modifier"
+                              >
+                                <Edit size={16} />
+                              </motion.div>
+                              <motion.div
+                                whileHover={{ scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setConfirmDelete(position);
+                                }}
+                                className="text-red-500 hover:text-red-600 p-1 cursor-pointer"
+                                title="Supprimer"
+                              >
+                                <Trash size={16} />
+                              </motion.div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                        {/* description Shower Icon */}
+                        {position.description && (
+                          <motion.button
+                            whileHover={{ scale: 1.2 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={(e) => toggleDescription(position.id, e)}
+                            className={`${buttonColor} p-1 ml-1`}
+                            title={expandedDescriptions[position.id] ? "Masquer la description" : "Afficher la description"}
+                          >
+                            <Info size={16} />
+                          </motion.button>
+                        )}
+
+                      </div>
+                    </button>
                     
-                    {/* Show actions on hover */}
+                    {/* Description collapsible section */}
                     <AnimatePresence>
-                      {hoveredPosition === position.id && position.name !== 'Professeurs' && (
-                        <motion.div 
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          className="flex space-x-1"
+                      {expandedDescriptions[position.id] && position.description && (
+                        <motion.div
+                          variants={descriptionVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="hidden"
+                          className={`mx-3 mb-2 rounded ${descriptionBgColor} border ${borderColor} text-sm`}
                         >
-                          <motion.div
-                            whileHover={{ scale: 1.2 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setPositionToEdit(position);
-                            }}
-                            className="text-blue-500 hover:text-blue-600 p-1 cursor-pointer"
-                            title="Modifier"
-                          >
-                            <Edit size={16} />
-                          </motion.div>
-                          <motion.div
-                            whileHover={{ scale: 1.2 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setConfirmDelete(position);
-                            }}
-                            className="text-red-500 hover:text-red-600 p-1 cursor-pointer"
-                            title="Supprimer"
-                          >
-                            <Trash size={16} />
-                          </motion.div>
+                          <div className={`
+                            flex items-center border-b border-b-1 p-2
+                            ${theme === "dark" ? "" : "bg-gray-200"}
+                          `}>
+                            <span className={`text-xs mb-1 font-medium ${_text_color} opacity-70`}>Description</span>
+                          </div>
+                          <div className="text-sm p-2">
+                            {formatDescription(position.description.trim())}
+                          </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
-                  </button>
+                  </div>
                 </motion.li>
               ))}
             </ul>
@@ -202,7 +276,10 @@ const EmployeeSidebar = ({
                 Êtes-vous sûr de vouloir supprimer le poste "{confirmDelete.name}" ?
                 {confirmDelete.employeeCount > 0 && (
                   <span className="text-red-500 block mt-2 font-semibold">
-                    Attention: {confirmDelete.employeeCount} employé(s) occupent ce poste. Veuillez les réaffecter d'abord.
+                    Attention: {confirmDelete.employeeCount} employé(s) occupent ce poste.
+                    <br />
+                    - Les employés occupant uniquement ce poste seront supprimés
+                    - Ce poste sera retiré des autres employés qui l'occupent
                   </span>
                 )}
               </p>
@@ -219,12 +296,8 @@ const EmployeeSidebar = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleDeletePosition(confirmDelete.id)}
-                  disabled={confirmDelete.employeeCount > 0}
-                  className={`px-4 py-2 rounded-md text-white ${
-                    confirmDelete.employeeCount > 0 
-                      ? 'bg-gray-500 cursor-not-allowed' 
-                      : 'bg-red-500 hover:bg-red-600'
-                  }`}
+                  disabled={false}
+                  className={`px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600`}
                 >
                   Supprimer
                 </motion.button>

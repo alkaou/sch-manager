@@ -11,7 +11,7 @@ import PremiumModal from '../../auth/PremiumModal.jsx';
 // En haut de votre fichier React
 import logo from "../../assets/logo.png";
 
-const HomeNavBar = ({ setIsOpenPopup }) => {
+const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme, app_bg_color, text_color } = useTheme();
@@ -73,9 +73,17 @@ const HomeNavBar = ({ setIsOpenPopup }) => {
   // Count unread notifications
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  // Naviguer vers le profile
+  const navigate_to_profile = () => {
+    const path = data_exist ? "/profile-auth" : "/no_data_profile-auth";
+    navigate(path);
+    setDropdownOpen(false);
+  }
+
   // Handle help button click
   const handleHelpClick = () => {
-    navigate("/helpers");
+    const path = data_exist ? "/helpers" : "/tuto_helpers";
+    navigate(path);
     setDropdownOpen(false);
   };
 
@@ -202,7 +210,7 @@ const HomeNavBar = ({ setIsOpenPopup }) => {
                     className={`p-2 rounded-full ${hoverBg} transition-colors relative`}
                     aria-label="Notifications"
                   >
-                    <Bell className={theme === "dark" ? "text-white" : "text-gray-600"} size={20} />
+                    <Bell className={`${text_color}`} size={20} />
                     {unreadCount > 0 && (
                       <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
                         {unreadCount}
@@ -334,24 +342,11 @@ const HomeNavBar = ({ setIsOpenPopup }) => {
 
                         <div className="py-1">
                           <button
-                            onClick={() => {
-                              navigate("/profile-auth");
-                              setDropdownOpen(false);
-                            }}
+                            onClick={navigate_to_profile}
                             className={`flex items-center w-full px-4 py-2 text-sm ${text_color} ${hoverBg}`}
                           >
                             <User size={16} className="mr-2" />
                             {live_language.profile_btn_text || "Profile"}
-                          </button>
-                          <button
-                            onClick={() => {
-                              setIsOpenPopup("SETTINGS");
-                              setDropdownOpen(false);
-                            }}
-                            className={`flex items-center w-full px-4 py-2 text-sm ${text_color} ${hoverBg}`}
-                          >
-                            <Settings size={16} className="mr-2" />
-                            {live_language.settings_btn_text || "Settings"}
                           </button>
                           <button
                             onClick={handleHelpClick}

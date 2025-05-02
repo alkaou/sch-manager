@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
-import { User, Mail, LogOut, Crown } from 'lucide-react';
+import { User, Mail, LogOut, Crown, ArrowLeft } from 'lucide-react';
 import { useAuth } from './AuthContext';
-import { useTheme } from '../components/contexts';
+import { useTheme, useLanguage } from '../components/contexts';
 
 const UserProfile = () => {
   const { currentUser, logout, isAuthenticated } = useAuth();
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
+  const { live_language, language } = useLanguage();
 
   // Theme-based styles
   const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -25,6 +27,14 @@ const UserProfile = () => {
     }
   };
 
+  // Language-specific text content
+  const getContent = (fr, en, bm) => {
+    if (language === 'Français') return fr;
+    if (language === 'Anglais') return en;
+    if (language === 'Bambara') return bm;
+    return fr; // Default to French
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center mt-40 p-8">
@@ -35,6 +45,16 @@ const UserProfile = () => {
             <p className={`mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
               Please log in to view your profile
             </p>
+
+            <Link to="/" style={{fontWeight: "bold"}} className={`inline-flex items-center mt-6 btn btn-primary`}>
+              <ArrowLeft className="mr-2" size={18} />
+              {getContent(
+                'Retour à l\'accueil', 
+                'Back to Home',
+                'Segin so kɔnɔ'
+              )}
+            </Link>
+
           </div>
         </div>
       </div>
@@ -105,6 +125,16 @@ const UserProfile = () => {
             <LogOut size={18} />
             <span>{loading ? 'Logging out...' : 'Logout'}</span>
           </button>
+
+          <Link to="/" style={{fontWeight: "bold"}} className={`inline-flex items-center mt-6 btn btn-primary`}>
+            <ArrowLeft className="mr-2" size={18} />
+            {getContent(
+              'Retour à l\'accueil', 
+              'Back to Home',
+              'Segin so kɔnɔ'
+            )}
+          </Link>
+          
         </div>
       </motion.div>
     </div>

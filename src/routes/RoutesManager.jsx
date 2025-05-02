@@ -41,6 +41,7 @@ const RoutesManager = () => {
                   <Route path="/tuto_helpers" element={<HelpersPage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/community" element={<CommunityPage />} />
+                  <Route path="/no_data_profile-auth" element={<UserProfile />} />
                   {/* Route parent pour le layout avancé */}
                   <Route element={<AdvancedLayout />}>
                     <Route path="/started_page" element={<StartedPage />} />

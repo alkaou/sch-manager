@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronDown, ChevronUp, DollarSign, Check } from 'lucide-react';
-import { useTheme, useFlashNotification } from '../contexts';
+import { X, ChevronDown, ChevronUp, DollarSign } from 'lucide-react';
+import { useTheme, useFlashNotification, useLanguage } from '../contexts';
 import { saveEmployee, updateEmployee } from '../../utils/database_methods';
 import { getDefaultEmployee, validateEmployee, PROFESSOR_SPECIALTIES } from './utils';
 import AutocompleteInput from "../AutocompleteInput.jsx";
-import { suggestNames, suggestLastNames, suggCitiesNames } from "../../utils/suggestionNames";
+import { suggestNames, suggestLastNames } from "../../utils/suggestionNames";
+import { getClasseName } from "../../utils/helpers";
 
 const EmployeeForm = ({
   isOpen,
@@ -17,6 +18,7 @@ const EmployeeForm = ({
 }) => {
   const { app_bg_color, text_color, theme, gradients } = useTheme();
   const { setFlashMessage } = useFlashNotification();
+  const { language } = useLanguage();
   
   const [formData, setFormData] = useState(getDefaultEmployee());
   const [errors, setErrors] = useState({});
@@ -557,6 +559,56 @@ const EmployeeForm = ({
               {activeSection === "professor" && (
                 <div className="space-y-6">
                   <h4 className={`text-md font-semibold mb-4 ${_text_color}`}>Configuration pour le poste de Professeur</h4>
+                  
+                  {/* Classes enseignées */}
+                  <div className="border border-gray-200 rounded-lg overflow-hidden mb-4">
+                    <div className={`${sectionHeaderBg} px-4 py-2 flex justify-between items-center`}>
+                      <h4 className={`font-medium ${_text_color}`}>Classes enseignées</h4>
+                    </div>
+                    <div className="p-4 space-y-4">
+                      <p className={`text-sm ${_text_color}`}>Sélectionnez les classes dans lesquelles ce professeur enseigne :</p>
+                      
+                      {database?.classes && database.classes.length > 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                          {database.classes.sort((a, b) => a.level - b.level).map(classe => {
+                            const classId = classe.id;
+                            const classDisplayName = getClasseName(`${classe.level} ${classe.name}`.trim(), language);
+                            const isSelected = formData.classes?.includes(classId);
+                            
+                            return (
+                              <div key={classId} className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  id={`class-${classId}`}
+                                  checked={isSelected}
+                                  onChange={() => {
+                                    const currentClasses = formData.classes || [];
+                                    const newClasses = isSelected
+                                      ? currentClasses.filter(id => id !== classId)
+                                      : [...currentClasses, classId];
+                                    
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      classes: newClasses
+                                    }));
+                                  }}
+                                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                />
+                                <label
+                                  htmlFor={`class-${classId}`}
+                                  className={`ml-2 text-sm font-medium ${_text_color}`}
+                                >
+                                  {classDisplayName}
+                                </label>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-500">Aucune classe disponible. Veuillez d'abord créer des classes.</p>
+                      )}
+                    </div>
+                  </div>
                   
                   <div className="border border-gray-200 rounded-lg overflow-hidden">
                     <div 

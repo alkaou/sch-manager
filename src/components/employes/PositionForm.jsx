@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, AlignLeft, Info, Eye, EyeOff, Scissors } from 'lucide-react';
 import { useTheme, useFlashNotification } from '../contexts';
 import { savePosition, updatePosition } from '../../utils/database_methods';
 
@@ -21,26 +21,38 @@ const PositionForm = ({
   
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  const [charCount, setCharCount] = useState(0);
   
   // Reset form when opening or changing position
   useEffect(() => {
     if (position) {
       setFormData({
-        name: position.name,
-        description: position.description || ''
+        name: position.name.trim(),
+        description: position.description.trim() || ''
       });
+      setCharCount(position.description?.length || 0);
     } else {
       setFormData({
         name: '',
         description: ''
       });
+      setCharCount(0);
     }
     setErrors({});
   }, [position, isOpen]);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // For description field, check character limit
+    if (name === 'description') {
+      const newValue = value.substring(0, 1000);
+      setCharCount(newValue.length);
+      setFormData(prev => ({ ...prev, [name]: newValue }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
     
     // Clear error when field is changed
     if (errors[name]) {
@@ -58,6 +70,11 @@ const PositionForm = ({
       newErrors.name = "Le nom doit contenir au moins 3 caractères";
     } else if (formData.name.trim().length > 60) {
       newErrors.name = "Le nom ne peut pas dépasser 60 caractères";
+    }
+    
+    // Description validation
+    if (formData.description.trim().length > 1000) {
+      newErrors.description = "La description ne peut pas dépasser 1000 caractères";
     }
     
     // Check if trying to rename Professeurs
@@ -105,6 +122,7 @@ const PositionForm = ({
   const inputBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-white';
   const inputBorderColor = theme === 'dark' ? 'border-gray-600' : 'border-gray-300';
   const buttonBgColor = theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500';
+  const previewBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50';
 
   const _text_color = app_bg_color === gradients[1] ||
         app_bg_color === gradients[2] ||
@@ -131,6 +149,34 @@ const PositionForm = ({
       transition: { duration: 0.2 }
     }
   };
+
+  const previewVariants = {
+    hidden: { opacity: 0, height: 0 },
+    visible: { 
+      opacity: 1,
+      height: 'auto',
+      transition: { duration: 0.3 }
+    }
+  };
+  
+  // Calculate character count color based on proximity to limit
+  const getCharCountColor = () => {
+    if (charCount > 900) {
+      return 'text-red-500';
+    } else if (charCount > 700) {
+      return 'text-yellow-500';
+    }
+    return 'text-green-500';
+  };
+
+  // Format preview text with proper line breaks
+  const formatPreviewText = (text) => {
+    return text.split('\n').map((line, index) => (
+      <p key={index} className={`${_text_color} ${line.trim() ? '' : 'h-3'}`}>
+        {line || '\u00A0'}
+      </p>
+    ));
+  };
   
   return (
     <AnimatePresence>
@@ -143,7 +189,7 @@ const PositionForm = ({
           exit="hidden"
         >
           <motion.div
-            className={`${bgColor} rounded-lg shadow-xl w-full max-w-md overflow-hidden`}
+            className={`${bgColor} rounded-lg shadow-xl w-full max-w-md overflow-hidden max-h-[90vh]`}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -163,7 +209,7 @@ const PositionForm = ({
               </motion.button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-4">
+            <form onSubmit={handleSubmit} className="p-4 overflow-y-auto max-h-[calc(90vh-4rem)]">
               <div className="mb-4">
                 <label className={`block mb-2 text-sm font-medium ${_text_color}`}>
                   Nom du poste <span className="text-red-500">*</span>
@@ -193,20 +239,77 @@ const PositionForm = ({
               </div>
               
               <div className="mb-6">
-                <label className={`block mb-2 text-sm font-medium ${_text_color}`}>
-                  Description
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  rows={4}
-                  className={`w-full px-3 py-2 text-sm rounded-lg transition-all duration-300 
-                    focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
-                    ${inputBgColor} ${inputBorderColor} ${_text_color}
-                  `}
-                  placeholder="Description du poste (optionnel)"
-                />
+                <div className="flex justify-between items-center mb-2">
+                  <label className={`text-sm font-medium ${_text_color}`}>
+                    Description
+                  </label>
+                  <div className="flex items-center space-x-2">
+                    <span className={`text-xs ${getCharCountColor()}`}>
+                      {charCount}/1000
+                    </span>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      type="button"
+                      onClick={() => setShowPreview(!showPreview)}
+                      className="text-blue-500 hover:text-blue-700 p-1 rounded-full transition-colors"
+                    >
+                      {showPreview ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </motion.button>
+                  </div>
+                </div>
+                <div className="relative">
+                  <div className="absolute top-2 left-2 flex">
+                    <Info size={16} className="text-gray-400" />
+                  </div>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    rows={4}
+                    className={`w-full px-3 py-2 pl-10 text-sm rounded-lg transition-all duration-300 
+                      focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+                      ${inputBgColor} ${inputBorderColor} ${_text_color}
+                    `}
+                    placeholder="Description du poste (optionnel)"
+                  />
+                </div>
+                {errors.description && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-1 text-sm text-red-500"
+                  >
+                    {errors.description}
+                  </motion.p>
+                )}
+                
+                <AnimatePresence>
+                  {showPreview && formData.description && (
+                    <motion.div
+                      variants={previewVariants}
+                      initial="hidden"
+                      animate="visible"
+                      exit="hidden"
+                      className={`mt-2 p-3 rounded-lg ${previewBgColor} border ${inputBorderColor}`}
+                    >
+                      <div className="flex items-center mb-2">
+                        <AlignLeft size={16} className="text-blue-500 mr-2" />
+                        <span className={`text-sm font-medium ${_text_color}`}>Aperçu</span>
+                      </div>
+                      <div className="text-sm">
+                        {formatPreviewText(formData.description)}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <div className="text-xs text-gray-500 flex items-center">
+                    <Scissors size={12} className="mr-1" /> 
+                    Limite: 1000 caractères
+                  </div>
+                </div>
               </div>
               
               <div className="flex justify-end space-x-3">

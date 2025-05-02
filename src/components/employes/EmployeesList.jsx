@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Edit, Trash, CheckCircle, XCircle, UserPlus, RefreshCw } from 'lucide-react';
-import { useTheme, useFlashNotification } from '../contexts';
+import { User, Edit, Trash, CheckCircle, XCircle, UserPlus, RefreshCw, ChevronRight, ChevronDown, Briefcase, Users, UserCheck } from 'lucide-react';
+import { useTheme, useFlashNotification, useLanguage } from '../contexts';
 import { deleteEmployee, activateEmployee, deactivateEmployee } from '../../utils/database_methods';
 import { formatDate, formatCurrency } from './utils';
+import { getClasseName } from "../../utils/helpers";
 
 const EmployeesList = ({
   employees,
@@ -16,10 +17,12 @@ const EmployeesList = ({
 }) => {
   const { text_color, theme, gradients, app_bg_color } = useTheme();
   const { setFlashMessage } = useFlashNotification();
+  const { language } = useLanguage();
 
   const [selected, setSelected] = useState([]);
   const [confirmModal, setConfirmModal] = useState(null);
   const [localLoading, setLocalLoading] = useState(false);
+  const [expandedClassRows, setExpandedClassRows] = useState({});
   
   // Reset local loading when parent loading changes
   useEffect(() => {
@@ -43,6 +46,14 @@ const EmployeesList = ({
     } else {
       setSelected([...selected, id]);
     }
+  };
+
+  // Toggle expanded classes for a specific employee
+  const toggleExpandClasses = (employeeId) => {
+    setExpandedClassRows(prev => ({
+      ...prev,
+      [employeeId]: !prev[employeeId]
+    }));
   };
 
   // Status operations
@@ -133,15 +144,23 @@ const EmployeesList = ({
     employees.find(e => e.id === id)?.status === 'inactif'
   );
 
+  // Calculate statistics
+  const activeEmployeesInPosition = employees.filter(e => e.status === 'actif').length;
+  const totalActiveEmployees = database?.employees?.filter(e => e.status === 'actif').length || 0;
+  const totalPositions = database?.positions?.length || 0;
+
   // Theme styling
   const tableBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
   const tableHeaderBg = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100';
   const tableBorderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
-  const tableRowHoverBg = theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-50';
+  const tableRowHoverBg = theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200';
   const buttonDeleteColor = "bg-red-600 hover:bg-red-700 text-white";
   const buttonSuccessColor = "bg-green-600 hover:bg-green-700 text-white";
   const buttonWarningColor = "bg-yellow-500 hover:bg-yellow-600 text-white";
   const buttonPrimaryColor = "bg-blue-600 hover:bg-blue-700 text-white";
+  const statsBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-blue-50';
+  const statsBorderColor = theme === 'dark' ? 'border-gray-600' : 'border-blue-200';
+  const statsIconColor = theme === 'dark' ? 'text-blue-400' : 'text-blue-500';
   const _text_color = app_bg_color === gradients[1] ||
       app_bg_color === gradients[2] ||
       theme === "dark" ? text_color : "text-gray-700";
@@ -185,6 +204,15 @@ const EmployeesList = ({
     }
   };
 
+  const statsVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.3 }
+    }
+  };
+
   const handleRefreshData = async () => {
     setLocalLoading(true);
     await refreshData();
@@ -192,7 +220,47 @@ const EmployeesList = ({
   };
 
   return (
-    <div className={`relative ${_text_color}`}>
+    <div className={`relative ${_text_color} overflow-hidden`}>
+      {/* Statistics display */}
+      <motion.div 
+        className={`mb-6 rounded-lg ${statsBgColor} border ${statsBorderColor} p-4 shadow-md overflow-hidden`}
+        variants={statsVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="flex items-center p-3 bg-opacity-40 bg-blue-500 bg-opacity-10 rounded-lg">
+            <div className={`p-3 rounded-full ${statsIconColor} bg-white bg-opacity-30 mr-4`}>
+              <UserCheck size={24} />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium opacity-70">Employés actifs ({position})</h4>
+              <p className="text-2xl font-bold">{activeEmployeesInPosition}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center p-3 bg-opacity-40 bg-green-500 bg-opacity-10 rounded-lg">
+            <div className={`p-3 rounded-full text-green-500 bg-white bg-opacity-30 mr-4`}>
+              <Users size={24} />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium opacity-70">Total des employés actifs</h4>
+              <p className="text-2xl font-bold">{totalActiveEmployees}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center p-3 bg-opacity-70 bg-purple-500 bg-opacity-10 rounded-lg">
+            <div className={`p-3 rounded-full text-purple-500 bg-white bg-opacity-30 mr-4`}>
+              <Briefcase size={24} />
+            </div>
+            <div>
+              <h4 className="text-sm font-medium opacity-70">Total des postes</h4>
+              <p className="text-2xl font-bold">{totalPositions}</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Action bar */}
       <div className="mb-4 flex gap-2 justify-end">
         <motion.button
@@ -201,6 +269,7 @@ const EmployeesList = ({
           onClick={handleRefreshData}
           className={`p-2 rounded-full ${buttonPrimaryColor} shadow-md`}
           disabled={loading || localLoading}
+          title="Actualiser les données"
         >
           <RefreshCw size={20} className={(loading || localLoading) ? 'animate-spin' : ''} />
         </motion.button>
@@ -212,6 +281,7 @@ const EmployeesList = ({
               whileTap={{ scale: 0.95 }}
               onClick={handleDeleteSelected}
               className={`p-2 rounded-full ${buttonDeleteColor} shadow-md`}
+              title="Supprimer les employés"
             >
               <Trash size={20} />
             </motion.button>
@@ -222,6 +292,7 @@ const EmployeesList = ({
                 whileTap={{ scale: 0.95 }}
                 onClick={handleDeactivateSelected}
                 className={`p-2 rounded-full ${buttonWarningColor} shadow-md`}
+                title="Désactiver les employés"
               >
                 <XCircle size={20} />
               </motion.button>
@@ -233,6 +304,7 @@ const EmployeesList = ({
                 whileTap={{ scale: 0.95 }}
                 onClick={handleActivateSelected}
                 className={`p-2 rounded-full ${buttonSuccessColor} shadow-md`}
+                title="Activer les employés"
               >
                 <CheckCircle size={20} />
               </motion.button>
@@ -245,6 +317,7 @@ const EmployeesList = ({
                   whileTap={{ scale: 0.95 }}
                   onClick={handleActivateSelected}
                   className={`p-2 rounded-full ${buttonSuccessColor} shadow-md`}
+                  title="Activer les employés"
                 >
                   <CheckCircle size={20} />
                 </motion.button>
@@ -253,6 +326,7 @@ const EmployeesList = ({
                   whileTap={{ scale: 0.95 }}
                   onClick={handleDeactivateSelected}
                   className={`p-2 rounded-full ${buttonWarningColor} shadow-md`}
+                  title="Désactiver les employés"
                 >
                   <XCircle size={20} />
                 </motion.button>
@@ -265,6 +339,7 @@ const EmployeesList = ({
                 whileTap={{ scale: 0.95 }}
                 onClick={handleEditSelected}
                 className={`p-2 rounded-full ${buttonPrimaryColor} shadow-md`}
+                title="Modifier l'employé"
               >
                 <Edit size={20} />
               </motion.button>
@@ -277,6 +352,7 @@ const EmployeesList = ({
           whileTap={{ scale: 0.95 }}
           onClick={onAddNew}
           className={`p-2 rounded-full ${buttonSuccessColor} shadow-md`}
+          title="Ajouter un employé"
         >
           <UserPlus size={20} />
         </motion.button>
@@ -350,6 +426,7 @@ const EmployeesList = ({
                     <>
                       <th className="py-3 px-4 text-left">Type</th>
                       <th className="py-3 px-4 text-left">Spécialité</th>
+                      <th className="py-3 px-4 text-left">Classes</th>
                       <th className="py-3 px-4 text-left">Salaire</th>
                     </>
                   )}
@@ -365,7 +442,7 @@ const EmployeesList = ({
                     key={employee.id}
                     variants={rowVariants}
                     className={`border-b ${tableBorderColor} ${tableRowHoverBg} ${tableBgColor}`}
-                    whileHover={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
+                    // whileHover={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}
                   >
                     <td className="py-3 px-4">
                       <input
@@ -381,7 +458,17 @@ const EmployeesList = ({
                       </div>
                     </td>
                     <td className="py-3 px-4 font-medium">{employee.name_complet}</td>
-                    <td className="py-3 px-4">{employee.sexe}</td>
+                    <td className="py-3 px-4">
+                      <span 
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          employee.sexe === 'M' 
+                            ? 'bg-blue-100 text-blue-800' 
+                            : 'bg-pink-100 text-pink-800'
+                        }`}
+                      >
+                        {employee.sexe === 'M' ? 'Homme' : 'Femme'}
+                      </span>
+                    </td>
                     <td className="py-3 px-4">{employee.contact}</td>
                     <td className="py-3 px-4">{formatDate(employee.birth_date)}</td>
                     <td className="py-3 px-4">{employee.matricule || "-"}</td>
@@ -414,22 +501,89 @@ const EmployeesList = ({
                     {position === 'Professeurs' && (
                       <>
                         <td className="py-3 px-4">
-                          {employee.proffesseur_config.is_permanent ? 'Permanent' : 'Vacataire'}
+                          <span 
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                              employee.proffesseur_config.is_permanent 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-orange-100 text-orange-800'
+                            }`}
+                          >
+                            {employee.proffesseur_config.is_permanent ? 'Permanent' : 'Vacataire'}
+                          </span>
                         </td>
                         <td className="py-3 px-4">{employee.proffesseur_config.speciality}</td>
                         <td className="py-3 px-4">
-                          <div className="flex items-center gap-2">
-                            {employee.proffesseur_config.is_permanent
-                              ? formatCurrency(employee.proffesseur_config.salaire_monthly) + '/mois'
-                              : formatCurrency(employee.proffesseur_config.salaire_hourly) + '/heure'
-                            }
-                          </div>
+                          {employee.classes && employee.classes.length > 0 ? (
+                            <div className="relative">
+                              {!expandedClassRows[employee.id] ? (
+                                <div 
+                                  className="text-center flex items-center cursor-pointer hover:bg-blue-50 hover:text-blue-600 p-1 rounded transition-colors"
+                                  onClick={() => toggleExpandClasses(employee.id)}
+                                >
+                                  {(() => {
+                                    const firstClass = database?.classes?.find(c => c.id === employee.classes[0]);
+                                    if (!firstClass) return <span className="text-gray-400 text-xs">Aucune classe</span>;
+                                    
+                                    const className = getClasseName(`${firstClass.level} ${firstClass.name}`.trim(), language);
+                                    return (
+                                      <>
+                                        <span className="text-center inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mr-2">
+                                          {className}
+                                        </span>
+                                        {employee.classes.length > 1 && (
+                                          <span className="text-xs font-medium text-blue-600 flex items-center">
+                                            <ChevronRight size={14} className="mr-1" />
+                                            +{employee.classes.length - 1} autres
+                                          </span>
+                                        )}
+                                      </>
+                                    );
+                                  })()}
+                                </div>
+                              ) : (
+                                <div>
+                                  <div 
+                                    className="text-center flex items-center cursor-pointer hover:bg-blue-50 hover:text-blue-600 p-1 rounded transition-colors mb-2"
+                                    onClick={() => toggleExpandClasses(employee.id)}
+                                  >
+                                    <span className="text-xs font-medium text-blue-600 flex items-center">
+                                      <ChevronDown size={14} className="mr-1" />
+                                      Classes ({employee.classes.length})
+                                    </span>
+                                  </div>
+                                  <div className="text-center grid grid-cols-1 gap-1 max-w-xs p-2 bg-blue-50 rounded-md border border-blue-100 animate-fadeIn">
+                                    {employee.classes.map(classId => {
+                                      const classInfo = database?.classes?.find(c => c.id === classId);
+                                      if (!classInfo) return null;
+                                      
+                                      const className = getClasseName(`${classInfo.level} ${classInfo.name}`.trim(), language);
+                                      return (
+                                        <span 
+                                          key={classId}
+                                          className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-white text-blue-800 border border-blue-200"
+                                        >
+                                          {className}
+                                        </span>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-gray-400 text-xs">Aucune classe</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          {employee.proffesseur_config.is_permanent 
+                            ? `${formatCurrency(employee.proffesseur_config.salaire_monthly)}/mois`
+                            : `${formatCurrency(employee.proffesseur_config.salaire_hourly)}/heure`}
                         </td>
                       </>
                     )}
                     {position !== 'Professeurs' && (
                       <td className="py-3 px-4">
-                        {formatCurrency(employee.others_employe_config.salaire_monthly)}
+                        {`${formatCurrency(employee.others_employe_config.salaire_monthly)}/mois`}
                       </td>
                     )}
                     <td className="py-3 px-4">
@@ -461,7 +615,7 @@ const EmployeesList = ({
             exit={{ opacity: 0, y: 20 }}
             className="fixed bottom-4 right-4 z-50"
           >
-            <div className="bg-blue-600 px-4 py-2 rounded-lg shadow-lg flex items-center">
+            <div className="bg-blue-600 px-4 py-2 rounded-lg shadow-lg text-white flex items-center">
               <span className="font-medium">{selected.length} employé(s) sélectionné(s)</span>
             </div>
           </motion.div>

@@ -169,7 +169,7 @@ const EmployesPage = () => {
       
       {/* Main content area */}
       <motion.div 
-        className="flex-1 p-6 overflow-auto"
+        className="flex-1 p-6 overflow-auto scrollbar-custom"
         variants={contentVariants}
       >
         <AnimatePresence mode="wait">

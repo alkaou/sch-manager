@@ -39,7 +39,7 @@ const TermsOfUse = () => {
       className={`min-h-screen p-6 md:p-10 ${app_bg_color}`}
     >
       <div className="max-w-4xl mx-auto">
-        <Link to="/" className={`inline-flex items-center mb-6 btn btn-primary`}>
+        <Link to="/" style={{fontWeight: "bold"}} className={`inline-flex items-center mb-6 btn btn-primary`}>
           <ArrowLeft className="mr-2" size={18} />
           {getContent(
             'Retour à l\'accueil', 

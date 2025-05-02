@@ -22,6 +22,7 @@ const HomePage = () => {
 
   const isOthersBGColors = app_bg_color === gradients[1] || app_bg_color === gradients[2] || theme === "dark" ? false : true;
 
+  const data_exist = data && data?.version ? true : false;
 
   useEffect(() => {
     window.electron.getDatabase().then((data) => {
@@ -38,7 +39,10 @@ const HomePage = () => {
   return (
     <div className={`${app_bg_color} min-h-screen`}>
       {/* Navigation Bar */}
-      <HomeNavBar setIsOpenPopup={setIsOpenPopup} />
+      <HomeNavBar 
+        setIsOpenPopup={setIsOpenPopup}
+        data_exist={data_exist}
+      />
       
       {/* Main Content Sections */}
       <main>
