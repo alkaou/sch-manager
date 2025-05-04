@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Trash, Check, X } from 'lucide-react';
 import { getClasseName, getBornInfos } from "../../utils/helpers";
-import { useLanguage } from "../contexts";
+import { useLanguage, useTheme } from "../contexts";
 import CountryInfosHeader from '../CountryInfosHeader.jsx';
 
 const StudentListPreview = ({
   list,
   onRemoveStudent,
   onUpdateStudentCustomData,
+  isEmployeeList = false,
   db = { db }
 }) => {
   const [editingCell, setEditingCell] = useState(null);
@@ -16,8 +17,11 @@ const StudentListPreview = ({
   const inputRef = useRef(null);
 
   const { live_language, language, Translator } = useLanguage();
+  const { text_color } = useTheme();
   const list_lang = list.langue ? list.langue : "Français";
   // console.log(list_lang);
+
+  const made_text = list_lang === "Français" ? "Fait, le" : list_lang === "Anglais" ? "Done," : "Kɛra,";
 
   // Handle click outside to cancel editing
   useEffect(() => {
@@ -47,54 +51,81 @@ const StudentListPreview = ({
     allHeaders.unshift('N°');
   }
 
-  // Get student data for a specific header
-  const getStudentData = (student, header, index) => {
-    // console.log(student.first_name + ' ' student.last_name + ' ' + index);
+  // Determine which array to use (students or employees)
+  const listItems = isEmployeeList ? (list.employees || []) : (list.students || []);
+
+  // Get data for a specific header
+  const getItemData = (item, header, index) => {
     if (header === 'N°') {
       return index + 1;
     }
 
-    if (header === 'Prénom') return `${student?.first_name} ${student?.sure_name}`.trim() || '';
-    if (header === 'Nom') return student.last_name || '';
-    if (header === 'Matricule') return student.matricule || '';
-    if (header === 'Père') return student.father_name || '';
-    if (header === 'Mère') return student.mother_name || '';
-    if (header === 'Contact') return student.parents_contact || '';
-    if (header === 'Date & Lieu de naissance') {
-      // const _birth_date = new Date(student.birth_date).toLocaleDateString() || '';
-      return `${getBornInfos(student.birth_date, student.birth_place, list_lang)}`.trim();
-    };
-    if (header === 'Moyenne') return student.Moyenne || '';
-    if (header === 'Classe') return getClasseName(student.classe) || '';
-    if (header === 'Âge') {
-      if (!student.birth_date) return '';
-      const birthDate = new Date(student.birth_date);
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const m = today.getMonth() - birthDate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
+    if (isEmployeeList) {
+      // Employee data
+      if (header === 'Prénom') return `${item?.first_name} ${item?.sure_name}`.trim() || '';
+      if (header === 'Nom') return item.last_name || '';
+      if (header === 'Matricule') return item.matricule || '';
+      if (header === 'Contact') return item.contact || '';
+      if (header === 'Date de naissance') return item.birth_date ? new Date(item.birth_date).toLocaleDateString() : '';
+      if (header === 'Date de début') return item.service_started_at ? new Date(item.service_started_at).toLocaleDateString() : '';
+      if (header === 'Postes') return item.postes?.join(', ') || '';
+      if (header === 'Sexe') return item.sexe === 'M' ? 'Homme' : 'Femme';
+      if (header === 'Statut') return item.status === 'actif' ? 'Actif' : 'Inactif';
+      if (header === 'Signature') return '';
+      if (header === 'Salaire') {
+        if (item.postes?.includes('Professeurs')) {
+          return item.proffesseur_config?.is_permanent
+            ? `${item.proffesseur_config?.salaire_monthly?.toLocaleString()} XOF/mois`
+            : `${item.proffesseur_config?.salaire_hourly?.toLocaleString()} XOF/heure`;
+        } else {
+          return `${item.others_employe_config?.salaire_monthly?.toLocaleString()} XOF/mois`;
+        }
       }
-      const student_age = list_lang === "Bambara" ? `${Translator[list_lang].years_text} ${age.toString()}` : `${age.toString()} ${Translator[list_lang].years_text}`;
-      return student_age;
+      if (header === 'Spécialité') return item.postes?.includes('Professeurs') ? item.proffesseur_config?.speciality : '';
+    } else {
+      // Student data
+      if (header === 'Prénom') return `${item?.first_name} ${item?.sure_name}`.trim() || '';
+      if (header === 'Nom') return item.last_name || '';
+      if (header === 'Matricule') return item.matricule || '';
+      if (header === 'Père') return item.father_name || '';
+      if (header === 'Mère') return item.mother_name || '';
+      if (header === 'Contact') return item.parents_contact || '';
+      if (header === 'Date & Lieu de naissance') {
+        // const _birth_date = new Date(student.birth_date).toLocaleDateString() || '';
+        return `${getBornInfos(item.birth_date, item.birth_place, list_lang)}`.trim();
+      };
+      if (header === 'Moyenne') return item.Moyenne || '';
+      if (header === 'Classe') return getClasseName(item.classe) || '';
+      if (header === 'Âge') {
+        if (!item.birth_date) return '';
+        const birthDate = new Date(item.birth_date);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        const student_age = list_lang === "Bambara" ? `${Translator[list_lang].years_text} ${age.toString()}` : `${age.toString()} ${Translator[list_lang].years_text}`;
+        return student_age;
+      }
+      if (header === 'Sexe') return item.sexe || '';
+      if (header === 'Signature') return '';
     }
-    if (header === 'Sexe') return student.sexe || '';
-    if (header === 'Signature') return '';
 
-    // Custom header - Modifié pour mieux gérer les données personnalisées
-    return student.header && student.header !== undefined
-      ? student.header
+    // Custom header 
+    return item.header && item.header !== undefined
+      ? item.header
       : '';
   };
 
   // Handle cell click for custom data
-  const handleCellClick = (student, header, index) => {
+  const handleCellClick = (item, header, index) => {
     // Only allow editing custom headers or empty standard fields
     const isCustomHeader = list.customHeaders.includes(header);
-    const value = getStudentData(student, header, index);
+    const value = getItemData(item, header, index);
 
     if (isCustomHeader || value === '') {
-      setEditingCell({ studentId: student.id, header });
+      setEditingCell({ itemId: item.id, header });
       setEditValue(value);
     }
   };
@@ -105,10 +136,10 @@ const StudentListPreview = ({
     if (e) e.stopPropagation();
 
     if (editingCell) {
-      // Appeler la fonction de mise à jour avec les bonnes valeurs
-      onUpdateStudentCustomData(editingCell.studentId, editingCell.header, editValue);
+      // Call the appropriate update function based on list type
+      onUpdateStudentCustomData(editingCell.itemId, editingCell.header, editValue);
 
-      // Fermer l'éditeur après la sauvegarde
+      // Close the editor after saving
       setEditingCell(null);
       setEditValue('');
     }
@@ -135,29 +166,29 @@ const StudentListPreview = ({
   // Calculate page dimensions based on orientation
   const pageWidth = list.orientation === 'portrait' ? '210mm' : '297mm';
 
-  // Nombre d'élèves à afficher
+  // Number of items to display per page
   const FIRST_PAGE_COUNT = list.orientation === 'portrait' ? 15 : 12;
   const OTHER_PAGE_COUNT = 20;
 
-  const totalStudents = list.students.length;
+  const totalItems = listItems.length;
 
-  // Calcul du nombre de pages supplémentaires après la première page
-  const remainingStudents = Math.max(0, totalStudents - FIRST_PAGE_COUNT);
-  const additionalPages = Math.ceil(remainingStudents / OTHER_PAGE_COUNT);
+  // Calculate number of additional pages after the first page
+  const remainingItems = Math.max(0, totalItems - FIRST_PAGE_COUNT);
+  const additionalPages = Math.ceil(remainingItems / OTHER_PAGE_COUNT);
 
-  // Nombre total de pages = 1 (pour la première page) + pages supplémentaires
+  // Total number of pages = 1 (for the first page) + additional pages
   const totalPages = 1 + additionalPages;
 
-  const studentPages = [];
+  const itemPages = [];
 
-  // Première page : 12 élèves (ou moins si le total est inférieur)
-  studentPages.push(list.students.slice(0, FIRST_PAGE_COUNT));
+  // First page: FIRST_PAGE_COUNT items (or fewer if the total is less)
+  itemPages.push(listItems.slice(0, FIRST_PAGE_COUNT));
 
-  // Pages suivantes : 15 élèves par page
+  // Subsequent pages: OTHER_PAGE_COUNT items per page
   for (let i = 0; i < additionalPages; i++) {
     const startIndex = FIRST_PAGE_COUNT + i * OTHER_PAGE_COUNT;
-    const endIndex = Math.min(startIndex + OTHER_PAGE_COUNT, totalStudents);
-    studentPages.push(list.students.slice(startIndex, endIndex));
+    const endIndex = Math.min(startIndex + OTHER_PAGE_COUNT, totalItems);
+    itemPages.push(listItems.slice(startIndex, endIndex));
   }
 
   // Styles based on theme
@@ -169,7 +200,7 @@ const StudentListPreview = ({
 
   return (
     <div className="flex flex-col items-center text-gray-700">
-      {studentPages.map((pageStudents, pageIndex) => (
+      {itemPages.map((pageItems, pageIndex) => (
         <div
           key={`page-${pageIndex}`}
           className="mb-8 shadow-lg bg-white student-list-preview-container"
@@ -213,7 +244,7 @@ const StudentListPreview = ({
           )}
 
           {/* Table */}
-          {pageStudents.length > 0 && (
+          {pageItems.length > 0 && (
             <table className={`w-full border-collapse ${tableBorderColor} border`}>
               <thead>
                 <tr className={`${tableHeaderBgColor}`}>
@@ -233,19 +264,19 @@ const StudentListPreview = ({
                 </tr>
               </thead>
               <tbody>
-                {pageStudents.map((student, index) => {
-                  // Calculate the actual student index across all pages
+                {pageItems.map((item, index) => {
+                  // Calculate the actual item index across all pages
                   const globalIndex = pageIndex === 0 ? index :
                     FIRST_PAGE_COUNT + (OTHER_PAGE_COUNT * (pageIndex - 1)) + index;
 
                   return (
                     <tr
-                      key={student.id}
+                      key={item.id}
                       className={`${index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor}`}
                     >
                       {allHeaders.map(header => (
                         <td
-                          key={`${student.id}-${header}`}
+                          key={`${item.id}-${header}`}
                           className={`
                             border p-2 
                             ${tableBorderColor} 
@@ -257,18 +288,20 @@ const StudentListPreview = ({
                               header === "Âge" ||
                               header === "Contact" ||
                               header === "Matricule" ||
-                              header === "Prénom" && student.sure_name !== ""
+                              header === "Statut" ||
+                              header === "Salaire" ||
+                              (header === "Prénom" && item.sure_name !== "")
                               ? "text-center" : ""
                             }
                           `}
                           onClick={() => {
                             if (header === "Signature" || header === "signature") return;
-                            handleCellClick(student, header, globalIndex);
+                            handleCellClick(item, header, globalIndex);
                           }}
-                          style={{ cursor: list.customHeaders.includes(header) || getStudentData(student, header, globalIndex) === '' ? 'pointer' : 'default' }}
+                          style={{ cursor: list.customHeaders.includes(header) || getItemData(item, header, globalIndex) === '' ? 'pointer' : 'default' }}
                         >
                           {editingCell &&
-                            editingCell.studentId === student.id &&
+                            editingCell.itemId === item.id &&
                             editingCell.header === header &&
                             header !== "Signature" &&
                             header !== "signature" ? (
@@ -287,6 +320,7 @@ const StudentListPreview = ({
                                   className="p-1 bg-green-600 text-white rounded mr-1"
                                   whileHover={{ scale: 1.1 }}
                                   whileTap={{ scale: 0.9 }}
+                                  title="Enregistrer"
                                 >
                                   <Check size={16} />
                                 </motion.button>
@@ -295,22 +329,24 @@ const StudentListPreview = ({
                                   className="p-1 bg-red-600 text-white rounded"
                                   whileHover={{ scale: 1.1 }}
                                   whileTap={{ scale: 0.9 }}
+                                  title="Annuler"
                                 >
                                   <X size={16} />
                                 </motion.button>
                               </div>
                             </div>
                           ) : (
-                            getStudentData(student, header, globalIndex)
+                            getItemData(item, header, globalIndex)
                           )}
                         </td>
                       ))}
                       <td className={`border ${tableBorderColor} p-2 text-center no-print`}>
                         <motion.button
-                          onClick={() => onRemoveStudent(student.id)}
+                          onClick={() => onRemoveStudent(item.id)}
                           className={`${buttonDanger} p-1 rounded`}
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
+                          title={`Retirer ${isEmployeeList ? "l'employé" : "l'élève"}`}
                         >
                           <Trash size={16} />
                         </motion.button>
@@ -327,8 +363,19 @@ const StudentListPreview = ({
             <>
               {pageIndex === totalPages - 1 && (
                 <div className="mt-5 text-right">
-                  <div className="text-lg font-bold mb-40">{list.customMessage.text}</div>
-                  <div className="mb-10">Fait, le {new Date(list.customMessage.date).toLocaleDateString()}</div>
+                  <div 
+                    style={{
+                      textDecoration: "underline",
+                      textDecorationThickness: "3px",
+                      textDecorationStyle: "solid",
+                    }} 
+                    className="text-lg font-bold mb-1"
+                  >{list.customMessage.text} : </div>
+                  <div 
+                    className="text-small italic font-medium"
+                    style={{marginBottom: "20%"}}
+                  >{list.customMessage.name}</div>
+                  <div className="mb-10">{made_text} {new Date(list.customMessage.date).toLocaleDateString()}</div>
                 </div>
               )}
             </>
@@ -341,10 +388,14 @@ const StudentListPreview = ({
         </div>
       ))}
 
-      {list.students.length === 0 && (
+      {listItems.length === 0 && (
         <div className="text-center p-8">
-          <p className={`text-lg text-gray-700`}>Aucun élève dans cette liste</p>
-          <p className={`text-gray-700 opacity-75`}>Cliquez sur le bouton "Ajouter des élèves" pour commencer</p>
+          <p className={`text-lg ${text_color}`}>
+            {isEmployeeList ? "Aucun employé dans cette liste" : "Aucun élève dans cette liste"}
+          </p>
+          <p className={`${text_color} opacity-75`}>
+            Cliquez sur le bouton "{isEmployeeList ? "Ajouter des employés" : "Ajouter des élèves"}" pour commencer
+          </p>
         </div>
       )}
     </div>

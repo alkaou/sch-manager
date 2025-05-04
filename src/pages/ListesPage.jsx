@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, useFlashNotification } from '../components/contexts';
-import StudentListMenu from "../components/student_liste/StudentListMenu.jsx";
-import StudentListEditor from "../components/student_liste/StudentListEditor.jsx";
-import StudentListNamePopup from "../components/student_liste/StudentListNamePopup.jsx";
+import StudentListMenu from "../components/liste_rapide/StudentListMenu.jsx";
+import StudentListEditor from "../components/liste_rapide/StudentListEditor.jsx";
+import StudentListNamePopup from "../components/liste_rapide/StudentListNamePopup.jsx";
 
-const ListeElevesPageContent = ({
+const ListesPagePageContent = ({
   app_bg_color,
   text_color,
   theme,
@@ -20,6 +20,7 @@ const ListeElevesPageContent = ({
   const [showNamePopup, setShowNamePopup] = useState(false);
   const [currentList, setCurrentList] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSmallLoading, setIsSmallLoading] = useState(false);
 
   // Fetch database and student lists
   useEffect(() => {
@@ -57,15 +58,17 @@ const ListeElevesPageContent = ({
   };
 
   // Handle saving a list name from popup
-  const handleSaveListName = (name) => {
+  const handleSaveListName = (name, listType = 'students') => {
     const newList = {
       id: Date.now().toString(),
+      listType: listType, // 'students' or 'employees'
       name: name,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       headers: ["Prénom", "Nom"],
       customHeaders: [],
       students: [],
+      employees: [],
       title: {
         text: name,
         style: {
@@ -83,6 +86,7 @@ const ListeElevesPageContent = ({
       customMessage: {
         show: false,
         text: "Le Directeur",
+        name: "",
         date: new Date().toISOString().split('T')[0]
       },
       countryInfosHeader: {
@@ -137,7 +141,7 @@ const ListeElevesPageContent = ({
   // Handle deleting a list
   const handleDeleteList = async (listId) => {
     try {
-      setIsLoading(true);
+      setIsSmallLoading(true);
       await window.electron.deleteStudentList(listId);
 
       // Refresh the list of student lists
@@ -156,8 +160,11 @@ const ListeElevesPageContent = ({
         type: "error",
         duration: 5000,
       });
+      setIsSmallLoading(false);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsSmallLoading(false);
+      }, 1000);
     }
   };
 
@@ -166,14 +173,36 @@ const ListeElevesPageContent = ({
     setCurrentList(updatedList);
   };
 
+  const some_text_color = theme === "dark" ? text_color : "text-gray-700";
+
   return (
     <div style={{marginLeft: "7%"}} className={`p-4 mt-20 ${app_bg_color}`}>
       {isLoading ? (
-        <div className="flex items-center justify-center h-full mt-40">
+        <div 
+          className="items-center absolute z-40 justify-center"
+          style={{
+            top: "50%",
+            left: "50%",
+          }}
+        >
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
       ) : (
         <>
+          {isSmallLoading && (
+            <div 
+              className="bg-blue-100 bg-opacity-40 z-40 justify-center fixed"
+              style={{
+                borderRadius: "100%",
+                padding: "20px",
+                border: "2px solid lightblue",
+                marginLeft: "42%",
+                marginTop: "20%"
+              }}
+            >
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-700"></div>
+            </div>
+          )}
           <AnimatePresence mode="wait">
             {showMenu && (
               <motion.div
@@ -224,7 +253,7 @@ const ListeElevesPageContent = ({
                 onSave={handleSaveListName}
                 onCancel={() => setShowNamePopup(false)}
                 theme={theme}
-                textClass={text_color}
+                textClass={some_text_color}
                 appBgColor={app_bg_color}
               />
             )}
@@ -235,9 +264,9 @@ const ListeElevesPageContent = ({
   );
 };
 
-const ListeElevesPage = () => {
+const ListesPagePage = () => {
   const outletContext = useOutletContext();
-  return <ListeElevesPageContent {...outletContext} />;
+  return <ListesPagePageContent {...outletContext} />;
 };
 
-export default ListeElevesPage;
+export default ListesPagePage;

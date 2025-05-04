@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Save, Settings, Download, Users, Globe } from 'lucide-react';
+import { ArrowLeft, Save, Settings, Download, Users, Globe, Briefcase } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
 import { useFlashNotification } from "../contexts.js";
 import StudentListSidebar from './StudentListSidebar.jsx';
 import StudentListPreview from './StudentListPreview.jsx';
 import StudentListAddStudents from './StudentListAddStudents.jsx';
+import EmployeListAddEmployees from './EmployeListAddEmployees.jsx';
 import { addPdfStyles } from './pdfStyles.js';
 
 // Available languages
@@ -28,11 +29,15 @@ const StudentListEditor = ({
   const [currentList, setCurrentList] = useState(list);
   const [showSidebar, setShowSidebar] = useState(true);
   const [showAddStudents, setShowAddStudents] = useState(false);
+  const [showAddEmployees, setShowAddEmployees] = useState(false);
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [saving, setSaving] = useState(false);
   const [customHeaderInput, setCustomHeaderInput] = useState('');
   const [pdfIsGenerating, setPdfIsGenerating] = useState(false);
   const languageSelectorRef = useRef(null);
+
+  // Determine if this is an employee list or student list
+  const isEmployeeList = currentList?.listType === 'employees';
 
   // Load custom headers from local storage
   useEffect(() => {
@@ -158,6 +163,46 @@ const StudentListEditor = ({
     setShowAddStudents(false);
   };
 
+  // New function to handle adding employees to the list
+  const handleAddEmployees = (selectedEmployees) => {
+    // Filter out employees that are already in the list
+    const existingEmployeeIds = currentList.employees?.map(e => e.id) || [];
+    const newEmployees = selectedEmployees.filter(e => !existingEmployeeIds.includes(e.id));
+    const allEmployees = [...(currentList.employees || []), ...newEmployees];
+    const filteredEmployees = allEmployees.sort((a, b) => {
+      const lastNameA = (`${a.last_name} ${a.sure_name} ${a.first_name}` || '').toLowerCase();
+      const lastNameB = (`${b.last_name} ${b.sure_name} ${b.first_name}` || '').toLowerCase();
+
+      if (lastNameA !== lastNameB) {
+        return lastNameA.localeCompare(lastNameB);
+      }
+    });
+
+    if (newEmployees.length > 0) {
+      const updatedList = {
+        ...currentList,
+        employees: filteredEmployees,
+      };
+
+      setCurrentList(updatedList);
+      onUpdateList(updatedList);
+
+      setFlashMessage({
+        message: `${newEmployees.length} employé(s) ajouté(s) à la liste`,
+        type: "success",
+        duration: 3000,
+      });
+    } else {
+      setFlashMessage({
+        message: "Aucun nouvel employé ajouté à la liste",
+        type: "info",
+        duration: 3000,
+      });
+    }
+
+    setShowAddEmployees(false);
+  };
+
   // Handle removing a student from the list
   const handleRemoveStudent = (studentId) => {
     const updatedList = {
@@ -170,6 +215,23 @@ const StudentListEditor = ({
 
     setFlashMessage({
       message: "Élève retiré de la liste",
+      type: "success",
+      duration: 3000,
+    });
+  };
+
+  // Handle removing an employee from the list
+  const handleRemoveEmployee = (employeeId) => {
+    const updatedList = {
+      ...currentList,
+      employees: currentList.employees.filter(e => e.id !== employeeId)
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+
+    setFlashMessage({
+      message: "Employé retiré de la liste",
       type: "success",
       duration: 3000,
     });
@@ -327,31 +389,79 @@ const StudentListEditor = ({
     onUpdateList(updatedList);
   };
 
+  // Handle updating list type (student or employee)
+  const handleUpdateListType = (listType) => {
+    // Only allow changing if the list is empty or already matches the type
+    if (
+      (listType === 'students' && currentList.employees?.length > 0) ||
+      (listType === 'employees' && currentList.students?.length > 0)
+    ) {
+      setFlashMessage({
+        message: `Cette liste contient déjà des ${listType === 'students' ? 'employés' : 'élèves'}. Veuillez les supprimer avant de changer le type.`,
+        type: "error",
+        duration: 5000,
+      });
+      return;
+    }
+
+    const updatedList = {
+      ...currentList,
+      listType,
+      // Initialize appropriate collection if it doesn't exist
+      ...(listType === 'employees' && !currentList.employees && { employees: [] }),
+      ...(listType === 'students' && !currentList.students && { students: [] })
+    };
+
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+    
+    setFlashMessage({
+      message: `Type de liste défini sur ${listType === 'students' ? 'élèves' : 'employés'}`,
+      type: "success",
+      duration: 3000,
+    });
+  };
+
   // Handle updating student custom data
   const handleUpdateStudentCustomData = (studentId, headerName, value) => {
     const updatedStudents = currentList.students.map(student => {
       if (student.id === studentId) {
         // Créer une copie profonde pour s'assurer que React détecte le changement
-        // const new_header = {}
         const updatedStudent = {
           ...student,
           [headerName]: value,
-          // customData: {
-          //   ...(student.customData || {}),
-          //   [headerName]: value
-          // }
         };
         return updatedStudent;
       }
       return student;
     });
-    // console.log(updatedStudents); // Commencer par ici
     const updatedList = {
       ...currentList,
       students: updatedStudents
     };
 
     // Mettre à jour l'état local et propager la mise à jour au parent
+    setCurrentList(updatedList);
+    onUpdateList(updatedList);
+  };
+
+  // Handle updating employee custom data
+  const handleUpdateEmployeeCustomData = (employeeId, headerName, value) => {
+    const updatedEmployees = currentList.employees.map(employee => {
+      if (employee.id === employeeId) {
+        const updatedEmployee = {
+          ...employee,
+          [headerName]: value,
+        };
+        return updatedEmployee;
+      }
+      return employee;
+    });
+    const updatedList = {
+      ...currentList,
+      employees: updatedEmployees
+    };
+
     setCurrentList(updatedList);
     onUpdateList(updatedList);
   };
@@ -404,7 +514,6 @@ const StudentListEditor = ({
           backgroundColor: '#ffffff'
         });
 
-        // console.log(orientation);
         // Calculate dimensions
         const imgData = canvas.toDataURL('image/png');
         const pdfWidth = orientation === 'p' ? 210 : 297;
@@ -422,7 +531,6 @@ const StudentListEditor = ({
 
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        // const margin = 10;
         const img_x = 5;
         const img_width = pageWidth - 10;
         let imagHeight;
@@ -440,7 +548,8 @@ const StudentListEditor = ({
       }
 
       // Generate filename
-      const fileName = `${currentList.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const listTypeName = isEmployeeList ? 'employes' : 'eleves';
+      const fileName = `${currentList.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${listTypeName}_${new Date().toISOString().split('T')[0]}.pdf`;
 
       // Save the PDF
       pdf.save(fileName);
@@ -480,6 +589,7 @@ const StudentListEditor = ({
             className={`${buttonSecondary} p-2 rounded-lg mr-4 flex items-center`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            title="Retourner au menu"
           >
             <ArrowLeft size={20} />
           </motion.button>
@@ -487,6 +597,19 @@ const StudentListEditor = ({
         </div>
 
         <div className="flex items-center space-x-2">
+          {/* Type switcher */}
+          <div className="relative mr-2">
+            <select
+              value={currentList.listType || 'students'}
+              onChange={(e) => handleUpdateListType(e.target.value)}
+              className={`${buttonSecondary} p-2 rounded-lg`}
+              title="Changer le type de liste"
+            >
+              <option value="students">Liste d'élèves</option>
+              <option value="employees">Liste d'employés</option>
+            </select>
+          </div>
+
           {/* Language selector button */}
           <div className="relative">
             <motion.button
@@ -494,6 +617,7 @@ const StudentListEditor = ({
               className={`${buttonSecondary} p-2 rounded-lg flex items-center`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              title="Changer la langue"
             >
               <Globe size={20} />
               <span className="ml-2 hidden sm:inline">{currentList.langue || "Français"}</span>
@@ -528,18 +652,32 @@ const StudentListEditor = ({
             className={`${buttonSecondary} p-2 rounded-lg flex items-center`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            title="Paramètres"
           >
             <Settings size={20} />
           </motion.button>
 
-          <motion.button
-            onClick={() => setShowAddStudents(true)}
-            className={`${buttonPrimary} p-2 rounded-lg flex items-center`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Users size={20} />
-          </motion.button>
+          {isEmployeeList ? (
+            <motion.button
+              onClick={() => setShowAddEmployees(true)}
+              className={`${buttonPrimary} p-2 rounded-lg flex items-center`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              title="Ajouter des employés"
+            >
+              <Briefcase size={20} />
+            </motion.button>
+          ) : (
+            <motion.button
+              onClick={() => setShowAddStudents(true)}
+              className={`${buttonPrimary} p-2 rounded-lg flex items-center`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              title="Ajouter des élèves"
+            >
+              <Users size={20} />
+            </motion.button>
+          )}
 
           <motion.button
             onClick={handleSave}
@@ -547,6 +685,7 @@ const StudentListEditor = ({
             className={`${buttonSuccess} p-2 rounded-lg flex items-center`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            title="Sauvegarder la liste"
           >
             <Save size={20} />
           </motion.button>
@@ -557,6 +696,7 @@ const StudentListEditor = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             disabled={pdfIsGenerating}
+            title="Télécharger la liste en PDF"
           >
             {pdfIsGenerating ?
               <Download size={20} className="animate-pulse" /> :
@@ -587,6 +727,7 @@ const StudentListEditor = ({
                 onUpdateOrientation={handleUpdateOrientation}
                 onUpdateCustomMessage={handleUpdateCustomMessage}
                 onUpdatecountryInfosHeader={onUpdatecountryInfosHeader}
+                isEmployeeList={isEmployeeList}
                 theme={theme}
                 textClass={textClass}
                 appBgColor={appBgColor}
@@ -595,12 +736,13 @@ const StudentListEditor = ({
           )}
         </AnimatePresence>
 
-        {/* Preview : LIST STUDENTS */}
+        {/* Preview */}
         <div className="flex-1 overflow-auto p-4">
           <StudentListPreview
             list={currentList}
-            onRemoveStudent={handleRemoveStudent}
-            onUpdateStudentCustomData={handleUpdateStudentCustomData}
+            onRemoveStudent={isEmployeeList ? handleRemoveEmployee : handleRemoveStudent}
+            onUpdateStudentCustomData={isEmployeeList ? handleUpdateEmployeeCustomData : handleUpdateStudentCustomData}
+            isEmployeeList={isEmployeeList}
             db={db}
           />
         </div>
@@ -615,6 +757,19 @@ const StudentListEditor = ({
             onAddStudents={handleAddStudents}
             theme={theme}
             currentStudents={currentList.students}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Add Employees Modal */}
+      <AnimatePresence>
+        {showAddEmployees && (
+          <EmployeListAddEmployees
+            db={db}
+            onClose={() => setShowAddEmployees(false)}
+            onAddEmployees={handleAddEmployees}
+            theme={theme}
+            currentEmployees={currentList.employees || []}
           />
         )}
       </AnimatePresence>

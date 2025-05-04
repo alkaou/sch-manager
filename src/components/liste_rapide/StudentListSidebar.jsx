@@ -14,6 +14,7 @@ const StudentListSidebar = ({
   onUpdateOrientation,
   onUpdateCustomMessage,
   onUpdatecountryInfosHeader,
+  isEmployeeList = false,
   theme,
   textClass,
   appBgColor
@@ -45,8 +46,8 @@ const StudentListSidebar = ({
     });
   };
 
-  // Standard headers
-  const standardHeaders = [
+  // Standard headers for students
+  const standardStudentHeaders = [
     "N°",
     "Prénom",
     "Nom",
@@ -61,6 +62,26 @@ const StudentListSidebar = ({
     "Moyenne",
     "Signature",
   ];
+
+  // Standard headers for employees
+  const standardEmployeeHeaders = [
+    "N°",
+    "Prénom",
+    "Nom",
+    "Matricule",
+    "Sexe",
+    "Contact",
+    "Date de naissance",
+    "Date de début",
+    "Postes",
+    "Salaire",
+    "Spécialité",
+    "Statut",
+    "Signature",
+  ];
+
+  // Use the appropriate headers based on list type
+  const standardHeaders = isEmployeeList ? standardEmployeeHeaders : standardStudentHeaders;
 
   // Count selected headers
   const selectedHeadersCount = list.headers.length;
@@ -327,7 +348,6 @@ const StudentListSidebar = ({
                         style: {
                           ...list.title.style,
                           border: undefined,
-                          borderBottom: undefined,
                           borderTop: list.title.style.borderTop ? undefined : '2px solid black',
                           padding: list.title.style.borderTop ? undefined : '4px 0',
                         }
@@ -641,7 +661,7 @@ const StudentListSidebar = ({
             className={`${sectionBgColor} p-3 flex justify-between items-center cursor-pointer`}
             onClick={() => toggleSection('headers')}
           >
-            <h3 className="font-medium">En-têtes standard ({selectedHeadersCount}/10)</h3>
+            <h3 className="font-medium">En-têtes standard ({selectedHeadersCount}/10) {isEmployeeList ? "- Employés" : "- Élèves"}</h3>
             {expandedSections.headers ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
           </div>
 
@@ -757,69 +777,27 @@ const StudentListSidebar = ({
           </div>
 
           {expandedSections.orientation && (
-            <div className="p-3">
-              <div className="flex space-x-2">
-                <motion.button
+            <div className="p-3 space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <button
                   onClick={() => onUpdateOrientation('portrait')}
-                  className={`flex-1 p-2 rounded-lg flex items-center justify-center ${list.orientation === 'portrait' ? buttonPrimary : buttonSecondary}`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className={`p-3 rounded-lg flex items-center justify-center ${
+                    list.orientation === 'portrait' ? buttonPrimary : buttonSecondary
+                  }`}
                 >
                   <Layout size={20} className="mr-2" />
                   Portrait
-                </motion.button>
-
-                <motion.button
+                </button>
+                <button
                   onClick={() => onUpdateOrientation('landscape')}
-                  className={`flex-1 p-2 rounded-lg flex items-center justify-center ${list.orientation === 'landscape' ? buttonPrimary : buttonSecondary}`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className={`p-3 rounded-lg flex items-center justify-center ${
+                    list.orientation === 'landscape' ? buttonPrimary : buttonSecondary
+                  }`}
                 >
-                  <Layout size={20} className="mr-2 transform rotate-90" />
+                  <Layout size={20} className="mr-2 rotate-90" />
                   Paysage
-                </motion.button>
+                </button>
               </div>
-            </div>
-          )}
-        </div>
-
-        {/* Custom Country INFOS Header Section */}
-        <div className={`mb-4 border ${borderColor} rounded-lg overflow-hidden`}>
-          <div
-            className={`${sectionBgColor} p-3 flex justify-between items-center cursor-pointer`}
-            onClick={() => toggleSection('countryInfosHeader')}
-          >
-            <h3 className="font-medium">Les informations de la fiche</h3>
-            {expandedSections.countryInfosHeader ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-          </div>
-
-          {expandedSections.countryInfosHeader && (
-            <div className="p-3 space-y-3">
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="show-custom-message"
-                  checked={list.countryInfosHeader.show}
-                  onChange={(e) => onUpdatecountryInfosHeader({ ...list.countryInfosHeader, show: e.target.checked })}
-                  className="mr-2 h-4 w-4"
-                />
-                <label htmlFor="show-custom-message">Afficher informations</label>
-              </div>
-
-              {list.countryInfosHeader.show && (
-                <>
-                  <div className='flex items-center'>
-                    <input
-                      type="checkbox"
-                      id="show-custom-message"
-                      checked={list.countryInfosHeader.isCAP}
-                      onChange={(e) => onUpdatecountryInfosHeader({ ...list.countryInfosHeader, isCAP: e.target.checked })}
-                      className="mr-2 h-4 w-4"
-                    />
-                    <label htmlFor="show-custom-message">CAP ?</label>
-                  </div>
-                </>
-              )}
             </div>
           )}
         </div>
@@ -841,21 +819,41 @@ const StudentListSidebar = ({
                   type="checkbox"
                   id="show-custom-message"
                   checked={list.customMessage.show}
-                  onChange={(e) => onUpdateCustomMessage({ ...list.customMessage, show: e.target.checked })}
+                  onChange={(e) => onUpdateCustomMessage({
+                    ...list.customMessage,
+                    show: e.target.checked
+                  })}
                   className="mr-2 h-4 w-4"
                 />
-                <label htmlFor="show-custom-message">Afficher le message personnalisé</label>
+                <label htmlFor="show-custom-message">Afficher un message personnalisé</label>
               </div>
 
               {list.customMessage.show && (
                 <>
                   <div>
-                    <label className="block mb-1 text-sm font-medium">Texte</label>
+                    <label className="block mb-1 text-sm font-medium">Texte du message</label>
                     <input
                       type="text"
                       value={list.customMessage.text}
-                      onChange={(e) => onUpdateCustomMessage({ ...list.customMessage, text: e.target.value })}
+                      onChange={(e) => onUpdateCustomMessage({
+                        ...list.customMessage,
+                        text: e.target.value
+                      })}
                       placeholder="Ex: Le Directeur"
+                      className={`w-full p-2 rounded-lg border ${borderColor} ${inputBgColor}`}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm font-medium">Votre Prénom & Nom</label>
+                    <input
+                      type="text"
+                      value={list.customMessage.name}
+                      onChange={(e) => onUpdateCustomMessage({
+                        ...list.customMessage,
+                        name: e.target.value
+                      })}
+                      placeholder="Ex: Mamadou Dembélé"
                       className={`w-full p-2 rounded-lg border ${borderColor} ${inputBgColor}`}
                     />
                   </div>
@@ -865,7 +863,10 @@ const StudentListSidebar = ({
                     <input
                       type="date"
                       value={list.customMessage.date}
-                      onChange={(e) => onUpdateCustomMessage({ ...list.customMessage, date: e.target.value })}
+                      onChange={(e) => onUpdateCustomMessage({
+                        ...list.customMessage,
+                        date: e.target.value
+                      })}
                       className={`w-full p-2 rounded-lg border ${borderColor} ${inputBgColor}`}
                     />
                   </div>
@@ -875,8 +876,51 @@ const StudentListSidebar = ({
           )}
         </div>
 
-      </div>
+        {/* Country Infos Header */}
+        <div className={`mb-4 border ${borderColor} rounded-lg overflow-hidden`}>
+          <div
+            className={`${sectionBgColor} p-3 flex justify-between items-center cursor-pointer`}
+            onClick={() => toggleSection('countryInfosHeader')}
+          >
+            <h3 className="font-medium">En-tête de pays</h3>
+            {expandedSections.countryInfosHeader ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+          </div>
 
+          {expandedSections.countryInfosHeader && (
+            <div className="p-3 space-y-3">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="show-country-infos"
+                  checked={list.countryInfosHeader.show}
+                  onChange={(e) => onUpdatecountryInfosHeader({
+                    ...list.countryInfosHeader,
+                    show: e.target.checked
+                  })}
+                  className="mr-2 h-4 w-4"
+                />
+                <label htmlFor="show-country-infos">Afficher l'en-tête de pays</label>
+              </div>
+
+              {list.countryInfosHeader.show && (
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="is-cap"
+                    checked={list.countryInfosHeader.isCAP}
+                    onChange={(e) => onUpdatecountryInfosHeader({
+                      ...list.countryInfosHeader,
+                      isCAP: e.target.checked
+                    })}
+                    className="mr-2 h-4 w-4"
+                  />
+                  <label htmlFor="is-cap">Centre d'Animation Pédagogique (CAP) au lieu d'Académie</label>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

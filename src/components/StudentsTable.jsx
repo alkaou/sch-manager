@@ -544,13 +544,13 @@ const StudentsTable = ({
                     title="Double Clique"
                     onDoubleClick={() => { }}
                     key={student.id}
-                    className={`${_text_color} divide-x divide-gray-300 ${app_bg_color === gradients[1]
-                      ? "hover:bg-white"
-                      : app_bg_color === gradients[2]
-                        ? "hover:bg-gray-100"
-                        : "hover:bg-gray-50"
-                      } hover:text-gray-700 transition-colors duration-300 cursor-pointer`}
-                  >
+                    className={`${_text_color} divide-x divide-gray-300 transition-colors duration-300 cursor-pointer
+                      ${
+                        app_bg_color === gradients[1] ? "hover:bg-white hover:text-gray-700" : 
+                        app_bg_color === gradients[2] ? "hover:bg-gray-200 hover:text-gray-700" : 
+                        theme === "dark" ? "hover:bg-gray-700 hover:text-white" : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white"
+                      }`
+                    }>
                     <td className="py-1 px-2 text-center">
                       <input
                         type="checkbox"

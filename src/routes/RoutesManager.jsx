@@ -5,7 +5,7 @@ import HomePage from "../pages/HomePage.jsx";
 import StartedPage from "../pages/StartedPage.jsx";
 import CompositionsPage from "../pages/CompositionsPage.jsx";
 import BulletinsPage from "../pages/BulletinsPage.jsx";
-import ListeElevesPage from "../pages/ListeElevesPage.jsx";
+import ListesPage from "../pages/ListesPage.jsx";
 import PayementsPage from "../pages/PayementsPage.jsx";
 import StatistiquesPage from "../pages/StatistiquesPage.jsx";
 import ReadPage from "../pages/ReadPage.jsx";
@@ -47,7 +47,7 @@ const RoutesManager = () => {
                     <Route path="/started_page" element={<StartedPage />} />
                     <Route path="/compositions" element={<CompositionsPage />} />
                     <Route path="/bulletins" element={<BulletinsPage />} />
-                    <Route path="/liste_eleves" element={<ListeElevesPage />} />
+                    <Route path="/liste_eleves" element={<ListesPage />} />
                     <Route path="/payements" element={<PayementsPage />} />
                     <Route path="/statistiques" element={<StatistiquesPage />} />
                     <Route path="/database" element={<DatabasePage />} />
