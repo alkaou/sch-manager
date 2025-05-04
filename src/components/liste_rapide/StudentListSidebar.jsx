@@ -76,6 +76,7 @@ const StudentListSidebar = ({
     "Postes",
     "Salaire",
     "Spécialité",
+    "Classes",
     "Statut",
     "Signature",
   ];

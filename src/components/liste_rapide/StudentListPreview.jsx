@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Trash, Check, X } from 'lucide-react';
-import { getClasseName, getBornInfos } from "../../utils/helpers";
+import { getClasseName, getBornInfos, getClasseById } from "../../utils/helpers";
 import { useLanguage, useTheme } from "../contexts";
 import CountryInfosHeader from '../CountryInfosHeader.jsx';
+import { getHeaderNameByLang } from './utils';
 
 const StudentListPreview = ({
   list,
@@ -64,7 +65,7 @@ const StudentListPreview = ({
       // Employee data
       if (header === 'Prénom') return `${item?.first_name} ${item?.sure_name}`.trim() || '';
       if (header === 'Nom') return item.last_name || '';
-      if (header === 'Matricule') return item.matricule || '';
+      if (header === 'Matricule') return item.matricule || item.Matricule || '';
       if (header === 'Contact') return item.contact || '';
       if (header === 'Date de naissance') return item.birth_date ? new Date(item.birth_date).toLocaleDateString() : '';
       if (header === 'Date de début') return item.service_started_at ? new Date(item.service_started_at).toLocaleDateString() : '';
@@ -82,11 +83,22 @@ const StudentListPreview = ({
         }
       }
       if (header === 'Spécialité') return item.postes?.includes('Professeurs') ? item.proffesseur_config?.speciality : '';
+      if ((header === 'classes' || header === 'Classes') && item.classes && Array.isArray(item.classes) && item.classes.length > 0) {
+        let prof_classes = [];
+        for (let i = 0; i < item.classes.length; i++) {
+          const classe = getClasseById(db.classes, item.classes[i], list_lang);
+          const _name = `${classe.level} ${classe.name}`.trim();
+          const classeName = getClasseName(_name, list_lang);
+          prof_classes.push(classeName);
+        }
+        console.log(prof_classes);
+        return prof_classes.join(" , ");
+      };
     } else {
       // Student data
       if (header === 'Prénom') return `${item?.first_name} ${item?.sure_name}`.trim() || '';
       if (header === 'Nom') return item.last_name || '';
-      if (header === 'Matricule') return item.matricule || '';
+      if (header === 'Matricule') return item.matricule || item.Matricule || '';
       if (header === 'Père') return item.father_name || '';
       if (header === 'Mère') return item.mother_name || '';
       if (header === 'Contact') return item.parents_contact || '';
@@ -113,8 +125,11 @@ const StudentListPreview = ({
     }
 
     // Custom header 
-    return item.header && item.header !== undefined
-      ? item.header
+    // console.log(item);
+    // console.log(header);
+    // console.log(item[header]);
+    return item[header] && item[header] !== undefined
+      ? item[header]
       : '';
   };
 
@@ -257,10 +272,12 @@ const StudentListPreview = ({
                         maxWidth: header === 'Prénom' || header === 'Nom' ? '150px' : 'auto'
                       }}
                     >
-                      {header}
+                      {getHeaderNameByLang(header, list_lang)}
                     </th>
                   ))}
-                  <th className={`border ${tableBorderColor} p-2 text-center w-12 no-print`}>Actions</th>
+                  <th className={`border ${tableBorderColor} p-2 text-center w-12 no-print`}>
+                    {list_lang === "Bambara" ? "Yεlεma" : "Actions"}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -363,17 +380,17 @@ const StudentListPreview = ({
             <>
               {pageIndex === totalPages - 1 && (
                 <div className="mt-5 text-right">
-                  <div 
+                  <div
                     style={{
                       textDecoration: "underline",
                       textDecorationThickness: "3px",
                       textDecorationStyle: "solid",
-                    }} 
+                    }}
                     className="text-lg font-bold mb-1"
                   >{list.customMessage.text} : </div>
-                  <div 
+                  <div
                     className="text-small italic font-medium"
-                    style={{marginBottom: "20%"}}
+                    style={{ marginBottom: "20%" }}
                   >{list.customMessage.name}</div>
                   <div className="mb-10">{made_text} {new Date(list.customMessage.date).toLocaleDateString()}</div>
                 </div>
