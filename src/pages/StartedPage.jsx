@@ -3,6 +3,7 @@ import { useOutletContext } from "react-router-dom";
 import StudentsTable from "../components/StudentsTable.jsx";
 import AddStudent from "../components/AddStudent.jsx";
 import ManageClasses from "../components/ManageClasses.jsx";
+import PageLoading from "../components/PageLoading.jsx";
 
 const StartedPageContent = ({
   isAddStudentActive,
@@ -16,6 +17,7 @@ const StartedPageContent = ({
   OpenThePopup,
   refreshData,
   database,
+  loadingData,
   setStudentsForUpdate,
   studentsForUpdate,
   app_bg_color,
@@ -32,6 +34,12 @@ const StartedPageContent = ({
   const style_2 = {
     width: "98%",
     marginLeft: "1.5%",
+  };
+
+  if (loadingData) {
+    return (
+      <PageLoading />
+    );
   };
 
   // Rendu conditionnel selon l'action sélectionnée dans le sidebar

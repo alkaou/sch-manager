@@ -23,6 +23,7 @@ const AdvancedLayout = () => {
   const [isShowBgColorSelector, setisShowBgColorSelector] = useState(false);
   const [activeSideBarBtn, setActiveSideBarBtn] = useState(1);
   const [lastBtnActivate, setLastBtnActivate] = useState(1);
+  const [loadingData, setLoadingData] = useState(true);
 
   // États spécifiques pour certaines actions
   const [isAddStudentActive, setIsAddStudentActive] = useState(false);
@@ -53,12 +54,13 @@ const AdvancedLayout = () => {
       setSchool_short_name(data.short_name);
       setSchool_zone_name(data.zone);
       setDatabase(data);
-      if (data.students !== undefined && data.students !== null) {
-        setStudents(data.students);
-      }
       if (data.classes !== undefined && data.classes !== null) {
         setClasses(data.classes);
       }
+      if (data.students !== undefined && data.students !== null) {
+        setStudents(data.students);
+      }
+      setLoadingData(false);
     });
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -147,6 +149,7 @@ const AdvancedLayout = () => {
             setStudentsForUpdate,
             refreshData,
             database,
+            loadingData,
             isFilterOpen,
             setIsFilterOpen,
             isClassesOpen,

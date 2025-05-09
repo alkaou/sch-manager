@@ -1,0 +1,558 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  ArrowLeft, PlusCircle, DollarSign, Calendar, Clock, 
+  Edit, Trash2, Search, SortAsc, SortDesc, ChevronRight, 
+  ChevronDown, Lock, AlertTriangle, FileText, X, Filter
+} from 'lucide-react';
+import { useLanguage } from '../contexts';
+
+const ExpensesList = ({
+  expenses,
+  schoolYear,
+  onBack,
+  onAddExpense,
+  onEditExpense,
+  onDeleteExpense,
+  isExpired,
+  app_bg_color,
+  text_color,
+  theme
+}) => {
+  const { live_language } = useLanguage();
+  const [filteredExpenses, setFilteredExpenses] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' });
+  const [expandedExpense, setExpandedExpense] = useState(null);
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState({
+    start: '',
+    end: ''
+  });
+  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  
+  // Theme-based styling
+  const cardBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
+  const textClass = theme === 'dark' ? text_color : 'text-gray-700';
+  const inputBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-white';
+  const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
+  const headerBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100';
+  const altRowColor = theme === 'dark' ? 'bg-gray-750' : 'bg-gray-50';
+  
+  // Filter and sort expenses
+  useEffect(() => {
+    let result = [...expenses];
+    
+    // Search filter
+    if (searchTerm) {
+      const lowercasedSearch = searchTerm.toLowerCase();
+      result = result.filter(expense => 
+        expense.name.toLowerCase().includes(lowercasedSearch) || 
+        expense.description.toLowerCase().includes(lowercasedSearch) ||
+        expense.category.toLowerCase().includes(lowercasedSearch)
+      );
+    }
+    
+    // Category filter
+    if (categoryFilter !== 'all') {
+      result = result.filter(expense => expense.category === categoryFilter);
+    }
+    
+    // Date filter
+    if (dateFilter.start) {
+      result = result.filter(expense => new Date(expense.date) >= new Date(dateFilter.start));
+    }
+    
+    if (dateFilter.end) {
+      result = result.filter(expense => new Date(expense.date) <= new Date(dateFilter.end));
+    }
+    
+    // Sorting
+    if (sortConfig.key) {
+      result.sort((a, b) => {
+        if (sortConfig.key === 'amount') {
+          return sortConfig.direction === 'asc'
+            ? parseFloat(a.amount) - parseFloat(b.amount)
+            : parseFloat(b.amount) - parseFloat(a.amount);
+        }
+        
+        if (sortConfig.key === 'date') {
+          return sortConfig.direction === 'asc'
+            ? new Date(a.date) - new Date(b.date)
+            : new Date(b.date) - new Date(a.date);
+        }
+        
+        if (sortConfig.key === 'name') {
+          const nameA = a.name.toLowerCase();
+          const nameB = b.name.toLowerCase();
+          return sortConfig.direction === 'asc'
+            ? nameA.localeCompare(nameB)
+            : nameB.localeCompare(nameA);
+        }
+        
+        return 0;
+      });
+    }
+    
+    setFilteredExpenses(result);
+  }, [expenses, searchTerm, sortConfig, categoryFilter, dateFilter]);
+  
+  // Handle sort changes
+  const handleSortChange = (field) => {
+    setSortConfig(prevConfig => ({
+      key: field,
+      direction: prevConfig.key === field && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+  
+  // Toggle expense details
+  const toggleExpenseDetails = (id) => {
+    setExpandedExpense(expandedExpense === id ? null : id);
+  };
+  
+  // Format date for display
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+  
+  // Format time for display
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    
+    // If it's already in HH:MM:SS format, return as is
+    if (timeString.includes(':')) {
+      return timeString.split(':').slice(0, 2).join(':');
+    }
+    
+    // If it's a timestamp, convert to time
+    const date = new Date(parseInt(timeString));
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+  
+  // Format currency for display
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'XOF',
+      minimumFractionDigits: 0
+    }).format(amount);
+  };
+  
+  // Get unique categories from expenses
+  const categories = ['all', ...new Set(expenses.map(expense => expense.category))];
+  
+  // Calculate total sum
+  const totalSum = filteredExpenses.reduce((sum, expense) => sum + parseFloat(expense.amount || 0), 0);
+  
+  // Reset filters
+  const resetFilters = () => {
+    setSearchTerm('');
+    setCategoryFilter('all');
+    setDateFilter({ start: '', end: '' });
+    setSortConfig({ key: 'date', direction: 'desc' });
+  };
+  
+  // Animation variants
+  const container = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05
+      }
+    }
+  };
+  
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 }
+    }
+  };
+  
+  return (
+    <div className="w-full">
+      {/* Header with back button and title */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center">
+          <button
+            onClick={onBack}
+            className="p-2 mr-4 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            aria-label="Retour"
+          >
+            <ArrowLeft size={24} className={textClass} />
+          </button>
+          <div>
+            <h2 className={`text-2xl font-bold ${textClass}`}>
+              {schoolYear.title}
+            </h2>
+            <p className={`text-sm opacity-75 ${textClass}`}>
+              {formatDate(schoolYear.start_date)} - {formatDate(schoolYear.end_date)}
+            </p>
+          </div>
+        </div>
+        
+        {isExpired ? (
+          <div className="flex items-center px-3 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 rounded-full text-sm">
+            <Lock size={16} className="mr-2" />
+            {live_language.expired_year || "Année expirée"}
+          </div>
+        ) : (
+          <button
+            onClick={onAddExpense}
+            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center transition-colors duration-200"
+          >
+            <PlusCircle size={20} className="mr-2" />
+            {live_language.add_expense || "Ajouter une dépense"}
+          </button>
+        )}
+      </div>
+      
+      {/* Filter and search section */}
+      <div className={`${cardBgColor} border ${borderColor} rounded-lg mb-6 overflow-hidden shadow-sm`}>
+        <div className="p-4">
+          <div className="flex flex-col md:flex-row justify-between gap-4 items-center mb-4">
+            <div className="relative w-full md:w-1/3">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <Search size={18} className={textClass} />
+              </div>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={`pl-10 pr-10 py-2 w-full rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                placeholder={live_language.search_expenses || "Rechercher une dépense..."}
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute inset-y-0 right-0 flex items-center pr-3"
+                >
+                  <X size={18} className={textClass} />
+                </button>
+              )}
+            </div>
+            
+            <div className="flex items-center space-x-2 w-full md:w-auto">
+              <button
+                onClick={() => setIsFilterExpanded(!isFilterExpanded)}
+                className={`flex items-center px-3 py-2 rounded-lg border ${borderColor} ${textClass}`}
+              >
+                <Filter size={18} className="mr-2" />
+                {live_language.filters || "Filtres"}
+                {isFilterExpanded ? 
+                  <ChevronDown size={18} className="ml-2" /> : 
+                  <ChevronRight size={18} className="ml-2" />
+                }
+              </button>
+              
+              <button
+                onClick={resetFilters}
+                className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200"
+              >
+                {live_language.reset_filters || "Réinitialiser"}
+              </button>
+            </div>
+          </div>
+          
+          {/* Advanced filters */}
+          <AnimatePresence>
+            {isFilterExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden"
+              >
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Category filter */}
+                  <div>
+                    <label className={`block mb-2 text-sm font-medium ${textClass}`}>
+                      {live_language.category || "Catégorie"}
+                    </label>
+                    <select
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
+                      className={`w-full p-2 rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    >
+                      <option value="all">{live_language.all_categories || "Toutes les catégories"}</option>
+                      {categories.filter(cat => cat !== 'all').map(category => (
+                        <option key={category} value={category}>
+                          {live_language[`category_${category}`] || category}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  {/* Date range filter */}
+                  <div>
+                    <label className={`block mb-2 text-sm font-medium ${textClass}`}>
+                      {live_language.start_date || "Date de début"}
+                    </label>
+                    <input
+                      type="date"
+                      value={dateFilter.start}
+                      onChange={(e) => setDateFilter(prev => ({ ...prev, start: e.target.value }))}
+                      className={`w-full p-2 rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className={`block mb-2 text-sm font-medium ${textClass}`}>
+                      {live_language.end_date || "Date de fin"}
+                    </label>
+                    <input
+                      type="date"
+                      value={dateFilter.end}
+                      onChange={(e) => setDateFilter(prev => ({ ...prev, end: e.target.value }))}
+                      className={`w-full p-2 rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+        
+        {/* Summary */}
+        <div className={`${headerBgColor} p-4 border-t ${borderColor} flex justify-between items-center`}>
+          <div className={`${textClass}`}>
+            <span className="font-medium">{filteredExpenses.length}</span> {live_language.expenses_found || "dépenses trouvées"}
+            {filteredExpenses.length !== expenses.length && (
+              <span className={`ml-2 opacity-75 ${textClass}`}>
+                ({live_language.filtered_from || "filtrées sur"} {expenses.length})
+              </span>
+            )}
+          </div>
+          <div className="flex items-center">
+            <span className={`${textClass} mr-2`}>{live_language.total || "Total"}: </span>
+            <span className="text-xl font-bold text-green-600 dark:text-green-400">
+              {formatCurrency(totalSum)}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Expenses table */}
+      {filteredExpenses.length > 0 ? (
+        <motion.div 
+          className={`${cardBgColor} border ${borderColor} rounded-lg overflow-hidden shadow-sm`}
+          variants={container}
+          initial="hidden"
+          animate="visible"
+        >
+          {/* Table header */}
+          <div className={`${headerBgColor} p-4 flex border-b ${borderColor}`}>
+            <div className="w-5/12 sm:w-3/12 flex items-center">
+              <button
+                onClick={() => handleSortChange('name')}
+                className="flex items-center font-medium"
+              >
+                <span className={textClass}>{live_language.expense_name || "Nom"}</span>
+                {sortConfig.key === 'name' && (
+                  sortConfig.direction === 'asc' ? 
+                  <SortAsc size={16} className="ml-1 text-blue-500" /> : 
+                  <SortDesc size={16} className="ml-1 text-blue-500" />
+                )}
+              </button>
+            </div>
+            <div className="w-4/12 sm:w-3/12 flex items-center">
+              <button
+                onClick={() => handleSortChange('date')}
+                className="flex items-center font-medium"
+              >
+                <span className={textClass}>{live_language.date || "Date"}</span>
+                {sortConfig.key === 'date' && (
+                  sortConfig.direction === 'asc' ? 
+                  <SortAsc size={16} className="ml-1 text-blue-500" /> : 
+                  <SortDesc size={16} className="ml-1 text-blue-500" />
+                )}
+              </button>
+            </div>
+            <div className="w-3/12 sm:w-2/12 flex items-center">
+              <button
+                onClick={() => handleSortChange('amount')}
+                className="flex items-center font-medium"
+              >
+                <span className={textClass}>{live_language.amount || "Montant"}</span>
+                {sortConfig.key === 'amount' && (
+                  sortConfig.direction === 'asc' ? 
+                  <SortAsc size={16} className="ml-1 text-blue-500" /> : 
+                  <SortDesc size={16} className="ml-1 text-blue-500" />
+                )}
+              </button>
+            </div>
+            <div className="hidden sm:block sm:w-3/12 flex items-center">
+              <span className={`font-medium ${textClass}`}>{live_language.category || "Catégorie"}</span>
+            </div>
+            <div className="w-1/12 text-right">
+              <span className={`font-medium ${textClass}`}></span>
+            </div>
+          </div>
+          
+          {/* Expenses list */}
+          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            {filteredExpenses.map((expense, index) => (
+              <motion.div 
+                key={expense.id}
+                variants={item}
+                className={`${index % 2 === 1 ? altRowColor : ''}`}
+              >
+                <div className={`p-4 cursor-pointer ${textClass}`} onClick={() => toggleExpenseDetails(expense.id)}>
+                  <div className="flex items-center">
+                    <div className="w-5/12 sm:w-3/12">
+                      <span className="font-medium">{expense.name}</span>
+                    </div>
+                    <div className="w-4/12 sm:w-3/12 flex items-center">
+                      <Calendar size={16} className="mr-2 opacity-75" />
+                      <span>{formatDate(expense.date)}</span>
+                    </div>
+                    <div className="w-3/12 sm:w-2/12 text-green-600 dark:text-green-400 font-bold">
+                      {formatCurrency(expense.amount)}
+                    </div>
+                    <div className="hidden sm:block sm:w-3/12">
+                      <span className="px-2 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200">
+                        {live_language[`category_${expense.category}`] || expense.category}
+                      </span>
+                    </div>
+                    <div className="w-1/12 text-right">
+                      {expandedExpense === expense.id ? (
+                        <ChevronDown size={20} className={textClass} />
+                      ) : (
+                        <ChevronRight size={20} className={textClass} />
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Expanded details */}
+                  <AnimatePresence>
+                    {expandedExpense === expense.id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4"
+                      >
+                        {/* Category for mobile view */}
+                        <div className="block sm:hidden">
+                          <span className="text-sm font-medium opacity-75">{live_language.category || "Catégorie"}:</span>
+                          <span className="ml-2 px-2 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200">
+                            {live_language[`category_${expense.category}`] || expense.category}
+                          </span>
+                        </div>
+                        
+                        {/* Description */}
+                        {expense.description && (
+                          <div>
+                            <span className="text-sm font-medium opacity-75">{live_language.description || "Description"}:</span>
+                            <p className="mt-1">{expense.description}</p>
+                          </div>
+                        )}
+                        
+                        {/* Metadata */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                          <div>
+                            <span className="font-medium opacity-75">{live_language.created_at || "Créé le"}:</span>
+                            <div className="flex items-center mt-1">
+                              <Calendar size={14} className="mr-1 opacity-75" />
+                              <span>{formatDate(new Date(expense.created_at))}</span>
+                              <Clock size={14} className="ml-3 mr-1 opacity-75" />
+                              <span>{formatTime(expense.created_time || expense.created_at)}</span>
+                            </div>
+                          </div>
+                          
+                          {expense.updated_at && expense.updated_at !== expense.created_at && (
+                            <div>
+                              <span className="font-medium opacity-75">{live_language.updated_at || "Modifié le"}:</span>
+                              <div className="flex items-center mt-1">
+                                <Calendar size={14} className="mr-1 opacity-75" />
+                                <span>{formatDate(new Date(expense.updated_at))}</span>
+                                <Clock size={14} className="ml-3 mr-1 opacity-75" />
+                                <span>{formatTime(expense.updated_time || expense.updated_at)}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Actions */}
+                        {!isExpired && (
+                          <div className="flex justify-end space-x-2 pt-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEditExpense(expense);
+                              }}
+                              className="p-2 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white transition-colors"
+                            >
+                              <Edit size={16} />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteExpense(expense);
+                              }}
+                              className="p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      ) : (
+        <motion.div 
+          className={`${cardBgColor} border ${borderColor} rounded-lg p-8 text-center shadow-sm`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex flex-col items-center justify-center">
+            <FileText size={64} className="text-blue-500 mb-4" />
+            <h3 className="text-xl font-bold mb-2">
+              {searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end
+                ? (live_language.no_matching_expenses || "Aucune dépense ne correspond à vos critères")
+                : (live_language.no_expenses || "Aucune dépense enregistrée")}
+            </h3>
+            <p className="mb-6 opacity-75">
+              {searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end
+                ? (live_language.try_different_filters || "Essayez différents filtres ou effacez votre recherche")
+                : (live_language.add_first_expense || "Ajoutez votre première dépense pour commencer à suivre vos finances")}
+            </p>
+            
+            {!isExpired && (
+              <button
+                onClick={searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end ? resetFilters : onAddExpense}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center transition-colors duration-200"
+              >
+                {searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end ? (
+                  <>
+                    <X size={20} className="mr-2" />
+                    {live_language.reset_filters || "Réinitialiser les filtres"}
+                  </>
+                ) : (
+                  <>
+                    <PlusCircle size={20} className="mr-2" />
+                    {live_language.add_expense || "Ajouter une dépense"}
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </div>
+  );
+};
+
+export default ExpensesList; 

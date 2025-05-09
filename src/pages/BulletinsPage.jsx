@@ -11,6 +11,8 @@ import GetBulletinStudents from "../components/GetBulletinStudents.jsx";
 import BulletinNotes from "../components/BulletinNotes.jsx";
 import ShowAllBulletin from "../components/ShowAllBulletin.jsx";
 import ActionConfirmePopup from '../components/ActionConfirmePopup.jsx';
+import PageLoading from "../components/PageLoading.jsx";
+
 
 const BulletinsPageContent = ({
   app_bg_color,
@@ -19,9 +21,10 @@ const BulletinsPageContent = ({
   school_name,
   school_short_name,
   school_zone_name,
+  database,
 }) => {
   const { live_language, language } = useLanguage();
-  const [db, setDb] = useState(null);
+  const [db, setDb] = useState(database);
   const [compositions, setCompositions] = useState([]);
   const [bulletins, setBulletins] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -280,6 +283,12 @@ const BulletinsPageContent = ({
       set_the_classId(null);
       set_popup_action(null);
     }
+  };
+
+  if (!db) {
+    return (
+      <PageLoading />
+    );
   };
 
   return (

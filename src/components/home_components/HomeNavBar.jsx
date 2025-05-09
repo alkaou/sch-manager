@@ -9,7 +9,7 @@ import LoginModal from '../../auth/LoginModal.jsx';
 import PremiumModal from '../../auth/PremiumModal.jsx';
 
 // En haut de votre fichier React
-import logo from "../../assets/logo.png";
+import { LogoSVG } from "../Logo.svg.jsx";
 
 const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -153,10 +153,9 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
             >
               <Link to="/" className="flex items-center space-x-2">
                 <div className="relative h-12 w-12 overflow-hidden">
-                  <img
-                    className="h-full w-full object-contain"
-                    src={logo}
-                    alt="School Manager Logo"
+                  <LogoSVG
+                    className={"h-full w-full object-contain"}
+                    title="School Manager Logo"
                   />
                   <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-transparent mix-blend-overlay rounded-full"></div>
                 </div>

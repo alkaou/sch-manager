@@ -11,6 +11,7 @@ const CreateCompositionComponent = ({
   inputBgColor,
   textClass,
   app_bg_color,
+  theme,
   inputBorderColor,
   buttonAdd,
   setCompositionToDelete,
@@ -144,7 +145,10 @@ const CreateCompositionComponent = ({
                           compositionBulletins.every(bulletin => bulletin.isLocked === true);
 
                         return (
-                          <tr key={composition.id} className={`hover:bg-gray-50 hover:text-gray-500 ${_text_color}`}>
+                          <tr key={composition.id} 
+                            className={`${theme === "dark" ? "hover:bg-gray-700/80 hover:text-white" : "hover:bg-gray-50 hover:text-gray-500"} 
+                            ${_text_color}`}
+                          >
                             <td className="px-2 py-1 border text-center">{composition.label}</td>
                             <td className="px-2 py-1 border text-center">{formatDate(composition.date)}</td>
                             <td className="px-2 py-1 border text-center">{getClassesNames(composition.classes)}</td>

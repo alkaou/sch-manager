@@ -6,14 +6,16 @@ import { getClasseName } from '../utils/helpers';
 import { useLanguage } from '../components/contexts.js';
 import ActionConfirmePopup from '../components/ActionConfirmePopup.jsx';
 import CreateCompositionComponent from "../components/CreateCompositionComponent.jsx";
+import PageLoading from "../components/PageLoading.jsx";
 
 const CompositionsPageContent = ({
   app_bg_color,
   text_color,
   theme,
+  database,
 }) => {
   const { live_language, language } = useLanguage();
-  const [db, setDb] = useState(null);
+  const [db, setDb] = useState(database);
   const [compositions, setCompositions] = useState([]);
   const [isCreateMode, setIsCreateMode] = useState(false);
   const [editingCompositionId, setEditingCompositionId] = useState(null);
@@ -345,6 +347,12 @@ const CompositionsPageContent = ({
     { value: "21", helper: "Bac", label: "BAC Blanc" },
   ];
 
+  if (!db) {
+    return (
+      <PageLoading />
+    );
+  };
+
   return (
     <div 
       className="p-4 mt-20"
@@ -402,6 +410,7 @@ const CompositionsPageContent = ({
           inputBgColor={inputBgColor}
           textClass={textClass}
           app_bg_color={app_bg_color}
+          theme={theme}
           inputBorderColor={inputBorderColor}
           buttonAdd={buttonAdd}
           setCompositionToDelete={setCompositionToDelete}
