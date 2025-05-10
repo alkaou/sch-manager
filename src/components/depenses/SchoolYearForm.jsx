@@ -1,32 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, Save, X, AlertCircle, 
-  Info, ArrowLeft, CheckCircle, AlertTriangle 
+import {
+  Calendar, Save, X,
+  Info, ArrowLeft, CheckCircle, AlertTriangle
 } from 'lucide-react';
 import { useLanguage, useFlashNotification } from '../contexts';
 import translations from './depense_translator';
 
-const SchoolYearForm = ({ 
-  db, 
-  schoolYears, 
-  setSchoolYears, 
-  schoolYear, 
+const SchoolYearForm = ({
+  db,
+  schoolYears,
+  setSchoolYears,
+  schoolYear,
   onCancel,
-  app_bg_color,
   text_color,
-  theme 
+  theme
 }) => {
   const { language } = useLanguage();
   const { setFlashMessage } = useFlashNotification();
   const isEditMode = Boolean(schoolYear);
-  
+
   // Translation helper
   const t = (key) => {
     if (!translations[key]) return key;
     return translations[key][language] || translations[key]["Français"];
   };
-  
+
   // Form state
   const [formData, setFormData] = useState({
     title: '',
@@ -34,22 +33,22 @@ const SchoolYearForm = ({
     start_date: '',
     end_date: ''
   });
-  
+
   // Validation state
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formTouched, setFormTouched] = useState(false);
-  
+
   // Date constraints - limit to within 1 year before/after today
   const today = new Date();
   const oneYearBefore = new Date(today);
   oneYearBefore.setFullYear(today.getFullYear() - 1);
   const oneYearAfter = new Date(today);
   oneYearAfter.setFullYear(today.getFullYear() + 1);
-  
+
   const minDate = oneYearBefore.toISOString().split('T')[0];
   const maxDate = oneYearAfter.toISOString().split('T')[0];
-  
+
   // Initialize form with existing data if editing
   useEffect(() => {
     if (isEditMode && schoolYear) {
@@ -65,21 +64,21 @@ const SchoolYearForm = ({
       const nextYear = currentYear + 1;
       const startMonth = 9; // September
       const endMonth = 6; // June
-      
+
       let startDate = new Date(currentYear, startMonth - 1, 1); // Sept 1st of current year
       if (today.getMonth() >= 8) { // If we're already in September or later
         startDate = new Date(currentYear, startMonth - 1, 1);
       } else {
         startDate = new Date(currentYear - 1, startMonth - 1, 1);
       }
-      
+
       let endDate = new Date(nextYear, endMonth - 1, 30); // June 30th of next year
       if (today.getMonth() >= 8) { // If we're already in September or later
         endDate = new Date(nextYear, endMonth - 1, 30);
       } else {
         endDate = new Date(currentYear, endMonth - 1, 30);
       }
-      
+
       setFormData({
         title: `Année Scolaire ${startDate.getFullYear()}-${endDate.getFullYear()}`,
         description: `Année scolaire complète de septembre ${startDate.getFullYear()} à juin ${endDate.getFullYear()}.`,
@@ -88,91 +87,91 @@ const SchoolYearForm = ({
       });
     }
   }, [schoolYear, isEditMode]);
-  
+
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setFormTouched(true);
-    
+
     // Clear error when field is edited
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
   };
-  
+
   // Validate form
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Title validation
     if (!formData.title.trim()) {
       newErrors.title = t('title_required');
     } else if (formData.title.trim().length < 10 || formData.title.trim().length > 150) {
       newErrors.title = t('title_length');
     }
-    
+
     // Description validation
     if (!formData.description.trim()) {
       newErrors.description = t('description_required');
     } else if (formData.description.trim().length < 30 || formData.description.trim().length > 10000) {
       newErrors.description = t('description_length');
     }
-    
+
     // Start date validation
     if (!formData.start_date) {
       newErrors.start_date = t('start_date_required');
     }
-    
+
     // End date validation
     if (!formData.end_date) {
       newErrors.end_date = t('end_date_required');
     } else if (formData.start_date && new Date(formData.end_date) <= new Date(formData.start_date)) {
       newErrors.end_date = t('date_range_invalid');
     }
-    
+
     // Check if dates are within allowed range (±1 year from today)
     const startDate = new Date(formData.start_date);
     const endDate = new Date(formData.end_date);
-    
+
     if (startDate < oneYearBefore || startDate > oneYearAfter) {
       newErrors.start_date = t('date_range_limit');
     }
-    
+
     if (endDate < oneYearBefore || endDate > oneYearAfter) {
       newErrors.end_date = t('date_range_limit');
     }
-    
+
     // Check for duplicate school years (same title, start_date and end_date)
     // Improved to check for all three fields together
-    const duplicateCheck = schoolYears.find(year => 
-      year.title === formData.title && 
-      year.start_date === formData.start_date && 
+    const duplicateCheck = schoolYears.find(year =>
+      year.title === formData.title &&
+      year.start_date === formData.start_date &&
       year.end_date === formData.end_date &&
       (!isEditMode || (isEditMode && year.id !== schoolYear.id)) // Exclude current year when editing
     );
-    
+
     if (duplicateCheck) {
       newErrors.title = t('year_already_exists');
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   // Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const timestamp = Date.now();
-      
+
       if (isEditMode) {
         // Update existing school year
         const updatedSchoolYear = {
@@ -183,19 +182,19 @@ const SchoolYearForm = ({
           end_date: formData.end_date,
           updated_at: timestamp
         };
-        
-        const updatedSchoolYears = schoolYears.map(year => 
+
+        const updatedSchoolYears = schoolYears.map(year =>
           year.id === schoolYear.id ? updatedSchoolYear : year
         );
-        
+
         const updatedDb = {
           ...db,
           schoolYears: updatedSchoolYears
         };
-        
+
         await window.electron.saveDatabase(updatedDb);
         setSchoolYears(updatedSchoolYears);
-        
+
         setFlashMessage({
           message: t('school_year_updated'),
           type: "success",
@@ -212,32 +211,32 @@ const SchoolYearForm = ({
           created_at: timestamp,
           updated_at: timestamp
         };
-        
+
         const updatedSchoolYears = [...schoolYears, newSchoolYear];
-        
+
         // Sort school years from newest to oldest by start date
         updatedSchoolYears.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
-        
+
         const updatedDb = {
           ...db,
           schoolYears: updatedSchoolYears
         };
-        
+
         await window.electron.saveDatabase(updatedDb);
         setSchoolYears(updatedSchoolYears);
-        
+
         setFlashMessage({
           message: t('school_year_added'),
           type: "success",
           duration: 3000,
         });
       }
-      
+
       onCancel();
     } catch (error) {
       console.error("Error saving school year:", error);
       setFlashMessage({
-        message: isEditMode 
+        message: isEditMode
           ? t('error_saving')
           : t('error_saving'),
         type: "error",
@@ -247,31 +246,31 @@ const SchoolYearForm = ({
       setIsSubmitting(false);
     }
   };
-  
+
   // Animation variants
   const formVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        type: "spring", 
-        stiffness: 100, 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
         damping: 15,
         staggerChildren: 0.07
       }
     }
   };
-  
+
   const controlVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
+    visible: {
+      opacity: 1,
+      y: 0,
       transition: { type: "spring", stiffness: 100 }
     }
   };
-  
+
   // Theme-based styling
   const cardBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
   const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
@@ -283,10 +282,10 @@ const SchoolYearForm = ({
   const cancelButtonColor = theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300';
   const mutedTextColor = theme === 'dark' ? 'text-gray-400' : 'text-gray-500';
   const errorColor = 'text-red-500';
-  
+
   return (
     <motion.div
-      className={`${cardBgColor} rounded-xl shadow-xl overflow-hidden border ${borderColor}`}
+      className={`${cardBgColor} ${text_color} rounded-xl shadow-xl overflow-hidden border ${borderColor}`}
       initial="hidden"
       animate="visible"
       variants={formVariants}
@@ -297,7 +296,7 @@ const SchoolYearForm = ({
           <div className="flex items-center">
             <Calendar className="mr-2" size={24} />
             <h2 className="text-2xl font-bold">
-              {isEditMode 
+              {isEditMode
                 ? t('edit_school_year')
                 : t('add_school_year')
               }
@@ -313,7 +312,7 @@ const SchoolYearForm = ({
           </button>
         </div>
       </div>
-      
+
       {/* Form */}
       <form onSubmit={handleSubmit} className="p-6">
         <div className="space-y-6">
@@ -343,7 +342,7 @@ const SchoolYearForm = ({
               </p>
             )}
           </motion.div>
-          
+
           {/* Description field */}
           <motion.div variants={controlVariants}>
             <div className="flex justify-between">
@@ -370,7 +369,7 @@ const SchoolYearForm = ({
               </p>
             )}
           </motion.div>
-          
+
           {/* Dates row */}
           <motion.div variants={controlVariants} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Start date field */}
@@ -395,7 +394,7 @@ const SchoolYearForm = ({
                 </p>
               )}
             </div>
-            
+
             {/* End date field */}
             <div>
               <label htmlFor="end_date" className={`block text-sm font-medium ${labelColor} mb-1`}>
@@ -419,9 +418,9 @@ const SchoolYearForm = ({
               )}
             </div>
           </motion.div>
-          
+
           {/* Note about dates */}
-          <motion.div 
+          <motion.div
             variants={controlVariants}
             className={`flex items-start rounded-lg p-4 ${inputBgColor} border ${borderColor}`}
           >
@@ -430,24 +429,24 @@ const SchoolYearForm = ({
               {t('date_range_limit')}
             </p>
           </motion.div>
-          
+
           {/* Warning about duplicate school years */}
-          <motion.div 
+          <motion.div
             variants={controlVariants}
             className={`flex items-start rounded-lg p-4 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700/50`}
           >
             <AlertTriangle size={18} className={`text-amber-500 flex-shrink-0 mt-0.5 mr-3`} />
             <p className={`text-sm text-amber-700 dark:text-amber-300`}>
-              {isEditMode 
-                ? "Si vous modifiez le titre ou les dates, assurez-vous qu'il n'existe pas déjà une année scolaire avec les mêmes informations."
-                : "Vous ne pouvez pas créer deux années scolaires avec le même titre, la même date de début et la même date de fin."}
+              {isEditMode
+                ? t('school_year_duplicate_warning_edit')
+                : t('school_year_duplicate_warning_create')}
             </p>
           </motion.div>
         </div>
-        
+
         {/* Form actions */}
-        <motion.div 
-          variants={controlVariants} 
+        <motion.div
+          variants={controlVariants}
           className="mt-8 flex justify-between"
         >
           <button
@@ -459,13 +458,12 @@ const SchoolYearForm = ({
             <ArrowLeft size={18} className="mr-2" />
             {t('cancel')}
           </button>
-          
+
           <button
             type="submit"
             disabled={isSubmitting || (!formTouched && isEditMode)}
-            className={`px-5 py-2 rounded-lg flex items-center text-white ${buttonColor} transition-colors ${
-              (isSubmitting || (!formTouched && isEditMode)) ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`px-5 py-2 rounded-lg flex items-center text-white ${buttonColor} transition-colors ${(isSubmitting || (!formTouched && isEditMode)) ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             title={t('save')}
           >
             {isSubmitting ? (

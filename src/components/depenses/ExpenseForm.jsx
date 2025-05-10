@@ -11,7 +11,6 @@ const ExpenseForm = ({
   expense,
   schoolYearId,
   onCancel,
-  app_bg_color,
   text_color,
   theme
 }) => {
@@ -66,7 +65,7 @@ const ExpenseForm = ({
       const today = new Date().toISOString().split('T')[0];
       const startDate = schoolYear.start_date;
       const endDate = schoolYear.end_date;
-      
+
       // Check if today is within the school year date range
       if (today >= startDate && today <= endDate) {
         setFormData(prev => ({ ...prev, date: today }));
@@ -77,8 +76,7 @@ const ExpenseForm = ({
     }
   }, [expense, isEditMode, schoolYear]);
 
-  // Form styling based on theme
-  const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
+  // Form styling based on them
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const textClass = theme === "dark" ? text_color : "text-gray-600";
   const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
@@ -89,12 +87,12 @@ const ExpenseForm = ({
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     // Update character count for description
     if (name === 'description') {
       setCharCount(value.length);
     }
-    
+
     // Clear error when field is modified
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
@@ -134,18 +132,18 @@ const ExpenseForm = ({
     if (!formData.date) {
       newErrors.date = t('expense_date_required');
     }
-    
+
     // Validate that date is within school year range
     if (formData.date && schoolYear) {
       const expenseDate = new Date(formData.date);
       const startDate = new Date(schoolYear.start_date);
       const endDate = new Date(schoolYear.end_date);
-      
+
       // Set time to midnight for accurate date comparison
       expenseDate.setHours(0, 0, 0, 0);
       startDate.setHours(0, 0, 0, 0);
       endDate.setHours(0, 0, 0, 0);
-      
+
       if (expenseDate < startDate || expenseDate > endDate) {
         newErrors.date = t('expense_date_outside_range');
       }
@@ -163,36 +161,36 @@ const ExpenseForm = ({
   // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setIsSubmitting(true);
-    
+
     try {
       const timestamp = Date.now();
       const formattedTime = new Date().toLocaleTimeString();
-      
+
       if (isEditMode) {
         // Update existing expense
-        const updatedExpenses = expenses.map(exp => 
-          exp.id === expense.id 
+        const updatedExpenses = expenses.map(exp =>
+          exp.id === expense.id
             ? {
-                ...exp,
-                name: formData.name,
-                description: formData.description,
-                amount: formData.amount,
-                date: formData.date,
-                category: formData.category,
-                updated_at: timestamp,
-                updated_time: formattedTime
-              }
+              ...exp,
+              name: formData.name,
+              description: formData.description,
+              amount: formData.amount,
+              date: formData.date,
+              category: formData.category,
+              updated_at: timestamp,
+              updated_time: formattedTime
+            }
             : exp
         );
-        
+
         const updatedDb = { ...db, expenses: updatedExpenses };
         await window.electron.saveDatabase(updatedDb);
         setExpenses(updatedExpenses);
-        
+
         setFlashMessage({
           message: t('expense_updated'),
           type: "success",
@@ -213,19 +211,19 @@ const ExpenseForm = ({
           updated_at: timestamp,
           updated_time: formattedTime
         };
-        
+
         const updatedExpenses = [...expenses, newExpense];
         const updatedDb = { ...db, expenses: updatedExpenses };
         await window.electron.saveDatabase(updatedDb);
         setExpenses(updatedExpenses);
-        
+
         setFlashMessage({
           message: t('expense_created'),
           type: "success",
           duration: 3000,
         });
       }
-      
+
       onCancel();
     } catch (error) {
       console.error("Error saving expense:", error);
@@ -250,16 +248,11 @@ const ExpenseForm = ({
     { value: 'events', label: t('category_events') },
     { value: 'other', label: t('category_other') }
   ];
-  
-  // Get category label from value
-  const getCategoryLabel = (value) => {
-    const category = categories.find(cat => cat.value === value);
-    return category ? category.label : value;
-  };
+
 
   return (
     <motion.div
-      className="w-full"
+      className={`w-full ${text_color}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -318,16 +311,17 @@ const ExpenseForm = ({
               placeholder={t('expense_description_placeholder')}
             />
             <div className={`text-xs mt-1 flex justify-between ${charCount < 30 ? 'text-red-500' : charCount > 9800 ? 'text-amber-500' : 'text-gray-500'}`}>
-              <span>{t('character_count')}: {charCount}</span>
-              <span>{t('min_max_chars')}</span>
+              <div>
+                {errors.description && (
+                  <p className="mt-1 text-sm text-red-500 flex items-center">
+                    <AlertTriangle size={16} className="mr-1" />
+                    {errors.description}
+                  </p>
+                )}
+              </div>
+              <div>{t('min_max_chars')}</div>
             </div>
           </div>
-          {errors.description && (
-            <p className="mt-1 text-sm text-red-500 flex items-center">
-              <AlertTriangle size={16} className="mr-1" />
-              {errors.description}
-            </p>
-          )}
         </div>
 
         {/* Amount field */}
@@ -380,7 +374,7 @@ const ExpenseForm = ({
               {errors.date}
             </p>
           )}
-          
+
           {/* School year date range hint */}
           {schoolYear && (
             <p className="mt-1 text-xs text-blue-500 flex items-center">
@@ -436,9 +430,9 @@ const ExpenseForm = ({
             title={isEditMode ? t('update_tooltip') : t('save_tooltip')}
           >
             <Check size={20} className="mr-2" />
-            {isSubmitting 
+            {isSubmitting
               ? t('saving')
-              : isEditMode 
+              : isEditMode
                 ? t('update')
                 : t('save')}
           </button>

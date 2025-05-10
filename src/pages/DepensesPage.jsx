@@ -12,6 +12,7 @@ import InfoPopup from "../components/depenses/InfoPopup.jsx";
 import AlertPopup from "../components/AlertPopup.jsx";
 import ActionConfirmePopup from "../components/ActionConfirmePopup.jsx";
 import translations from "../components/depenses/depense_translator.js";
+import { gradients } from "../utils/colors";
 
 const DepensesPageContent = ({
   app_bg_color,
@@ -36,6 +37,9 @@ const DepensesPageContent = ({
   const [showExpenseDeleteConfirm, setShowExpenseDeleteConfirm] = useState(null);
   const [showAlert, setShowAlert] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const isOthersBGColors = app_bg_color === gradients[1] || app_bg_color === gradients[2] || theme === "dark" ? false : true;
+  const form_text_color = isOthersBGColors ? "text-gray-700" : text_color;
   
   // Translation helper
   const t = (key) => {
@@ -262,8 +266,8 @@ const DepensesPageContent = ({
             setIsAddingSchoolYear(false);
             setIsEditingSchoolYear(null);
           }}
-          app_bg_color={app_bg_color}
-          text_color={text_color}
+          // app_bg_color={app_bg_color}
+          text_color={form_text_color}
           theme={theme}
         />
       );
@@ -281,8 +285,8 @@ const DepensesPageContent = ({
             setIsAddingExpense(false);
             setIsEditingExpense(null);
           }}
-          app_bg_color={app_bg_color}
-          text_color={text_color}
+          // app_bg_color={app_bg_color}
+          text_color={form_text_color}
           theme={theme}
         />
       );

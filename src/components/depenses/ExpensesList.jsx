@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  ArrowLeft, PlusCircle, DollarSign, Calendar, Clock, 
+  ArrowLeft, PlusCircle, Calendar, Clock, 
   Edit, Trash2, Search, SortAsc, SortDesc, ChevronRight, 
-  ChevronDown, Lock, AlertTriangle, FileText, X, Filter
+  ChevronDown, Lock, FileText, X, Filter
 } from 'lucide-react';
 import { useLanguage } from '../contexts';
 import translations from './depense_translator';
@@ -16,7 +16,6 @@ const ExpensesList = ({
   onEditExpense,
   onDeleteExpense,
   isExpired,
-  app_bg_color,
   text_color,
   theme
 }) => {
@@ -122,10 +121,28 @@ const ExpensesList = ({
     setExpandedExpense(expandedExpense === id ? null : id);
   };
   
-  // Format date for display
+  // Format date for display with translated months
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    
+    // Get translated month name
+    const monthNames = [
+      'month_january', 'month_february', 'month_march', 'month_april',
+      'month_may', 'month_june', 'month_july', 'month_august',
+      'month_september', 'month_october', 'month_november', 'month_december'
+    ];
+    
+    const translatedMonth = t(monthNames[month]);
+    
+    // Format based on language
+    if (language === 'Anglais') {
+      return `${translatedMonth} ${day}, ${year}`;
+    } else {
+      return `${day} ${translatedMonth} ${year}`;
+    }
   };
   
   // Format time for display
@@ -184,6 +201,24 @@ const ExpensesList = ({
       transition: { type: "spring", stiffness: 100 }
     }
   };
+  
+  const renderDetailRow = (label, value) => (
+    <div className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-700 text-sm">
+      <span className="text-gray-600 dark:text-gray-400">{label}</span>
+      <span className="font-medium">{value}</span>
+    </div>
+  );
+  
+  const renderDetailSection = (expense) => (
+    <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-sm space-y-1">
+      {renderDetailRow(t('id'), expense.id)}
+      {renderDetailRow(t('date'), formatDate(expense.date))}
+      {renderDetailRow(t('category'), getCategoryName(expense.category))}
+      {renderDetailRow(t('amount'), formatCurrency(expense.amount))}
+      {renderDetailRow(t('created_on'), formatDate(expense.createdAt))}
+      {renderDetailRow(t('updated_on'), formatDate(expense.updatedAt))}
+    </div>
+  );
   
   return (
     <div className="w-full">

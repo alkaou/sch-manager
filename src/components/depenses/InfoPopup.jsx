@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { 
   X, AlertTriangle, Info, Check, BookOpen, PenLine, 
   Calendar, DollarSign, FileText, TrendingUp, Clock,
-  Shield, ExternalLink, Target, List, BarChart, Zap,
-  HelpCircle, Database, Sliders
+  Shield, Target, List, BarChart, Zap,
+  Database, Sliders
 } from "lucide-react";
 import { useLanguage } from "../contexts";
 import translations from "./depense_translator";
@@ -62,68 +62,68 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
 
   // Define the detailed content
   const content = {
-    title: "Guide complet de gestion des dépenses",
+    title: t('complete_guide'),
     intro: {
-      title: "Vue d'ensemble",
-      content: "Le système de gestion des dépenses est conçu pour vous aider à suivre efficacement toutes les dépenses de votre établissement scolaire. Organisé par années scolaires, il vous permet de maintenir une comptabilité précise et de générer des rapports détaillés sur vos finances.",
+      title: t('overview'),
+      content: t('guide_intro_content'),
       icon: <BookOpen size={24} className="text-blue-500" />
     },
     
     structure: {
-      title: "Structure du système",
-      content: "Le système est structuré en deux niveaux hiérarchiques principaux :",
+      title: t('system_structure'),
+      content: t('system_structured_levels'),
       items: [
         {
           icon: <Calendar className="text-green-500" size={20} />,
-          title: "Années scolaires",
-          desc: "Chaque année scolaire représente un cadre temporel défini par une date de début et une date de fin. Ces périodes servent de conteneurs pour toutes vos dépenses."
+          title: t('school_years_structure'),
+          desc: t('school_years_desc')
         },
         {
           icon: <DollarSign className="text-purple-500" size={20} />,
-          title: "Dépenses",
-          desc: "Les dépenses individuelles sont associées à une année scolaire spécifique. Chaque dépense comprend un nom, un montant, une catégorie, une date et une description détaillée."
+          title: t('expenses_structure'),
+          desc: t('expenses_desc')
         }
       ]
     },
     
     workflow: {
-      title: "Flux de travail recommandé",
+      title: t('recommended_workflow'),
       steps: [
-        "Créez d'abord une année scolaire avec des dates précises couvrant votre période académique.",
-        "Ajoutez progressivement vos dépenses dans l'ordre chronologique au fur et à mesure qu'elles surviennent.",
-        "Utilisez des catégories cohérentes pour faciliter le suivi et l'analyse ultérieure.",
-        "Consultez régulièrement les totaux et les statistiques pour surveiller vos finances.",
-        "Archivez automatiquement les années expirées tout en conservant l'accès pour référence future."
+        t('workflow_step1'),
+        t('workflow_step2'),
+        t('workflow_step3'),
+        t('workflow_step4'),
+        t('workflow_step5')
       ]
     },
     
     bestPractices: {
-      title: "Bonnes pratiques",
+      title: t('best_practices'),
       practices: [
         {
           icon: <Clock size={20} className="text-amber-500" />,
-          title: "Chronologie stricte",
-          content: "Enregistrez vos dépenses dans l'ordre chronologique pour maintenir une trace précise et cohérente. Évitez d'ajouter des dépenses en désordre, ce qui pourrait compliquer l'analyse financière."
+          title: t('strict_timeline'),
+          content: t('strict_timeline_content')
         },
         {
           icon: <List size={20} className="text-blue-500" />,
-          title: "Catégorisation cohérente",
-          content: "Utilisez systématiquement les mêmes catégories pour des dépenses similaires afin de garantir des rapports et des analyses précis."
+          title: t('consistent_categorization'),
+          content: t('consistent_categorization_content')
         },
         {
           icon: <FileText size={20} className="text-green-500" />,
-          title: "Descriptions détaillées",
-          content: "Rédigez des descriptions complètes pour chaque dépense (minimum 30 caractères) incluant le contexte, la justification et les parties prenantes concernées."
+          title: t('detailed_descriptions'),
+          content: t('detailed_descriptions_content')
         },
         {
           icon: <TrendingUp size={20} className="text-purple-500" />,
-          title: "Vérification régulière",
-          content: "Examinez périodiquement vos dépenses pour identifier les tendances et optimiser votre budget futur."
+          title: t('regular_verification'),
+          content: t('regular_verification_content')
         },
         {
           icon: <Database size={20} className="text-indigo-500" />,
-          title: "Sauvegarde des données",
-          content: "Effectuez régulièrement des sauvegardes de vos données financières pour éviter toute perte d'information."
+          title: t('data_backup'),
+          content: t('data_backup_content')
         }
       ]
     },
@@ -131,48 +131,48 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
     warnings: [
       {
         icon: <AlertTriangle className="text-amber-500" size={20} />,
-        title: "Années scolaires expirées",
-        content: "Une année scolaire devient automatiquement en lecture seule lorsque sa date de fin est dépassée. Vous ne pourrez ni la modifier, ni la supprimer, ni ajouter ou modifier ses dépenses. Cette restriction garantit l'intégrité de vos données historiques."
+        title: t('expired_school_years_warning'),
+        content: t('expired_school_years_content')
       },
       {
         icon: <AlertTriangle className="text-amber-500" size={20} />,
-        title: "Descriptions obligatoires",
-        content: "Chaque dépense nécessite une description détaillée entre 30 et 10 000 caractères. Cette exigence assure une documentation complète et favorise la transparence financière."
+        title: t('mandatory_descriptions_warning'),
+        content: t('mandatory_descriptions_content')
       },
       {
         icon: <AlertTriangle className="text-amber-500" size={20} />,
-        title: "Dates des dépenses",
-        content: "La date d'une dépense doit obligatoirement se situer entre la date de début et la date de fin de son année scolaire. Toute date en dehors de cette plage sera refusée."
+        title: t('expense_dates_warning'),
+        content: t('expense_dates_content')
       },
       {
         icon: <AlertTriangle className="text-amber-500" size={20} />,
-        title: "Années scolaires dupliquées",
-        content: "Le système empêche la création d'années scolaires en double. Deux années ne peuvent pas avoir simultanément le même titre, la même date de début et la même date de fin."
+        title: t('duplicate_years_warning'),
+        content: t('duplicate_years_content')
       }
     ],
     
     features: {
-      title: "Fonctionnalités principales",
+      title: t('main_features'),
       items: [
         {
           icon: <Sliders size={24} className="text-green-500" />,
-          title: "Filtrage avancé",
-          desc: "Filtrez les dépenses par catégorie, date ou mot-clé pour trouver rapidement ce que vous cherchez."
+          title: t('advanced_filtering'),
+          desc: t('advanced_filtering_desc')
         },
         {
           icon: <BarChart size={24} className="text-blue-500" />,
-          title: "Visualisation des totaux",
-          desc: "Consultez instantanément le total des dépenses pour chaque année scolaire et catégorie."
+          title: t('totals_visualization'),
+          desc: t('totals_visualization_desc')
         },
         {
           icon: <Shield size={24} className="text-purple-500" />,
-          title: "Protection des données",
-          desc: "Les années expirées sont automatiquement verrouillées pour préserver l'intégrité des données historiques."
+          title: t('data_protection'),
+          desc: t('data_protection_desc')
         },
         {
           icon: <Zap size={24} className="text-amber-500" />,
-          title: "Interface réactive",
-          desc: "Profitez d'une expérience utilisateur fluide grâce à des transitions animées et un design responsive."
+          title: t('responsive_interface'),
+          desc: t('responsive_interface_desc')
         }
       ]
     },
@@ -180,29 +180,29 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
     tips: [
       {
         icon: <Check className="text-green-500" size={20} />,
-        title: "Planification préalable",
-        content: "Créez votre nouvelle année scolaire avant la fin de l'année en cours pour assurer une transition sans heurts."
+        title: t('advance_planning'),
+        content: t('advance_planning_content')
       },
       {
         icon: <Check className="text-green-500" size={20} />,
-        title: "Nomenclature cohérente",
-        content: "Utilisez un système de nommage uniforme pour toutes vos dépenses afin de faciliter les recherches et le tri."
+        title: t('consistent_naming'),
+        content: t('consistent_naming_content')
       },
       {
         icon: <Check className="text-green-500" size={20} />,
-        title: "Vérification mensuelle",
-        content: "Réservez du temps chaque mois pour vérifier que toutes les dépenses ont été correctement enregistrées."
+        title: t('monthly_check'),
+        content: t('monthly_check_content')
       },
       {
         icon: <Check className="text-green-500" size={20} />,
-        title: "Analyse trimestrielle",
-        content: "Analysez vos dépenses par trimestre pour identifier les tendances et ajuster votre budget en conséquence."
+        title: t('quarterly_analysis'),
+        content: t('quarterly_analysis_content')
       }
     ],
     
-    footer: "Une gestion rigoureuse des dépenses est essentielle pour optimiser votre budget scolaire et assurer la pérennité financière de votre établissement.",
+    footer: t('footer_note'),
     
-    close: "Fermer"
+    close: t('close')
   };
 
   if (!isOpen) return null;
@@ -329,7 +329,7 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
           <div className="mb-8">
             <h3 className={`${styles.sectionTitle} text-amber-500`}>
               <AlertTriangle size={24} />
-              <span className="ml-2">Avertissements importants</span>
+              <span className="ml-2">{t('important_warnings')}</span>
             </h3>
             <div className="space-y-3 mt-4">
               {content.warnings.map((warning, index) => (
@@ -348,7 +348,7 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
           <div className="mb-8">
             <h3 className={`${styles.sectionTitle} text-green-500`}>
               <Check size={24} />
-              <span className="ml-2">Conseils pratiques</span>
+              <span className="ml-2">{t('practical_tips')}</span>
             </h3>
             <div className="grid md:grid-cols-2 gap-3 mt-4">
               {content.tips.map((tip, index) => (
@@ -367,9 +367,9 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
           <div className={`${styles.warningCard} border-l-4 border-l-red-500`}>
             <AlertTriangle size={24} className="text-red-500 flex-shrink-0" />
             <div>
-              <h4 className="text-lg font-bold text-red-500 dark:text-red-400">Ordre chronologique essentiel</h4>
+              <h4 className="text-lg font-bold text-red-500 dark:text-red-400">{t('chronological_order_title')}</h4>
               <p className="mt-2">
-                <strong>Il est fortement recommandé de créer vos dépenses dans l'ordre chronologique.</strong> Cette pratique est cruciale pour maintenir une comptabilité précise et faciliter les audits financiers. La création de dépenses en désordre peut entraîner des erreurs d'analyse et compliquer la gestion budgétaire.
+                <strong>{t('chronological_order_strong')}</strong> {t('chronological_order_content')}
               </p>
             </div>
           </div>
