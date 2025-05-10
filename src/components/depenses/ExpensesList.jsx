@@ -6,6 +6,7 @@ import {
   ChevronDown, Lock, AlertTriangle, FileText, X, Filter
 } from 'lucide-react';
 import { useLanguage } from '../contexts';
+import translations from './depense_translator';
 
 const ExpensesList = ({
   expenses,
@@ -19,7 +20,7 @@ const ExpensesList = ({
   text_color,
   theme
 }) => {
-  const { live_language } = useLanguage();
+  const { language } = useLanguage();
   const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'date', direction: 'desc' });
@@ -30,6 +31,12 @@ const ExpensesList = ({
     end: ''
   });
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  
+  // Translation helper
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
   
   // Theme-based styling
   const cardBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -96,6 +103,11 @@ const ExpensesList = ({
     
     setFilteredExpenses(result);
   }, [expenses, searchTerm, sortConfig, categoryFilter, dateFilter]);
+
+  // Default sort is now date DESC (newest to oldest)
+  useEffect(() => {
+    setSortConfig({ key: 'date', direction: 'desc' });
+  }, []);
   
   // Handle sort changes
   const handleSortChange = (field) => {
@@ -181,7 +193,8 @@ const ExpensesList = ({
           <button
             onClick={onBack}
             className="p-2 mr-4 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            aria-label="Retour"
+            aria-label={t('back')}
+            title={t('back')}
           >
             <ArrowLeft size={24} className={textClass} />
           </button>
@@ -198,15 +211,16 @@ const ExpensesList = ({
         {isExpired ? (
           <div className="flex items-center px-3 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 rounded-full text-sm">
             <Lock size={16} className="mr-2" />
-            {live_language.expired_year || "Année expirée"}
+            {t('expired_year')}
           </div>
         ) : (
           <button
             onClick={onAddExpense}
             className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center transition-colors duration-200"
+            title={t('add_expense')}
           >
             <PlusCircle size={20} className="mr-2" />
-            {live_language.add_expense || "Ajouter une dépense"}
+            {t('add_expense')}
           </button>
         )}
       </div>
@@ -224,12 +238,14 @@ const ExpensesList = ({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={`pl-10 pr-10 py-2 w-full rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                placeholder={live_language.search_expenses || "Rechercher une dépense..."}
+                placeholder={t('search_expenses')}
+                title={t('search_expenses')}
               />
               {searchTerm && (
                 <button
                   onClick={() => setSearchTerm('')}
                   className="absolute inset-y-0 right-0 flex items-center pr-3"
+                  title={t('clear_search')}
                 >
                   <X size={18} className={textClass} />
                 </button>
@@ -240,9 +256,10 @@ const ExpensesList = ({
               <button
                 onClick={() => setIsFilterExpanded(!isFilterExpanded)}
                 className={`flex items-center px-3 py-2 rounded-lg border ${borderColor} ${textClass}`}
+                title={t('filters')}
               >
                 <Filter size={18} className="mr-2" />
-                {live_language.filters || "Filtres"}
+                {t('filters')}
                 {isFilterExpanded ? 
                   <ChevronDown size={18} className="ml-2" /> : 
                   <ChevronRight size={18} className="ml-2" />
@@ -252,8 +269,9 @@ const ExpensesList = ({
               <button
                 onClick={resetFilters}
                 className="px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200"
+                title={t('reset_filters')}
               >
-                {live_language.reset_filters || "Réinitialiser"}
+                {t('reset_filters')}
               </button>
             </div>
           </div>
@@ -272,17 +290,18 @@ const ExpensesList = ({
                   {/* Category filter */}
                   <div>
                     <label className={`block mb-2 text-sm font-medium ${textClass}`}>
-                      {live_language.category || "Catégorie"}
+                      {t('category')}
                     </label>
                     <select
                       value={categoryFilter}
                       onChange={(e) => setCategoryFilter(e.target.value)}
                       className={`w-full p-2 rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                      title={t('category')}
                     >
-                      <option value="all">{live_language.all_categories || "Toutes les catégories"}</option>
+                      <option value="all">{t('all_categories')}</option>
                       {categories.filter(cat => cat !== 'all').map(category => (
                         <option key={category} value={category}>
-                          {live_language[`category_${category}`] || category}
+                          {t(`category_${category}`)}
                         </option>
                       ))}
                     </select>
@@ -291,25 +310,27 @@ const ExpensesList = ({
                   {/* Date range filter */}
                   <div>
                     <label className={`block mb-2 text-sm font-medium ${textClass}`}>
-                      {live_language.start_date || "Date de début"}
+                      {t('start_date')}
                     </label>
                     <input
                       type="date"
                       value={dateFilter.start}
                       onChange={(e) => setDateFilter(prev => ({ ...prev, start: e.target.value }))}
                       className={`w-full p-2 rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                      title={t('start_date')}
                     />
                   </div>
                   
                   <div>
                     <label className={`block mb-2 text-sm font-medium ${textClass}`}>
-                      {live_language.end_date || "Date de fin"}
+                      {t('end_date')}
                     </label>
                     <input
                       type="date"
                       value={dateFilter.end}
                       onChange={(e) => setDateFilter(prev => ({ ...prev, end: e.target.value }))}
                       className={`w-full p-2 rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                      title={t('end_date')}
                     />
                   </div>
                 </div>
@@ -321,15 +342,15 @@ const ExpensesList = ({
         {/* Summary */}
         <div className={`${headerBgColor} p-4 border-t ${borderColor} flex justify-between items-center`}>
           <div className={`${textClass}`}>
-            <span className="font-medium">{filteredExpenses.length}</span> {live_language.expenses_found || "dépenses trouvées"}
+            <span className="font-medium">{filteredExpenses.length}</span> {t('expenses_found')}
             {filteredExpenses.length !== expenses.length && (
               <span className={`ml-2 opacity-75 ${textClass}`}>
-                ({live_language.filtered_from || "filtrées sur"} {expenses.length})
+                ({t('filtered_from')} {expenses.length})
               </span>
             )}
           </div>
           <div className="flex items-center">
-            <span className={`${textClass} mr-2`}>{live_language.total || "Total"}: </span>
+            <span className={`${textClass} mr-2`}>{t('total')}: </span>
             <span className="text-xl font-bold text-green-600 dark:text-green-400">
               {formatCurrency(totalSum)}
             </span>
@@ -347,12 +368,18 @@ const ExpensesList = ({
         >
           {/* Table header */}
           <div className={`${headerBgColor} p-4 flex border-b ${borderColor}`}>
-            <div className="w-5/12 sm:w-3/12 flex items-center">
+            {/* Action buttons column for repositioned edit/delete */}
+            <div className="w-1/12 text-center">
+              <span className={`font-medium ${textClass}`}></span>
+            </div>
+            
+            <div className="w-4/12 sm:w-3/12 flex items-center">
               <button
                 onClick={() => handleSortChange('name')}
                 className="flex items-center font-medium"
+                title={t('expense_name')}
               >
-                <span className={textClass}>{live_language.expense_name || "Nom"}</span>
+                <span className={textClass}>{t('expense_name')}</span>
                 {sortConfig.key === 'name' && (
                   sortConfig.direction === 'asc' ? 
                   <SortAsc size={16} className="ml-1 text-blue-500" /> : 
@@ -364,8 +391,9 @@ const ExpensesList = ({
               <button
                 onClick={() => handleSortChange('date')}
                 className="flex items-center font-medium"
+                title={t('date')}
               >
-                <span className={textClass}>{live_language.date || "Date"}</span>
+                <span className={textClass}>{t('date')}</span>
                 {sortConfig.key === 'date' && (
                   sortConfig.direction === 'asc' ? 
                   <SortAsc size={16} className="ml-1 text-blue-500" /> : 
@@ -377,8 +405,9 @@ const ExpensesList = ({
               <button
                 onClick={() => handleSortChange('amount')}
                 className="flex items-center font-medium"
+                title={t('amount')}
               >
-                <span className={textClass}>{live_language.amount || "Montant"}</span>
+                <span className={textClass}>{t('amount')}</span>
                 {sortConfig.key === 'amount' && (
                   sortConfig.direction === 'asc' ? 
                   <SortAsc size={16} className="ml-1 text-blue-500" /> : 
@@ -387,10 +416,7 @@ const ExpensesList = ({
               </button>
             </div>
             <div className="hidden sm:block sm:w-3/12 flex items-center">
-              <span className={`font-medium ${textClass}`}>{live_language.category || "Catégorie"}</span>
-            </div>
-            <div className="w-1/12 text-right">
-              <span className={`font-medium ${textClass}`}></span>
+              <span className={`font-medium ${textClass}`}>{t('category')}</span>
             </div>
           </div>
           
@@ -404,7 +430,35 @@ const ExpensesList = ({
               >
                 <div className={`p-4 cursor-pointer ${textClass}`} onClick={() => toggleExpenseDetails(expense.id)}>
                   <div className="flex items-center">
-                    <div className="w-5/12 sm:w-3/12">
+                    {/* Edit/Delete Icons - Repositioned to the left */}
+                    <div className="w-1/12 flex justify-center space-x-1">
+                      {!isExpired && (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditExpense(expense);
+                            }}
+                            className="p-1 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white transition-colors"
+                            title={t('edit')}
+                          >
+                            <Edit size={14} />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDeleteExpense(expense);
+                            }}
+                            className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors"
+                            title={t('delete')}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                    
+                    <div className="w-4/12 sm:w-3/12">
                       <span className="font-medium">{expense.name}</span>
                     </div>
                     <div className="w-4/12 sm:w-3/12 flex items-center">
@@ -416,10 +470,12 @@ const ExpensesList = ({
                     </div>
                     <div className="hidden sm:block sm:w-3/12">
                       <span className="px-2 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200">
-                        {live_language[`category_${expense.category}`] || expense.category}
+                        {t(`category_${expense.category}`)}
                       </span>
                     </div>
-                    <div className="w-1/12 text-right">
+                    
+                    {/* Expand/Collapse indicator */}
+                    <div className="ml-auto">
                       {expandedExpense === expense.id ? (
                         <ChevronDown size={20} className={textClass} />
                       ) : (
@@ -440,24 +496,24 @@ const ExpensesList = ({
                       >
                         {/* Category for mobile view */}
                         <div className="block sm:hidden">
-                          <span className="text-sm font-medium opacity-75">{live_language.category || "Catégorie"}:</span>
+                          <span className="text-sm font-medium opacity-75">{t('category')}:</span>
                           <span className="ml-2 px-2 py-1 text-xs rounded-full bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200">
-                            {live_language[`category_${expense.category}`] || expense.category}
+                            {t(`category_${expense.category}`)}
                           </span>
                         </div>
                         
                         {/* Description */}
                         {expense.description && (
                           <div>
-                            <span className="text-sm font-medium opacity-75">{live_language.description || "Description"}:</span>
-                            <p className="mt-1">{expense.description}</p>
+                            <span className="text-sm font-medium opacity-75">{t('description')}:</span>
+                            <p className="whitespace-pre-wrap">{expense.description}</p>
                           </div>
                         )}
                         
                         {/* Metadata */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <span className="font-medium opacity-75">{live_language.created_at || "Créé le"}:</span>
+                            <span className="font-medium opacity-75">{t('created_at')}:</span>
                             <div className="flex items-center mt-1">
                               <Calendar size={14} className="mr-1 opacity-75" />
                               <span>{formatDate(new Date(expense.created_at))}</span>
@@ -468,7 +524,7 @@ const ExpensesList = ({
                           
                           {expense.updated_at && expense.updated_at !== expense.created_at && (
                             <div>
-                              <span className="font-medium opacity-75">{live_language.updated_at || "Modifié le"}:</span>
+                              <span className="font-medium opacity-75">{t('updated_at')}:</span>
                               <div className="flex items-center mt-1">
                                 <Calendar size={14} className="mr-1 opacity-75" />
                                 <span>{formatDate(new Date(expense.updated_at))}</span>
@@ -478,30 +534,6 @@ const ExpensesList = ({
                             </div>
                           )}
                         </div>
-                        
-                        {/* Actions */}
-                        {!isExpired && (
-                          <div className="flex justify-end space-x-2 pt-2">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onEditExpense(expense);
-                              }}
-                              className="p-2 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white transition-colors"
-                            >
-                              <Edit size={16} />
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onDeleteExpense(expense);
-                              }}
-                              className="p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors"
-                            >
-                              <Trash2 size={16} />
-                            </button>
-                          </div>
-                        )}
                       </motion.div>
                     )}
                   </AnimatePresence>
@@ -521,29 +553,30 @@ const ExpensesList = ({
             <FileText size={64} className="text-blue-500 mb-4" />
             <h3 className="text-xl font-bold mb-2">
               {searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end
-                ? (live_language.no_matching_expenses || "Aucune dépense ne correspond à vos critères")
-                : (live_language.no_expenses || "Aucune dépense enregistrée")}
+                ? t('no_matching_expenses')
+                : t('no_expenses')}
             </h3>
             <p className="mb-6 opacity-75">
               {searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end
-                ? (live_language.try_different_filters || "Essayez différents filtres ou effacez votre recherche")
-                : (live_language.add_first_expense || "Ajoutez votre première dépense pour commencer à suivre vos finances")}
+                ? t('try_different_filters')
+                : t('add_first_expense')}
             </p>
             
             {!isExpired && (
               <button
                 onClick={searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end ? resetFilters : onAddExpense}
                 className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center transition-colors duration-200"
+                title={searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end ? t('reset_filters') : t('add_expense')}
               >
                 {searchTerm || categoryFilter !== 'all' || dateFilter.start || dateFilter.end ? (
                   <>
                     <X size={20} className="mr-2" />
-                    {live_language.reset_filters || "Réinitialiser les filtres"}
+                    {t('reset_filters')}
                   </>
                 ) : (
                   <>
                     <PlusCircle size={20} className="mr-2" />
-                    {live_language.add_expense || "Ajouter une dépense"}
+                    {t('add_expense')}
                   </>
                 )}
               </button>

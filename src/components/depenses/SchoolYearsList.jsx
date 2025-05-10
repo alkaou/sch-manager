@@ -1,11 +1,70 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   PlusCircle, Edit, Trash2, Clock, 
   Calendar, DollarSign, Search, Filter, 
-  ArrowUpRight, X, Lock
+  ArrowUpRight, X, Lock, FileText, Info
 } from 'lucide-react';
 import { useLanguage } from '../contexts';
+import translations from './depense_translator';
+
+const SchoolYearDescriptionModal = ({ isOpen, onClose, schoolYear, theme }) => {
+  if (!isOpen) return null;
+  
+  const isDark = theme === 'dark';
+  
+  return (
+    <motion.div 
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div 
+        className={`w-full scrollbar-custom overflow-y-auto max-w-2xl rounded-xl shadow-2xl ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'} overflow-hidden`}
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ type: "spring", damping: 30, stiffness: 500 }}
+        style={{height: "90vh"}}
+      >
+        <div className={`px-6 py-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} flex justify-between items-center`}>
+          <h2 className="text-xl font-bold flex items-center">
+            <FileText className="mr-2 text-blue-500" size={24} />
+            {schoolYear.title}
+          </h2>
+          <button 
+            onClick={onClose}
+            className={`p-2 rounded-full ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-200'} transition-colors`}
+          >
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="p-6">
+          <div className="flex items-center mb-4 text-sm opacity-75">
+            <Calendar size={16} className="mr-2" />
+            <span>
+              {new Date(schoolYear.start_date).toLocaleDateString()} - {new Date(schoolYear.end_date).toLocaleDateString()}
+            </span>
+          </div>
+          
+          <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'} whitespace-pre-wrap`}>
+            {schoolYear.description}
+          </div>
+          
+          <div className="mt-6 text-sm opacity-75">
+            <p>ID: {schoolYear.id}</p>
+            <p>Créé le: {new Date(schoolYear.created_at).toLocaleString()}</p>
+            {schoolYear.updated_at && schoolYear.updated_at !== schoolYear.created_at && (
+              <p>Mis à jour le: {new Date(schoolYear.updated_at).toLocaleString()}</p>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
 
 const SchoolYearsList = ({ 
   schoolYears, 
@@ -20,9 +79,16 @@ const SchoolYearsList = ({
   text_color,
   theme
 }) => {
-  const { live_language } = useLanguage();
+  const { live_language, language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all'); // all, active, expired
+  const [viewingYearDescription, setViewingYearDescription] = useState(null);
+  
+  // Get translation
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
   
   // Theme-based styling
   const cardBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -111,12 +177,14 @@ const SchoolYearsList = ({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={`pl-10 pr-10 py-2 w-full rounded-lg ${inputBgColor} ${textClass} border ${borderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-            placeholder={live_language.search_year || "Rechercher une année..."}
+            placeholder={t('search_year')}
+            title={t('search_year')}
           />
           {searchTerm && (
             <button
               onClick={handleClearSearch}
               className="absolute inset-y-0 right-0 flex items-center pr-3"
+              title={t('clear_search')}
             >
               <X size={18} className={textClass} />
             </button>
@@ -131,8 +199,9 @@ const SchoolYearsList = ({
               ? "px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white" 
               : `px-3 py-1 rounded-full text-sm font-medium ${theme === 'dark' ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`
             }
+            title={t('all_years')}
           >
-            {live_language.all_years || "Toutes"}
+            {t('all_years')}
           </button>
           <button
             onClick={() => setFilterType('active')}
@@ -140,8 +209,9 @@ const SchoolYearsList = ({
               ? "px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white" 
               : `px-3 py-1 rounded-full text-sm font-medium ${theme === 'dark' ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`
             }
+            title={t('active_years')}
           >
-            {live_language.active_years || "Actives"}
+            {t('active_years')}
           </button>
           <button
             onClick={() => setFilterType('expired')}
@@ -149,8 +219,9 @@ const SchoolYearsList = ({
               ? "px-3 py-1 rounded-full text-sm font-medium bg-blue-500 text-white" 
               : `px-3 py-1 rounded-full text-sm font-medium ${theme === 'dark' ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`
             }
+            title={t('expired_years')}
           >
-            {live_language.expired_years || "Expirées"}
+            {t('expired_years')}
           </button>
         </div>
       </div>
@@ -165,14 +236,15 @@ const SchoolYearsList = ({
         >
           <div className="flex flex-col items-center justify-center">
             <Calendar size={64} className="text-blue-500 mb-4" />
-            <h3 className="text-xl font-bold mb-2">{live_language.no_years_title || "Aucune année scolaire"}</h3>
-            <p className="mb-6 opacity-75">{live_language.no_years_message || "Vous n'avez pas encore créé d'année scolaire. Commencez par en ajouter une."}</p>
+            <h3 className="text-xl font-bold mb-2">{t('no_years_title')}</h3>
+            <p className="mb-6 opacity-75">{t('no_years_message')}</p>
             <button
               onClick={onAddSchoolYear}
               className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center transition-colors duration-200"
+              title={t('add_school_year_tooltip')}
             >
               <PlusCircle size={20} className="mr-2" />
-              {live_language.add_school_year || "Ajouter une année scolaire"}
+              {t('add_school_year')}
             </button>
           </div>
         </motion.div>
@@ -185,14 +257,15 @@ const SchoolYearsList = ({
         >
           <div className="flex flex-col items-center justify-center">
             <Search size={64} className="text-blue-500 mb-4" />
-            <h3 className="text-xl font-bold mb-2">{live_language.no_results_title || "Aucun résultat"}</h3>
-            <p className="mb-6 opacity-75">{live_language.no_results_message || "Aucune année scolaire ne correspond à votre recherche."}</p>
+            <h3 className="text-xl font-bold mb-2">{t('no_results_title')}</h3>
+            <p className="mb-6 opacity-75">{t('no_results_message')}</p>
             <button
               onClick={handleClearSearch}
               className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center transition-colors duration-200"
+              title={t('clear_search')}
             >
               <X size={20} className="mr-2" />
-              {live_language.clear_search || "Effacer la recherche"}
+              {t('clear_search')}
             </button>
           </div>
         </motion.div>
@@ -215,22 +288,32 @@ const SchoolYearsList = ({
                 className={`${cardBgColor} border ${borderColor} rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200`}
               >
                 <div className="p-6">
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="flex justify-between items-start mb-2">
                     <h3 className={`text-xl font-bold ${textClass}`}>{year.title}</h3>
                     <div className="flex space-x-2">
                       {isExpired ? (
                         <div className="flex items-center px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs">
                           <Lock size={12} className="mr-1" />
-                          {live_language.expired || "Expirée"}
+                          {t('expired')}
                         </div>
                       ) : (
                         <div className="flex items-center px-2 py-1 bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200 rounded-full text-xs">
                           <Clock size={12} className="mr-1" />
-                          {live_language.active || "Active"}
+                          {t('active')}
                         </div>
                       )}
                     </div>
                   </div>
+                  
+                  {/* View Description Button */}
+                  <button
+                    onClick={() => setViewingYearDescription(year)}
+                    className={`mb-3 w-full flex items-center justify-center px-3 py-1.5 text-sm rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+                    title={t('view_school_year_description')}
+                  >
+                    <Info size={14} className="mr-1.5 text-blue-500" />
+                    {t('view_school_year_description')}
+                  </button>
                   
                   <div className="flex items-center mb-3">
                     <Calendar size={16} className={`${textClass} mr-2 opacity-75`} />
@@ -242,7 +325,7 @@ const SchoolYearsList = ({
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
                       <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                        {live_language.expenses_count || "Dépenses"}
+                        {t('expenses_count')}
                       </div>
                       <div className="flex items-center">
                         <span className={`text-xl font-bold ${textClass}`}>
@@ -252,7 +335,7 @@ const SchoolYearsList = ({
                     </div>
                     <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
                       <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-                        {live_language.total_amount || "Total"}
+                        {t('total_amount')}
                       </div>
                       <div className="flex items-center">
                         <DollarSign size={16} className="text-green-500 mr-1" />
@@ -267,9 +350,10 @@ const SchoolYearsList = ({
                     <button
                       onClick={() => onSelectSchoolYear(year)}
                       className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg flex items-center justify-center transition-colors duration-200"
+                      title={t('view_details')}
                     >
                       <ArrowUpRight size={20} className="mr-2" />
-                      {live_language.view_details || "Voir les détails"}
+                      {t('view_details')}
                     </button>
                     
                     <div className="flex space-x-2">
@@ -281,17 +365,24 @@ const SchoolYearsList = ({
                             ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed' 
                             : 'bg-yellow-500 hover:bg-yellow-600 text-white'}`
                         }
+                        title={isExpired ? t('school_year_expired_readonly') : t('edit')}
                       >
                         <Edit size={16} className="mr-1" />
-                        {live_language.edit || "Modifier"}
+                        {t('edit')}
                       </button>
                       
                       <button
                         onClick={() => onDeleteSchoolYear(year)}
-                        className="flex-1 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg flex items-center justify-center transition-colors duration-200"
+                        disabled={isExpired}
+                        className={`flex-1 py-2 rounded-lg flex items-center justify-center transition-colors duration-200
+                          ${isExpired 
+                            ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed' 
+                            : 'bg-red-500 hover:bg-red-600 text-white'}`
+                        }
+                        title={isExpired ? t('school_year_expired_readonly') : t('delete')}
                       >
                         <Trash2 size={16} className="mr-1" />
-                        {live_language.delete || "Supprimer"}
+                        {t('delete')}
                       </button>
                     </div>
                   </div>
@@ -301,6 +392,18 @@ const SchoolYearsList = ({
           })}
         </motion.div>
       )}
+      
+      {/* School Year Description Modal */}
+      <AnimatePresence>
+        {viewingYearDescription && (
+          <SchoolYearDescriptionModal 
+            isOpen={Boolean(viewingYearDescription)}
+            onClose={() => setViewingYearDescription(null)}
+            schoolYear={viewingYearDescription}
+            theme={theme}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

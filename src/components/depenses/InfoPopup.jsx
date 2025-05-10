@@ -1,147 +1,23 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { X, AlertTriangle, Info, Check, BookOpen, PenLine, Calendar, DollarSign } from "lucide-react";
+import { 
+  X, AlertTriangle, Info, Check, BookOpen, PenLine, 
+  Calendar, DollarSign, FileText, TrendingUp, Clock,
+  Shield, ExternalLink, Target, List, BarChart, Zap,
+  HelpCircle, Database, Sliders
+} from "lucide-react";
 import { useLanguage } from "../contexts";
+import translations from "./depense_translator";
 
 const InfoPopup = ({ isOpen, onClose, theme }) => {
-  const { live_language, language } = useLanguage();
+  const { language } = useLanguage();
   
-  // Dynamic content based on language
-  const content = {
-    title: language === "Français" ? "Guide de gestion des dépenses" : 
-           language === "Bambara" ? "Musaka kɛcogo kunnafonini" : 
-           "Expense Management Guide",
-    
-    sections: [
-      {
-        icon: <BookOpen className="text-blue-500" size={24} />,
-        title: language === "Français" ? "Vue d'ensemble" : 
-               language === "Bambara" ? "Cogo ɲɛfɔli" : 
-               "Overview",
-        content: language === "Français" ? 
-          "Le système de gestion des dépenses est organisé par années scolaires. Chaque année scolaire contient ses propres dépenses. Cette organisation vous permet de suivre les finances de votre école de manière structurée et chronologique." : 
-          language === "Bambara" ? 
-          "Musaka kɛcogo labɛnnen don ka kɔn ni kalansen sanji ye. Sanji kelen kelen bɛɛ ni a ta musaka ye. Nin labɛnni b'a to i ka se ka i ka lakɔli musaka kɔlɔsi cogoya ni waati kɔnɔ." : 
-          "The expense management system is organized by school years. Each school year contains its own expenses. This organization allows you to track your school's finances in a structured and chronological manner."
-      },
-      {
-        icon: <Calendar className="text-green-500" size={24} />,
-        title: language === "Français" ? "Années scolaires" : 
-               language === "Bambara" ? "Kalansen sanjaw" : 
-               "School Years",
-        content: language === "Français" ? 
-          "Créez d'abord une année scolaire avec un titre, une description, une date de début et une date de fin. Les dates doivent couvrir votre année scolaire réelle. Une fois l'année scolaire créée, vous pourrez y ajouter des dépenses. Une année scolaire expire automatiquement lorsque sa date de fin est dépassée." : 
-          language === "Bambara" ? 
-          "Fɔlɔ i ka kan ka kalansen san dɔ da ni tɔgɔ, bayɛlɛmali, daminɛ don ni laban don ye. Donw ka kan ka i ka lakɔli kalansen san kura daminɛ ni a laban ɲɛfɔ. Kalansen san dalen kɔfɛ, i bɛ se ka musakaw fara a kan. Kalansen san bɛ ban yɛrɛma ni a laban don tɛmɛna." : 
-          "First create a school year with a title, description, start date, and end date. The dates should cover your actual school year. Once the school year is created, you can add expenses to it. A school year automatically expires when its end date has passed."
-      },
-      {
-        icon: <DollarSign className="text-purple-500" size={24} />,
-        title: language === "Français" ? "Dépenses" : 
-               language === "Bambara" ? "Musakaw" : 
-               "Expenses",
-        content: language === "Français" ? 
-          "Pour chaque dépense, saisissez un nom, un montant, une catégorie, une date et une description détaillée. La description doit contenir entre 30 et 10 000 caractères et est essentielle pour garder une trace des détails de vos dépenses. Organisez vos dépenses dans un ordre chronologique pour faciliter le suivi financier." : 
-          language === "Bambara" ? 
-          "Musaka kelen kelen bɛɛ kama, i ka tɔgɔ, hakɛ, suguyali, don ni bayɛlɛmali dɔ sɛbɛn. Bayɛlɛmali ka kan ka sira sɛbɛn 30 ni 10 000 cɛ, a man kan ka fɔn i ka musaka kunnafoniw. I ka i ka musaka ladonni kɛ waati kɔnɔ walasa ka wari kɔlɔsili nɔgɔya." : 
-          "For each expense, enter a name, amount, category, date, and detailed description. The description must be between 30 and 10,000 characters and is essential for keeping track of your expense details. Organize your expenses in chronological order to facilitate financial tracking."
-      },
-      {
-        icon: <PenLine className="text-orange-500" size={24} />,
-        title: language === "Français" ? "Bonnes pratiques" : 
-               language === "Bambara" ? "Baarakɛcogo ɲumanw" : 
-               "Best Practices",
-        content: language === "Français" ? 
-          "Créez vos dépenses dans un ordre chronologique pour maintenir une trace claire de vos finances. Utilisez des catégories cohérentes pour faciliter l'analyse future. Ajoutez des descriptions détaillées qui permettront de comprendre le contexte de chaque dépense même des mois plus tard. Effectuez des sauvegardes régulières de vos données." : 
-          language === "Bambara" ? 
-          "I ka i ka musakaw da waati kɔnɔ walasa ka i ka wari kunnafoniw ladon ɲuman ye. I ka suguyali kelen kelen baara kɛ walasa ka sɛgɛsɛgɛli nɔgɔya kɔfɛ. I ka bayɛlɛmali dakɔrɔlen dɔ da min bɛna a to i ka musaka kunnafoniw ka faamu hali kalo caman tɛmɛnen kɔfɛ. I ka i ka kunnafoniw maracogo ɲuman kɛ tuma bɛɛ." : 
-          "Create your expenses in chronological order to maintain a clear track of your finances. Use consistent categories to facilitate future analysis. Add detailed descriptions that will allow you to understand the context of each expense even months later. Make regular backups of your data."
-      }
-    ],
-    
-    warnings: [
-      {
-        icon: <AlertTriangle className="text-amber-500" size={20} />,
-        title: language === "Français" ? "Restrictions sur les années expirées" : 
-               language === "Bambara" ? "Kalansen san tɛmɛnew danw" : 
-               "Expired Year Restrictions",
-        content: language === "Français" ? 
-          "Une année scolaire expirée ne peut pas être modifiée ou supprimée. Elle devient accessible en lecture seule pour préserver l'intégrité des données historiques." : 
-          language === "Bambara" ? 
-          "Kalansen san tɛmɛnen tɛ se ka yɛlɛma walima ka jɔsi. A bɛ se ka kalan dɔrɔn walasa ka kɔrɔlen kunnafoniw kisi." : 
-          "An expired school year cannot be modified or deleted. It becomes read-only to preserve the integrity of historical data."
-      },
-      {
-        icon: <AlertTriangle className="text-amber-500" size={20} />,
-        title: language === "Français" ? "Validation des descriptions" : 
-               language === "Bambara" ? "Bayɛlɛmaliw sɛgɛsɛgɛli" : 
-               "Description Validation",
-        content: language === "Français" ? 
-          "La description d'une dépense est obligatoire et doit contenir entre 30 et 10 000 caractères. Une description complète est essentielle pour la transparence financière." : 
-          language === "Bambara" ? 
-          "Musaka dɔ bayɛlɛmali ka kan ka kɛ, o sira ka kan ka kɛ 30 ni 10 000 cɛ. Bayɛlɛmali dafalen nafa ka bon wari kunnafoni ɲɛfɔli la." : 
-          "The description of an expense is mandatory and must contain between 30 and 10,000 characters. A complete description is essential for financial transparency."
-      },
-      {
-        icon: <AlertTriangle className="text-amber-500" size={20} />,
-        title: language === "Français" ? "Années scolaires dupliquées" : 
-               language === "Bambara" ? "Kalansen san kɛlen fila ye" : 
-               "Duplicate School Years",
-        content: language === "Français" ? 
-          "Vous ne pouvez pas créer deux années scolaires avec le même titre, la même date de début et la même date de fin. Chaque année scolaire doit être unique." : 
-          language === "Bambara" ? 
-          "I tɛ se ka kalansen san fila da ni tɔgɔ kelen, daminɛ don kelen ani laban don kelen ye. Kalansen san kelen kelen bɛɛ ka kan ka kɛ a kelen ye." : 
-          "You cannot create two school years with the same title, start date, and end date. Each school year must be unique."
-      }
-    ],
-    
-    tips: [
-      {
-        icon: <Check className="text-green-500" size={20} />,
-        title: language === "Français" ? "Créez dans l'ordre" : 
-               language === "Bambara" ? "Da ɲɔgɔn kɔ" : 
-               "Create in Order",
-        content: language === "Français" ? 
-          "Créez vos dépenses chronologiquement pour faciliter le suivi et l'analyse financière." : 
-          language === "Bambara" ? 
-          "I ka i ka musakaw da waati kɔnɔ walasa ka kɔlɔsili ni sɛgɛsɛgɛli nɔgɔya." : 
-          "Create your expenses chronologically to facilitate tracking and financial analysis."
-      },
-      {
-        icon: <Check className="text-green-500" size={20} />,
-        title: language === "Français" ? "Soyez précis" : 
-               language === "Bambara" ? "Kɛ dakɔrɔlenba ye" : 
-               "Be Precise",
-        content: language === "Français" ? 
-          "Utilisez des noms clairs et des catégories cohérentes pour faciliter les recherches ultérieures." : 
-          language === "Bambara" ? 
-          "I ka tɔgɔ jɛlenw ni suguyali kɛlen kelen kelen baara kɛ walasa ka ɲininiw nɔgɔya kɔfɛ." : 
-          "Use clear names and consistent categories to facilitate later searches."
-      },
-      {
-        icon: <Check className="text-green-500" size={20} />,
-        title: language === "Français" ? "Planifiez à l'avance" : 
-               language === "Bambara" ? "Labɛn kɔrɔlen k'a ɲɛ" : 
-               "Plan Ahead",
-        content: language === "Français" ? 
-          "Créez votre nouvelle année scolaire avant la fin de l'année en cours pour assurer une transition fluide." : 
-          language === "Bambara" ? 
-          "I ka i ka kalansen san kura da sisan san ban ɲɛ walasa ka yɛlɛma nɔgɔya." : 
-          "Create your new school year before the end of the current year to ensure a smooth transition."
-      }
-    ],
-    
-    footer: language === "Français" ? 
-      "Une gestion rigoureuse des dépenses vous aidera à optimiser votre budget scolaire." : 
-      language === "Bambara" ? 
-      "Musaka kɛcogo ɲuman b'a to i ka i ka lakɔli wari ladon ka ɲɛ." : 
-      "Rigorous expense management will help you optimize your school budget.",
-    
-    close: language === "Français" ? "Fermer" : 
-           language === "Bambara" ? "Datugu" : 
-           "Close"
+  // Get translation function
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
   };
-
+  
   // Animation variants
   const backdropVariants = {
     hidden: { opacity: 0 },
@@ -158,8 +34,8 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
     const isDark = theme === "dark";
     
     return {
-      backdrop: "fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4",
-      modal: `w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`,
+      backdrop: "fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4 backdrop-blur-sm",
+      modal: `w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`,
       header: `px-6 py-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} flex justify-between items-center sticky top-0 ${isDark ? 'bg-gray-800' : 'bg-white'} z-10`,
       closeButton: `p-2 rounded-full transition-colors ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`,
       content: "p-6 space-y-8",
@@ -170,11 +46,164 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
       warningContent: `${isDark ? 'text-amber-200' : 'text-amber-700'} mt-1`,
       tipCard: `p-3 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'} flex items-start space-x-3 my-2`,
       tipTitle: "font-semibold",
-      footer: `mt-6 pt-6 border-t ${isDark ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-600'} text-center italic`
+      footer: `mt-6 pt-6 border-t ${isDark ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-600'} text-center italic`,
+      accentBox: `p-5 rounded-lg my-6 ${isDark ? 'bg-blue-900/30 border border-blue-800/50' : 'bg-blue-50 border border-blue-200'}`,
+      link: `${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'} underline transition-colors`,
+      tabButton: `px-4 py-2 rounded-t-lg font-medium transition-colors`,
+      activeTab: isDark ? 'bg-gray-700 text-white' : 'bg-white text-blue-600 border-t border-l border-r border-gray-200',
+      inactiveTab: isDark ? 'bg-gray-800 text-gray-400 hover:bg-gray-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200',
+      stepNumber: `w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mr-2 ${isDark ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-800'}`,
+      stepItem: `flex items-start p-3 rounded-lg mb-3 ${isDark ? 'bg-gray-700/50' : 'bg-gray-50'}`,
+      gridItem: `p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'} flex flex-col items-center text-center`
     };
   };
 
   const styles = getStyles();
+
+  // Define the detailed content
+  const content = {
+    title: "Guide complet de gestion des dépenses",
+    intro: {
+      title: "Vue d'ensemble",
+      content: "Le système de gestion des dépenses est conçu pour vous aider à suivre efficacement toutes les dépenses de votre établissement scolaire. Organisé par années scolaires, il vous permet de maintenir une comptabilité précise et de générer des rapports détaillés sur vos finances.",
+      icon: <BookOpen size={24} className="text-blue-500" />
+    },
+    
+    structure: {
+      title: "Structure du système",
+      content: "Le système est structuré en deux niveaux hiérarchiques principaux :",
+      items: [
+        {
+          icon: <Calendar className="text-green-500" size={20} />,
+          title: "Années scolaires",
+          desc: "Chaque année scolaire représente un cadre temporel défini par une date de début et une date de fin. Ces périodes servent de conteneurs pour toutes vos dépenses."
+        },
+        {
+          icon: <DollarSign className="text-purple-500" size={20} />,
+          title: "Dépenses",
+          desc: "Les dépenses individuelles sont associées à une année scolaire spécifique. Chaque dépense comprend un nom, un montant, une catégorie, une date et une description détaillée."
+        }
+      ]
+    },
+    
+    workflow: {
+      title: "Flux de travail recommandé",
+      steps: [
+        "Créez d'abord une année scolaire avec des dates précises couvrant votre période académique.",
+        "Ajoutez progressivement vos dépenses dans l'ordre chronologique au fur et à mesure qu'elles surviennent.",
+        "Utilisez des catégories cohérentes pour faciliter le suivi et l'analyse ultérieure.",
+        "Consultez régulièrement les totaux et les statistiques pour surveiller vos finances.",
+        "Archivez automatiquement les années expirées tout en conservant l'accès pour référence future."
+      ]
+    },
+    
+    bestPractices: {
+      title: "Bonnes pratiques",
+      practices: [
+        {
+          icon: <Clock size={20} className="text-amber-500" />,
+          title: "Chronologie stricte",
+          content: "Enregistrez vos dépenses dans l'ordre chronologique pour maintenir une trace précise et cohérente. Évitez d'ajouter des dépenses en désordre, ce qui pourrait compliquer l'analyse financière."
+        },
+        {
+          icon: <List size={20} className="text-blue-500" />,
+          title: "Catégorisation cohérente",
+          content: "Utilisez systématiquement les mêmes catégories pour des dépenses similaires afin de garantir des rapports et des analyses précis."
+        },
+        {
+          icon: <FileText size={20} className="text-green-500" />,
+          title: "Descriptions détaillées",
+          content: "Rédigez des descriptions complètes pour chaque dépense (minimum 30 caractères) incluant le contexte, la justification et les parties prenantes concernées."
+        },
+        {
+          icon: <TrendingUp size={20} className="text-purple-500" />,
+          title: "Vérification régulière",
+          content: "Examinez périodiquement vos dépenses pour identifier les tendances et optimiser votre budget futur."
+        },
+        {
+          icon: <Database size={20} className="text-indigo-500" />,
+          title: "Sauvegarde des données",
+          content: "Effectuez régulièrement des sauvegardes de vos données financières pour éviter toute perte d'information."
+        }
+      ]
+    },
+    
+    warnings: [
+      {
+        icon: <AlertTriangle className="text-amber-500" size={20} />,
+        title: "Années scolaires expirées",
+        content: "Une année scolaire devient automatiquement en lecture seule lorsque sa date de fin est dépassée. Vous ne pourrez ni la modifier, ni la supprimer, ni ajouter ou modifier ses dépenses. Cette restriction garantit l'intégrité de vos données historiques."
+      },
+      {
+        icon: <AlertTriangle className="text-amber-500" size={20} />,
+        title: "Descriptions obligatoires",
+        content: "Chaque dépense nécessite une description détaillée entre 30 et 10 000 caractères. Cette exigence assure une documentation complète et favorise la transparence financière."
+      },
+      {
+        icon: <AlertTriangle className="text-amber-500" size={20} />,
+        title: "Dates des dépenses",
+        content: "La date d'une dépense doit obligatoirement se situer entre la date de début et la date de fin de son année scolaire. Toute date en dehors de cette plage sera refusée."
+      },
+      {
+        icon: <AlertTriangle className="text-amber-500" size={20} />,
+        title: "Années scolaires dupliquées",
+        content: "Le système empêche la création d'années scolaires en double. Deux années ne peuvent pas avoir simultanément le même titre, la même date de début et la même date de fin."
+      }
+    ],
+    
+    features: {
+      title: "Fonctionnalités principales",
+      items: [
+        {
+          icon: <Sliders size={24} className="text-green-500" />,
+          title: "Filtrage avancé",
+          desc: "Filtrez les dépenses par catégorie, date ou mot-clé pour trouver rapidement ce que vous cherchez."
+        },
+        {
+          icon: <BarChart size={24} className="text-blue-500" />,
+          title: "Visualisation des totaux",
+          desc: "Consultez instantanément le total des dépenses pour chaque année scolaire et catégorie."
+        },
+        {
+          icon: <Shield size={24} className="text-purple-500" />,
+          title: "Protection des données",
+          desc: "Les années expirées sont automatiquement verrouillées pour préserver l'intégrité des données historiques."
+        },
+        {
+          icon: <Zap size={24} className="text-amber-500" />,
+          title: "Interface réactive",
+          desc: "Profitez d'une expérience utilisateur fluide grâce à des transitions animées et un design responsive."
+        }
+      ]
+    },
+    
+    tips: [
+      {
+        icon: <Check className="text-green-500" size={20} />,
+        title: "Planification préalable",
+        content: "Créez votre nouvelle année scolaire avant la fin de l'année en cours pour assurer une transition sans heurts."
+      },
+      {
+        icon: <Check className="text-green-500" size={20} />,
+        title: "Nomenclature cohérente",
+        content: "Utilisez un système de nommage uniforme pour toutes vos dépenses afin de faciliter les recherches et le tri."
+      },
+      {
+        icon: <Check className="text-green-500" size={20} />,
+        title: "Vérification mensuelle",
+        content: "Réservez du temps chaque mois pour vérifier que toutes les dépenses ont été correctement enregistrées."
+      },
+      {
+        icon: <Check className="text-green-500" size={20} />,
+        title: "Analyse trimestrielle",
+        content: "Analysez vos dépenses par trimestre pour identifier les tendances et ajuster votre budget en conséquence."
+      }
+    ],
+    
+    footer: "Une gestion rigoureuse des dépenses est essentielle pour optimiser votre budget scolaire et assurer la pérennité financière de votre établissement.",
+    
+    close: "Fermer"
+  };
 
   if (!isOpen) return null;
 
@@ -209,26 +238,98 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
         
         {/* Main content */}
         <div className={styles.content}>
-          {/* Main sections */}
-          {content.sections.map((section, index) => (
-            <div key={index} className="mb-8">
-              <h3 className={styles.sectionTitle}>
-                {section.icon}
-                <span className="ml-2">{section.title}</span>
-              </h3>
-              <p className={styles.sectionContent}>{section.content}</p>
+          {/* Introduction */}
+          <div className="mb-8">
+            <h3 className={styles.sectionTitle}>
+              {content.intro.icon}
+              <span className="ml-2">{content.intro.title}</span>
+            </h3>
+            <div className={styles.accentBox}>
+              <p className="text-lg leading-relaxed">{content.intro.content}</p>
             </div>
-          ))}
+          </div>
+          
+          {/* System Structure */}
+          <div className="mb-8">
+            <h3 className={styles.sectionTitle}>
+              <TrendingUp size={24} className="text-blue-500" />
+              <span className="ml-2">{content.structure.title}</span>
+            </h3>
+            <p className={styles.sectionContent + " mb-4"}>{content.structure.content}</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ml-9">
+              {content.structure.items.map((item, index) => (
+                <div key={index} className={styles.tipCard + " flex-col items-start"}>
+                  <div className="flex items-center w-full mb-2">
+                    {item.icon}
+                    <h4 className={styles.tipTitle + " ml-2"}>{item.title}</h4>
+                  </div>
+                  <p>{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Workflow */}
+          <div className="mb-8">
+            <h3 className={styles.sectionTitle}>
+              <Target size={24} className="text-blue-500" />
+              <span className="ml-2">{content.workflow.title}</span>
+            </h3>
+            
+            <div className="ml-9 space-y-3">
+              {content.workflow.steps.map((step, index) => (
+                <div key={index} className={styles.stepItem}>
+                  <div className={styles.stepNumber}>{index + 1}</div>
+                  <div>{step}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Features */}
+          <div className="mb-8">
+            <h3 className={styles.sectionTitle}>
+              <Zap size={24} className="text-blue-500" />
+              <span className="ml-2">{content.features.title}</span>
+            </h3>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-9">
+              {content.features.items.map((feature, index) => (
+                <div key={index} className={styles.gridItem}>
+                  {feature.icon}
+                  <h4 className="font-bold mt-2 mb-1">{feature.title}</h4>
+                  <p className="text-sm">{feature.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Best Practices */}
+          <div className="mb-8">
+            <h3 className={styles.sectionTitle}>
+              <PenLine size={24} className="text-blue-500" />
+              <span className="ml-2">{content.bestPractices.title}</span>
+            </h3>
+            
+            <div className="space-y-4 ml-9">
+              {content.bestPractices.practices.map((practice, index) => (
+                <div key={index} className={styles.warningCard.replace('amber', 'blue')}>
+                  <span className="mt-1">{practice.icon}</span>
+                  <div className="flex-1">
+                    <h4 className={styles.warningTitle.replace('amber', 'blue')}>{practice.title}</h4>
+                    <p className={styles.warningContent.replace('amber', 'blue')}>{practice.content}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
           
           {/* Warnings section */}
           <div className="mb-8">
             <h3 className={`${styles.sectionTitle} text-amber-500`}>
               <AlertTriangle size={24} />
-              <span className="ml-2">
-                {language === "Français" ? "Avertissements importants" : 
-                language === "Bambara" ? "Lasɔmi nafamaw" : 
-                "Important Warnings"}
-              </span>
+              <span className="ml-2">Avertissements importants</span>
             </h3>
             <div className="space-y-3 mt-4">
               {content.warnings.map((warning, index) => (
@@ -247,22 +348,29 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
           <div className="mb-8">
             <h3 className={`${styles.sectionTitle} text-green-500`}>
               <Check size={24} />
-              <span className="ml-2">
-                {language === "Français" ? "Conseils pratiques" : 
-                language === "Bambara" ? "Ladilikan balikuw" : 
-                "Practical Tips"}
-              </span>
+              <span className="ml-2">Conseils pratiques</span>
             </h3>
-            <div className="grid md:grid-cols-3 gap-3 mt-4">
+            <div className="grid md:grid-cols-2 gap-3 mt-4">
               {content.tips.map((tip, index) => (
                 <div key={index} className={styles.tipCard}>
                   <span className="mt-1">{tip.icon}</span>
                   <div>
                     <h4 className={styles.tipTitle}>{tip.title}</h4>
-                    <p className="mt-1 text-sm">{tip.content}</p>
+                    <p className="mt-1">{tip.content}</p>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+          
+          {/* Important note about chronological order */}
+          <div className={`${styles.warningCard} border-l-4 border-l-red-500`}>
+            <AlertTriangle size={24} className="text-red-500 flex-shrink-0" />
+            <div>
+              <h4 className="text-lg font-bold text-red-500 dark:text-red-400">Ordre chronologique essentiel</h4>
+              <p className="mt-2">
+                <strong>Il est fortement recommandé de créer vos dépenses dans l'ordre chronologique.</strong> Cette pratique est cruciale pour maintenir une comptabilité précise et faciliter les audits financiers. La création de dépenses en désordre peut entraîner des erreurs d'analyse et compliquer la gestion budgétaire.
+              </p>
             </div>
           </div>
           

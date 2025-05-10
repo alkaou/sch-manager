@@ -5,6 +5,7 @@ import {
   Info, ArrowLeft, CheckCircle, AlertTriangle 
 } from 'lucide-react';
 import { useLanguage, useFlashNotification } from '../contexts';
+import translations from './depense_translator';
 
 const SchoolYearForm = ({ 
   db, 
@@ -16,9 +17,15 @@ const SchoolYearForm = ({
   text_color,
   theme 
 }) => {
-  const { live_language } = useLanguage();
+  const { language } = useLanguage();
   const { setFlashMessage } = useFlashNotification();
   const isEditMode = Boolean(schoolYear);
+  
+  // Translation helper
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
   
   // Form state
   const [formData, setFormData] = useState({
@@ -100,28 +107,28 @@ const SchoolYearForm = ({
     
     // Title validation
     if (!formData.title.trim()) {
-      newErrors.title = live_language.title_required || "Le titre est obligatoire";
+      newErrors.title = t('title_required');
     } else if (formData.title.trim().length < 10 || formData.title.trim().length > 150) {
-      newErrors.title = live_language.title_length || "Le titre doit contenir entre 10 et 150 caractères";
+      newErrors.title = t('title_length');
     }
     
     // Description validation
     if (!formData.description.trim()) {
-      newErrors.description = live_language.description_required || "La description est obligatoire";
+      newErrors.description = t('description_required');
     } else if (formData.description.trim().length < 30 || formData.description.trim().length > 10000) {
-      newErrors.description = live_language.description_length || "La description doit contenir entre 30 et 10000 caractères";
+      newErrors.description = t('description_length');
     }
     
     // Start date validation
     if (!formData.start_date) {
-      newErrors.start_date = live_language.start_date_required || "La date de début est obligatoire";
+      newErrors.start_date = t('start_date_required');
     }
     
     // End date validation
     if (!formData.end_date) {
-      newErrors.end_date = live_language.end_date_required || "La date de fin est obligatoire";
+      newErrors.end_date = t('end_date_required');
     } else if (formData.start_date && new Date(formData.end_date) <= new Date(formData.start_date)) {
-      newErrors.end_date = live_language.date_range_invalid || "La date de fin doit être après la date de début";
+      newErrors.end_date = t('date_range_invalid');
     }
     
     // Check if dates are within allowed range (±1 year from today)
@@ -129,24 +136,24 @@ const SchoolYearForm = ({
     const endDate = new Date(formData.end_date);
     
     if (startDate < oneYearBefore || startDate > oneYearAfter) {
-      newErrors.start_date = live_language.date_range_limit || "Les dates ne peuvent pas être à plus d'un an de la date actuelle";
+      newErrors.start_date = t('date_range_limit');
     }
     
     if (endDate < oneYearBefore || endDate > oneYearAfter) {
-      newErrors.end_date = live_language.date_range_limit || "Les dates ne peuvent pas être à plus d'un an de la date actuelle";
+      newErrors.end_date = t('date_range_limit');
     }
     
     // Check for duplicate school years (same title, start_date and end_date)
-    if (!isEditMode || (isEditMode && formData.title !== schoolYear.title)) {
-      const duplicate = schoolYears.some(year => 
-        year.title === formData.title && 
-        year.start_date === formData.start_date && 
-        year.end_date === formData.end_date
-      );
-      
-      if (duplicate) {
-        newErrors.title = live_language.year_already_exists || "Une année scolaire avec le même titre et les mêmes dates existe déjà";
-      }
+    // Improved to check for all three fields together
+    const duplicateCheck = schoolYears.find(year => 
+      year.title === formData.title && 
+      year.start_date === formData.start_date && 
+      year.end_date === formData.end_date &&
+      (!isEditMode || (isEditMode && year.id !== schoolYear.id)) // Exclude current year when editing
+    );
+    
+    if (duplicateCheck) {
+      newErrors.title = t('year_already_exists');
     }
     
     setErrors(newErrors);
@@ -190,7 +197,7 @@ const SchoolYearForm = ({
         setSchoolYears(updatedSchoolYears);
         
         setFlashMessage({
-          message: live_language.school_year_updated || "Année scolaire mise à jour avec succès !",
+          message: t('school_year_updated'),
           type: "success",
           duration: 3000,
         });
@@ -208,6 +215,9 @@ const SchoolYearForm = ({
         
         const updatedSchoolYears = [...schoolYears, newSchoolYear];
         
+        // Sort school years from newest to oldest by start date
+        updatedSchoolYears.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+        
         const updatedDb = {
           ...db,
           schoolYears: updatedSchoolYears
@@ -217,7 +227,7 @@ const SchoolYearForm = ({
         setSchoolYears(updatedSchoolYears);
         
         setFlashMessage({
-          message: live_language.school_year_added || "Année scolaire ajoutée avec succès !",
+          message: t('school_year_added'),
           type: "success",
           duration: 3000,
         });
@@ -228,8 +238,8 @@ const SchoolYearForm = ({
       console.error("Error saving school year:", error);
       setFlashMessage({
         message: isEditMode 
-          ? "Erreur lors de la mise à jour de l'année scolaire"
-          : "Erreur lors de la création de l'année scolaire",
+          ? t('error_saving')
+          : t('error_saving'),
         type: "error",
         duration: 3000,
       });
@@ -288,8 +298,8 @@ const SchoolYearForm = ({
             <Calendar className="mr-2" size={24} />
             <h2 className="text-2xl font-bold">
               {isEditMode 
-                ? live_language.edit_school_year || "Modifier l'année scolaire" 
-                : live_language.add_school_year || "Ajouter une année scolaire"
+                ? t('edit_school_year')
+                : t('add_school_year')
               }
             </h2>
           </div>
@@ -297,6 +307,7 @@ const SchoolYearForm = ({
             onClick={onCancel}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             aria-label="Close"
+            title={t('cancel')}
           >
             <X size={20} />
           </button>
@@ -310,7 +321,7 @@ const SchoolYearForm = ({
           <motion.div variants={controlVariants}>
             <div className="flex justify-between">
               <label htmlFor="title" className={`block text-sm font-medium ${labelColor} mb-1`}>
-                {live_language.title || "Titre"} *
+                {t('title')} *
               </label>
               <span className={`text-sm ${mutedTextColor}`}>
                 {formData.title.length}/150
@@ -323,7 +334,7 @@ const SchoolYearForm = ({
               value={formData.title}
               onChange={handleChange}
               className={`w-full px-4 py-2 rounded-lg ${inputBgColor} ${inputBorderColor} border ${inputFocusBorderColor} focus:ring-2 focus:ring-blue-500 transition-colors ${errors.title ? 'border-red-500' : ''}`}
-              placeholder={live_language.title || "Titre de l'année scolaire"}
+              placeholder={t('title')}
             />
             {errors.title && (
               <p className={`mt-1 text-sm ${errorColor} flex items-center`}>
@@ -337,7 +348,7 @@ const SchoolYearForm = ({
           <motion.div variants={controlVariants}>
             <div className="flex justify-between">
               <label htmlFor="description" className={`block text-sm font-medium ${labelColor} mb-1`}>
-                {live_language.description || "Description"} *
+                {t('description')} *
               </label>
               <span className={`text-sm ${mutedTextColor}`}>
                 {formData.description.length}/10000
@@ -349,7 +360,7 @@ const SchoolYearForm = ({
               value={formData.description}
               onChange={handleChange}
               className={`w-full px-4 py-2 rounded-lg ${inputBgColor} ${inputBorderColor} border ${inputFocusBorderColor} focus:ring-2 focus:ring-blue-500 transition-colors ${errors.description ? 'border-red-500' : ''}`}
-              placeholder={live_language.description || "Description de l'année scolaire"}
+              placeholder={t('description')}
               rows="4"
             />
             {errors.description && (
@@ -365,7 +376,7 @@ const SchoolYearForm = ({
             {/* Start date field */}
             <div>
               <label htmlFor="start_date" className={`block text-sm font-medium ${labelColor} mb-1`}>
-                {live_language.start_date || "Date de début"} *
+                {t('start_date')} *
               </label>
               <input
                 type="date"
@@ -388,7 +399,7 @@ const SchoolYearForm = ({
             {/* End date field */}
             <div>
               <label htmlFor="end_date" className={`block text-sm font-medium ${labelColor} mb-1`}>
-                {live_language.end_date || "Date de fin"} *
+                {t('end_date')} *
               </label>
               <input
                 type="date"
@@ -416,7 +427,20 @@ const SchoolYearForm = ({
           >
             <Info size={18} className={`${mutedTextColor} flex-shrink-0 mt-0.5 mr-3`} />
             <p className={`text-sm ${mutedTextColor}`}>
-              {live_language.date_range_limit || "Les dates sont limitées à un an avant ou après la date actuelle pour assurer une meilleure gestion."}
+              {t('date_range_limit')}
+            </p>
+          </motion.div>
+          
+          {/* Warning about duplicate school years */}
+          <motion.div 
+            variants={controlVariants}
+            className={`flex items-start rounded-lg p-4 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700/50`}
+          >
+            <AlertTriangle size={18} className={`text-amber-500 flex-shrink-0 mt-0.5 mr-3`} />
+            <p className={`text-sm text-amber-700 dark:text-amber-300`}>
+              {isEditMode 
+                ? "Si vous modifiez le titre ou les dates, assurez-vous qu'il n'existe pas déjà une année scolaire avec les mêmes informations."
+                : "Vous ne pouvez pas créer deux années scolaires avec le même titre, la même date de début et la même date de fin."}
             </p>
           </motion.div>
         </div>
@@ -430,9 +454,10 @@ const SchoolYearForm = ({
             type="button"
             onClick={onCancel}
             className={`px-5 py-2 rounded-lg flex items-center ${cancelButtonColor} transition-colors`}
+            title={t('cancel')}
           >
             <ArrowLeft size={18} className="mr-2" />
-            {live_language.cancel || "Annuler"}
+            {t('cancel')}
           </button>
           
           <button
@@ -441,6 +466,7 @@ const SchoolYearForm = ({
             className={`px-5 py-2 rounded-lg flex items-center text-white ${buttonColor} transition-colors ${
               (isSubmitting || (!formTouched && isEditMode)) ? 'opacity-50 cursor-not-allowed' : ''
             }`}
+            title={t('save')}
           >
             {isSubmitting ? (
               <>
@@ -448,12 +474,12 @@ const SchoolYearForm = ({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {live_language.saving || "Enregistrement..."}
+                {t('saving')}
               </>
             ) : (
               <>
                 {isEditMode ? <CheckCircle size={18} className="mr-2" /> : <Save size={18} className="mr-2" />}
-                {live_language.save || "Enregistrer"}
+                {t('save')}
               </>
             )}
           </button>

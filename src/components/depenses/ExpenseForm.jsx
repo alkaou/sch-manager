@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Check, X, AlertTriangle, DollarSign } from 'lucide-react';
 import { useLanguage, useFlashNotification } from '../contexts';
+import translations from './depense_translator';
 
 const ExpenseForm = ({
   db,
@@ -14,9 +15,18 @@ const ExpenseForm = ({
   text_color,
   theme
 }) => {
-  const { live_language, language } = useLanguage();
+  const { language } = useLanguage();
   const { setFlashMessage } = useFlashNotification();
   const isEditMode = Boolean(expense);
+
+  // Find the active school year for date validation
+  const [schoolYear, setSchoolYear] = useState(null);
+
+  // Translation helper
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
 
   // Form state
   const [formData, setFormData] = useState({
@@ -30,6 +40,16 @@ const ExpenseForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [charCount, setCharCount] = useState(0);
 
+  // Get school year data for date validation
+  useEffect(() => {
+    if (schoolYearId && db && db.schoolYears) {
+      const year = db.schoolYears.find(y => y.id === schoolYearId);
+      if (year) {
+        setSchoolYear(year);
+      }
+    }
+  }, [schoolYearId, db]);
+
   // Initialize form with expense data if in edit mode
   useEffect(() => {
     if (isEditMode && expense) {
@@ -41,8 +61,21 @@ const ExpenseForm = ({
         category: expense.category || 'other'
       });
       setCharCount(expense.description ? expense.description.length : 0);
+    } else if (schoolYear) {
+      // For new expenses, default to today's date if within school year, otherwise use school year start date
+      const today = new Date().toISOString().split('T')[0];
+      const startDate = schoolYear.start_date;
+      const endDate = schoolYear.end_date;
+      
+      // Check if today is within the school year date range
+      if (today >= startDate && today <= endDate) {
+        setFormData(prev => ({ ...prev, date: today }));
+      } else {
+        // Default to school year start date if today is outside range
+        setFormData(prev => ({ ...prev, date: startDate }));
+      }
     }
-  }, [expense, isEditMode]);
+  }, [expense, isEditMode, schoolYear]);
 
   // Form styling based on theme
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
@@ -74,37 +107,53 @@ const ExpenseForm = ({
 
     // Name validation
     if (!formData.name.trim()) {
-      newErrors.name = live_language.expense_name_required || "Le nom de la dépense est requis";
+      newErrors.name = t('expense_name_required');
     } else if (formData.name.length < 3) {
-      newErrors.name = live_language.expense_name_min_length || "Le nom doit contenir au moins 3 caractères";
+      newErrors.name = t('expense_name_min_length');
     } else if (formData.name.length > 50) {
-      newErrors.name = live_language.expense_name_max_length || "Le nom ne peut pas dépasser 50 caractères";
+      newErrors.name = t('expense_name_max_length');
     }
 
     // Description validation - now mandatory with length requirements
     if (!formData.description.trim()) {
-      newErrors.description = live_language.expense_description_required || "La description est requise";
+      newErrors.description = t('expense_description_required');
     } else if (formData.description.length < 30) {
-      newErrors.description = live_language.expense_description_min_length || "La description doit contenir au moins 30 caractères";
+      newErrors.description = t('expense_description_min_length');
     } else if (formData.description.length > 10000) {
-      newErrors.description = live_language.expense_description_max_length || "La description ne peut pas dépasser 10 000 caractères";
+      newErrors.description = t('expense_description_max_length');
     }
 
     // Amount validation
     if (!formData.amount) {
-      newErrors.amount = live_language.expense_amount_required || "Le montant est requis";
+      newErrors.amount = t('expense_amount_required');
     } else if (isNaN(formData.amount) || parseFloat(formData.amount) <= 0) {
-      newErrors.amount = live_language.expense_amount_positive || "Le montant doit être un nombre positif";
+      newErrors.amount = t('expense_amount_positive');
     }
 
     // Date validation
     if (!formData.date) {
-      newErrors.date = live_language.expense_date_required || "La date est requise";
+      newErrors.date = t('expense_date_required');
+    }
+    
+    // Validate that date is within school year range
+    if (formData.date && schoolYear) {
+      const expenseDate = new Date(formData.date);
+      const startDate = new Date(schoolYear.start_date);
+      const endDate = new Date(schoolYear.end_date);
+      
+      // Set time to midnight for accurate date comparison
+      expenseDate.setHours(0, 0, 0, 0);
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(0, 0, 0, 0);
+      
+      if (expenseDate < startDate || expenseDate > endDate) {
+        newErrors.date = t('expense_date_outside_range');
+      }
     }
 
     // Category validation
     if (!formData.category) {
-      newErrors.category = live_language.expense_category_required || "La catégorie est requise";
+      newErrors.category = t('expense_category_required');
     }
 
     setErrors(newErrors);
@@ -145,7 +194,7 @@ const ExpenseForm = ({
         setExpenses(updatedExpenses);
         
         setFlashMessage({
-          message: live_language.expense_updated || "Dépense mise à jour avec succès !",
+          message: t('expense_updated'),
           type: "success",
           duration: 3000,
         });
@@ -171,7 +220,7 @@ const ExpenseForm = ({
         setExpenses(updatedExpenses);
         
         setFlashMessage({
-          message: live_language.expense_created || "Dépense ajoutée avec succès !",
+          message: t('expense_created'),
           type: "success",
           duration: 3000,
         });
@@ -181,7 +230,7 @@ const ExpenseForm = ({
     } catch (error) {
       console.error("Error saving expense:", error);
       setFlashMessage({
-        message: live_language.error_saving || "Erreur lors de l'enregistrement de la dépense",
+        message: t('error_saving'),
         type: "error",
         duration: 5000,
       });
@@ -192,14 +241,14 @@ const ExpenseForm = ({
 
   // Expense categories
   const categories = [
-    { value: 'supplies', label: live_language.category_supplies || "Fournitures" },
-    { value: 'equipment', label: live_language.category_equipment || "Équipement" },
-    { value: 'salary', label: live_language.category_salary || "Salaires" },
-    { value: 'rent', label: live_language.category_rent || "Loyer" },
-    { value: 'utilities', label: live_language.category_utilities || "Services" },
-    { value: 'maintenance', label: live_language.category_maintenance || "Maintenance" },
-    { value: 'events', label: live_language.category_events || "Événements" },
-    { value: 'other', label: live_language.category_other || "Autres" }
+    { value: 'supplies', label: t('category_supplies') },
+    { value: 'equipment', label: t('category_equipment') },
+    { value: 'salary', label: t('category_salary') },
+    { value: 'rent', label: t('category_rent') },
+    { value: 'utilities', label: t('category_utilities') },
+    { value: 'maintenance', label: t('category_maintenance') },
+    { value: 'events', label: t('category_events') },
+    { value: 'other', label: t('category_other') }
   ];
   
   // Get category label from value
@@ -220,15 +269,13 @@ const ExpenseForm = ({
         <button
           onClick={onCancel}
           className="p-2 mr-4 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-          aria-label="Retour"
-          title={live_language.back || "Retour"}
+          aria-label={t('back')}
+          title={t('back')}
         >
           <ArrowLeft size={24} className={textClass} />
         </button>
         <h2 className={`text-2xl font-bold ${textClass}`}>
-          {isEditMode 
-            ? (live_language.edit_expense || "Modifier la dépense") 
-            : (live_language.add_expense || "Ajouter une dépense")}
+          {isEditMode ? t('edit_expense') : t('add_expense')}
         </h2>
       </div>
 
@@ -236,7 +283,7 @@ const ExpenseForm = ({
         {/* Name field */}
         <div>
           <label htmlFor="name" className={`block mb-2 font-medium ${textClass}`}>
-            {live_language.expense_name || "Nom de la dépense"} *
+            {t('expense_name')} *
           </label>
           <input
             type="text"
@@ -245,7 +292,7 @@ const ExpenseForm = ({
             value={formData.name}
             onChange={handleChange}
             className={`w-full p-3 rounded-lg ${inputBgColor} ${errors.name ? 'border-red-500' : inputBorderColor} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-            placeholder={live_language.expense_name_placeholder || "Nom de la dépense"}
+            placeholder={t('expense_name_placeholder')}
           />
           {errors.name && (
             <p className="mt-1 text-sm text-red-500 flex items-center">
@@ -258,7 +305,7 @@ const ExpenseForm = ({
         {/* Description field */}
         <div>
           <label htmlFor="description" className={`block mb-2 font-medium ${textClass}`}>
-            {live_language.expense_description || "Description"} *
+            {t('expense_description')} *
           </label>
           <div className="relative">
             <textarea
@@ -268,11 +315,11 @@ const ExpenseForm = ({
               onChange={handleChange}
               rows="5"
               className={`w-full p-3 rounded-lg ${inputBgColor} ${errors.description ? 'border-red-500' : inputBorderColor} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-              placeholder={live_language.expense_description_placeholder || "Description détaillée (30-10000 caractères)"}
+              placeholder={t('expense_description_placeholder')}
             />
             <div className={`text-xs mt-1 flex justify-between ${charCount < 30 ? 'text-red-500' : charCount > 9800 ? 'text-amber-500' : 'text-gray-500'}`}>
-              <span>{live_language.character_count || "Caractères"}: {charCount}</span>
-              <span>{live_language.min_max_chars || "Min: 30 / Max: 10000"}</span>
+              <span>{t('character_count')}: {charCount}</span>
+              <span>{t('min_max_chars')}</span>
             </div>
           </div>
           {errors.description && (
@@ -286,7 +333,7 @@ const ExpenseForm = ({
         {/* Amount field */}
         <div>
           <label htmlFor="amount" className={`block mb-2 font-medium ${textClass}`}>
-            {live_language.expense_amount || "Montant"} *
+            {t('expense_amount')} *
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -315,7 +362,7 @@ const ExpenseForm = ({
         {/* Date field */}
         <div>
           <label htmlFor="date" className={`block mb-2 font-medium ${textClass}`}>
-            {live_language.expense_date || "Date"} *
+            {t('expense_date')} *
           </label>
           <input
             type="date"
@@ -324,6 +371,8 @@ const ExpenseForm = ({
             value={formData.date}
             onChange={handleChange}
             className={`w-full p-3 rounded-lg ${inputBgColor} ${errors.date ? 'border-red-500' : inputBorderColor} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            min={schoolYear ? schoolYear.start_date : ''}
+            max={schoolYear ? schoolYear.end_date : ''}
           />
           {errors.date && (
             <p className="mt-1 text-sm text-red-500 flex items-center">
@@ -331,12 +380,21 @@ const ExpenseForm = ({
               {errors.date}
             </p>
           )}
+          
+          {/* School year date range hint */}
+          {schoolYear && (
+            <p className="mt-1 text-xs text-blue-500 flex items-center">
+              <span>
+                {t('start_date')}: {schoolYear.start_date} — {t('end_date')}: {schoolYear.end_date}
+              </span>
+            </p>
+          )}
         </div>
 
         {/* Category field */}
         <div>
           <label htmlFor="category" className={`block mb-2 font-medium ${textClass}`}>
-            {live_language.expense_category || "Catégorie"} *
+            {t('expense_category')} *
           </label>
           <select
             id="category"
@@ -366,25 +424,23 @@ const ExpenseForm = ({
             onClick={onCancel}
             className={`px-6 py-3 rounded-lg text-white ${buttonCancel} flex items-center transition-colors`}
             disabled={isSubmitting}
-            title={live_language.cancel_tooltip || "Annuler et revenir à la liste"}
+            title={t('cancel_tooltip')}
           >
             <X size={20} className="mr-2" />
-            {live_language.cancel || "Annuler"}
+            {t('cancel')}
           </button>
           <button
             type="submit"
             className={`px-6 py-3 rounded-lg text-white ${buttonPrimary} flex items-center transition-colors`}
             disabled={isSubmitting}
-            title={isEditMode 
-              ? (live_language.update_tooltip || "Enregistrer les modifications") 
-              : (live_language.save_tooltip || "Enregistrer la nouvelle dépense")}
+            title={isEditMode ? t('update_tooltip') : t('save_tooltip')}
           >
             <Check size={20} className="mr-2" />
             {isSubmitting 
-              ? (live_language.saving || "Enregistrement...") 
+              ? t('saving')
               : isEditMode 
-                ? (live_language.update || "Mettre à jour")
-                : (live_language.save || "Enregistrer")}
+                ? t('update')
+                : t('save')}
           </button>
         </div>
       </form>
