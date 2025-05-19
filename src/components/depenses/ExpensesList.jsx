@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   ArrowLeft, PlusCircle, Calendar, Clock, 
   Edit, Trash2, Search, SortAsc, SortDesc, ChevronRight, 
-  ChevronDown, Lock, FileText, X, Filter
-} from 'lucide-react';
+  ChevronDown, Lock, FileText, X, Filter, Users, RefreshCw, CalendarIcon, DollarSign, Eye, Pencil
+} from "lucide-react";
 import { useLanguage } from '../contexts';
 import translations from './depense_translator';
+import PayEmployeesForm from "./PayEmployeesForm.jsx";
+
+import { getPostNameTrans } from "../../utils/helpers";
 
 const ExpensesList = ({
   expenses,
@@ -16,8 +19,11 @@ const ExpensesList = ({
   onEditExpense,
   onDeleteExpense,
   isExpired,
+  app_bg_color,
   text_color,
-  theme
+  theme,
+  db,
+  setExpenses
 }) => {
   const { language } = useLanguage();
   const [filteredExpenses, setFilteredExpenses] = useState([]);
@@ -30,6 +36,10 @@ const ExpensesList = ({
     end: ''
   });
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  const [sortDirection, setSortDirection] = useState("desc");
+  const [sortField, setSortField] = useState("date");
+  const [expandedExpenseId, setExpandedExpenseId] = useState(null);
+  const [isPayingEmployees, setIsPayingEmployees] = useState(false);
   
   // Translation helper
   const t = (key) => {
@@ -168,6 +178,11 @@ const ExpensesList = ({
     }).format(amount);
   };
   
+  // Get category name translation
+  const getCategoryName = (category) => {
+    return t(`category_${category}`) || category;
+  };
+  
   // Get unique categories from expenses
   const categories = ['all', ...new Set(expenses.map(expense => expense.category))];
   
@@ -209,17 +224,108 @@ const ExpensesList = ({
     </div>
   );
   
+  // Render employee payment details
+  const renderEmployeePayments = (expense) => {
+    if (!expense.payment_details || !expense.payment_details.employees || expense.payment_details.employees.length === 0) {
+      return null;
+    }
+    
+    return (
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h4 className="text-md font-semibold mb-3">{t('employee_payments') || "Détails des paiements employés"}</h4>
+        <div className="overflow-x-auto">
+          <table className={`w-full text-sm ${theme === "dark" ? "text-gray-200" : "text-gray-700"} border-collapse`}>
+            <thead className={`${headerBgColor} text-left`}>
+              <tr>
+                <th className="px-4 py-2 border ${borderColor}">{t('employee_name') || "Employé"}</th>
+                <th className="px-4 py-2 border ${borderColor}">{t('employee_post') || "Poste"}</th>
+                <th className="px-4 py-2 border ${borderColor}">{t('original_amount') || "Montant initial"}</th>
+                <th className="px-4 py-2 border ${borderColor}">{t('percentage') || "Pourcentage"}</th>
+                <th className="px-4 py-2 border ${borderColor}">{t('paid_amount') || "Montant payé"}</th>
+                <th className="px-4 py-2 border ${borderColor}">{t('work_hours') || "Heures travaillées"}</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {expense.payment_details.employees.map((employee, empIndex) => (
+                employee.positions.map((position, posIndex) => (
+                  <tr 
+                    key={`${employee.employee_id}-${posIndex}`}
+                    className={empIndex % 2 === 1 ? altRowColor : ''}
+                  >
+                    {posIndex === 0 && (
+                      <td 
+                        className="px-4 py-3 align-top border ${borderColor}" 
+                        rowSpan={employee.positions.length}
+                      >
+                        {employee.employee_name}
+                      </td>
+                    )}
+                    <td className="px-4 py-3 border ${borderColor}">{getPostNameTrans(position.position_name, language)}</td>
+                    <td className="px-4 py-3 border ${borderColor}">{formatCurrency(position.original_amount)}</td>
+                    <td className="px-4 py-3 border ${borderColor}">{position.percentage}%</td>
+                    <td className="px-4 py-3 font-medium text-green-600 dark:text-green-400 border ${borderColor}">
+                      {formatCurrency(position.paid_amount)}
+                    </td>
+                    <td className="px-4 py-3 border ${borderColor}">
+                      {position.work_hours ? (
+                        <>
+                          {position.work_hours.hours}h
+                          {position.work_hours.minutes > 0 && ` ${position.work_hours.minutes}min`}
+                        </>
+                      ) : "-"}
+                    </td>
+                  </tr>
+                ))
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+  
   const renderDetailSection = (expense) => (
-    <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-sm space-y-1">
-      {renderDetailRow(t('id'), expense.id)}
-      {renderDetailRow(t('date'), formatDate(expense.date))}
-      {renderDetailRow(t('category'), getCategoryName(expense.category))}
-      {renderDetailRow(t('amount'), formatCurrency(expense.amount))}
-      {renderDetailRow(t('created_on'), formatDate(expense.createdAt))}
-      {renderDetailRow(t('updated_on'), formatDate(expense.updatedAt))}
-    </div>
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, height: 0 }}
+        animate={{ opacity: 1, height: "auto" }}
+        exit={{ opacity: 0, height: 0 }}
+        transition={{ duration: 0.3 }}
+        className={`p-4 text-sm ${theme === "dark" ? "bg-gray-800" : "bg-gray-50"}`}
+      >
+        {renderDetailRow(t('id'), expense.id)}
+        {renderDetailRow(t('date'), formatDate(expense.date))}
+        {renderDetailRow(t('category'), getCategoryName(expense.category))}
+        {renderDetailRow(t('amount'), formatCurrency(expense.amount))}
+        {renderDetailRow(t('created_on'), formatDate(expense.createdAt))}
+        {renderDetailRow(t('updated_on'), formatDate(expense.updatedAt))}
+      </motion.div>
+    </AnimatePresence>
   );
   
+  const onPayEmployees = () => {
+    if (isExpired) {
+      // Handle expired school year case
+      return;
+    }
+    setIsPayingEmployees(true);
+  };
+  
+  // Render main content or pay employees form
+  if (isPayingEmployees) {
+    return (
+      <PayEmployeesForm
+        db={db}
+        expenses={expenses}
+        setExpenses={setExpenses}
+        schoolYearId={schoolYear.id}
+        onCancel={() => setIsPayingEmployees(false)}
+        text_color={text_color}
+        theme={theme}
+      />
+    );
+  }
+
   return (
     <div className="w-full">
       {/* Header with back button and title */}
@@ -249,14 +355,24 @@ const ExpensesList = ({
             {t('expired_year')}
           </div>
         ) : (
-          <button
-            onClick={onAddExpense}
-            className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center transition-colors duration-200"
-            title={t('add_expense')}
-          >
-            <PlusCircle size={20} className="mr-2" />
-            {t('add_expense')}
-          </button>
+          <div className="flex justify-between">
+            <button
+              onClick={onPayEmployees}
+              className="px-4 py-2 mr-2 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center transition-colors duration-200"
+              title={t('add_expense')}
+            >
+              <Users size={20} className="mr-2" />
+              {t('pay_employees')}
+            </button>
+            <button
+              onClick={onAddExpense}
+              className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg flex items-center transition-colors duration-200"
+              title={t('add_expense')}
+            >
+              <PlusCircle size={20} className="mr-2" />
+              {t('add_expense')}
+            </button>
+          </div>
         )}
       </div>
       
@@ -312,14 +428,14 @@ const ExpensesList = ({
           </div>
           
           {/* Advanced filters */}
-          <AnimatePresence>
-            {isFilterExpanded && (
+          {isFilterExpanded && (
+            <AnimatePresence>
               <motion.div
                 initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
+                animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="overflow-hidden"
+                className={`p-4 rounded-lg mt-2 ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"}`}
               >
                 <div className="pt-4 border-t border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* Category filter */}
@@ -370,8 +486,8 @@ const ExpensesList = ({
                   </div>
                 </div>
               </motion.div>
-            )}
-          </AnimatePresence>
+            </AnimatePresence>
+          )}
         </div>
         
         {/* Summary */}
@@ -469,16 +585,20 @@ const ExpensesList = ({
                     <div className="w-1/12 flex justify-center space-x-1">
                       {!isExpired && (
                         <>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onEditExpense(expense);
-                            }}
-                            className="p-1 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white transition-colors"
-                            title={t('edit')}
-                          >
-                            <Edit size={14} />
-                          </button>
+                        { expense.type && 
+                          expense.type === "employees" ? null :
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEditExpense(expense);
+                              }}
+                              className="p-1 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white transition-colors"
+                              title={t('edit')}
+                            >
+                              <Edit size={14} />
+                            </button>
+                        }
+
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -544,6 +664,9 @@ const ExpensesList = ({
                             <p className="whitespace-pre-wrap">{expense.description}</p>
                           </div>
                         )}
+                        
+                        {/* Employee payment details */}
+                        {expense.type && expense.type === "employees" && renderEmployeePayments(expense)}
                         
                         {/* Metadata */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">

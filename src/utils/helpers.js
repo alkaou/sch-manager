@@ -119,12 +119,19 @@ const getClasseById = (classes, id, lang = "Français") => {
   return this_classe;
 }
 
+const getPostNameTrans = (post_name, lang="Français") => {
+  if (post_name !== "Professeurs" || lang === "Français") return post_name;
+  const nameTrans = lang === "Anglais" ? "Teachers" : "Karamɔgɔw";
+  return nameTrans;
+}
+
 export { 
   getFormattedDateTime,
   getAge, getDateTime,
   getClasseName, delay,
   areArraysEqual, getBornInfos,
   textToUppercase,
-  getClasseById
+  getClasseById,
+  getPostNameTrans,
 }
 

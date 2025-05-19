@@ -323,6 +323,8 @@ const DepensesPageContent = ({
           app_bg_color={app_bg_color}
           text_color={text_color}
           theme={theme}
+          db={db}
+          setExpenses={setExpenses}
         />
       );
     }

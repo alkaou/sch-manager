@@ -239,6 +239,11 @@ const translations = {
   },
   
   // Expenses
+  "pay_employees": {
+    "Français": "Payer Des Emplyés",
+    "Anglais": "To Pay Employees",
+    "Bambara": "Ka Baarakɛlaw Sara"
+  },
   "add_expense": {
     "Français": "Ajouter une dépense",
     "Anglais": "Add Expense",
@@ -373,6 +378,26 @@ const translations = {
   },
   
   // Expense categories
+  "employee_payments": {
+    "Français": "Détails des paiements employés",
+    "Anglais": "Employee payment details",
+    "Bambara": "Kalosara kunnafoniw"
+  },
+  "employee_name": {
+    "Français": "Employé",
+    "Anglais": "Employee",
+    "Bambara": "Baarakɛla"
+  },
+  "employee_post": {
+    "Français": "Postes",
+    "Anglais": "Jobs",
+    "Bambara": "Baaraw"
+  },
+  "paid_amount": {
+    "Français": "Montant payé",
+    "Anglais": "Amount paid",
+    "Bambara": "Sara min sɔrɔla"
+  },
   "category_supplies": {
     "Français": "Fournitures",
     "Anglais": "Supplies",
@@ -982,4 +1007,306 @@ const translations = {
   }
 };
 
-export default translations; 
+// Add employee payment translations
+const newTranslations = {
+    // Employee payment form
+    pay_employees: {
+        "Français": "Payer les employés",
+        "Anglais": "Pay employees",
+        "Bambara": "Baarakɛlaw sara"
+    },
+    select_employees_to_pay: {
+        "Français": "Sélectionner les employés à payer",
+        "Anglais": "Select employees to pay",
+        "Bambara": "Baarakɛlaw sugandi minnu ka kan ka sara"
+    },
+    select_employees_instruction: {
+        "Français": "Sélectionnez les employés que vous souhaitez payer. Vous pouvez utiliser les filtres pour affiner votre recherche.",
+        "Anglais": "Select the employees you want to pay. You can use filters to refine your search.",
+        "Bambara": "Baarakɛlaw sugandi i b'a fɛ ka minnu sara. I bɛ se ka wolonkɛnanw kɛ walasa k'i ka ɲinini nɔgɔya."
+    },
+    search_employees: {
+        "Français": "Rechercher des employés...",
+        "Anglais": "Search employees...",
+        "Bambara": "Baarakɛlaw ɲini..."
+    },
+    toggle_filters: {
+        "Français": "Afficher/masquer les filtres",
+        "Anglais": "Toggle filters",
+        "Bambara": "Wolonkɛnanw jira/dogo"
+    },
+    filter_by_status: {
+        "Français": "Filtrer par statut",
+        "Anglais": "Filter by status",
+        "Bambara": "Woloma ni cogoya ye"
+    },
+    filter_by_type: {
+        "Français": "Filtrer par type",
+        "Anglais": "Filter by type",
+        "Bambara": "Woloma ni suguyaw ye"
+    },
+    all_employees: {
+        "Français": "Tous les employés",
+        "Anglais": "All employees",
+        "Bambara": "Baarakɛlaw bɛɛ"
+    },
+    active_employees: {
+        "Français": "Employés actifs",
+        "Anglais": "Active employees",
+        "Bambara": "Baarakɛlaw baara la"
+    },
+    inactive_employees: {
+        "Français": "Employés inactifs",
+        "Anglais": "Inactive employees",
+        "Bambara": "Baarakɛlaw baara tɛ la"
+    },
+    all_positions: {
+        "Français": "Tous les postes",
+        "Anglais": "All positions",
+        "Bambara": "Baara bɛɛ"
+    },
+    professors_only: {
+        "Français": "Professeurs uniquement",
+        "Anglais": "Professors only",
+        "Bambara": "Karamɔgɔw dɔrɔn"
+    },
+    other_staff: {
+        "Français": "Autres personnels",
+        "Anglais": "Other staff",
+        "Bambara": "Baarakɛla wɛrɛw"
+    },
+    employees_found: {
+        "Français": "employés trouvés",
+        "Anglais": "employees found",
+        "Bambara": "baarakɛla sɔrɔlen"
+    },
+    employees_selected: {
+        "Français": "employés sélectionnés",
+        "Anglais": "employees selected",
+        "Bambara": "baarakɛla sugandilen"
+    },
+    select_all: {
+        "Français": "Tout sélectionner",
+        "Anglais": "Select all",
+        "Bambara": "Bɛɛ sugandi"
+    },
+    deselect_all: {
+        "Français": "Tout désélectionner",
+        "Anglais": "Deselect all",
+        "Bambara": "Bɛɛ sugandili bɔ"
+    },
+    active_status: {
+        "Français": "Actif",
+        "Anglais": "Active",
+        "Bambara": "Baara la"
+    },
+    inactive_status: {
+        "Français": "Inactif",
+        "Anglais": "Inactive",
+        "Bambara": "Baara tɛ la"
+    },
+    no_employees_found: {
+        "Français": "Aucun employé trouvé",
+        "Anglais": "No employees found",
+        "Bambara": "Baarakɛla si ma sɔrɔ"
+    },
+    try_different_filters: {
+        "Français": "Essayez différents filtres ou critères de recherche",
+        "Anglais": "Try different filters or search criteria",
+        "Bambara": "Wolon kɛnan wɛrɛw walima ɲinini cogo wɛrɛw kɛ"
+    },
+    select_at_least_one_employee: {
+        "Français": "Veuillez sélectionner au moins un employé",
+        "Anglais": "Please select at least one employee",
+        "Bambara": "I ka kan ka baarakɛla kelen sugandi dɔɔni dɔɔni"
+    },
+
+    // Payment configuration
+    configure_payments: {
+        "Français": "Configurer les paiements",
+        "Anglais": "Configure payments",
+        "Bambara": "Saraw ɲɛnabaara"
+    },
+    configure_payments_instruction: {
+        "Français": "Pour chaque employé, sélectionnez les postes pour lesquels vous souhaitez effectuer un paiement et définissez les montants.",
+        "Anglais": "For each employee, select the positions you want to pay for and set the amounts.",
+        "Bambara": "Barakɛla kelen kelen bɛɛ kɔnɔ, baara minnu sugu i b'a fɛ ka minnu sara sugandi ani ka sara hakɛw sɛbɛn."
+    },
+    select_positions_to_pay: {
+        "Français": "Sélectionner les postes à payer",
+        "Anglais": "Select positions to pay",
+        "Bambara": "Baara suguyaw sugandi minnu bɛ sara"
+    },
+    work_hours: {
+        "Français": "Heures de travail",
+        "Anglais": "Work hours",
+        "Bambara": "Baara kɛ waatiw"
+    },
+    hourly_rate: {
+        "Français": "Taux horaire",
+        "Anglais": "Hourly rate",
+        "Bambara": "Lɛrɛ kelen sara"
+    },
+    hours: {
+        "Français": "heures",
+        "Anglais": "hours",
+        "Bambara": "lɛrɛw"
+    },
+    minutes: {
+        "Français": "minutes",
+        "Anglais": "minutes",
+        "Bambara": "miniti"
+    },
+    total_salary_for_hours: {
+        "Français": "Salaire total pour les heures",
+        "Anglais": "Total salary for hours",
+        "Bambara": "Sara bɛɛ lajɛlen lɛrɛw kama"
+    },
+    payment_for: {
+        "Français": "Paiement pour",
+        "Anglais": "Payment for",
+        "Bambara": "Sara kama"
+    },
+    custom_amount: {
+        "Français": "Montant personnalisé",
+        "Anglais": "Custom amount",
+        "Bambara": "Sɔngɔ kɛrɛnkɛrɛnnen"
+    },
+    percentage: {
+        "Français": "Pourcentage %",
+        "Anglais": "Percentage %",
+        "Bambara": "Hakɛya kɛmɛkofoli la %"
+    },
+    switch_to_percentage: {
+        "Français": "Passer au pourcentage",
+        "Anglais": "Switch to percentage",
+        "Bambara": "I tɛmɛ kɛmɛkofoli ma"
+    },
+    switch_to_custom_amount: {
+        "Français": "Passer au montant personnalisé",
+        "Anglais": "Switch to custom amount",
+        "Bambara": "I tɛmɛ sɔngɔ kɛrɛnkɛrɛnnen ma"
+    },
+    minimum_amount: {
+        "Français": "Montant minimum",
+        "Anglais": "Minimum amount",
+        "Bambara": "Sɔngɔ fitini"
+    },
+    base_salary: {
+        "Français": "Salaire de base",
+        "Anglais": "Base salary",
+        "Bambara": "Sara dasɔgɔli"
+    },
+    amount_to_pay: {
+        "Français": "Montant à payer",
+        "Anglais": "Amount to pay",
+        "Bambara": "Sɔngɔ min bɛ sara"
+    },
+    select_at_least_one_position_per_employee: {
+        "Français": "Veuillez sélectionner au moins un poste pour chaque employé",
+        "Anglais": "Please select at least one position for each employee",
+        "Bambara": "I ka kan ka baarakɛla bɛɛ ka baara suguyaw kelen sugandi dɔɔni dɔɔni"
+    },
+
+    // Payment details
+    payment_details: {
+        "Français": "Détails du paiement",
+        "Anglais": "Payment details",
+        "Bambara": "Sara kunnafoniw"
+    },
+    payment_details_instruction: {
+        "Français": "Veuillez fournir les informations générales concernant ce paiement.",
+        "Anglais": "Please provide general information about this payment.",
+        "Bambara": "I ka sara in kunnafoni ɲumanw di."
+    },
+    payment_summary: {
+        "Français": "Récapitulatif du paiement",
+        "Anglais": "Payment summary",
+        "Bambara": "Sara kunnafoni surun"
+    },
+    please_review_details: {
+        "Français": "Veuillez vérifier les détails avant de confirmer",
+        "Anglais": "Please review details before confirming",
+        "Bambara": "I k'a jateminɛ sanni k'a dablali kɛ"
+    },
+    original_amount: {
+        "Français": "Montant initial",
+        "Anglais": "Original amount",
+        "Bambara": "Sara Yɛrɛ"
+    },
+    total_to_pay: {
+        "Français": "Total à payer",
+        "Anglais": "Total to pay",
+        "Bambara": "Sara bɛɛ lajɛlen"
+    },
+    saving: {
+        "Français": "Économie",
+        "Anglais": "Saving",
+        "Bambara": "Maralikɛ"
+    },
+    payment_title: {
+        "Français": "Titre du paiement",
+        "Anglais": "Payment title",
+        "Bambara": "Sara tɔgɔ"
+    },
+    payment_title_placeholder: {
+        "Français": "Ex: Paiement des salaires - Mai 2024",
+        "Anglais": "Ex: Salary payment - May 2024",
+        "Bambara": "Ex: Saraw saratali - Mɛ 2024"
+    },
+    payment_title_help: {
+        "Français": "Entre 10 et 150 caractères",
+        "Anglais": "Between 10 and 150 characters",
+        "Bambara": "Taamasiyɛn 10 fo 150 cɛ"
+    },
+    payment_date: {
+        "Français": "Date du paiement",
+        "Anglais": "Payment date",
+        "Bambara": "Sara don"
+    },
+    payment_description: {
+        "Français": "Description du paiement",
+        "Anglais": "Payment description",
+        "Bambara": "Sara bayɛlɛmali"
+    },
+    payment_description_placeholder: {
+        "Français": "Décrivez les détails de ce paiement (personnes concernées, raison, etc.)",
+        "Anglais": "Describe the details of this payment (people involved, reason, etc.)",
+        "Bambara": "Sara in kumancogo ɲuman fɔ (a bɛ mɔgɔ minnu kɔrɔ, kun, etc.)"
+    },
+    payment_description_help: {
+        "Français": "Entre 30 et 10000 caractères",
+        "Anglais": "Between 30 and 10000 characters",
+        "Bambara": "Taamasiyɛn 30 fo 10000 cɛ"
+    },
+
+    // Navigation
+    previous: {
+        "Français": "Précédent",
+        "Anglais": "Previous",
+        "Bambara": "Kɔsegi"
+    },
+    next: {
+        "Français": "Suivant",
+        "Anglais": "Next",
+        "Bambara": "N'ɔgɔna"
+    },
+    saving: {
+        "Français": "Enregistrement...",
+        "Anglais": "Saving...",
+        "Bambara": "Maralila..."
+    },
+
+    // Error messages
+    add_error: {
+        "Français": "Erreur lors de l'ajout de la dépense",
+        "Anglais": "Error adding the expense",
+        "Bambara": "Filɛli don na musaka farali la"
+    }
+};
+
+// Merge new translations with existing ones
+export default {
+    ...translations,
+    ...newTranslations
+}; 
