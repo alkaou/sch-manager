@@ -9,7 +9,7 @@ import PaymentDetailsForm from "./PaymentDetailsForm.jsx";
 
 const PayEmployeesForm = ({
   db,
-  expenses,
+  // expenses,
   setExpenses,
   schoolYearId,
   onCancel,
@@ -28,7 +28,6 @@ const PayEmployeesForm = ({
     date: new Date().toISOString().split('T')[0],
   });
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
 
   // Translation helper
   const t = (key) => {
@@ -190,7 +189,6 @@ const PayEmployeesForm = ({
     }
     
     setIsSubmitting(true);
-    setLoading(true);
     
     try {
       const now = new Date();
@@ -262,24 +260,22 @@ const PayEmployeesForm = ({
       setExpenses(allExpenses);
       
       setFlashMessage({
-        message: t('expense_added'),
+        message: t('expense_created'),
         type: "success",
         duration: 5000,
       });
       
       // Reset form and close
       setIsSubmitting(false);
-      setLoading(false);
       onCancel();
     } catch (error) {
       console.error("Error saving expense:", error);
       setFlashMessage({
-        message: t('add_error'),
+        message: t('error_saving'),
         type: "error",
         duration: 5000,
       });
       setIsSubmitting(false);
-      setLoading(false);
     }
   };
 

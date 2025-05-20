@@ -11,7 +11,9 @@ const ExpenseForm = ({
   expense,
   schoolYearId,
   onCancel,
+  default_text_color,
   text_color,
+  isOthersBGColors,
   theme
 }) => {
   const { language } = useLanguage();
@@ -265,9 +267,9 @@ const ExpenseForm = ({
           aria-label={t('back')}
           title={t('back')}
         >
-          <ArrowLeft size={24} className={textClass} />
+          <ArrowLeft size={24} className={default_text_color} />
         </button>
-        <h2 className={`text-2xl font-bold ${textClass}`}>
+        <h2 className={`text-2xl font-bold ${default_text_color}`}>
           {isEditMode ? t('edit_expense') : t('add_expense')}
         </h2>
       </div>
@@ -275,7 +277,7 @@ const ExpenseForm = ({
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Name field */}
         <div>
-          <label htmlFor="name" className={`block mb-2 font-medium ${textClass}`}>
+          <label htmlFor="name" className={`block mb-2 font-medium ${default_text_color}`}>
             {t('expense_name')} *
           </label>
           <input
@@ -288,7 +290,7 @@ const ExpenseForm = ({
             placeholder={t('expense_name_placeholder')}
           />
           {errors.name && (
-            <p className="mt-1 text-sm text-red-500 flex items-center">
+            <p className={`${isOthersBGColors ? "bg-red-100 p-1 rounded" : ""} mt-1 text-sm text-red-500 flex items-center`}>
               <AlertTriangle size={16} className="mr-1" />
               {errors.name}
             </p>
@@ -297,7 +299,7 @@ const ExpenseForm = ({
 
         {/* Description field */}
         <div>
-          <label htmlFor="description" className={`block mb-2 font-medium ${textClass}`}>
+          <label htmlFor="description" className={`block mb-2 font-medium ${default_text_color}`}>
             {t('expense_description')} *
           </label>
           <div className="relative">
@@ -313,49 +315,51 @@ const ExpenseForm = ({
             <div className={`text-xs mt-1 flex justify-between ${charCount < 30 ? 'text-red-500' : charCount > 9800 ? 'text-amber-500' : 'text-gray-500'}`}>
               <div>
                 {errors.description && (
-                  <p className="mt-1 text-sm text-red-500 flex items-center">
+                  <p className={`${isOthersBGColors ? "bg-red-100 p-1 rounded" : ""} mt-1 text-sm text-red-500 flex items-center`}>
                     <AlertTriangle size={16} className="mr-1" />
                     {errors.description}
                   </p>
                 )}
               </div>
-              <div>{t('min_max_chars')}</div>
+              <div className={`${isOthersBGColors ? "bg-red-100 p-1 rounded" : ""}`}>{t('min_max_chars')}</div>
             </div>
           </div>
         </div>
 
         {/* Amount field */}
-        <div>
-          <label htmlFor="amount" className={`block mb-2 font-medium ${textClass}`}>
-            {t('expense_amount')} *
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <DollarSign size={18} className={textClass} />
+        {isEditMode && expense && expense.type && expense.type === "employees" ? null :
+          <div>
+            <label htmlFor="amount" className={`block mb-2 font-medium ${default_text_color}`}>
+              {t('expense_amount')} *
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <DollarSign size={18} className={textClass} />
+              </div>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={formData.amount}
+                onChange={handleChange}
+                className={`w-full p-3 pl-10 rounded-lg ${inputBgColor} ${errors.amount ? 'border-red-500' : inputBorderColor} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+              />
             </div>
-            <input
-              type="number"
-              id="amount"
-              name="amount"
-              value={formData.amount}
-              onChange={handleChange}
-              className={`w-full p-3 pl-10 rounded-lg ${inputBgColor} ${errors.amount ? 'border-red-500' : inputBorderColor} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-            />
+            {errors.amount && (
+              <p className={`${isOthersBGColors ? "bg-red-100 p-1 rounded" : ""} mt-1 text-sm text-red-500 flex items-center`}>
+                <AlertTriangle size={16} className="mr-1" />
+                {errors.amount}
+              </p>
+            )}
           </div>
-          {errors.amount && (
-            <p className="mt-1 text-sm text-red-500 flex items-center">
-              <AlertTriangle size={16} className="mr-1" />
-              {errors.amount}
-            </p>
-          )}
-        </div>
+        }
 
         {/* Date field */}
         <div>
-          <label htmlFor="date" className={`block mb-2 font-medium ${textClass}`}>
+          <label htmlFor="date" className={`block mb-2 font-medium ${default_text_color}`}>
             {t('expense_date')} *
           </label>
           <input
@@ -369,7 +373,7 @@ const ExpenseForm = ({
             max={schoolYear ? schoolYear.end_date : ''}
           />
           {errors.date && (
-            <p className="mt-1 text-sm text-red-500 flex items-center">
+            <p className={`${isOthersBGColors ? "bg-red-100 p-1 rounded" : ""} mt-1 text-sm text-red-500 flex items-center`}>
               <AlertTriangle size={16} className="mr-1" />
               {errors.date}
             </p>
@@ -377,7 +381,7 @@ const ExpenseForm = ({
 
           {/* School year date range hint */}
           {schoolYear && (
-            <p className="mt-1 text-xs text-blue-500 flex items-center">
+            <p className={`${isOthersBGColors ? "bg-blue-100 p-1 rounded" : ""} mt-1 text-xs text-blue-500 flex items-center`}>
               <span>
                 {t('start_date')}: {schoolYear.start_date} — {t('end_date')}: {schoolYear.end_date}
               </span>
@@ -386,30 +390,32 @@ const ExpenseForm = ({
         </div>
 
         {/* Category field */}
-        <div>
-          <label htmlFor="category" className={`block mb-2 font-medium ${textClass}`}>
-            {t('expense_category')} *
-          </label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleChange}
-            className={`w-full p-3 rounded-lg ${inputBgColor} ${errors.category ? 'border-red-500' : inputBorderColor} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-          >
-            {categories.map((category) => (
-              <option key={category.value} value={category.value}>
-                {category.label}
-              </option>
-            ))}
-          </select>
-          {errors.category && (
-            <p className="mt-1 text-sm text-red-500 flex items-center">
-              <AlertTriangle size={16} className="mr-1" />
-              {errors.category}
-            </p>
-          )}
-        </div>
+        {isEditMode && expense && expense.type && expense.type === "employees" ? null :
+          <div>
+            <label htmlFor="category" className={`block mb-2 font-medium ${default_text_color}`}>
+              {t('expense_category')} *
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={`w-full p-3 rounded-lg ${inputBgColor} ${errors.category ? 'border-red-500' : inputBorderColor} border focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+            >
+              {categories.map((category) => (
+                <option key={category.value} value={category.value}>
+                  {category.label}
+                </option>
+              ))}
+            </select>
+            {errors.category && (
+              <p className={`${isOthersBGColors ? "bg-red-100 p-1 rounded" : ""} mt-1 text-sm text-red-500 flex items-center`}>
+                <AlertTriangle size={16} className="mr-1" />
+                {errors.category}
+              </p>
+            )}
+          </div>
+        }
 
         {/* Form buttons */}
         <div className="flex justify-end space-x-4 pt-4">

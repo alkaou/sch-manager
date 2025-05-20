@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ArrowLeft, PlusCircle, Calendar, Clock, 
   Edit, Trash2, Search, SortAsc, SortDesc, ChevronRight, 
-  ChevronDown, Lock, FileText, X, Filter, Users, RefreshCw, CalendarIcon, DollarSign, Eye, Pencil
+  ChevronDown, Lock, FileText, X, Filter, Users,
 } from "lucide-react";
 import { useLanguage } from '../contexts';
 import translations from './depense_translator';
@@ -19,7 +19,7 @@ const ExpensesList = ({
   onEditExpense,
   onDeleteExpense,
   isExpired,
-  app_bg_color,
+  // app_bg_color,
   text_color,
   theme,
   db,
@@ -36,9 +36,6 @@ const ExpensesList = ({
     end: ''
   });
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
-  const [sortDirection, setSortDirection] = useState("desc");
-  const [sortField, setSortField] = useState("date");
-  const [expandedExpenseId, setExpandedExpenseId] = useState(null);
   const [isPayingEmployees, setIsPayingEmployees] = useState(false);
   
   // Translation helper
@@ -262,7 +259,7 @@ const ExpensesList = ({
                     )}
                     <td className="px-4 py-3 border ${borderColor}">{getPostNameTrans(position.position_name, language)}</td>
                     <td className="px-4 py-3 border ${borderColor}">{formatCurrency(position.original_amount)}</td>
-                    <td className="px-4 py-3 border ${borderColor}">{position.percentage}%</td>
+                    <td className="px-4 py-3 border ${borderColor}">{position.percentage ? position.percentage + "%" : "-"}</td>
                     <td className="px-4 py-3 font-medium text-green-600 dark:text-green-400 border ${borderColor}">
                       {formatCurrency(position.paid_amount)}
                     </td>
@@ -284,25 +281,6 @@ const ExpensesList = ({
     );
   };
   
-  const renderDetailSection = (expense) => (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ opacity: 1, height: "auto" }}
-        exit={{ opacity: 0, height: 0 }}
-        transition={{ duration: 0.3 }}
-        className={`p-4 text-sm ${theme === "dark" ? "bg-gray-800" : "bg-gray-50"}`}
-      >
-        {renderDetailRow(t('id'), expense.id)}
-        {renderDetailRow(t('date'), formatDate(expense.date))}
-        {renderDetailRow(t('category'), getCategoryName(expense.category))}
-        {renderDetailRow(t('amount'), formatCurrency(expense.amount))}
-        {renderDetailRow(t('created_on'), formatDate(expense.createdAt))}
-        {renderDetailRow(t('updated_on'), formatDate(expense.updatedAt))}
-      </motion.div>
-    </AnimatePresence>
-  );
-  
   const onPayEmployees = () => {
     if (isExpired) {
       // Handle expired school year case
@@ -320,7 +298,7 @@ const ExpensesList = ({
         setExpenses={setExpenses}
         schoolYearId={schoolYear.id}
         onCancel={() => setIsPayingEmployees(false)}
-        text_color={text_color}
+        text_color={textClass}
         theme={theme}
       />
     );
@@ -337,13 +315,13 @@ const ExpensesList = ({
             aria-label={t('back')}
             title={t('back')}
           >
-            <ArrowLeft size={24} className={textClass} />
+            <ArrowLeft size={24} className={text_color} />
           </button>
           <div>
-            <h2 className={`text-2xl font-bold ${textClass}`}>
+            <h2 className={`text-2xl font-bold ${text_color}`}>
               {schoolYear.title}
             </h2>
-            <p className={`text-sm opacity-75 ${textClass}`}>
+            <p className={`text-sm opacity-75 ${text_color}`}>
               {formatDate(schoolYear.start_date)} - {formatDate(schoolYear.end_date)}
             </p>
           </div>
@@ -585,20 +563,16 @@ const ExpensesList = ({
                     <div className="w-1/12 flex justify-center space-x-1">
                       {!isExpired && (
                         <>
-                        { expense.type && 
-                          expense.type === "employees" ? null :
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onEditExpense(expense);
-                              }}
-                              className="p-1 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white transition-colors"
-                              title={t('edit')}
-                            >
-                              <Edit size={14} />
-                            </button>
-                        }
-
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditExpense(expense);
+                            }}
+                            className="p-1 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white transition-colors"
+                            title={t('edit')}
+                          >
+                            <Edit size={14} />
+                          </button>
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
