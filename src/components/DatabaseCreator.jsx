@@ -191,10 +191,10 @@ function DatabaseCreator({ setIsOpenPopup }) {
 
 			updatedDb = {
 				...db,
-				name: dbName.trim(),
-				short_name: shortName.trim(),
-				academie: academie.trim(),
-				zone: zone.trim(),
+				name: dbName.trim().toUpperCase(),
+				short_name: shortName.trim().toUpperCase(),
+				academie: academie.trim().toUpperCase(),
+				zone: zone.trim().toUpperCase(),
 				version: "1.0.0",
 				updated_at: date,
 				updated_time: hour,
@@ -203,10 +203,10 @@ function DatabaseCreator({ setIsOpenPopup }) {
 		} else {
 			updatedDb = {
 				...db,
-				name: dbName.trim(),
-				short_name: shortName.trim(),
-				academie: academie.trim(),
-				zone: zone.trim(),
+				name: dbName.trim().toUpperCase(),
+				short_name: shortName.trim().toUpperCase(),
+				academie: academie.trim().toUpperCase(),
+				zone: zone.trim().toUpperCase(),
 				version: "1.0.0",
 				created_at: date,
 				created_time: hour,
@@ -279,7 +279,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 						name={live_language.create_input_info_text}
 						holderExp="GROUPE-SCOLAIRE-FATOUMATA-DEMBELE"
 						type='text'
-						value={dbName}
+						value={dbName.toUpperCase()}
 						setValue={(e) => changeInputVal('dbName', e.target.value)}
 						icon={<BsDatabaseAdd className="text-gray-500" />}
 					/>
@@ -290,7 +290,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 						name={live_language.short_name}
 						holderExp="GSFD"
 						type='text'
-						value={shortName}
+						value={shortName.toUpperCase()}
 						setValue={(e) => changeInputVal('shortName', e.target.value)}
 						icon={<FaBookOpen className="text-gray-500" />}
 					/>
@@ -301,7 +301,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 						name={live_language.academie}
 						holderExp="SAN"
 						type='text'
-						value={academie}
+						value={academie.toUpperCase()}
 						setValue={(e) => changeInputVal('academie', e.target.value)}
 						icon={<FaSchool className="text-gray-500" />}
 					/>
@@ -312,7 +312,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 						name={live_language.zone}
 						holderExp="SAN"
 						type='text'
-						value={zone}
+						value={zone.toUpperCase()}
 						setValue={(e) => changeInputVal('zone', e.target.value)}
 						icon={<FaMapMarkerAlt className="text-gray-500" />}
 					/>

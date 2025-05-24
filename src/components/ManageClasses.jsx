@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gradients } from '../utils/colors';
 import { getClasseName } from '../utils/helpers';
+import { updateCurrentSnapshot } from '../utils/database_methods';
 import { useLanguage } from './contexts.js';
 
 const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, theme }) => {
@@ -100,11 +101,6 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
         newErr[`${index}-level`] = "Le niveau doit être entre 1 et 12.";
         valid = false;
       }
-      // if (!cls.name.trim()) {
-      //   newErr[`${index}-name`] = "Le nom de la classe est obligatoire.";
-      //   valid = false;
-      // } else {
-      // Vérification dans la DB sur la combinaison niveau + nom
       const duplicateInDB = classes.find(c =>
         Number(c.level) === Number(cls.level) &&
         c.name.trim().toLowerCase() === cls.name.trim().toLowerCase()
@@ -123,7 +119,6 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
         newErr[`${index}-name`] = "Cette classe a déjà été ajoutée.";
         valid = false;
       }
-      // }
     });
     setErrors(newErr);
     return valid;
@@ -142,6 +137,10 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       });
     });
     const updatedDB = { ...db, classes: updatedClasses };
+    
+    // Mettre à jour le snapshot de l'année en cours
+    updateCurrentSnapshot(updatedDB);
+    
     try {
       await window.electron.saveDatabase(updatedDB);
       setClasses(updatedClasses);
@@ -157,6 +156,10 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
     if (!classToDelete) return;
     const updatedClasses = classes.filter(cls => cls.id !== classToDelete.id);
     const updatedDB = { ...db, classes: updatedClasses };
+    
+    // Mettre à jour le snapshot de l'année en cours
+    updateCurrentSnapshot(updatedDB);
+    
     try {
       await window.electron.saveDatabase(updatedDB);
       setClasses(updatedClasses);
@@ -182,10 +185,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setGlobalError("Le niveau doit être entre 1 et 12.");
       return;
     }
-    // if (!editedClass.name.trim()) {
-    //   setGlobalError("Le nom de la classe est obligatoire.");
-    //   return;
-    // }
+    
     // Vérification de la duplication sur la combinaison niveau + nom pour l'édition
     const duplicate = classes.find(
       cls => cls.id !== editingClassId &&
@@ -227,6 +227,9 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       classes: updatedClasses,
       students: updatedStudents
     };
+    
+    // Mettre à jour le snapshot de l'année en cours
+    updateCurrentSnapshot(updatedDB);
     
     try {
       await window.electron.saveDatabase(updatedDB);

@@ -11,5 +11,8 @@ contextBridge.exposeInMainWorld('electron', {
   // Nouvelles fonctions pour les listes d'élèves
   saveStudentList: (listData) => ipcRenderer.invoke('saveStudentList', listData),
   getStudentLists: () => ipcRenderer.invoke('getStudentLists'),
-  deleteStudentList: (listId) => ipcRenderer.invoke('deleteStudentList', listId)
+  deleteStudentList: (listId) => ipcRenderer.invoke('deleteStudentList', listId),
+  
+  // Fonction pour générer un snapshot manuellement
+  generateSnapshot: () => ipcRenderer.invoke('generate-snapshot')
 });

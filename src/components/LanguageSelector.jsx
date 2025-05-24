@@ -35,7 +35,7 @@ const LanguageSelector = ({
 
     const changeLanguage = (lang) => {
         setLanguage(lang);
-        setShowPanel(false)
+        setShowPanel(false);
         secureLocalStorage.setItem("language", lang);
         // localStorage.setItem("preferredLanguage", lang); // Sauvegarde la langue choisie
     };

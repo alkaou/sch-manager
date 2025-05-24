@@ -3,7 +3,7 @@ import { User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2, CheckCircle, XCir
 import { gradients } from "../utils/colors";
 import { useLanguage, useFlashNotification } from "./contexts";
 import { getAge, getClasseName, getBornInfos } from "../utils/helpers";
-import { deleteStudent, activateStudent, deactivateStudent } from "../utils/database_methods";
+import { deleteStudentWithEnrollment as deleteStudent, activateStudentWithEnrollment as activateStudent, deactivateStudentWithEnrollment as deactivateStudent } from "../utils/database_methods";
 import ActionConfirmePopup from "./ActionConfirmePopup.jsx";
 
 

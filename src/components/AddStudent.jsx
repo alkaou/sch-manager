@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { saveStudent, updateStudent } from '../utils/database_methods';
+import { saveStudentWithEnrollment as saveStudent, updateStudentWithEnrollment as updateStudent } from '../utils/database_methods';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from './contexts';
+import { useLanguage, useFlashNotification } from './contexts';
 import { gradients } from '../utils/colors';
 import { getClasseName, getAge } from "../utils/helpers";
 import { suggestNames, suggestLastNames, suggNameComplete, suggCitiesNames } from "../utils/suggestionNames";
@@ -38,6 +38,8 @@ const AddStudent = ({
   const [success, setSuccess] = useState(null);
   const [particuleError, setParticuleError] = useState(null);
   const [activeTab, setActiveTab] = useState(0);
+
+  const { setFlashMessage } = useFlashNotification();
 
   useEffect(() => {
     window.electron.getDatabase().then((data) => {
@@ -210,6 +212,11 @@ const AddStudent = ({
       }
       if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
         setSuccess("Les élèves ont été mis à jour avec succès !");
+        setFlashMessage({
+          message: "Les élèves ont été mis à jour avec succès !",
+          type: "success",
+          duration: 8000
+        });
         setTimeout(() => setIsAddStudentActive(false), 2000);
       }
     } else {
@@ -228,6 +235,11 @@ const AddStudent = ({
       }
       if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
         setSuccess("Les élèves ont été ajoutés avec succès!");
+        setFlashMessage({
+          message: "Les élèves ont été mis à jour avec succès !",
+          type: "success",
+          duration: 8000
+        });
         setTimeout(() => setIsAddStudentActive(false), 2000);
       }
     }

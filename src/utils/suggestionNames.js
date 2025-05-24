@@ -6,7 +6,7 @@ const suggestNames = [
   "Cheïcknè", "Maïmouna", "Djènèba", "Djénéba", "Sali", "Saly", "Mamou",
   "Mamadou", "Moussa", "Oumar", "Souleymane", "Abdoulaye", "Boubacar", "Seydou", "Cheick", "Modibo", "Yaya",
   "Ibrahima", "Kalilou", "Fousseyni", "Abdou", "Ibrahim", "Ousmane", "Bakary", "Habib", "Soumaila", "Sory",
-  "Mahamadou", "Lamine", "Alpha", "Amara", "Assane", "Bocar", "Massalate", "Kassim", "Yacouba", "Saliou",
+  "Mahamadou", "Lamine", "Alpha", "Amara", "Assane", "Bocar", "Massalate", "Kassim", "Issiaka", "Saliou",
   "Nourdine", "Alioune", "Tiemoko", "Babacar", "Abdoul", "El Hadji", "M’Baye", "Sékou", "Mamoudou", "Sidiki",
   "Kouma", "Samba", "Youssouf", "Sidi", "Karamoko", "Garan", "Mamadi", "Oumarou", "Ali", "N'Guessan",
   "Djibril", "Mamadouba", "Sidy", "Mahamane", "Dramane", "Issouf", "Balla", "Goumar", "Sangaré", "Salif",
@@ -40,7 +40,7 @@ const suggestNames = [
 
 // Tableau de noms de famille (environ 50 entrées)
 const suggestLastNames = [
-  "Mallé", "Dé", "Sokanda", "Dianè", "Diané", "N'Diané", "N'Dianè", "Maïga", "Tall", "Wologuème", "Tessougé",
+  "Mallé", "Dé", "Haïdara", "Sokanda", "Dianè", "Diané", "N'Diané", "N'Dianè", "Maïga", "Tall", "Wologuème", "Tessougé",
   "Traoré", "Keïta", "Sissoko", "Tounkara", "Camara", "Sidibé", "Touré", "Bagayoko", "Seck", "Ndiaye", "Doucouré",
   "Fall", "Mbaye", "Guindo", "Barry", "Sow", "Kaba", "Koné", "Diarra", "Cissé", "Diallo", "Diabaté", "Diassana", "Togola",
   "Coulibaly", "Ballo", "Demba", "Dembélé", "Fofana", "Kouyaté", "Goulamaly", "Sangaré", "Maiga", "Sy", "Goïta", "Togo",
