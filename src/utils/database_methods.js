@@ -1,4 +1,6 @@
 import { getFormattedDateTime, getDateTime } from './helpers';
+import { handleStudentEnrollment, handleStudentUpdate, handleStudentDeletion } from './enrollmentManager.js';
+import { updateCurrentSnapshot } from './snapshotManager.js';
 
 // Fonction pour générer un identifiant unique
 const generateUniqueId = () => {
@@ -304,208 +306,264 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
 	return cleanedData;
 };
 
-// Méthode pour ajouter un nouvel étudiant
-const saveStudent = (studentData, db) => {
-	// Validation et nettoyage
-	const cleanedData = validateAndCleanStudentData(studentData, true);
+// Méthode pour ajouter un nouvel étudiant (mise à jour)
+const saveStudent = async (studentData, db) => {
+	try {
+		// Validation et nettoyage
+		const cleanedData = validateAndCleanStudentData(studentData, true);
 
-	// Vérification de doublon sur les autres champs
-	if (db.students) {
-		const duplicate = db.students.find(student =>
-			student.first_name === cleanedData.first_name &&
-			student.last_name === cleanedData.last_name &&
-			student.classe === cleanedData.classe &&
-			student.sexe === cleanedData.sexe &&
-			student.birth_date === cleanedData.birth_date &&
-			student.birth_place === cleanedData.birth_place &&
-			student.father_name === cleanedData.father_name &&
-			student.mother_name === cleanedData.mother_name &&
-			student.parents_contact === cleanedData.parents_contact
-		);
-		if (duplicate) {
-			// Doublon détecté : on quitte silencieusement
-			return;
+		// Vérification de doublon sur les autres champs
+		if (db.students) {
+			const duplicate = db.students.find(student =>
+				student.first_name === cleanedData.first_name &&
+				student.last_name === cleanedData.last_name &&
+				student.classe === cleanedData.classe &&
+				student.sexe === cleanedData.sexe &&
+				student.birth_date === cleanedData.birth_date &&
+				student.birth_place === cleanedData.birth_place &&
+				student.father_name === cleanedData.father_name &&
+				student.mother_name === cleanedData.mother_name &&
+				student.parents_contact === cleanedData.parents_contact
+			);
+			if (duplicate) {
+				return;
+			}
 		}
-	}
 
-	// Vérification de l'unicité du matricule (s'il est renseigné)
-	if (cleanedData.matricule && db.students) {
-		const duplicateMatricule = db.students.find(student => student.matricule === cleanedData.matricule);
-		if (duplicateMatricule) {
-			const error = new Error("Le matricule est déjà utilisé.");
-			error.field = "matricule";
-			error.step = "Le matricule est déjà utilisé.";
-			throw error;
+		// Vérification de l'unicité du matricule
+		if (cleanedData.matricule && db.students) {
+			const duplicateMatricule = db.students.find(student => student.matricule === cleanedData.matricule);
+			if (duplicateMatricule) {
+				const error = new Error("Le matricule est déjà utilisé.");
+				error.field = "matricule";
+				error.step = "Le matricule est déjà utilisé.";
+				throw error;
+			}
 		}
+
+		// Création de l'objet étudiant
+		const timestamp = Date.now();
+		const student_name_complete = `${cleanedData.first_name} ${cleanedData.sure_name} ${cleanedData.last_name}`.replace(/\s+/g, " ");
+
+		const newStudent = {
+			id: generateUniqueId(),
+			name_complet: student_name_complete,
+			...cleanedData,
+			status: "actif",
+			added_at: timestamp,
+			updated_at: timestamp
+		};
+
+		// Assurer l'existence de la collection students
+		if (!db.students) {
+			db.students = [];
+		}
+		db.students.push(newStudent);
+
+		// Gérer l'enrollment pour le nouvel étudiant
+		await handleStudentEnrollment(newStudent, db);
+
+		// Mettre à jour le snapshot de l'année courante
+		await updateCurrentSnapshot(db);
+
+		// Sauvegarde de la base de données
+		await window.electron.saveDatabase(db);
+		// console.log("Étudiant ajouté avec succès");
+	} catch (err) {
+		console.error("Erreur lors de la sauvegarde de l'étudiant :", err);
+		throw err;
 	}
-
-	// Création de l'objet étudiant
-	const timestamp = Date.now();
-	// Construction du nom complet en combinant les noms (on inclut sure_name même s'il est vide)
-	const student_name_complete = `${cleanedData.first_name} ${cleanedData.sure_name} ${cleanedData.last_name}`.replace(/\s+/g, " ");
-
-	const newStudent = {
-		id: generateUniqueId(),
-		name_complet: student_name_complete,
-		...cleanedData,
-		status: "actif",
-		added_at: timestamp,
-		updated_at: timestamp
-	};
-
-	// Assurer l'existence de la collection students dans la base
-	if (!db.students) {
-		db.students = [];
-	}
-	db.students.push(newStudent);
-
-	// Sauvegarde asynchrone de la base de données
-	window.electron.saveDatabase(db)
-		.then(() => {
-			console.log("Étudiant ajouté avec succès");
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la sauvegarde de l'étudiant :", err);
-		});
 };
 
-// Méthode pour modifier un étudiant existant
-const updateStudent = (studentId, updatedData, db) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
-	}
-
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
-
-	const student = db.students[studentIndex];
-
-	// Validation des données mises à jour
-	const cleanedData = validateAndCleanStudentData(updatedData, true);
-
-	// Vérification de l'unicité du matricule en cas de modification
-	if (cleanedData.matricule && cleanedData.matricule !== student.matricule) {
-		const duplicateMatricule = db.students.find(s => s.matricule === cleanedData.matricule);
-		if (duplicateMatricule) {
-			const error = new Error("Le matricule est déjà utilisé.");
-			error.field = "matricule";
-			error.step = "Le matricule est déjà utilisé.";
-			throw error;
+// Méthode pour modifier un étudiant existant (mise à jour)
+const updateStudent = async (studentId, updatedData, db) => {
+	try {
+		if (!db.students || db.students.length === 0) {
+			throw new Error("Aucun étudiant n'est enregistré.");
 		}
+
+		const studentIndex = db.students.findIndex(student => student.id === studentId);
+		if (studentIndex === -1) {
+			throw new Error("Étudiant non trouvé.");
+		}
+
+		const oldStudent = { ...db.students[studentIndex] };
+
+		// Validation des données mises à jour
+		const cleanedData = validateAndCleanStudentData(updatedData, true);
+
+		// Vérification de l'unicité du matricule
+		if (cleanedData.matricule && cleanedData.matricule !== oldStudent.matricule) {
+			const duplicateMatricule = db.students.find(s => s.matricule === cleanedData.matricule);
+			if (duplicateMatricule) {
+				const error = new Error("Le matricule est déjà utilisé.");
+				error.field = "matricule";
+				error.step = "Le matricule est déjà utilisé.";
+				throw error;
+			}
+		}
+
+		// Mise à jour de l'étudiant
+		const updatedStudent = {
+			...oldStudent,
+			...cleanedData,
+			updated_at: Date.now()
+		};
+
+		// Recalcul du nom complet
+		if (cleanedData.first_name || cleanedData.sure_name || cleanedData.last_name) {
+			updatedStudent.name_complet = `${updatedStudent.first_name} ${updatedStudent.sure_name || ""} ${updatedStudent.last_name}`.replace(/\s+/g, " ");
+		}
+
+		db.students[studentIndex] = updatedStudent;
+
+		// Gérer la mise à jour de l'enrollment si la classe a changé ou le statut a changé
+		await handleStudentUpdate(oldStudent, updatedStudent, db);
+
+		// Mettre à jour le snapshot de l'année courante
+		await updateCurrentSnapshot(db);
+
+		// Sauvegarde de la base de données
+		await window.electron.saveDatabase(db);
+		
+		return updatedStudent;
+	} catch (err) {
+		console.error("Erreur lors de la mise à jour de l'étudiant :", err);
+		throw err;
 	}
+};
 
-	// Mise à jour de l'étudiant en fusionnant les données existantes et les données mises à jour
-	const updatedStudent = {
-		...student,
-		...cleanedData,
-		updated_at: Date.now()
-	};
+// Méthode pour supprimer un étudiant (mise à jour)
+const deleteStudent = async (studentId, db, setFlashMessage) => {
+	try {
+		if (!db.students || db.students.length === 0) {
+			throw new Error("Aucun étudiant n'est enregistré.");
+		}
 
-	// Recalcul du nom complet si l'un des éléments de nom a été modifié
-	if (cleanedData.first_name || cleanedData.sure_name || cleanedData.last_name) {
-		updatedStudent.name_complet = `${updatedStudent.first_name} ${updatedStudent.sure_name || ""} ${updatedStudent.last_name}`.replace(/\s+/g, " ");
+		const studentIndex = db.students.findIndex(student => student.id === studentId);
+		if (studentIndex === -1) {
+			throw new Error("Étudiant non trouvé.");
+		}
+
+		const studentToDelete = db.students[studentIndex];
+
+		// Gérer la suppression dans les enrollments
+		await handleStudentDeletion(studentToDelete, db);
+
+		// Suppression de l'étudiant du tableau
+		db.students.splice(studentIndex, 1);
+
+		// Mettre à jour le snapshot de l'année courante
+		await updateCurrentSnapshot(db);
+
+		// Sauvegarde de la base de données
+		await window.electron.saveDatabase(db);
+
+		if (setFlashMessage) {
+			setFlashMessage({
+				message: "La suppression a été passée avec succès.",
+				type: "success",
+				duration: 5000,
+			});
+		}
+		
+		return true;
+	} catch (err) {
+		console.error("Erreur lors de la suppression de l'étudiant :", err);
+		throw err;
 	}
-
-	db.students[studentIndex] = updatedStudent;
-
-	window.electron.saveDatabase(db)
-		.then(() => {
-			// console.log("Étudiant mis à jour avec succès :", updatedStudent);
-			// console.log("Étudiant mis à jour avec succès.");
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la mise à jour de l'étudiant :", err);
-		});
 };
 
 // Méthode pour activer un étudiant (passer son status à "actif")
-const activateStudent = (studentId, db, setFlashMessage) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
-	}
+const activateStudent = async (studentId, db, setFlashMessage) => {
+	try {
+		if (!db.students || db.students.length === 0) {
+			throw new Error("Aucun étudiant n'est enregistré.");
+		}
 
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
+		const studentIndex = db.students.findIndex(student => student.id === studentId);
+		if (studentIndex === -1) {
+			throw new Error("Étudiant non trouvé.");
+		}
 
-	db.students[studentIndex].status = "actif";
-	db.students[studentIndex].updated_at = Date.now();
+		// Récupérer l'ancien état pour l'enrollment
+		const oldStudent = { ...db.students[studentIndex] };
 
-	window.electron.saveDatabase(db)
-		.then(() => {
-			// console.log("Étudiant activé avec succès :", db.students[studentIndex]);
-			// console.log("Étudiant activé avec succès.");
+		// Mise à jour de l'étudiant
+		db.students[studentIndex].status = "actif";
+		db.students[studentIndex].updated_at = Date.now();
+
+		// Nouvel état pour l'enrollment
+		const updatedStudent = db.students[studentIndex];
+
+		// Gérer la mise à jour de l'enrollment
+		await handleStudentUpdate(oldStudent, updatedStudent, db);
+		
+		// Mettre à jour le snapshot - s'assurer que cette fonction est appelée correctement
+		await updateCurrentSnapshot(db);
+		
+		// Sauvegarder la base de données
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
 			setFlashMessage({
 				message: "Étudiant activé avec succès.",
-				type: "success", // 'success', 'error', 'warning' ou 'info'
-				duration: 5000,  // durée d'affichage en ms
+				type: "success",
+				duration: 5000,
 			});
-		})
-		.catch((err) => {
-			console.error("Erreur lors de l'activation de l'étudiant :", err);
-		});
+		}
+		
+		return true;
+	} catch (err) {
+		console.error("Erreur lors de l'activation de l'étudiant:", err);
+		throw err;
+	}
 };
 
 // Méthode pour désactiver un étudiant (passer son status à "inactif")
-const deactivateStudent = (studentId, db, setFlashMessage) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
-	}
+const deactivateStudent = async (studentId, db, setFlashMessage) => {
+	try {
+		if (!db.students || db.students.length === 0) {
+			throw new Error("Aucun étudiant n'est enregistré.");
+		}
 
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
+		const studentIndex = db.students.findIndex(student => student.id === studentId);
+		if (studentIndex === -1) {
+			throw new Error("Étudiant non trouvé.");
+		}
 
-	db.students[studentIndex].status = "inactif";
-	db.students[studentIndex].updated_at = Date.now();
+		// Récupérer l'ancien état pour l'enrollment
+		const oldStudent = { ...db.students[studentIndex] };
 
-	window.electron.saveDatabase(db)
-		.then(() => {
-			// console.log("Étudiant désactivé avec succès :", db.students[studentIndex]);
-			// console.log("Étudiant désactivé avec succès.");
+		// Mise à jour de l'étudiant
+		db.students[studentIndex].status = "inactif";
+		db.students[studentIndex].updated_at = Date.now();
+
+		// Nouvel état pour l'enrollment
+		const updatedStudent = db.students[studentIndex];
+
+		// Gérer la mise à jour de l'enrollment
+		await handleStudentUpdate(oldStudent, updatedStudent, db);
+		
+		// Mettre à jour le snapshot - s'assurer que cette fonction est appelée correctement
+		await updateCurrentSnapshot(db);
+		
+		// Sauvegarder la base de données
+		await window.electron.saveDatabase(db);
+		
+		if (setFlashMessage) {
 			setFlashMessage({
 				message: "Étudiant désactivé avec succès.",
-				type: "success", // 'success', 'error', 'warning' ou 'info'
-				duration: 5000,  // durée d'affichage en ms
+				type: "success",
+				duration: 5000,
 			});
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la désactivation de l'étudiant :", err);
-		});
-};
-
-// Méthode pour supprimer un étudiant
-const deleteStudent = (studentId, db, setFlashMessage) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
+		}
+		
+		return true;
+	} catch (err) {
+		console.error("Erreur lors de la désactivation de l'étudiant:", err);
+		throw err;
 	}
-
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
-
-	// Suppression de l'étudiant du tableau
-	const removedStudent = db.students.splice(studentIndex, 1)[0];
-
-	window.electron.saveDatabase(db)
-		.then(() => {
-			// console.log("Étudiant supprimé avec succès :", removedStudent);
-			// console.log("Étudiant supprimé avec succès.");
-			setFlashMessage({
-				message: "La suppression a été passée avec succès.",
-				type: "success", // 'success', 'error', 'warning' ou 'info'
-				duration: 5000,  // durée d'affichage en ms
-			});
-
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la suppression de l'étudiant :", err);
-		});
 };
 
 // Employee Management Methods
@@ -901,506 +959,9 @@ export const initializePositions = async (db) => {
 	}
 };
 
-// Fonctions pour gérer les snapshots et enrollments
-
-/**
- * Détermine l'année scolaire en cours basé sur la date actuelle
- * L'année scolaire commence le 1er Octobre
- * @returns {string} - Année scolaire au format "2024-2025"
- */
-const getCurrentSchoolYear = () => {
-	const now = new Date();
-	const year = now.getFullYear();
-	const month = now.getMonth() + 1; // Les mois commencent à 0
-
-	// Si on est avant Octobre, on est dans l'année scolaire précédente
-	if (month < 6) {
-		return `${year-1}-${year}`;
-	} else {
-		return `${year}-${year+1}`;
-	}
-};
-
-/**
- * Crée ou met à jour le snapshot pour l'année scolaire en cours
- * @param {Object} db - La base de données
- * @returns {Object} - La base de données mise à jour
- */
-const updateCurrentSnapshot = (db) => {
-	if (!db.students || !db.classes) {
-		return db;
-	}
-
-	const currentYear = getCurrentSchoolYear();
-	
-	// Initialiser les snapshots s'ils n'existent pas
-	if (!db.snapshots) {
-		db.snapshots = [];
-	}
-
-	// Calculer le nombre d'élèves actifs par classe, séparés par sexe
-	const classCounts = {};
-	let totalMalesStudents = 0;
-	let totalFemalesStudents = 0;
-	
-	// Pour chaque classe existante dans la DB, initialiser les compteurs
-	db.classes.forEach(cls => {
-		const classKey = cls.name ? `${cls.level} ${cls.name}`.trim() : `${cls.level}`;
-		classCounts[classKey] = {
-			total: 0,
-			males: 0,
-			females: 0
-		};
-	});
-
-	// Compter les élèves actifs par classe et par sexe
-	db.students.forEach(student => {
-		if (student.status === "actif") {
-			const classKey = student.classe;
-			
-			// Si la classe n'existe pas encore dans classCounts, l'initialiser
-			if (!classCounts[classKey]) {
-				classCounts[classKey] = {
-					total: 0,
-					males: 0,
-					females: 0
-				};
-			}
-			
-			// Incrémenter le total pour cette classe
-			classCounts[classKey].total += 1;
-			
-			// Incrémenter le compteur par sexe pour cette classe
-			if (student.sexe === "M") {
-				classCounts[classKey].males += 1;
-				totalMalesStudents += 1;
-			} else if (student.sexe === "F") {
-				classCounts[classKey].females += 1;
-				totalFemalesStudents += 1;
-			}
-		}
-	});
-
-	const totalStudents = totalMalesStudents + totalFemalesStudents;
-
-	// Vérifier si un snapshot pour l'année en cours existe déjà
-	const existingSnapshotIndex = db.snapshots.findIndex(
-		snapshot => snapshot.schoolYear === currentYear
-	);
-
-	if (existingSnapshotIndex >= 0) {
-		// Mettre à jour le snapshot existant
-		db.snapshots[existingSnapshotIndex].classCounts = classCounts;
-		db.snapshots[existingSnapshotIndex].updatedAt = Date.now();
-		db.snapshots[existingSnapshotIndex].totalStudents = totalStudents;
-		db.snapshots[existingSnapshotIndex].totalMalesStudents = totalMalesStudents;
-		db.snapshots[existingSnapshotIndex].totalFemalesStudents = totalFemalesStudents;
-	} else {
-		// Créer un nouveau snapshot
-		db.snapshots.push({
-			schoolYear: currentYear,
-			classCounts: classCounts,
-			createdAt: Date.now(),
-			updatedAt: Date.now(),
-			totalStudents: totalStudents,
-			totalMalesStudents: totalMalesStudents,
-			totalFemalesStudents: totalFemalesStudents
-		});
-	}
-
-	return db;
-};
-
-/**
- * Met à jour les inscriptions (enrollments) des élèves
- * @param {Object} db - La base de données
- * @param {string} actionType - Type d'action: "add", "update", "delete"
- * @param {Object} studentData - Données de l'élève concerné
- * @param {Object|null} oldData - Anciennes données en cas de mise à jour
- * @returns {Object} - La base de données mise à jour
- */
-const updateEnrollments = (db, actionType, studentData, oldData = null) => {
-	if (!db.enrollments) {
-		db.enrollments = [];
-	}
-
-	const currentYear = getCurrentSchoolYear();
-	const timestamp = new Date().toISOString();
-	
-	// Déterminer le status en fonction de l'action
-	let status = "";
-	switch (actionType) {
-		case "add":
-			status = "new-entry"; // Nouvelle inscription
-			break;
-		case "update":
-			// Si la classe a changé, c'est un changement de classe
-			if (oldData && oldData.classe !== studentData.classe) {
-				status = "class-change";
-			} 
-			// Si le statut a changé de inactif à actif
-			else if (oldData && oldData.status !== studentData.status && studentData.status === "actif") {
-				status = "reactivated";
-			}
-			// Si le statut a changé d'actif à inactif
-			else if (oldData && oldData.status !== studentData.status && studentData.status === "inactif") {
-				status = "deactivated";
-			} else {
-				// Si c'est juste une mise à jour sans changement significatif pour l'inscription
-				return db;
-			}
-			break;
-		case "delete":
-			status = "removed"; // Suppression de l'élève
-			break;
-		default:
-			return db; // Si le type d'action n'est pas reconnu, ne rien faire
-	}
-
-	// Ajouter l'enrollment
-	db.enrollments.push({
-		studentId: studentData.id,
-		studentName: studentData.name_complet,
-		classId: studentData.classe,
-		schoolYear: currentYear,
-		status: status,
-		timestamp: timestamp
-	});
-
-	// Après avoir mis à jour les enrollments, mettre à jour le snapshot
-	return updateCurrentSnapshot(db);
-};
-
-// Modification des fonctions existantes pour intégrer les snapshots et enrollments
-
-// Modification de la fonction saveStudent pour mettre à jour les enrollments et snapshots
-const saveStudentWithEnrollment = (studentData, db) => {
-	// Validation et nettoyage (code existant)
-	const cleanedData = validateAndCleanStudentData(studentData, true);
-
-	// Vérification de doublon sur les autres champs (code existant)
-	if (db.students) {
-		const duplicate = db.students.find(student =>
-			student.first_name === cleanedData.first_name &&
-			student.last_name === cleanedData.last_name &&
-			student.classe === cleanedData.classe &&
-			student.sexe === cleanedData.sexe &&
-			student.birth_date === cleanedData.birth_date &&
-			student.birth_place === cleanedData.birth_place &&
-			student.father_name === cleanedData.father_name &&
-			student.mother_name === cleanedData.mother_name &&
-			student.parents_contact === cleanedData.parents_contact
-		);
-		if (duplicate) {
-			// Doublon détecté : on quitte silencieusement
-			return;
-		}
-	}
-
-	// Vérification de l'unicité du matricule (code existant)
-	if (cleanedData.matricule && db.students) {
-		const duplicateMatricule = db.students.find(student => student.matricule === cleanedData.matricule);
-		if (duplicateMatricule) {
-			const error = new Error("Le matricule est déjà utilisé.");
-			error.field = "matricule";
-			error.step = "Le matricule est déjà utilisé.";
-			throw error;
-		}
-	}
-
-	// Création de l'objet étudiant (code existant)
-	const timestamp = Date.now();
-	const student_name_complete = `${cleanedData.first_name} ${cleanedData.sure_name} ${cleanedData.last_name}`.replace(/\s+/g, " ");
-
-	const newStudent = {
-		id: generateUniqueId(),
-		name_complet: student_name_complete,
-		...cleanedData,
-		status: "actif",
-		added_at: timestamp,
-		updated_at: timestamp
-	};
-
-	// Assurer l'existence de la collection students dans la base
-	if (!db.students) {
-		db.students = [];
-	}
-	db.students.push(newStudent);
-
-	// Mise à jour des enrollments et snapshots
-	updateEnrollments(db, "add", newStudent);
-
-	// Sauvegarde asynchrone de la base de données
-	window.electron.saveDatabase(db)
-		.then(() => {
-			console.log("Étudiant ajouté avec succès");
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la sauvegarde de l'étudiant :", err);
-		});
-};
-
-// Modification de la fonction updateStudent pour mettre à jour les enrollments et snapshots
-const updateStudentWithEnrollment = (studentId, updatedData, db) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
-	}
-
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
-
-	const oldStudent = { ...db.students[studentIndex] };
-	const student = db.students[studentIndex];
-
-	// Validation des données mises à jour (code existant)
-	const cleanedData = validateAndCleanStudentData(updatedData, true);
-
-	// Vérification de l'unicité du matricule (code existant)
-	if (cleanedData.matricule && cleanedData.matricule !== student.matricule) {
-		const duplicateMatricule = db.students.find(s => s.matricule === cleanedData.matricule);
-		if (duplicateMatricule) {
-			const error = new Error("Le matricule est déjà utilisé.");
-			error.field = "matricule";
-			error.step = "Le matricule est déjà utilisé.";
-			throw error;
-		}
-	}
-
-	// Mise à jour de l'étudiant (code existant)
-	const updatedStudent = {
-		...student,
-		...cleanedData,
-		updated_at: Date.now()
-	};
-
-	// Recalcul du nom complet (code existant)
-	if (cleanedData.first_name || cleanedData.sure_name || cleanedData.last_name) {
-		updatedStudent.name_complet = `${updatedStudent.first_name} ${updatedStudent.sure_name || ""} ${updatedStudent.last_name}`.replace(/\s+/g, " ");
-	}
-
-	db.students[studentIndex] = updatedStudent;
-
-	// Mise à jour des enrollments et snapshots
-	updateEnrollments(db, "update", updatedStudent, oldStudent);
-
-	window.electron.saveDatabase(db)
-		.then(() => {
-			// console.log("Étudiant mis à jour avec succès");
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la mise à jour de l'étudiant :", err);
-		});
-};
-
-// Modification de la fonction activateStudent pour mettre à jour les enrollments et snapshots
-const activateStudentWithEnrollment = (studentId, db, setFlashMessage) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
-	}
-
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
-
-	const oldStudent = { ...db.students[studentIndex] };
-	db.students[studentIndex].status = "actif";
-	db.students[studentIndex].updated_at = Date.now();
-
-	// Mise à jour des enrollments et snapshots
-	updateEnrollments(db, "update", db.students[studentIndex], oldStudent);
-
-	window.electron.saveDatabase(db)
-		.then(() => {
-			setFlashMessage({
-				message: "Étudiant activé avec succès.",
-				type: "success",
-				duration: 5000,
-			});
-		})
-		.catch((err) => {
-			console.error("Erreur lors de l'activation de l'étudiant :", err);
-		});
-};
-
-// Modification de la fonction deactivateStudent pour mettre à jour les enrollments et snapshots
-const deactivateStudentWithEnrollment = (studentId, db, setFlashMessage) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
-	}
-
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
-
-	const oldStudent = { ...db.students[studentIndex] };
-	db.students[studentIndex].status = "inactif";
-	db.students[studentIndex].updated_at = Date.now();
-
-	// Mise à jour des enrollments et snapshots
-	updateEnrollments(db, "update", db.students[studentIndex], oldStudent);
-
-	window.electron.saveDatabase(db)
-		.then(() => {
-			setFlashMessage({
-				message: "Étudiant désactivé avec succès.",
-				type: "success",
-				duration: 5000,
-			});
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la désactivation de l'étudiant :", err);
-		});
-};
-
-// Modification de la fonction deleteStudent pour mettre à jour les enrollments et snapshots
-const deleteStudentWithEnrollment = (studentId, db, setFlashMessage) => {
-	if (!db.students || db.students.length === 0) {
-		throw new Error("Aucun étudiant n'est enregistré.");
-	}
-
-	const studentIndex = db.students.findIndex(student => student.id === studentId);
-	if (studentIndex === -1) {
-		throw new Error("Étudiant non trouvé.");
-	}
-
-	// Garder une copie de l'étudiant avant suppression
-	const removedStudent = { ...db.students[studentIndex] };
-	
-	// Suppression de l'étudiant du tableau
-	db.students.splice(studentIndex, 1);
-
-	// Mise à jour des enrollments et snapshots
-	updateEnrollments(db, "delete", removedStudent);
-
-	window.electron.saveDatabase(db)
-		.then(() => {
-			setFlashMessage({
-				message: "La suppression a été passée avec succès.",
-				type: "success",
-				duration: 5000,
-			});
-		})
-		.catch((err) => {
-			console.error("Erreur lors de la suppression de l'étudiant :", err);
-		});
-};
-
-// Générer un rapport d'évolution des effectifs par année scolaire
-const generateEnrollmentReport = (db) => {
-	if (!db.snapshots || db.snapshots.length === 0) {
-		return {
-			years: [],
-			totalsByYear: {},
-			malesByYear: {},
-			femalesByYear: {},
-			classesByYear: {},
-			evolution: { 
-				absolute: 0, 
-				percentage: 0,
-				males: { absolute: 0, percentage: 0 },
-				females: { absolute: 0, percentage: 0 }
-			},
-			genderRatio: {}
-		};
-	}
-
-	// Trier les snapshots par année scolaire
-	const sortedSnapshots = [...db.snapshots].sort((a, b) => {
-		const yearA = parseInt(a.schoolYear.split('-')[0]);
-		const yearB = parseInt(b.schoolYear.split('-')[0]);
-		return yearA - yearB;
-	});
-
-	// Extraire les années scolaires
-	const years = sortedSnapshots.map(snapshot => snapshot.schoolYear);
-	
-	// Calculer les totaux par année
-	const totalsByYear = {};
-	const malesByYear = {};
-	const femalesByYear = {};
-	const genderRatio = {};
-
-	sortedSnapshots.forEach(snapshot => {
-		totalsByYear[snapshot.schoolYear] = snapshot.totalStudents;
-		malesByYear[snapshot.schoolYear] = snapshot.totalMalesStudents || 0;
-		femalesByYear[snapshot.schoolYear] = snapshot.totalFemalesStudents || 0;
-		
-		// Calculer le ratio filles/garçons pour chaque année
-		const total = snapshot.totalStudents > 0 ? snapshot.totalStudents : 1; // Éviter division par zéro
-		genderRatio[snapshot.schoolYear] = {
-			males: Math.round((snapshot.totalMalesStudents || 0) / total * 100),
-			females: Math.round((snapshot.totalFemalesStudents || 0) / total * 100)
-		};
-	});
-
-	// Organiser les données de classe par année
-	const classesByYear = {};
-	sortedSnapshots.forEach(snapshot => {
-		classesByYear[snapshot.schoolYear] = snapshot.classCounts;
-	});
-
-	// Calculer l'évolution entre la première et la dernière année
-	let evolution = { 
-		absolute: 0, 
-		percentage: 0,
-		males: { absolute: 0, percentage: 0 },
-		females: { absolute: 0, percentage: 0 }
-	};
-	
-	if (sortedSnapshots.length >= 2) {
-		const firstYear = sortedSnapshots[0];
-		const lastYear = sortedSnapshots[sortedSnapshots.length - 1];
-		
-		// Évolution globale
-		evolution.absolute = lastYear.totalStudents - firstYear.totalStudents;
-		evolution.percentage = firstYear.totalStudents > 0 
-			? Math.round((evolution.absolute / firstYear.totalStudents) * 100) 
-			: 0;
-		
-		// Évolution garçons
-		const firstYearMales = firstYear.totalMalesStudents || 0;
-		const lastYearMales = lastYear.totalMalesStudents || 0;
-		evolution.males.absolute = lastYearMales - firstYearMales;
-		evolution.males.percentage = firstYearMales > 0
-			? Math.round((evolution.males.absolute / firstYearMales) * 100)
-			: 0;
-		
-		// Évolution filles
-		const firstYearFemales = firstYear.totalFemalesStudents || 0;
-		const lastYearFemales = lastYear.totalFemalesStudents || 0;
-		evolution.females.absolute = lastYearFemales - firstYearFemales;
-		evolution.females.percentage = firstYearFemales > 0
-			? Math.round((evolution.females.absolute / firstYearFemales) * 100)
-			: 0;
-	}
-
-	return {
-		years,
-		totalsByYear,
-		malesByYear,
-		femalesByYear,
-		classesByYear,
-		evolution,
-		genderRatio
-	};
-};
-
 export { 
 	generateUniqueId, 
-	saveStudent, updateStudent, activateStudent, deactivateStudent, deleteStudent, 
-	updateDatabaseNameAndShortName,
-	// Nouvelles fonctions
-	getCurrentSchoolYear,
-	updateCurrentSnapshot,
-	updateEnrollments,
-	saveStudentWithEnrollment,
-	updateStudentWithEnrollment,
-	activateStudentWithEnrollment,
-	deactivateStudentWithEnrollment,
-	deleteStudentWithEnrollment,
-	generateEnrollmentReport
+	saveStudent, updateStudent, 
+	activateStudent, deactivateStudent, 
+	deleteStudent, updateDatabaseNameAndShortName,
 };

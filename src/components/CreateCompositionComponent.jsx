@@ -63,6 +63,10 @@ const CreateCompositionComponent = ({
   };
 
   const _text_color = app_bg_color !== gradients[1] && app_bg_color !== gradients[2] ? "text-white" : textClass;
+  const hoverClass = app_bg_color === gradients[1] ? "hover:bg-white hover:text-gray-700" : 
+      app_bg_color === gradients[2] ? "hover:bg-gray-200 hover:text-gray-700" : 
+      theme === "dark" ? "hover:bg-gray-700 hover:text-white" : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white"
+    
 
   return (
     <>
@@ -145,16 +149,13 @@ const CreateCompositionComponent = ({
                           compositionBulletins.every(bulletin => bulletin.isLocked === true);
 
                         return (
-                          <tr key={composition.id} 
-                            className={`${theme === "dark" ? "hover:bg-gray-700/80 hover:text-white" : "hover:bg-gray-50 hover:text-gray-500"} 
-                            ${_text_color}`}
-                          >
+                          <tr key={composition.id} className={`${hoverClass} ${_text_color}`}>
                             <td className="px-2 py-1 border text-center">{composition.label}</td>
                             <td className="px-2 py-1 border text-center">{formatDate(composition.date)}</td>
                             <td className="px-2 py-1 border text-center">{getClassesNames(composition.classes)}</td>
                             <td className="px-2 py-1 border text-center">
                               {isFullyLocked ? (
-                                <div className="flex items-center justify-center text-gray-500">
+                                <div className={`flex items-center justify-center ${_text_color}`}>
                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                   </svg>

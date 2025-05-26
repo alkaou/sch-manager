@@ -182,7 +182,7 @@ const EmployeeSidebar = ({
                               exit={{ opacity: 0, scale: 0.8 }}
                               className="flex space-x-1"
                             >
-                              <motion.div
+                              <motion.button
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={(e) => {
@@ -193,8 +193,8 @@ const EmployeeSidebar = ({
                                 title="Modifier"
                               >
                                 <Edit size={16} />
-                              </motion.div>
-                              <motion.div
+                              </motion.button>
+                              <motion.button
                                 whileHover={{ scale: 1.2 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={(e) => {
@@ -205,7 +205,7 @@ const EmployeeSidebar = ({
                                 title="Supprimer"
                               >
                                 <Trash size={16} />
-                              </motion.div>
+                              </motion.button>
                             </motion.div>
                           )}
                         </AnimatePresence>

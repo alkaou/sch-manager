@@ -8,11 +8,13 @@ contextBridge.exposeInMainWorld('electron', {
   getDatabase: () => ipcRenderer.invoke('get-database'),
   saveDatabase: (db) => ipcRenderer.invoke('save-database', db),
   
-  // Nouvelles fonctions pour les listes d'élèves
+  // Fonctions pour les listes d'élèves
   saveStudentList: (listData) => ipcRenderer.invoke('saveStudentList', listData),
   getStudentLists: () => ipcRenderer.invoke('getStudentLists'),
   deleteStudentList: (listId) => ipcRenderer.invoke('deleteStudentList', listId),
   
-  // Fonction pour générer un snapshot manuellement
-  generateSnapshot: () => ipcRenderer.invoke('generate-snapshot')
+  // Nouvelles fonctions pour les enrollments et snapshots
+  getEnrollments: () => ipcRenderer.invoke('get-enrollments'),
+  getSnapshots: () => ipcRenderer.invoke('get-snapshots'),
+  getEnrollmentStats: (schoolYear) => ipcRenderer.invoke('get-enrollment-stats', schoolYear),
 });

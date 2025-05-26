@@ -43,6 +43,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@react-pdf-viewer/core": "3.6.0",
     "@react-pdf-viewer/default-layout": "3.6.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",

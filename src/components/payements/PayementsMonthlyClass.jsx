@@ -448,7 +448,7 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
 
                 {/* Sélecteur de mois scolaires */}
                 {schoolMonths.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-6 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 p-4 rounded-lg shadow-inner">
+                    <div className={`flex flex-wrap gap-2 mb-6 p-4 rounded-lg shadow-inner ${theme === "dark" ? "bg-gray-900 border border-2" : "bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700"}`}>
                         {schoolMonths.map((month) => (
                             <button
                                 key={month.number}

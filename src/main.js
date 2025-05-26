@@ -55,106 +55,6 @@ const readDatabase = () => {
   return {}; // Si le fichier n'existe pas, retourne un objet vide
 };
 
-// Fonction pour déterminer l'année scolaire en cours
-const getCurrentSchoolYear = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1; // Les mois commencent à 0
-
-  // Si on est avant Juin, on est dans l'année scolaire précédente
-  if (month < 6) {
-    return `${year-1}-${year}`;
-  } else {
-    return `${year}-${year+1}`;
-  }
-};
-
-// Fonction pour mettre à jour le snapshot de l'année scolaire en cours
-const updateCurrentSnapshot = (db) => {
-  if (!db.students || !db.classes) {
-    return db;
-  }
-
-  const currentYear = getCurrentSchoolYear();
-  
-  // Initialiser les snapshots s'ils n'existent pas
-  if (!db.snapshots) {
-    db.snapshots = [];
-  }
-
-  // Calculer le nombre d'élèves actifs par classe, séparés par sexe
-  const classCounts = {};
-  let totalMalesStudents = 0;
-  let totalFemalesStudents = 0;
-  
-  // Pour chaque classe existante dans la DB, initialiser les compteurs
-  db.classes.forEach(cls => {
-    const classKey = cls.name ? `${cls.level} ${cls.name}`.trim() : `${cls.level}`;
-    classCounts[classKey] = {
-      total: 0,
-      males: 0,
-      females: 0
-    };
-  });
-
-  // Compter les élèves actifs par classe et par sexe
-  db.students.forEach(student => {
-    if (student.status === "actif") {
-      const classKey = student.classe;
-      
-      // Si la classe n'existe pas encore dans classCounts, l'initialiser
-      if (!classCounts[classKey]) {
-        classCounts[classKey] = {
-          total: 0,
-          males: 0,
-          females: 0
-        };
-      }
-      
-      // Incrémenter le total pour cette classe
-      classCounts[classKey].total += 1;
-      
-      // Incrémenter le compteur par sexe pour cette classe
-      if (student.sexe === "M") {
-        classCounts[classKey].males += 1;
-        totalMalesStudents += 1;
-      } else if (student.sexe === "F") {
-        classCounts[classKey].females += 1;
-        totalFemalesStudents += 1;
-      }
-    }
-  });
-
-  const totalStudents = totalMalesStudents + totalFemalesStudents;
-
-  // Vérifier si un snapshot pour l'année en cours existe déjà
-  const existingSnapshotIndex = db.snapshots.findIndex(
-    snapshot => snapshot.schoolYear === currentYear
-  );
-
-  if (existingSnapshotIndex >= 0) {
-    // Mettre à jour le snapshot existant
-    db.snapshots[existingSnapshotIndex].classCounts = classCounts;
-    db.snapshots[existingSnapshotIndex].updatedAt = Date.now();
-    db.snapshots[existingSnapshotIndex].totalStudents = totalStudents;
-    db.snapshots[existingSnapshotIndex].totalMalesStudents = totalMalesStudents;
-    db.snapshots[existingSnapshotIndex].totalFemalesStudents = totalFemalesStudents;
-  } else {
-    // Créer un nouveau snapshot
-    db.snapshots.push({
-      schoolYear: currentYear,
-      classCounts: classCounts,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      totalStudents: totalStudents,
-      totalMalesStudents: totalMalesStudents,
-      totalFemalesStudents: totalFemalesStudents
-    });
-  }
-
-  return db;
-};
-
 // Sauvegarder la base de données dans le fichier JSON
 const saveDatabase = (db) => {
   const dbPath = getDbPath();
@@ -180,13 +80,6 @@ ipcMain.handle('backup-database', () => {
 // Gestion des événements IPC pour communiquer avec le renderer (React)
 ipcMain.handle('get-database', () => {
   const db = readDatabase();
-  // Mise à jour automatique du snapshot au démarrage de l'app
-  // et uniquement si la DB contient déjà des données
-  if (db.students && db.classes) {
-    const updatedDb = updateCurrentSnapshot(db);
-    saveDatabase(updatedDb);
-    return updatedDb;
-  }
   return db;
 });
 
@@ -195,13 +88,6 @@ ipcMain.handle('save-database', (event, db) => {
   return { success: true };
 });
 
-// Méthode pour générer un snapshot manuellement
-ipcMain.handle('generate-snapshot', () => {
-  const db = readDatabase();
-  const updatedDb = updateCurrentSnapshot(db);
-  saveDatabase(updatedDb);
-  return updatedDb;
-});
 
 // Fonctions pour la gestion des listes d'élèves
 ipcMain.handle('saveStudentList', (event, listData) => {
@@ -255,4 +141,35 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+// Nouvelles fonctions IPC pour les enrollments et snapshots
+ipcMain.handle('get-enrollments', () => {
+  const db = readDatabase();
+  return db.enrollments || [];
+});
+
+ipcMain.handle('get-snapshots', () => {
+  const db = readDatabase();
+  return db.snapshots || [];
+});
+
+ipcMain.handle('get-enrollment-stats', (event, schoolYear) => {
+  const db = readDatabase();
+  const enrollments = db.enrollments || [];
+  const snapshots = db.snapshots || [];
+  
+  // Filtrer par année scolaire si spécifiée
+  const filteredEnrollments = schoolYear 
+    ? enrollments.filter(e => e.schoolYear === schoolYear)
+    : enrollments;
+    
+  const filteredSnapshots = schoolYear
+    ? snapshots.filter(s => s.schoolYear === schoolYear)
+    : snapshots;
+    
+  return {
+    enrollments: filteredEnrollments,
+    snapshots: filteredSnapshots
+  };
 });

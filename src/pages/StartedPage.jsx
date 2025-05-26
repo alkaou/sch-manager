@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import StudentsTable from "../components/StudentsTable.jsx";
 import AddStudent from "../components/AddStudent.jsx";
 import ManageClasses from "../components/ManageClasses.jsx";
-import EnrollmentStats from "../components/EnrollmentStats.jsx";
 import PageLoading from "../components/PageLoading.jsx";
-import { Bar, BarChart } from "lucide-react";
+import EnrollmentStats from "../components/enrollements/EnrollmentStats.jsx";
+import { updateCurrentSnapshot } from "../utils/snapshotManager.js";
 
 const StartedPageContent = ({
   isAddStudentActive,
@@ -26,8 +26,30 @@ const StartedPageContent = ({
   text_color,
   theme,
 }) => {
-  // Ajout d'un état pour afficher les statistiques d'effectifs
+  // États pour l'affichage des statistiques d'effectifs
   const [showEnrollmentStats, setShowEnrollmentStats] = useState(false);
+  
+  // Générer un snapshot au démarrage de l'application
+  useEffect(() => {
+    const initializeSnapshot = async () => {
+      if (database && !loadingData) {
+        try {
+          // console.log("Génération du snapshot initial...");
+          // const success = await updateCurrentSnapshot(database);
+          await updateCurrentSnapshot(database);
+          // if (success) {
+          //   console.log("Snapshot initial généré avec succès");
+          // } else {
+          //   console.log("Snapshot initial non généré - vérifiez s'il existe déjà des données valides");
+          // }
+        } catch (error) {
+          console.error("Erreur lors de la génération du snapshot initial:", error);
+        }
+      }
+    };
+    
+    initializeSnapshot();
+  }, [database, loadingData]);
   
   // Styles spécifiques au contenu
   const style_1 = {
@@ -78,7 +100,7 @@ const StartedPageContent = ({
     );
   } else if (showEnrollmentStats) {
     return (
-      <div style={style_1}>
+      <div style={{...style_1, marginTop: "5%"}}>
         <div style={style_2}>
           <EnrollmentStats
             setShowEnrollmentStats={setShowEnrollmentStats}
@@ -86,6 +108,7 @@ const StartedPageContent = ({
             text_color={text_color}
             theme={theme}
             database={database}
+            refreshData={refreshData}
           />
         </div>
       </div>
@@ -102,19 +125,7 @@ const StartedPageContent = ({
           minWidth: "94%",
           height: "92vh",
         }}
-      >
-        {/* Bouton pour afficher les statistiques d'effectifs */}
-        <div className="flex justify-end mr-4 mt-10">
-          <button
-            onClick={() => setShowEnrollmentStats(true)}
-            className={`flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors`}
-            title="Voir les statistiques d'effectifs par année scolaire"
-          >
-            <BarChart size={16} />
-            <span>Statistiques d'effectifs</span>
-          </button>
-        </div>
-        
+      > 
         <div
           style={{
             width: "100%",

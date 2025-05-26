@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Trash, Check, X, Save } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
-import { useLanguage, useFlashNotification } from "./contexts.js";
-import { gradients } from '../utils/colors.js';
+import { useLanguage, useFlashNotification } from "./contexts";
+import { gradients } from '../utils/colors';
+import { getCurrentSchoolYear } from '../utils/schoolYear';
 
 const CreateBulletin = ({
     selectedComposition,
@@ -279,7 +280,10 @@ const CreateBulletin = ({
     };
 
     const handleSaveBulletin = async () => {
+
         const uniqueNames = new Set(selectedSubjects.map(s => s.name.toLowerCase()));
+        const schoolYear = getCurrentSchoolYear();
+
         if (uniqueNames.size !== selectedSubjects.length) {
             setError("Le bulletin ne peut pas contenir de matières dupliquées.");
             return;
@@ -297,6 +301,7 @@ const CreateBulletin = ({
             const bulletinData = {
                 id: existingBulletinIndex >= 0 ? db.bulletins[existingBulletinIndex].id : Date.now().toString(),
                 compositionId: selectedComposition.id,
+                schoolYear: schoolYear,
                 classId: selectedClass,
                 isLocked: false,
                 subjects: selectedSubjects,

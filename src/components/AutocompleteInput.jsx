@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTheme } from "./contexts";
 
 const AutocompleteInput = ({ suggestions, value, onChange, placeholder, inputClass }) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
@@ -90,8 +91,13 @@ const AutocompleteInput = ({ suggestions, value, onChange, placeholder, inputCla
     };
   }, []);
 
+
+  const { theme } = useTheme();
+
+  const bgColor = theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-600";
+
   return (
-    <div className="relative" ref={containerRef}>
+    <div className={`relative ${bgColor}`} ref={containerRef}>
       <input
         type="text"
         value={value}
@@ -101,13 +107,13 @@ const AutocompleteInput = ({ suggestions, value, onChange, placeholder, inputCla
         className={inputClass}
       />
       {showSuggestions && filteredSuggestions.length > 0 && (
-        <ul className="absolute top-full left-0 right-0 z-50 bg-white border border-gray-300 max-h-40 overflow-y-auto">
+        <ul className={`scrollbar-custom absolute top-full left-0 right-0 z-50 ${bgColor} border border-gray-300 max-h-40 overflow-y-auto`}>
           {filteredSuggestions.map((sugg, index) => (
             <li
               key={index}
               ref={el => suggestionRefs.current[index] = el}
               onClick={() => handleSuggestionClick(sugg)}
-              className={`p-2 cursor-pointer ${index === activeSuggestionIndex ? "bg-blue-100" : "hover:bg-gray-200"
+              className={`p-2 cursor-pointer ${index === activeSuggestionIndex ? "bg-blue-100 text-gray-600" : "hover:bg-gray-200 hover:text-gray-600"
                 }`}
             >
               {sugg}

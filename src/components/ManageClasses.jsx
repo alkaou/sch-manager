@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gradients } from '../utils/colors';
 import { getClasseName } from '../utils/helpers';
-import { updateCurrentSnapshot } from '../utils/database_methods';
 import { useLanguage } from './contexts.js';
 
 const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, theme }) => {
@@ -27,6 +26,10 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
   const buttonDelete = "bg-red-600 hover:bg-red-700";
   const buttonAdd = "bg-green-600 hover:bg-green-700";
   const shinyBorderColor = theme === "dark" ? "border-blue-400" : "border-purple-400";
+  const hoverClass = app_bg_color === gradients[1] ? "hover:bg-white hover:text-gray-700" : 
+      app_bg_color === gradients[2] ? "hover:bg-gray-200 hover:text-gray-700" : 
+      theme === "dark" ? "hover:bg-gray-700 hover:text-white" : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white"
+                  
 
   const loadDatabase = async () => {
     try {
@@ -138,9 +141,6 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
     });
     const updatedDB = { ...db, classes: updatedClasses };
     
-    // Mettre à jour le snapshot de l'année en cours
-    updateCurrentSnapshot(updatedDB);
-    
     try {
       await window.electron.saveDatabase(updatedDB);
       setClasses(updatedClasses);
@@ -156,9 +156,6 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
     if (!classToDelete) return;
     const updatedClasses = classes.filter(cls => cls.id !== classToDelete.id);
     const updatedDB = { ...db, classes: updatedClasses };
-    
-    // Mettre à jour le snapshot de l'année en cours
-    updateCurrentSnapshot(updatedDB);
     
     try {
       await window.electron.saveDatabase(updatedDB);
@@ -227,9 +224,6 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       classes: updatedClasses,
       students: updatedStudents
     };
-    
-    // Mettre à jour le snapshot de l'année en cours
-    updateCurrentSnapshot(updatedDB);
     
     try {
       await window.electron.saveDatabase(updatedDB);
@@ -338,7 +332,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
             </thead>
             <tbody>
               {sortedClasses.map((cls) => (
-                <tr key={cls.id} className={`hover:bg-gray-50 hover:text-gray-500 ${text_color}`}>
+                <tr key={cls.id} className={`${text_color} ${hoverClass}`}>
                   <td className="px-2 py-1 border text-center">{cls.level}</td>
                   <td className="px-2 py-1 border text-center">
                     {editingClassId === cls.id ? (
@@ -418,7 +412,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
           </thead>
           <tbody>
             {newClasses.map((cls, index) => (
-              <tr key={index} className="hover:bg-gray-50">
+              <tr key={index} className={`${hoverClass}`}>
                 <td className="px-2 py-1 border">
                   <select
                     value={cls.level}

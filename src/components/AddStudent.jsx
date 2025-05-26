@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { saveStudentWithEnrollment as saveStudent, updateStudentWithEnrollment as updateStudent } from '../utils/database_methods';
+import { saveStudent, updateStudent } from '../utils/database_methods';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage, useFlashNotification } from './contexts';
 import { gradients } from '../utils/colors';
@@ -655,7 +655,7 @@ const AddStudent = ({
     >
       <div className="flex justify-between items-center mb-6">
         <motion.h2
-          className={`text-2xl font-bold ${selectInputTextColor}`}
+          className={`text-2xl font-bold ${text_color}`}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -664,7 +664,7 @@ const AddStudent = ({
         </motion.h2>
         <motion.button
           onClick={() => setIsAddStudentActive(false)}
-          className="text-gray-500 hover:text-gray-700 transition-colors p-2 rounded-full hover:bg-gray-200"
+          className={`${text_color} hover:text-gray-700 transition-colors p-2 rounded-full hover:bg-gray-200`}
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.9 }}
         >
@@ -689,9 +689,15 @@ const AddStudent = ({
             transition={{ duration: 0.3 }}
           >
             <div className="flex items-center">
-              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
+              {particuleError ?
+                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                :
+                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              }
               {success ? success : particuleError}
             </div>
           </motion.div>
@@ -737,26 +743,8 @@ const AddStudent = ({
           </AnimatePresence>
         </motion.div>
 
-        {/* Bouton pour ajouter un nouvel élève */}
-        {studentsForUpdate.length === 0 && (
-          <div className="flex justify-end mt-6">
-            <motion.button
-              type="button"
-              onClick={handleAddForm}
-              className={`text-white px-4 py-2 rounded-lg flex items-center ${buttonAddColor}`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              Ajouter un autre élève
-            </motion.button>
-          </div>
-        )}
-
         {/* Boutons d'action */}
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-5">
           <motion.button
             type="button"
             onClick={() => setIsAddStudentActive(false)}
@@ -794,6 +782,23 @@ const AddStudent = ({
               </>
             )}
           </motion.button>
+
+          {/* Bouton pour ajouter un nouvel élève */}
+          {studentsForUpdate.length === 0 && (
+            <motion.button
+              type="button"
+              onClick={handleAddForm}
+              className={`text-white px-4 py-2 rounded-lg flex items-center ${buttonAddColor}`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Ajouter un autre élève
+            </motion.button>
+          )}
+
         </div>
       </form>
     </motion.div>

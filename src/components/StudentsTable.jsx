@@ -3,7 +3,7 @@ import { User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2, CheckCircle, XCir
 import { gradients } from "../utils/colors";
 import { useLanguage, useFlashNotification } from "./contexts";
 import { getAge, getClasseName, getBornInfos } from "../utils/helpers";
-import { deleteStudentWithEnrollment as deleteStudent, activateStudentWithEnrollment as activateStudent, deactivateStudentWithEnrollment as deactivateStudent } from "../utils/database_methods";
+import { deleteStudent, activateStudent, deactivateStudent } from "../utils/database_methods";
 import ActionConfirmePopup from "./ActionConfirmePopup.jsx";
 
 
@@ -224,18 +224,12 @@ const StudentsTable = ({
   const tableHeaderBg = theme === "dark" ? "bg-gray-800" : head_bg_color;
   const table_head_text_color = app_bg_color === gradients[2] ? "text-white" : text_color;
 
-  const controlsPanelBg = theme === "dark"
-    ? `${app_bg_color} border`
-    : app_bg_color === gradients[1]
-      ? "bg-white bg-opacity-90 border"
-      : app_bg_color === gradients[2]
-        ? "bg-gray-100 border"
-        : `${app_bg_color} border`;
+  const controlsPanelBg = `${app_bg_color} border border-2`;
 
   return (
     <div
-      className="p-4 overflow-y-auto overflow-x-auto"
-      style={{ height: "100vh", marginTop: "2%" }}
+      className="p-4 scrollbar-custom overflow-y-auto overflow-x-auto"
+      style={{ height: "85vh", marginTop: "2%" }}
     >
       {students.length <= 0 ? (
         <div
@@ -278,7 +272,7 @@ const StudentsTable = ({
           </button>
         </div>
       ) : (
-        <div style={{ marginBottom: "45%" }}>
+        <div>
           {/* Informations sommaires */}
           <div className={`flex flex-wrap items-center justify-between mb-4 p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
             <div className="flex items-center space-x-10">
