@@ -144,15 +144,15 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
           }
       `}>
 
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+          <div className="flex items-center justify-between h-14 sm:h-16 md:h-20">
             {/* Logo */}
             <motion.div
               className="flex-shrink-0 flex items-center"
               variants={linkVariants}
             >
-              <Link to="/" className="flex items-center space-x-2">
-                <div className="relative h-12 w-12 overflow-hidden">
+              <Link to="/" className="flex items-center space-x-1 sm:space-x-2">
+                <div className="relative h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 overflow-hidden">
                   <LogoSVG
                     className={"h-full w-full object-contain"}
                     title="School Manager Logo"
@@ -160,14 +160,14 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                   <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-transparent mix-blend-overlay rounded-full"></div>
                 </div>
                 <div className="flex flex-col">
-                  <span className={`font-bold text-xl tracking-tight ${text_color} bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600`}>{live_language.app_name || "SchoolManager"}</span>
-                  <span className={`text-xs font-medium ${text_color}`}>{live_language.excellent_edu}</span>
+                  <span className={`font-bold text-sm sm:text-base md:text-xl tracking-tight ${text_color} bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600`}>{live_language.app_name || "SchoolManager"}</span>
+                  <span className={`text-xs font-medium ${text_color} hidden sm:inline`}>{live_language.excellent_edu}</span>
                 </div>
               </Link>
             </motion.div>
 
             {/* Right side actions */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-2 lg:space-x-4">
               <motion.div variants={linkVariants}>
                 <LanguageSelector
                   showLangPanel={showLangPanel}
@@ -180,10 +180,10 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
               <motion.button
                 variants={linkVariants}
                 onClick={toggleTheme}
-                className={`p-2 rounded-full ${text_color} hover:bg-green-200/80 dark:hover:bg-green-700/80`}
+                className={`p-1.5 sm:p-2 rounded-full ${text_color} hover:bg-green-200/80 dark:hover:bg-green-700/80`}
                 aria-label="Toggle theme"
               >
-                {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+                {theme === 'dark' ? <Sun size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" /> : <Moon size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />}
               </motion.button>
 
               {/* Premium Button */}
@@ -192,9 +192,9 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handlePremiumClick}
-                className="flex items-center px-3 py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full text-sm font-medium shadow-sm"
+                className="flex items-center px-2 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full text-xs sm:text-sm font-medium shadow-sm"
               >
-                <Crown size={16} className="mr-1.5" />
+                <Crown size={14} className="mr-1 sm:mr-1.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
                 <span>{live_language.premium_text || "Premium"}</span>
               </motion.button>
 
@@ -206,12 +206,12 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setNotificationsOpen(!notificationsOpen)}
-                    className={`p-2 rounded-full ${hoverBg} transition-colors relative`}
+                    className={`p-1.5 sm:p-2 rounded-full ${hoverBg} transition-colors relative`}
                     aria-label="Notifications"
                   >
-                    <Bell className={`${text_color}`} size={20} />
+                    <Bell className={`${text_color} w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6`} />
                     {unreadCount > 0 && (
-                      <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
+                      <span className="absolute top-0 right-0 h-3 w-3 sm:h-4 sm:w-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
                         {unreadCount}
                       </span>
                     )}
@@ -224,10 +224,10 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                        className={`absolute right-0 mt-2 w-80 ${dropdownBg} ${borderColor} border rounded-lg shadow-lg overflow-hidden z-50`}
+                        className={`absolute right-0 mt-2 w-64 sm:w-72 md:w-80 ${dropdownBg} ${borderColor} border rounded-lg shadow-lg overflow-hidden z-50`}
                       >
                         <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                          <h3 className="font-medium">{live_language.notifications_text || "Notifications"}</h3>
+                          <h3 className="font-medium text-sm sm:text-base">{live_language.notifications_text || "Notifications"}</h3>
                           {unreadCount > 0 && (
                             <button
                               onClick={markAllAsRead}
@@ -238,15 +238,15 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                           )}
                         </div>
 
-                        <div className="max-h-80 overflow-y-auto">
+                        <div className="max-h-60 sm:max-h-72 md:max-h-80 overflow-y-auto">
                           {notifications.length > 0 ? (
                             notifications.map(notification => (
                               <div
                                 key={notification.id}
-                                className={`p-3 border-b ${borderColor} last:border-0 ${!notification.read ? notificationUnreadBg : ''}`}
+                                className={`p-2 sm:p-3 border-b ${borderColor} last:border-0 ${!notification.read ? notificationUnreadBg : ''}`}
                               >
                                 <div className="flex justify-between">
-                                  <p className={`${text_color} text-sm`}>{notification.message}</p>
+                                  <p className={`${text_color} text-xs sm:text-sm`}>{notification.message}</p>
                                   {!notification.read && (
                                     <span className="h-2 w-2 bg-blue-600 rounded-full"></span>
                                   )}
@@ -255,14 +255,14 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                               </div>
                             ))
                           ) : (
-                            <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                            <div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
                               {live_language.no_notifications_text || "No notifications"}
                             </div>
                           )}
                         </div>
 
                         <div className="p-2 border-t border-gray-200 dark:border-gray-700 text-center">
-                          <button className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+                          <button className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
                             {live_language.view_all || "View all notifications"}
                           </button>
                         </div>
@@ -283,7 +283,7 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                     className="flex items-center space-x-2"
                     aria-label="User menu"
                   >
-                    <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-blue-500">
+                    <div className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 rounded-full overflow-hidden border-2 border-blue-500">
                       {currentUser?.photoURL ? (
                         <img
                           src={currentUser.photoURL}
@@ -292,15 +292,15 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                         />
                       ) : (
                         <div className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}>
-                          <User size={20} />
+                          <User size={16} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
                         </div>
                       )}
                     </div>
                     <div className="hidden md:flex items-center">
-                      <span className={`text-sm font-medium ${text_color}`}>
+                      <span className={`text-xs sm:text-sm font-medium ${text_color}`}>
                         {currentUser?.displayName || live_language.user_text || "User"}
                       </span>
-                      <ChevronDown size={16} className="ml-1" />
+                      <ChevronDown size={14} className="ml-1" />
                     </div>
                   </motion.button>
 
@@ -311,11 +311,11 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                        className={`absolute right-0 mt-2 w-56 ${dropdownBg} ${borderColor} border rounded-lg shadow-lg overflow-hidden z-50`}
+                        className={`absolute right-0 mt-2 w-48 sm:w-52 md:w-56 ${dropdownBg} ${borderColor} border rounded-lg shadow-lg overflow-hidden z-50`}
                       >
                         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
                           <div className="flex items-center space-x-3">
-                            <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-blue-500">
+                            <div className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full overflow-hidden border-2 border-blue-500">
                               {currentUser?.photoURL ? (
                                 <img
                                   src={currentUser.photoURL}
@@ -324,12 +324,12 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                                 />
                               ) : (
                                 <div className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}>
-                                  <User size={20} />
+                                  <User size={16} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
                                 </div>
                               )}
                             </div>
                             <div>
-                              <p className={`text-sm font-medium ${text_color}`}>
+                              <p className={`text-xs sm:text-sm font-medium ${text_color}`}>
                                 {currentUser?.displayName || live_language.user_text || "User"}
                               </p>
                               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
@@ -342,23 +342,23 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                         <div className="py-1">
                           <button
                             onClick={navigate_to_profile}
-                            className={`flex items-center w-full px-4 py-2 text-sm ${text_color} ${hoverBg}`}
+                            className={`flex items-center w-full px-3 sm:px-4 py-2 text-xs sm:text-sm ${text_color} ${hoverBg}`}
                           >
-                            <User size={16} className="mr-2" />
+                            <User size={14} className="mr-2" />
                             {live_language.profile_btn_text || "Profile"}
                           </button>
                           <button
                             onClick={handleHelpClick}
-                            className={`flex items-center w-full px-4 py-2 text-sm ${text_color} ${hoverBg}`}
+                            className={`flex items-center w-full px-3 sm:px-4 py-2 text-xs sm:text-sm ${text_color} ${hoverBg}`}
                           >
-                            <HelpCircle size={16} className="mr-2" />
+                            <HelpCircle size={14} className="mr-2" />
                             {live_language.help_btn_text || "Help"}
                           </button>
                           <button
                             onClick={handleLogout}
-                            className={`flex items-center w-full px-4 py-2 text-sm text-red-600 ${hoverBg}`}
+                            className={`flex items-center w-full px-3 sm:px-4 py-2 text-xs sm:text-sm text-red-600 ${hoverBg}`}
                           >
-                            <LogOut size={16} className="mr-2" />
+                            <LogOut size={14} className="mr-2" />
                             {live_language.logout_btn_text || "Logout"}
                           </button>
                         </div>
@@ -372,9 +372,9 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleLoginClick}
-                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors space-x-1 shadow-md"
+                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-1.5 sm:py-2 px-3 sm:px-4 rounded-md transition-colors space-x-1 shadow-md text-xs sm:text-sm"
                 >
-                  <LogIn size={18} />
+                  <LogIn size={16} className="sm:w-4 sm:h-4 md:w-5 md:h-5" />
                   <span>{live_language.loginText || "Connexion"}</span>
                 </motion.button>
               )}
@@ -385,7 +385,7 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
               <motion.button
                 variants={linkVariants}
                 onClick={toggleTheme}
-                className={`p-2 rounded-full ${text_color} hover:bg-gray-200 dark:hover:bg-gray-700`}
+                className={`p-1.5 rounded-full ${text_color} hover:bg-gray-200 dark:hover:bg-gray-700`}
               >
                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
               </motion.button>
@@ -393,7 +393,7 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
               <motion.button
                 variants={linkVariants}
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={`p-2 rounded-md ${text_color} hover:bg-gray-200 dark:hover:bg-gray-700`}
+                className={`p-1.5 rounded-md ${text_color} hover:bg-gray-200 dark:hover:bg-gray-700`}
               >
                 {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </motion.button>
@@ -422,7 +422,7 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
               {isAuthenticated ? (
                 <>
                   <div className="flex items-center space-x-3 p-2 border-b border-gray-200 dark:border-gray-700">
-                    <div className="h-10 w-10 rounded-full overflow-hidden border-2 border-blue-500">
+                    <div className="h-9 w-9 rounded-full overflow-hidden border-2 border-blue-500">
                       {currentUser?.photoURL ? (
                         <img
                           src={currentUser.photoURL}
@@ -431,7 +431,7 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                         />
                       ) : (
                         <div className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}>
-                          <User size={20} />
+                          <User size={18} />
                         </div>
                       )}
                     </div>

@@ -32,31 +32,36 @@ const ColorsSelector = ({ OpenThePopup }) => {
     };
 
     return (
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-3 md:gap-4 w-full max-w-full">
             {/* Aperçu du fond sélectionné */}
-            <div className={`w-40 h-20 rounded-lg shadow-lg ${selectedColor}`}></div>
+            <div className={`w-32 md:w-40 h-16 md:h-20 rounded-lg shadow-lg ${selectedColor}`}></div>
 
             {/* Bouton de validation */}
             <button
-                className="w-12 h-12 hover:scale-110 flex items-center justify-center rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 transition"
+                className="w-10 h-10 md:w-12 md:h-12 hover:scale-110 flex items-center justify-center rounded-full bg-green-600 text-white shadow-lg hover:bg-green-700 transition"
                 onClick={select_this_color}
             >
-                <Check className="w-6 h-6" />
+                <Check className="w-5 h-5 md:w-6 md:h-6" />
             </button>
 
             {/* Sélecteur de couleurs */}
-            <h2 className={`text-lg font-semibold ${theme === "dark" ? "text-white" : "text-gray-800"} text-bold italic text-center mb-2`}>{Translator[language].select_color_text}</h2>
-            <div className="grid grid-cols-4 gap-3 overflow-y-auto max-h-60 custom-scrollbar p-2">
+            <h2 className={`text-base md:text-lg font-semibold ${theme === "dark" ? "text-white" : "text-gray-800"} text-bold italic text-center mb-1 md:mb-2`}>{Translator[language].select_color_text}</h2>
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 md:gap-3 overflow-y-auto scrollbar-custom max-h-48 md:max-h-60 p-2 w-full">
                 {gradients.map((gradient, index) => (
                     <button
                         key={index}
-                        className={`relative w-14 h-14 rounded-full shadow-md border-2 ${selectedColor === gradient ? "border-blue-500" : "border-transparent"} ${gradient} hover:scale-110 transition-all`}
+                        className={`
+                            relative ml-auto mr-auto w-12 h-12 md:w-14 md:h-14 rounded-full 
+                            shadow-md border-2 ${selectedColor === gradient ? "border-blue-500" : 
+                            "border-transparent"} ${gradient} hover:scale-110 transition-all duration-300
+                            ${index + 1 === gradients.length ? "mb-2" : ""}
+                        `}
                         onClick={() => setSelectedColor(gradient)}
                     >
                         {/* Icône Check centrée sur la couleur sélectionnée */}
                         {selectedColor === gradient && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <Check className="w-6 h-6 text-white drop-shadow-md" />
+                                <Check className="w-5 h-5 md:w-6 md:h-6 text-white drop-shadow-md" />
                             </div>
                         )}
                     </button>

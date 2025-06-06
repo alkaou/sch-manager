@@ -228,13 +228,11 @@ const StudentsTable = ({
 
   return (
     <div
-      className="p-4 scrollbar-custom overflow-y-auto overflow-x-auto"
-      style={{ height: "85vh", marginTop: "2%" }}
+      className="p-2 sm:p-3 md:p-4 scrollbar-custom overflow-y-auto overflow-x-auto w-full h-full"
     >
       {students.length <= 0 ? (
         <div
-          style={{ marginTop: "20%" }}
-          className={`flex flex-col items-center justify-center p-6 space-y-4 ${app_bg_color} animate-fadeIn`}
+          className={`flex flex-col items-center justify-center p-4 md:p-6 space-y-4 ${app_bg_color} animate-fadeIn mt-8 md:mt-20`}
         >
           {classes.length <= 0 ?
             <>
@@ -256,7 +254,7 @@ const StudentsTable = ({
             </>
           }
           <button
-            className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded bg-blue-700 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
+            className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded bg-blue-700 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
             onClick={classes.length <= 0 ? handleAddClasses : handleAddStudent}
           >
             <svg
@@ -274,27 +272,27 @@ const StudentsTable = ({
       ) : (
         <div>
           {/* Informations sommaires */}
-          <div className={`flex flex-wrap items-center justify-between mb-4 p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
-            <div className="flex items-center space-x-10">
-              <p className={`${_text_color} font-bold text-base transition-transform duration-300 transform hover:scale-105`}>
+          <div className={`flex flex-wrap items-center justify-between mb-3 md:mb-4 p-2 md:p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
+            <div className="flex items-center space-x-4 md:space-x-10 flex-wrap">
+              <p className={`${_text_color} font-bold text-sm md:text-base transition-transform duration-300 transform hover:scale-105`}>
                 {live_language.students_number_text} : <span className={`${_text_color}`}>{filteredStudents.length}</span>
               </p>
-              <span className={`${_text_color}`}>|</span>
-              <p className={`${_text_color} font-bold text-base transition-transform duration-300 transform hover:scale-105`}>
+              <span className={`${_text_color} hidden md:inline`}>|</span>
+              <p className={`${_text_color} font-bold text-sm md:text-base transition-transform duration-300 transform hover:scale-105`}>
                 {live_language.classe_number_text} : <span className={`${_text_color}`}>{totalClassesAvailable}</span>
               </p>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center flex-wrap gap-1 md:gap-2 mt-2 md:mt-0">
               {/* Bouton refresh - Enhanced with better hover effect */}
               <button
                 onClick={handleRefresh}
-                className={`p-2 rounded-full border bg-blue-500 hover:bg-blue-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
+                className={`p-1 md:p-2 rounded-full border bg-blue-500 hover:bg-blue-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md`}
                 title={live_language.refresh_text || "Rafraîchir"}
               >
                 {isRefreshing ? (
-                  <RefreshCcw className={`animate-spin text-white`} size={20} />
+                  <RefreshCcw className={`animate-spin text-white w-4 h-4 md:w-5 md:h-5`} />
                 ) : (
-                  <RefreshCcw className={`text-white`} size={20} />
+                  <RefreshCcw className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 )}
               </button>
 
@@ -302,10 +300,10 @@ const StudentsTable = ({
               {selected.length > 0 && (
                 <button
                   onClick={handleDeleteSelected}
-                  className="p-2 rounded-full border border-red-300 bg-red-500 hover:bg-red-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
+                  className="p-1 md:p-2 rounded-full border border-red-300 bg-red-500 hover:bg-red-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
                   title={live_language.delete_selected_text || "Supprimer la sélection"}
                 >
-                  <Trash size={20} className="text-white" />
+                  <Trash className="text-white w-4 h-4 md:w-5 md:h-5" />
                 </button>
               )}
 
@@ -313,36 +311,36 @@ const StudentsTable = ({
               {selected.length > 0 && allActive && (
                 <button
                   onClick={handleDeactivateSelected}
-                  className="p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
+                  className="p-1 md:p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
                   title={live_language.deactivate_selected_text || "Désactiver la sélection"}
                 >
-                  <XCircle size={20} className={`text-white`} />
+                  <XCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 </button>
               )}
               {selected.length > 0 && allInactive && (
                 <button
                   onClick={handleActivateSelected}
-                  className="p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
+                  className="p-1 md:p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
                   title={live_language.activate_selected_text || "Activer la sélection"}
                 >
-                  <CheckCircle size={20} className={`text-white`} />
+                  <CheckCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 </button>
               )}
               {selected.length > 0 && !allActive && !allInactive && (
                 <>
                   <button
                     onClick={handleDeactivateSelected}
-                    className="p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
+                    className="p-1 md:p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
                     title={live_language.deactivate_selected_text || "Désactiver la sélection"}
                   >
-                    <XCircle size={20} className={`text-white`} />
+                    <XCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                   </button>
                   <button
                     onClick={handleActivateSelected}
-                    className="p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md"
+                    className="p-1 md:p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
                     title={live_language.activate_selected_text || "Activer la sélection"}
                   >
-                    <CheckCircle size={20} className={`text-white`} />
+                    <CheckCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                   </button>
                 </>
               )}
@@ -350,44 +348,44 @@ const StudentsTable = ({
               {/* Bouton ajouter un élève - Enhanced with better hover effect */}
               <button
                 onClick={handleAddStudent}
-                className={`p-2 rounded-full border ${tableBorderColor} bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
+                className={`p-1 md:p-2 rounded-full border ${tableBorderColor} bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md`}
                 title={live_language.add_student_text || "Ajouter un élève"}
               >
-                <UserPlus size={20} className={`text-white`} />
+                <UserPlus className={`text-white w-4 h-4 md:w-5 md:h-5`} />
               </button>
 
               {/* Bouton ajouter une classe - Enhanced with better hover effect */}
               <button
                 onClick={handleAddClasses}
-                className={`p-2 rounded-full border ${tableBorderColor} bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
+                className={`p-1 md:p-2 rounded-full border ${tableBorderColor} bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md`}
                 title={live_language.add_class_text || "Ajouter une classe"}
               >
-                <PlusSquare size={20} className={`text-white`} />
+                <PlusSquare className={`text-white w-4 h-4 md:w-5 md:h-5`} />
               </button>
 
               {/* Bouton modifier des élèves sélectionnés - Enhanced with better hover effect */}
               {selected.length > 0 && (
                 <button
                   onClick={handleEditStudentSelected}
-                  className={`p-2 rounded-full border ${tableBorderColor} bg-blue-500 hover:bg-blue-600 transition-transform duration-300 transform hover:scale-150 hover:shadow-md`}
+                  className={`p-1 md:p-2 rounded-full border ${tableBorderColor} bg-blue-500 hover:bg-blue-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md`}
                   title={live_language.edit_selected_text || "Modifier la sélection"}
                 >
-                  <Edit2 size={20} className={`text-white`} />
+                  <Edit2 className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 </button>
               )}
             </div>
           </div>
 
           {/* Contrôles de tri, filtrage, recherche et sélection globale */}
-          <div className={`flex flex-wrap items-center justify-between gap-3 mb-4 p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
-            <div className="flex items-center space-x-2">
-              <label className={`${_text_color} font-semibold`}>
+          <div className={`flex flex-wrap items-center justify-between gap-2 md:gap-3 mb-3 md:mb-4 p-2 md:p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
+            <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
+              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>
                 {live_language.sort_by_text || "Trier:"}
               </label>
               <select
                 value={sortCriterion}
                 onChange={(e) => setSortCriterion(e.target.value)}
-                className={`px-2 py-1 ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
                 <option value="default">Défaut</option>
                 <option value="last_name">Nom</option>
@@ -395,14 +393,14 @@ const StudentsTable = ({
                 <option value="added_at">{live_language.added_time_text}</option>
               </select>
             </div>
-            <div className="flex items-center space-x-2">
-              <label className={`${_text_color} font-semibold`}>
+            <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
+              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>
                 {live_language.filter_by_class_text || "Filtrer par classe:"}
               </label>
               <select
                 value={filterClass}
                 onChange={(e) => setFilterClass(e.target.value)}
-                className={`px-2 py-1 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-1 md:px-2 py-1 text-xs md:text-sm rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
                 <option value="All">{live_language.all_text}</option>
                 {availableClasses.map((cls) => (
@@ -413,12 +411,12 @@ const StudentsTable = ({
               </select>
             </div>
             {/* Nouveau filtre : par status - Enhanced with better focus states */}
-            <div className="flex items-center space-x-2">
-              <label className={`${_text_color} font-semibold`}>Filtrer par status:</label>
+            <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
+              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>Status:</label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className={`px-2 py-1 ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
                 <option value="All">Tous</option>
                 <option value="actif">Les actifs</option>
@@ -426,20 +424,20 @@ const StudentsTable = ({
               </select>
             </div>
             {/* Nouveau filtre : par matricule - Enhanced with better focus states */}
-            <div className="flex items-center space-x-2">
-              <label className={`${_text_color} font-semibold`}>Filtrer par matricule:</label>
+            <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
+              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>Matricule:</label>
               <select
                 value={filterMatricule}
                 onChange={(e) => setFilterMatricule(e.target.value)}
-                className={`px-2 py-1 ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
                 <option value="All">Tous</option>
-                <option value="With">Avec matricule</option>
-                <option value="Without">Sans matricule</option>
+                <option value="With">Avec</option>
+                <option value="Without">Sans</option>
               </select>
             </div>
-            <div className="flex items-center space-x-2">
-              <label className={`${_text_color} font-semibold`}>
+            <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
+              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>
                 {live_language.search_text}:
               </label>
               <input
@@ -447,32 +445,33 @@ const StudentsTable = ({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={live_language.recherche_text}
-                className={`px-2 py-1 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-1 md:px-2 py-1 text-xs md:text-sm rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto">
               <input
                 type="checkbox"
                 checked={selected.length === filteredStudents.length && filteredStudents.length > 0}
                 onChange={toggleSelectAll}
-                className="w-5 h-5 rounded text-blue-600 focus:ring-blue-500"
+                className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className={`${_text_color} font-semibold`}>
+              <span className={`${_text_color} font-semibold text-xs md:text-sm`}>
                 {live_language.select_all_text}
               </span>
             </div>
           </div>
 
           {/* Tableau des élèves avec scroll horizontal si nécessaire */}
-          <div className="animate-fadeIn rounded-lg shadow-md">
+          <div className="animate-fadeIn rounded-lg shadow-md overflow-x-auto">
             <table
-              className={`min-w-full table-fixed border-collapse ${tableBorderColor}`}
+              className={`min-w-full border-collapse ${tableBorderColor} text-xs md:text-sm`}
               style={{
                 borderWidth: "1px",
+                tableLayout: "auto",
               }}
             >
               <thead
-                className={`sticky -top-5 ${tableHeaderBg} ${table_head_text_color} shadow-lg`}
+                className={`sticky top-0 ${tableHeaderBg} ${table_head_text_color} shadow-lg`}
                 style={{
                   borderWidth: "2px",
                   borderRadius: 10,
@@ -483,51 +482,51 @@ const StudentsTable = ({
                 }}
               >
                 <tr className={`divide-x ${theme === "dark" ? "divide-gray-700" : "divide-gray-200"}`}>
-                  <th className="w-8 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     <input
                       type="checkbox"
                       checked={selected.length === filteredStudents.length && filteredStudents.length > 0}
                       onChange={toggleSelectAll}
-                      className="w-5 h-5 mx-auto rounded text-blue-600 focus:ring-blue-500"
+                      className="w-3 h-3 md:w-4 md:h-4 mx-auto rounded text-blue-600 focus:ring-blue-500"
                     />
                   </th>
-                  <th className="w-12 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.profile_text}
                   </th>
-                  <th className="w-1/6 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.fullname_text}
                   </th>
-                  <th className="w-1/6 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.classe_text}
                   </th>
-                  <th className="w-28 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.birth_text}
                   </th>
-                  <th className="w-20 py-1 px-2 border-b border-gray-300 text-center">
-                    &nbsp;&nbsp;&nbsp;{live_language.age_text}&nbsp;&nbsp;&nbsp;
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
+                    {live_language.age_text}
                   </th>
-                  <th className="w-16 py-1 px-2 border-b border-gray-300 text-center">
-                    &nbsp;&nbsp;{live_language.sexe_text}&nbsp;&nbsp;
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
+                    {live_language.sexe_text}
                   </th>
-                  <th className="w-24 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     Nº matricule
                   </th>
-                  <th className="w-20 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.status_text}
                   </th>
-                  <th className="w-1/6 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.father_text}
                   </th>
-                  <th className="w-1/6 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.mother_text}
                   </th>
-                  <th className="w-24 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.contact_text}
                   </th>
-                  <th className="w-28 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.added_time_text}
                   </th>
-                  <th className="w-28 py-1 px-2 border-b border-gray-300 text-center">
+                  <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.updated_time_text}
                   </th>
                 </tr>
@@ -545,59 +544,58 @@ const StudentsTable = ({
                         theme === "dark" ? "hover:bg-gray-700 hover:text-white" : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white"
                       }`
                     }>
-                    <td className="py-1 px-2 text-center">
+                    <td className="py-1 px-1 md:px-2 text-center">
                       <input
                         type="checkbox"
                         checked={selected.includes(student.id)}
                         onChange={() => toggleSelectStudent(student.id)}
-                        className="w-5 h-5 mx-auto rounded text-blue-600 focus:ring-blue-500"
+                        className="w-3 h-3 md:w-4 md:h-4 mx-auto rounded text-blue-600 focus:ring-blue-500"
                       />
                     </td>
-                    <td className="py-1 px-2 text-center">
-                      <div className="w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center">
-                        <User className="text-gray-500 text-xs" />
+                    <td className="py-1 px-1 md:px-2 text-center">
+                      <div className="w-6 h-6 md:w-8 md:h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center mx-auto">
+                        <User className="text-gray-500 w-4 h-4 md:w-5 md:h-5" />
                       </div>
                     </td>
-                    <td className="py-1 px-2 text-center">{student.name_complet}</td>
-                    <td className="py-1 px-2 text-center">{getClasseName(student.classe, language)}</td>
-                    <td className="py-1 px-2 text-center">
+                    <td className="py-1 px-1 md:px-2 text-center">{student.name_complet}</td>
+                    <td className="py-1 px-1 md:px-2 text-center">{getClasseName(student.classe, language)}</td>
+                    <td className="py-1 px-1 md:px-2 text-center">
                       {getBornInfos(student.birth_date, student.birth_place, language)}
                     </td>
-                    <td className="py-1 px-2 text-center">
+                    <td className="py-1 px-1 md:px-2 text-center">
                       {getAge(student.birth_date)}
                       <div className="text-center">
-                        <b style={{ fontSize: "11px" }}>{live_language.years_text}</b>
+                        <b className="text-[9px] md:text-[11px]">{live_language.years_text}</b>
                       </div>
                     </td>
-                    <td className="py-1 px-2 text-center">{student.sexe}</td>
-                    <td className="py-1 px-2 text-center">
+                    <td className="py-1 px-1 md:px-2 text-center">{student.sexe}</td>
+                    <td className="py-1 px-1 md:px-2 text-center">
                       {!student.matricule || student.matricule === "" ? "-" : student.matricule}
                     </td>
-                    <td className="py-1 px-2 text-center">
+                    <td className="py-1 px-1 md:px-2 text-center">
                       {
                         language === "Français" ? student.status :
                           language === "Anglais" && student.status === "actif" ? "active" :
                             language === "Anglais" && student.status === "inactif" ? "inactive" :
                               language === "Bambara" && student.status === "actif" ? "Bɛɲin" : "Tɛɲin"
                       }
-                      <div className="text-center" style={{
-                        width: "15px",
-                        height: "15px",
-                        borderRadius: "20px",
+                      <div className="text-center mx-auto" style={{
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "10px",
                         borderWidth: "2px",
                         borderColor: "white",
                         backgroundColor: student.status === "actif" ? "green" : "gray",
-                        alignSelf: "center",
-                        marginLeft: "35%",
+                        marginTop: "2px",
                       }}></div>
                     </td>
-                    <td className="py-1 px-2 text-center">{student.father_name || "-"}</td>
-                    <td className="py-1 px-2 text-center">{student.mother_name || "-"}</td>
-                    <td className="py-1 px-2 text-center">{student.parents_contact || "-"}</td>
-                    <td className="py-1 px-2 text-center">
+                    <td className="py-1 px-1 md:px-2 text-center">{student.father_name || "-"}</td>
+                    <td className="py-1 px-1 md:px-2 text-center">{student.mother_name || "-"}</td>
+                    <td className="py-1 px-1 md:px-2 text-center">{student.parents_contact || "-"}</td>
+                    <td className="py-1 px-1 md:px-2 text-center">
                       {new Date(student.added_at).toLocaleDateString()}
                     </td>
-                    <td className="py-1 px-2 text-center">
+                    <td className="py-1 px-1 md:px-2 text-center">
                       {student.updated_at
                         ? new Date(student.updated_at).toLocaleDateString()
                         : "-"}
@@ -611,11 +609,10 @@ const StudentsTable = ({
       )}
 
       {selected.length > 0 && (
-        <div className="fixed right-40 bottom-5">
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-30">
           <div
-            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg transform transition-all duration-500 ease-in-out animate-bounce-subtle hover:scale-105"
+            className="flex items-center gap-2 px-3 py-1 md:px-4 md:py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-lg transform transition-all duration-500 ease-in-out animate-bounce-subtle hover:scale-105 text-xs md:text-sm"
             style={{
-              borderLeft: "4px solid #FFF",
               borderWidth: "2px",
               borderColor: "#FFF",
             }}

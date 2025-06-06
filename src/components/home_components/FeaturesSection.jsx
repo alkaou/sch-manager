@@ -20,18 +20,18 @@ const FeaturesSection = ({ isOthersBGColors }) => {
 
     return (
       <motion.div
-        className={`${text_color} p-6 rounded-xl shadow-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} hover:shadow-xl transition-all duration-300`}
+        className={`${text_color} p-3 sm:p-4 md:p-6 rounded-xl shadow-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} hover:shadow-xl transition-all duration-300`}
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.5, delay: delay }}
         whileHover={{ y: -5 }}
       >
-        <div className="mb-4 bg-blue-100 dark:bg-blue-900/30 w-14 h-14 rounded-lg flex items-center justify-center">
-          <Icon size={28} className="text-blue-600 dark:text-blue-400" />
+        <div className="mb-3 md:mb-4 bg-blue-100 dark:bg-blue-900/30 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center">
+          <Icon size={18} className="text-blue-600 dark:text-blue-400 sm:w-5 sm:h-5 md:w-7 md:h-7" />
         </div>
-        <h3 className="text-xl font-bold mb-3">{title}</h3>
-        <p className="opacity-75">{description}</p>
+        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 md:mb-3">{title}</h3>
+        <p className="opacity-75 text-sm sm:text-base">{description}</p>
       </motion.div>
     );
   };
@@ -104,7 +104,7 @@ const FeaturesSection = ({ isOthersBGColors }) => {
   ];
 
   return (
-    <section id="features" className="py-20 relative overflow-hidden">
+    <section id="features" className="py-12 sm:py-16 md:py-20 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10 opacity-5">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
@@ -117,26 +117,26 @@ const FeaturesSection = ({ isOthersBGColors }) => {
         </svg>
       </div>
 
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 w-full">
         <motion.div
-          className="text-center mb-16"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
           <h2 className={`
-              text-3xl md:text-4xl font-bold mb-6 inline-block bg-clip-text text-transparent 
+              text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 md:mb-6 inline-block bg-clip-text text-transparent 
               ${isOthersBGColors ? "bg-gradient-to-r from-white to-gray-50" : "bg-gradient-to-r from-blue-600 to-purple-600"}
           `}>
             {live_language.features_title || "Fonctionnalités Puissantes"}
           </h2>
-          <p className="max-w-2xl mx-auto text-lg opacity-75">
+          <p className="max-w-2xl mx-auto text-base sm:text-lg opacity-75 px-4">
             {live_language.features_subtitle || "Tout ce dont vous avez besoin pour une gestion scolaire efficace, accessible depuis n'importe quel appareil."}
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {features.map(feature => (
             <FeatureItem
               key={feature.id}
@@ -150,38 +150,38 @@ const FeaturesSection = ({ isOthersBGColors }) => {
 
         {/* Additional feature highlight */}
         <motion.div
-          className={`mt-16 p-8 ${text_color} rounded-2xl shadow-2xl ${theme === 'dark' ? 'bg-gray-800/50' : 'bg-blue-50'} border border-blue-200 dark:border-blue-800`}
+          className={`mt-10 sm:mt-12 md:mt-16 p-4 sm:p-6 md:p-8 ${text_color} rounded-2xl shadow-2xl ${theme === 'dark' ? 'bg-gray-800/50' : 'bg-blue-50'} border border-blue-200 dark:border-blue-800`}
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
             <div className="w-full md:w-1/2">
-              <h3 className="text-2xl font-bold mb-4">
+              <h3 className="text-xl sm:text-2xl font-bold mb-3 md:mb-4">
                 {live_language.multilingual_support || "Support multilingue"}
               </h3>
-              <p className="mb-6 opacity-75">
+              <p className="mb-4 md:mb-6 opacity-75 text-sm sm:text-base">
                 {live_language.multilingual_description || "Notre application prend en charge plusieurs langues (Français, Anglais, Bambara) pour répondre aux besoins de différentes communautés éducatives."}
               </p>
-              <div className="flex space-x-4">
+              <div className="flex flex-wrap gap-3 md:gap-4">
                 <div className="flex items-center">
-                  <Shield className="text-green-600 mr-2" size={20} />
-                  <span>{live_language.security_text || "Sécurité"}</span>
+                  <Shield className="text-green-600 mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">{live_language.security_text || "Sécurité"}</span>
                 </div>
                 <div className="flex items-center">
-                  <DownloadCloud className="text-blue-600 mr-2" size={20} />
-                  <span>{live_language.backup_text || "Sauvegarde"}</span>
+                  <DownloadCloud className="text-blue-600 mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">{live_language.backup_text || "Sauvegarde"}</span>
                 </div>
                 <div className="flex items-center">
-                  <Layers className="text-purple-600 mr-2" size={20} />
-                  <span>{live_language.customization_text || "Personnalisation"}</span>
+                  <Layers className="text-purple-600 mr-2 w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="text-sm sm:text-base">{live_language.customization_text || "Personnalisation"}</span>
                 </div>
               </div>
             </div>
             <div className="w-full md:w-1/2 flex justify-center">
               <motion.div
-                className="relative h-64 w-64"
+                className="relative h-48 w-48 sm:h-56 sm:w-56 md:h-64 md:w-64"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
               >
@@ -191,7 +191,7 @@ const FeaturesSection = ({ isOthersBGColors }) => {
                 <div className="absolute inset-4 rounded-full border-4 border-dashed border-blue-400 dark:border-blue-700 animate-spin" style={{ animationDuration: '20s', animationDirection: 'reverse' }}></div>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <motion.div
-                    className="h-32 w-32 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg"
+                    className="h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 bg-blue-600 dark:bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl md:text-2xl shadow-lg"
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ duration: 2, repeat: Infinity }}
                   >
@@ -204,9 +204,9 @@ const FeaturesSection = ({ isOthersBGColors }) => {
                   <motion.div
                     key={index}
                     className={`
-                      absolute w-12 h-12 
+                      absolute w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 
                       ${index === 0 ? "bg-green-600" : index === 1 ? "bg-yellow-600" : "bg-red-600"} 
-                      text-white rounded-full flex items-center justify-center text-xl shadow-lg
+                      text-white rounded-full flex items-center justify-center text-sm sm:text-base md:text-xl shadow-lg
                     `}
                     initial={{
                       x: Math.cos(index * (2 * Math.PI / 3)) * 100,

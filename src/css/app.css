@@ -83,24 +83,47 @@
 /* CUSTOM SCROLL BAR */
 /* Styles pour WebKit (Chrome, Edge, Safari) */
 .scrollbar-custom::-webkit-scrollbar {
-  width: 15px;
+  width: 2px; /* Reduced from 15px to 8px */
+}
+
+@media (max-width: 768px) {
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 2px; /* Even thinner on mobile */
+  }
 }
 
 .scrollbar-custom::-webkit-scrollbar-track {
   background: #f1f1f1;
+  border-radius: 10px;
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb {
   background: #3498db;
-  border-radius: 8px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
   background: #2980b9;
 }
 
+/* Firefox scrollbar */
 .scrollbar-custom {
   scrollbar-width: thin;
-  scrollbar-color:rgb(85, 85, 85) #f1f1f1;
+  scrollbar-color: #3498db #f1f1f1;
+}
+
+/* For dark theme */
+.dark .scrollbar-custom::-webkit-scrollbar-track {
+  background: #2d3748;
+}
+
+.dark .scrollbar-custom::-webkit-scrollbar-thumb {
+  background: #4299e1;
+}
+
+.dark .scrollbar-custom {
+  scrollbar-color: #4299e1 #2d3748;
 }
 

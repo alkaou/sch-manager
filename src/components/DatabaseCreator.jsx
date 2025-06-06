@@ -563,7 +563,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 									>
 										{currentStep === 3 ? (
 											<>
-												{live_language.create_btn_text}
+												{db === null ? live_language.create_btn_text : live_language.update_btn_text}
 												<BsCheckCircleFill className="ml-2" />
 											</>
 										) : (

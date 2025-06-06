@@ -25,7 +25,7 @@ const Popup = ({
         <AnimatePresence>
             {isOpenPopup && (
                 <motion.div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30"
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -43,13 +43,13 @@ const Popup = ({
                     >
                         {/* Bouton de fermeture */}
                         <button
-                            className="absolute top-4 right-4 p-2 bg-gray-200 dark:bg-gray-800 rounded-full shadow-md hover:scale-110 transition-all duration-300"
+                            className="absolute top-4 right-4 p-2 bg-red-200 dark:bg-red-800 rounded-full shadow-md hover:scale-110 transition-all duration-300"
                             onClick={() => {
                                 setIsOpenPopup(false);
                                 setActiveSideBarBtn(btnActiveVal);
                             }}
                         >
-                            <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+                            <X className="w-6 h-6 text-red-600 dark:text-red-300" />
                         </button>
 
                         {/* Contenu dynamique */}
