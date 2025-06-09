@@ -215,7 +215,7 @@ const EmployeeForm = ({
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center scrollbar-custom justify-center bg-black bg-opacity-50 overflow-y-auto py-10"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto scrollbar-custom py-10"
           variants={overlayVariants}
           initial="hidden"
           animate="visible"
@@ -268,7 +268,7 @@ const EmployeeForm = ({
               )}
             </div>
             
-            <form onSubmit={handleSubmit} className="px-4 py-6 max-h-[70vh] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="px-4 py-6 max-h-[70vh] overflow-y-auto scrollbar-custom">
               {/* General Information */}
               {activeSection === "general" && (
                 <div className="space-y-6">

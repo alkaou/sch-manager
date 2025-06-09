@@ -172,7 +172,7 @@ const StudentListMenu = ({
           </motion.button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredLists.map((list) => {
             const listTypeInfo = getListTypeInfo(list);
             const itemCount = list.listType === 'employees' ? list.employees?.length || 0 : list.students?.length || 0;
@@ -180,40 +180,40 @@ const StudentListMenu = ({
             return (
               <motion.div
                 key={list.id}
-                className={`${cardBgColor} ${borderColor} border rounded-lg shadow-sm overflow-hidden`}
-                whileHover={{ y: -5, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
-                transition={{ duration: 0.2 }}
+                className={`${cardBgColor} ${borderColor} border rounded-xl shadow-md overflow-hidden flex flex-col transform transition-all duration-300`}
+                whileHover={{ y: -5, boxShadow: "0 15px 30px -10px rgba(0, 0, 0, 0.15)" }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               >
-                <div className="p-5">
+                <div className="p-6 flex flex-col h-full">
                   {editingName === list.id ? (
                     <div className="mb-4">
                       <input
                         type="text"
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
-                        className={`w-full px-3 py-2 rounded border ${borderColor} ${theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-gray-700"}`}
+                        className={`w-full px-3 py-2 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-gray-700"} focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
                         placeholder="Nom de la liste"
                         autoFocus
                       />
                       {!newName.trim() && (
                         <p className="text-red-500 text-sm mt-1">Le nom ne peut pas être vide</p>
                       )}
-                      <div className="flex space-x-2 mt-2">
+                      <div className="flex space-x-3 mt-3">
                         <motion.button
                           onClick={() => handleSaveName(list)}
                           disabled={!newName.trim()}
-                          className={`${newName.trim() ? buttonPrimary : "bg-gray-400"} text-white px-3 py-1 rounded`}
-                          whileHover={newName.trim() ? { scale: 1.05 } : {}}
-                          whileTap={newName.trim() ? { scale: 0.95 } : {}}
+                          className={`${newName.trim() ? buttonPrimary : "bg-gray-400"} text-white px-4 py-2 rounded-lg flex-1 font-medium flex justify-center items-center`}
+                          whileHover={newName.trim() ? { scale: 1.03 } : {}}
+                          whileTap={newName.trim() ? { scale: 0.97 } : {}}
                           title="Enregistrer le nouveau nom"
                         >
                           Enregistrer
                         </motion.button>
                         <motion.button
                           onClick={() => setEditingName(null)}
-                          className={`${buttonSecondary} px-3 py-1 rounded`}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
+                          className={`${buttonSecondary} px-4 py-2 rounded-lg flex-1 font-medium flex justify-center items-center`}
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
                           title="Annuler le renommage"
                         >
                           Annuler
@@ -221,69 +221,78 @@ const StudentListMenu = ({
                       </div>
                     </div>
                   ) : (
-                    <h2 className={`text-xl font-semibold mb-2 ${some_text_color}`}>{list.name}</h2>
+                    <h2 className={`text-xl font-bold mb-3 line-clamp-2 ${some_text_color}`}>{list.name}</h2>
                   )}
 
-                  <div className={`flex items-center text-sm ${theme === "dark" ? "text-blue-400" : "text-blue-600"} mb-2`}>
+                  <div className={`inline-flex items-center text-sm ${theme === "dark" ? "text-blue-400" : "text-blue-600"} mb-3 px-2.5 py-1 rounded-full bg-blue-100/50 dark:bg-blue-900/30 w-fit`}>
                     {listTypeInfo.icon}
-                    <span>{listTypeInfo.label}</span>
+                    <span className="font-medium">{listTypeInfo.label}</span>
                   </div>
 
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                    <Clock size={16} className="mr-1" />
-                    <span>Modifié {formatDate(list.updatedAt)}</span>
+                  <div className="flex flex-col space-y-2 mb-4">
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <Clock size={14} className="mr-1.5 flex-shrink-0" />
+                      <span className="truncate">Modifié {formatDate(list.updatedAt)}</span>
+                    </div>
+
+                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                      <Calendar size={14} className="mr-1.5 flex-shrink-0" />
+                      <span className="truncate">Créé le {new Date(list.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    
+                    <div className={`flex items-center text-sm font-medium ${theme === "dark" ? "bg-gray-700/70" : "bg-gray-100"} px-2.5 py-1 rounded-full w-fit`}>
+                      {list.listType === 'employees' ? (
+                        <>
+                          <Briefcase size={14} className={`mr-1.5 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                          <span className={`${some_text_color}`}>{itemCount} employé(s)</span>
+                        </>
+                      ) : (
+                        <>
+                          <Users size={14} className={`mr-1.5 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
+                          <span className={`${some_text_color}`}>{itemCount} élève(s)</span>
+                        </>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                    <Calendar size={16} className="mr-1" />
-                    <span>Créé le {new Date(list.createdAt).toLocaleDateString()}</span>
-                  </div>
-                  
-                  <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-                    {list.listType === 'employees' ? 
-                      <span>{itemCount} employé(s)</span> : 
-                      <span>{itemCount} élève(s)</span>
-                    }
-                  </div>
-
-                  <div className="flex space-x-2 mt-4">
+                  <div className="mt-auto pt-3 border-t border-gray-100 dark:border-gray-700 grid grid-cols-2 gap-2">
                     <motion.button
                       onClick={() => onEditList(list)}
-                      className={`${buttonPrimary} text-white px-3 py-2 rounded flex items-center`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      className={`${buttonPrimary} text-white px-3 py-2 rounded-lg flex items-center justify-center font-medium shadow-sm`}
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                       title="Ouvrir la liste"
                     >
-                      <FileText size={16} className="mr-1" />
+                      <FileText size={16} className="mr-1.5" />
                       Ouvrir
                     </motion.button>
 
-                    {editingName !== list.id && (
-                      <motion.button
-                        onClick={() => handleEditName(list)}
-                        className={`${buttonSecondary} px-3 py-2 rounded flex items-center`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        title="Renommer la liste"
-                      >
-                        <Edit size={16} className="mr-1" />
-                        Renommer
-                      </motion.button>
-                    )}
+                    {editingName !== list.id ? (
+                      <div className="flex gap-2">
+                        <motion.button
+                          onClick={() => handleEditName(list)}
+                          className={`${buttonSecondary} px-3 py-2 rounded-lg flex items-center justify-center flex-1`}
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                          title="Renommer la liste"
+                        >
+                          <Edit size={16} />
+                        </motion.button>
 
-                    <motion.button
-                      onClick={() => {
-                        setListToDelete(list);
-                        setShowConfirmDelete(true);
-                      }}
-                      className={`${buttonDanger} text-white px-3 py-2 rounded flex items-center`}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      title="Supprimer la liste"
-                    >
-                      <Trash size={16} className="mr-1" />
-                      Supprimer
-                    </motion.button>
+                        <motion.button
+                          onClick={() => {
+                            setListToDelete(list);
+                            setShowConfirmDelete(true);
+                          }}
+                          className={`${buttonDanger} text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1`}
+                          whileHover={{ scale: 1.03 }}
+                          whileTap={{ scale: 0.97 }}
+                          title="Supprimer la liste"
+                        >
+                          <Trash size={16} />
+                        </motion.button>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               </motion.div>

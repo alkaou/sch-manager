@@ -108,10 +108,10 @@ const EmployeeSidebar = ({
       variants={sidebarVariants}
       initial="hidden"
       animate="visible"
-      className={`w-64 h-full ${sidebarBgColor} ${borderColor} border-r shadow-lg overflow-hidden flex flex-col`}
+      className={`w-14 xs:w-36 mt-16 sm:w-48 md:w-56 lg:w-64 h-full ${sidebarBgColor} ${borderColor} border-r shadow-lg overflow-hidden flex flex-col`}
     >
-      <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-        <h2 className={`font-bold text-lg ${_text_color}`}>Postes</h2>
+      <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 flex justify-between items-center">
+        <h2 className={`font-bold text-xs xs:text-sm md:text-lg ${_text_color} truncate`}>Postes</h2>
         <motion.button
           onClick={() => setShowAddPositionForm(true)}
           whileHover={{ scale: 1.1 }}
@@ -119,30 +119,30 @@ const EmployeeSidebar = ({
           className={`${buttonColor} p-1 rounded-full`}
           title="Ajouter un poste"
         >
-          <PlusCircle size={20} />
+          <PlusCircle size={18} />
         </motion.button>
       </div>
       
-      <div className="px-3 py-2">
-        <div className={`flex items-center px-2 py-2 bg-gray-100 rounded-md ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
-          <Search size={18} className={`${_text_color} opacity-60`} />
+      <div className="px-2 sm:px-3 py-2">
+        <div className={`flex items-center px-1 sm:px-2 py-1.5 sm:py-2 bg-gray-100 rounded-md ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+          <Search size={16} className={`${_text_color} opacity-60`} />
           <input
             type="text"
             placeholder="Rechercher..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={`ml-2 bg-transparent outline-none w-full ${_text_color}`}
+            className={`ml-1 sm:ml-2 bg-transparent outline-none w-full text-xs sm:text-sm ${_text_color}`}
           />
         </div>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-2 scrollbar-custom">
+      <div className="flex-1 overflow-y-auto p-1 sm:p-2 scrollbar-custom">
         <AnimatePresence>
           {filteredPositions.length === 0 ? (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className={`text-center p-4 ${_text_color} opacity-70`}
+              className={`text-center p-2 sm:p-4 ${_text_color} opacity-70 text-xs sm:text-sm`}
             >
               Aucun poste trouvé
             </motion.div>
@@ -163,11 +163,11 @@ const EmployeeSidebar = ({
                   <div className="flex flex-col">
                     <button
                       onClick={() => setSelectedPosition(position.name)}
-                      className={`w-full p-3 text-left flex items-center justify-between ${_text_color}`}
+                      className={`w-full p-2 sm:p-3 text-left flex items-center justify-between ${_text_color}`}
                     >
-                      <div className="flex items-center space-x-2">
-                        <Briefcase size={18} className={selectedPosition === position.name ? 'text-blue-500' : ''} />
-                        <span className={selectedPosition === position.name ? 'font-semibold' : ''}>{position.name}</span>
+                      <div className="flex items-center space-x-1 sm:space-x-2 truncate">
+                        <Briefcase size={16} className={selectedPosition === position.name ? 'text-blue-500' : ''} />
+                        <span className={`text-xs sm:text-sm ${selectedPosition === position.name ? 'font-semibold' : ''} truncate`}>{position.name}</span>
                       </div>
                       
                       {/* Action buttons + description toggle if description exists */}
@@ -189,10 +189,10 @@ const EmployeeSidebar = ({
                                   e.stopPropagation();
                                   setPositionToEdit(position);
                                 }}
-                                className="text-blue-500 hover:text-blue-600 p-1 cursor-pointer"
+                                className="text-blue-500 hover:text-blue-600 p-0.5 sm:p-1 cursor-pointer"
                                 title="Modifier"
                               >
-                                <Edit size={16} />
+                                <Edit size={14} />
                               </motion.button>
                               <motion.button
                                 whileHover={{ scale: 1.2 }}
@@ -201,10 +201,10 @@ const EmployeeSidebar = ({
                                   e.stopPropagation();
                                   setConfirmDelete(position);
                                 }}
-                                className="text-red-500 hover:text-red-600 p-1 cursor-pointer"
+                                className="text-red-500 hover:text-red-600 p-0.5 sm:p-1 cursor-pointer"
                                 title="Supprimer"
                               >
-                                <Trash size={16} />
+                                <Trash size={14} />
                               </motion.button>
                             </motion.div>
                           )}
@@ -216,10 +216,10 @@ const EmployeeSidebar = ({
                             whileHover={{ scale: 1.2 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={(e) => toggleDescription(position.id, e)}
-                            className={`${buttonColor} p-1 ml-1`}
+                            className={`${buttonColor} p-0.5 sm:p-1 ml-1`}
                             title={expandedDescriptions[position.id] ? "Masquer la description" : "Afficher la description"}
                           >
-                            <Info size={16} />
+                            <Info size={14} />
                           </motion.button>
                         )}
 
@@ -234,15 +234,15 @@ const EmployeeSidebar = ({
                           initial="hidden"
                           animate="visible"
                           exit="hidden"
-                          className={`mx-3 mb-2 rounded ${descriptionBgColor} border ${borderColor} text-sm`}
+                          className={`mx-2 sm:mx-3 mb-2 rounded ${descriptionBgColor} border ${borderColor} text-sm`}
                         >
                           <div className={`
-                            flex items-center border-b border-b-1 p-2
+                            flex items-center border-b border-b-1 p-1 sm:p-2
                             ${theme === "dark" ? "" : "bg-gray-200"}
                           `}>
-                            <span className={`text-xs mb-1 font-medium ${_text_color} opacity-70`}>Description</span>
+                            <span className={`text-xs mb-0 sm:mb-1 font-medium ${_text_color} opacity-70`}>Description</span>
                           </div>
-                          <div className="text-sm p-2">
+                          <div className="text-xs p-1.5 sm:p-2">
                             {formatDescription(position.description.trim())}
                           </div>
                         </motion.div>
@@ -269,13 +269,13 @@ const EmployeeSidebar = ({
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-xl max-w-md mx-auto`}
+              className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} p-4 sm:p-6 rounded-lg shadow-xl max-w-md mx-auto`}
             >
-              <h3 className={`text-xl font-semibold mb-4 ${_text_color}`}>Confirmer la suppression</h3>
-              <p className={`${_text_color} mb-6`}>
+              <h3 className={`text-base sm:text-xl font-semibold mb-2 sm:mb-4 ${_text_color}`}>Confirmer la suppression</h3>
+              <p className={`${_text_color} mb-4 sm:mb-6 text-sm sm:text-base`}>
                 Êtes-vous sûr de vouloir supprimer le poste "{confirmDelete.name}" ?
                 {confirmDelete.employeeCount > 0 && (
-                  <span className="text-red-500 block mt-2 font-semibold">
+                  <span className="text-red-500 block mt-2 font-semibold text-xs sm:text-sm">
                     Attention: {confirmDelete.employeeCount} employé(s) occupent ce poste.
                     <br />
                     - Les employés occupant uniquement ce poste seront supprimés
@@ -288,7 +288,7 @@ const EmployeeSidebar = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setConfirmDelete(null)}
-                  className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} ${_text_color}`}
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-sm ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} ${_text_color}`}
                 >
                   Annuler
                 </motion.button>
@@ -297,7 +297,7 @@ const EmployeeSidebar = ({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleDeletePosition(confirmDelete.id)}
                   disabled={false}
-                  className={`px-4 py-2 rounded-md text-white bg-red-500 hover:bg-red-600`}
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-sm text-white bg-red-500 hover:bg-red-600`}
                 >
                   Supprimer
                 </motion.button>

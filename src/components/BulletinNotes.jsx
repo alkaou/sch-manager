@@ -49,7 +49,9 @@ const BulletinNotes = ({
   const tableSubHeaderBg = `${app_bg_color} ${textClass}`;
   const tableRowHoverBg = "hover:bg-opacity-80";
   const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
+  const tableBorderWidth = "border-2";
   const cellActiveBgColor = "bg-white text-gray-700";
+  const noteCellHoverEffect = "hover:bg-blue-100 hover:bg-opacity-30 transition-colors duration-150";
   const dropdownBgColor = theme === "dark" ? tableBgColor : "bg-gray-50 text-gray-700";
   const dropdownHoverBgColor = theme === "dark" ? tableBgColor : "bg-gray-50 text-gray-700";
 
@@ -227,6 +229,9 @@ const BulletinNotes = ({
     // Mettre à jour l'état
     setStudents(updatedStudents);
     setHasChanges(true);
+    
+    // S'assurer que le popup est fermé
+    setActiveCell(null);
 
     // Mettre à jour la base de données
     await saveChangesToDatabase(updatedStudents);
@@ -536,15 +541,15 @@ const BulletinNotes = ({
         </div>
 
         {/* Conteneur scrollable pour le tableau */}
-        <div className="overflow-auto max-h-[calc(100vh-20%)]">
+        <div className="overflow-auto max-h-[calc(100vh-25%)] scrollbar-custom">
           <table
-            className={`min-w-full border ${tableBorderColor} border-collapse`}
+            className={`min-w-full border ${tableBorderColor} ${tableBorderWidth} border-collapse`}
             style={{ marginBottom: "40%" }}
           >
             <thead className="sticky -top-1 z-20">
               <tr className={`${tableHeaderBg}`}>
                 <th
-                  className={`px-4 py-3 text-left border ${tableBorderColor}`}
+                  className={`px-4 py-3 text-left border ${tableBorderColor} ${tableBorderWidth}`}
                   rowSpan={2}
                 >
                   Élève
@@ -552,7 +557,7 @@ const BulletinNotes = ({
                 {subjects.map((subject) => (
                   <th
                     key={subject.name}
-                    className={`px-4 py-2 text-center border ${tableBorderColor}`}
+                    className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                     colSpan={3}
                   >
                     <div className="flex items-center justify-center gap-2">
@@ -633,19 +638,19 @@ const BulletinNotes = ({
                   </th>
                 ))}
                 <th
-                  className={`px-4 py-3 text-center border ${tableBorderColor}`}
+                  className={`px-4 py-3 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                   rowSpan={2}
                 >
                   Générale
                 </th>
                 <th
-                  className={`px-4 py-3 text-center border ${tableBorderColor}`}
+                  className={`px-4 py-3 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                   rowSpan={2}
                 >
                   Visualiseur
                 </th>
                 <th
-                  className={`px-4 py-3 text-center border ${tableBorderColor}`}
+                  className={`px-4 py-3 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                   rowSpan={2}
                 >
                   Action
@@ -654,13 +659,13 @@ const BulletinNotes = ({
               <tr className={`${tableSubHeaderBg}`}>
                 {subjects.map((subject) => (
                   <React.Fragment key={`sub-${subject.name}`}>
-                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor}`}>
+                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}>
                       Classe
                     </th>
-                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor}`}>
+                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}>
                       Compo
                     </th>
-                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor}`}>
+                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}>
                       Moy
                     </th>
                   </React.Fragment>
@@ -672,7 +677,7 @@ const BulletinNotes = ({
                 <tr>
                   <td
                     colSpan={subjects.length * 3 + 4}
-                    className={`px-4 py-4 text-center border ${tableBorderColor}`}
+                    className={`px-4 py-4 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                   >
                     Chargement des données...
                   </td>
@@ -681,7 +686,7 @@ const BulletinNotes = ({
                 <tr>
                   <td
                     colSpan={subjects.length * 3 + 4}
-                    className={`px-4 py-4 text-center border ${tableBorderColor}`}
+                    className={`px-4 py-4 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                   >
                     Aucun élève trouvé pour cette classe.
                   </td>
@@ -690,9 +695,9 @@ const BulletinNotes = ({
                 students.map((student) => (
                   <tr
                     key={student.id}
-                    className={`${tableRowHoverBg} border ${tableBorderColor}`}
+                    className={`${tableRowHoverBg} border ${tableBorderColor} ${tableBorderWidth}`}
                   >
-                    <td className={`px-4 py-2 border ${tableBorderColor}`}>
+                    <td className={`px-4 py-2 border ${tableBorderColor} ${tableBorderWidth}`}>
                       {student.first_name} {student.sure_name}
                       <div style={{ fontSize: 14, opacity: 0.7 }}>
                         {student.last_name}
@@ -703,10 +708,10 @@ const BulletinNotes = ({
                       <React.Fragment key={`${student.id}-${subject.name}`}>
                         {/* Note de classe */}
                         <td
-                          className={`px-2 py-2 text-center border ${tableBorderColor} ${activeCell === `${student.id}-${subject.name}-classe`
+                          className={`px-2 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell === `${student.id}-${subject.name}-classe`
                             ? cellActiveBgColor
                             : ""
-                            } cursor-pointer`}
+                            } cursor-pointer ${noteCellHoverEffect}`}
                           onClick={(event) => {
                             setActiveCell(`${student.id}-${subject.name}-classe`);
                             if (activeCell !== `${student.id}-${subject.name}-classe`) {
@@ -777,10 +782,10 @@ const BulletinNotes = ({
 
                         {/* Note de composition */}
                         <td
-                          className={`px-2 py-2 text-center border ${tableBorderColor} ${activeCell === `${student.id}-${subject.name}-composition`
+                          className={`px-2 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell === `${student.id}-${subject.name}-composition`
                             ? cellActiveBgColor
                             : ""
-                            } cursor-pointer`}
+                            } cursor-pointer ${noteCellHoverEffect}`}
                           onClick={(event) => {
                             setActiveCell(`${student.id}-${subject.name}-composition`);
                             if (activeCell !== `${student.id}-${subject.name}-composition`) {
@@ -849,19 +854,19 @@ const BulletinNotes = ({
                         </td>
 
                         {/* Moyenne */}
-                        <td className={`px-2 py-2 text-center border ${tableBorderColor} font-medium`}>
+                        <td className={`px-2 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} font-medium`}>
                           {calculateSubjectAverageForStudent(students, student.id, subject.name)}
                         </td>
                       </React.Fragment>
                     ))}
 
                     {/* Moyenne générale */}
-                    <td className={`px-4 py-2 text-center border ${tableBorderColor} font-bold`}>
+                    <td className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} font-bold`}>
                       {calculateGeneralAverage(students, student.id, subjects)}
                     </td>
 
                     {/* Visualiseur de bulletin */}
-                    <td className={`px-4 py-2 text-center border ${tableBorderColor}`}>
+                    <td className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth}`}>
                       <button
                         onClick={() => handleViewStudentBulletin(student)}
                         className="p-1 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-300"
@@ -871,7 +876,7 @@ const BulletinNotes = ({
                     </td>
 
                     {/* Actions */}
-                    <td className={`px-4 py-2 text-center border ${tableBorderColor}`}>
+                    <td className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth}`}>
                       {showRemoveConfirm === student.id ? (
                         <div className="flex items-center gap-2">
                           <button
@@ -924,7 +929,7 @@ const BulletinNotes = ({
                 marginTop: "70%",
               }}
             >
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-4 sm:mt-7">
                 <h3 className="text-xl font-semibold">Prévisualisation du bulletin</h3>
                 <button
                   onClick={handleCloseBulletinPreview}

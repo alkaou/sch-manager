@@ -75,7 +75,7 @@ const StudentListNamePopup = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className={`w-full px-3 py-2 rounded-lg border ${inputBorderColor} ${inputBgColor} ${textClass}`}
-                placeholder="Ex: Liste des élèves de 6ème A"
+                placeholder={listType === 'students' ? "Ex: Liste des élèves de 6ème A" : "Ex: Liste des employés de la direction"}
                 ref={inputRef}
                 required
               />

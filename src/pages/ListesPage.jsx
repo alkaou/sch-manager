@@ -176,7 +176,7 @@ const ListesPagePageContent = ({
   const some_text_color = theme === "dark" ? text_color : "text-gray-700";
 
   return (
-    <div style={{marginLeft: "7%"}} className={`p-4 mt-20 ${app_bg_color}`}>
+    <div style={{marginLeft: "4%", marginTop: "4%"}} className={`p-4 ${app_bg_color}`}>
       {isLoading ? (
         <div 
           className="items-center absolute z-40 justify-center"

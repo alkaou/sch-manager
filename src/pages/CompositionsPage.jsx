@@ -356,7 +356,7 @@ const CompositionsPageContent = ({
   return (
     <div 
       className="p-4 mt-20"
-      style={{marginLeft: "7%"}}
+      style={{marginLeft: "4%"}}
     >
       <motion.div
         className={`max-w-7xl mx-auto p-6 ${formBgColor} rounded-lg shadow-2xl border-2 ${shinyBorderColor}`}

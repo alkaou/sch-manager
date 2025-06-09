@@ -35,7 +35,7 @@ const Popup = ({
                     }}
                 >
                     <motion.div
-                        className={`relative ${popup_bg_color} ${Tailwindclasse} dark:bg-gray-900 p-6 rounded-2xl shadow-2xl overflow-auto scrollbar-custom`}
+                        className={`relative ${popup_bg_color} ${Tailwindclasse} dark:bg-gray-900 p-6 rounded-2xl shadow-2xl sm:overflow-hidden overflow-auto scrollbar-custom`}
                         initial={{ scale: 0.5, opacity: 0, y: -50 }}
                         animate={{ scale: 1, opacity: 1, y: 0, transition: { type: "spring", stiffness: 200, damping: 20 } }}
                         exit={{ scale: 0.5, opacity: 0, y: 50, transition: { duration: 0.3 } }}
