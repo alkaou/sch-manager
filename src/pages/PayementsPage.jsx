@@ -20,8 +20,12 @@ const PayementsPage = () => {
   const [selectedPaymentSystem, setSelectedPaymentSystem] = useState(null);
   const [paymentSystems, setPaymentSystems] = useState([]);
 
-  // Largeur fixe du sidebar
-  const sidebarWidth = 280;
+  // Responsive sidebar width based on screen size
+  const sidebarWidth = {
+    base: "240px",  // Default for small screens
+    md: "260px",    // Medium screens
+    lg: "280px",    // Large screens
+  };
 
   const refreshData = () => {
     window.electron.getDatabase().then((data) => {
@@ -100,27 +104,20 @@ const PayementsPage = () => {
     }
   };
 
-  // Styles en fonction du thème
-  const mainBgColor = app_bg_color;
-  const textColorClass = text_color;
 
   return (
     <div
-      className={`flex ${mainBgColor} ${textColorClass}`}
-      style={{
-        overflow: "hidden",
-        marginTop: "4%",
-        marginLeft: "7%",
-        width: "93%",
-        maxWidth: "93%",
-        minWidth: "93%",
-        // height: "91vh",
-      }}
+      style={{ marginLeft: "4%", height: "100vh" }}
+      className={`overflow-hidden flex flex-col sm:flex-row h-screen ${app_bg_color} ${text_color}`}
     >
-      {/* Sidebar avec largeur fixe */}
+      {/* Sidebar with responsive width */}
       <div
-        className="h-screen overflow-hidden"
-        style={{ width: `${sidebarWidth}px` }}
+        className="h-full overflow-hidden"
+        style={{
+          width: `clamp(${sidebarWidth.base}, 20vw, ${sidebarWidth.lg})`,
+          minWidth: sidebarWidth.base,
+          maxWidth: sidebarWidth.lg,
+        }}
       >
         <PayementsSidebar
           db={db}
@@ -138,9 +135,12 @@ const PayementsPage = () => {
         />
       </div>
 
-      {/* Contenu principal */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Système d'onglets */}
+      {/* Main content area */}
+      <div
+        className="flex-1 flex flex-col overflow-hidden"
+        style={{ marginTop: "4.5%" }}
+      >
+        {/* Tab system */}
         <PayementsTabs
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -150,8 +150,8 @@ const PayementsPage = () => {
           setSelectedClass={setSelectedClass}
         />
 
-        {/* Contenu dynamique */}
-        <div className="flex-1 overflow-auto p-4">
+        {/* Dynamic content with responsive padding */}
+        <div className="flex-1 overflow-auto scrollbar-custom p-2 sm:p-3 md:p-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={`${activeTab}-${selectedClass?.id || 'none'}`}
@@ -159,9 +159,11 @@ const PayementsPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
-              className="h-full"
+              className="h-full scrollbar-custom"
             >
-              {renderContent()}
+              <div className="pb-2">
+                {renderContent()}
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>

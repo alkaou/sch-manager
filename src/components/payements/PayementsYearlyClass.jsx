@@ -311,20 +311,20 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
 
     return (
         <motion.div
-            className="container mx-auto p-4"
+            className="container mx-auto p-2 sm:p-3 md:p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="flex justify-between items-center mb-6">
-                <h2 className={`text-2xl font-bold ${text_color}`}>Budget Annuel par Classe</h2>
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${text_color}`}>Budget Annuel par Classe</h2>
 
                 <div className="flex items-center">
-                    <Calendar className={`h-5 w-5 mr-2 ${text_color}`} />
+                    <Calendar className={`h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2 ${text_color}`} />
                     <select
                         value={currentSchoolYear}
                         onChange={(e) => setCurrentSchoolYear(e.target.value)}
-                        className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                        className={`px-2 sm:px-3 py-1 sm:py-2 text-xs sm:text-sm rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     >
                         {availableSchoolYears.length > 0 ? (
                             availableSchoolYears.map(schoolYear => (
@@ -341,99 +341,99 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
 
             {isLoading ? (
                 <div className="flex justify-center items-center h-64">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 border-t-2 border-b-2 border-blue-500"></div>
                 </div>
             ) : (
                 <>
                     {/* Résumé global */}
                     <motion.div
-                        className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8"
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
                     >
                         <motion.div
-                            className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-blue-500`}
+                            className={`${cardBgColor} rounded-lg p-3 sm:p-4 md:p-6 shadow-lg border-l-4 border-blue-500`}
                             variants={itemVariants}
                             whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
                         >
-                            <div className="flex items-center mb-4">
-                                <div className="p-3 rounded-full bg-blue-100 mr-4">
-                                    <DollarSign className="h-6 w-6 text-blue-500" />
+                            <div className="flex items-center mb-2 sm:mb-4">
+                                <div className="p-2 sm:p-3 rounded-full bg-blue-100 mr-3 sm:mr-4">
+                                    <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-500" />
                                 </div>
                                 <div>
-                                    <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Budget Total Prévu</h3>
-                                    <p className="text-2xl font-bold text-blue-500">{formatCurrency(totalExpected)}</p>
+                                    <h3 className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}>Budget Total Prévu</h3>
+                                    <p className="text-base sm:text-xl md:text-2xl font-bold text-blue-500">{formatCurrency(totalExpected)}</p>
                                 </div>
                             </div>
-                            <div className="mt-2">
-                                <p className={`text-xs ${textColorClass} opacity-60`}>
+                            <div className="mt-1 sm:mt-2">
+                                <p className={`text-2xs sm:text-xs ${textColorClass} opacity-60`}>
                                     Budget annuel prévu pour toutes les classes
                                 </p>
                             </div>
                         </motion.div>
 
                         <motion.div
-                            className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-green-500`}
+                            className={`${cardBgColor} rounded-lg p-3 sm:p-4 md:p-6 shadow-lg border-l-4 border-green-500`}
                             variants={itemVariants}
                             whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
                         >
-                            <div className="flex items-center mb-4">
-                                <div className="p-3 rounded-full bg-green-100 mr-4">
-                                    <TrendingUp className="h-6 w-6 text-green-500" />
+                            <div className="flex items-center mb-2 sm:mb-4">
+                                <div className="p-2 sm:p-3 rounded-full bg-green-100 mr-3 sm:mr-4">
+                                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-green-500" />
                                 </div>
                                 <div>
-                                    <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Montant Total Reçu</h3>
-                                    <p className="text-2xl font-bold text-green-500">{formatCurrency(totalReceived)}</p>
+                                    <h3 className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}>Montant Total Reçu</h3>
+                                    <p className="text-base sm:text-xl md:text-2xl font-bold text-green-500">{formatCurrency(totalReceived)}</p>
                                 </div>
                             </div>
-                            <div className="mt-2">
-                                <p className={`text-xs ${textColorClass} opacity-60`}>
+                            <div className="mt-1 sm:mt-2">
+                                <p className={`text-2xs sm:text-xs ${textColorClass} opacity-60`}>
                                     Montant total reçu jusqu'à présent
                                 </p>
                             </div>
                         </motion.div>
 
                         <motion.div
-                            className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-red-500`}
+                            className={`${cardBgColor} rounded-lg p-3 sm:p-4 md:p-6 shadow-lg border-l-4 border-red-500`}
                             variants={itemVariants}
                             whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
                         >
-                            <div className="flex items-center mb-4">
-                                <div className="p-3 rounded-full bg-red-100 mr-4">
-                                    <Timer className="h-6 w-6 text-red-500" />
+                            <div className="flex items-center mb-2 sm:mb-4">
+                                <div className="p-2 sm:p-3 rounded-full bg-red-100 mr-3 sm:mr-4">
+                                    <Timer className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-red-500" />
                                 </div>
                                 <div>
-                                    <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Montant en Attente</h3>
-                                    <p className="text-2xl font-bold text-red-500">{formatCurrency(totalExpected - totalReceived)}</p>
+                                    <h3 className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}>Montant en Attente</h3>
+                                    <p className="text-base sm:text-xl md:text-2xl font-bold text-red-500">{formatCurrency(totalExpected - totalReceived)}</p>
                                 </div>
                             </div>
-                            <div className="mt-2">
-                                <p className={`text-xs ${textColorClass} opacity-60`}>
+                            <div className="mt-1 sm:mt-2">
+                                <p className={`text-2xs sm:text-xs ${textColorClass} opacity-60`}>
                                     Montant en attente jusqu'à présent
                                 </p>
                             </div>
                         </motion.div>
 
                         <motion.div
-                            className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-purple-500`}
+                            className={`${cardBgColor} rounded-lg p-3 sm:p-4 md:p-6 shadow-lg border-l-4 border-purple-500`}
                             variants={itemVariants}
                             whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
                         >
-                            <div className="flex items-center mb-4">
-                                <div className="p-3 rounded-full bg-purple-100 mr-4">
-                                    <PieChart className="h-6 w-6 text-purple-500" />
+                            <div className="flex items-center mb-2 sm:mb-4">
+                                <div className="p-2 sm:p-3 rounded-full bg-purple-100 mr-3 sm:mr-4">
+                                    <PieChart className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-purple-500" />
                                 </div>
                                 <div>
-                                    <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Taux de Recouvrement</h3>
-                                    <p className="text-2xl font-bold text-purple-500">
+                                    <h3 className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}>Taux de Recouvrement</h3>
+                                    <p className="text-base sm:text-xl md:text-2xl font-bold text-purple-500">
                                         {totalExpected > 0 ? Math.round((totalReceived / totalExpected) * 100) : 0}%
                                     </p>
                                 </div>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                            <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2 mt-1 sm:mt-2">
                                 <div
-                                    className="h-2 rounded-full bg-gradient-to-r from-purple-400 to-purple-600"
+                                    className="h-1.5 sm:h-2 rounded-full bg-gradient-to-r from-purple-400 to-purple-600"
                                     style={{ width: `${totalExpected > 0 ? Math.round((totalReceived / totalExpected) * 100) : 0}%` }}
                                 ></div>
                             </div>
@@ -441,18 +441,18 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                     </motion.div>
 
                     {yearlyData.length === 0 ? (
-                        <div className={`${cardBgColor} rounded-lg shadow-lg p-8 text-center ${textColorClass}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className={`${cardBgColor} rounded-lg shadow-lg p-4 sm:p-6 md:p-8 text-center ${textColorClass}`}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 mx-auto mb-3 sm:mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <h3 className="text-xl font-bold mb-2">Aucune donnée disponible</h3>
-                            <p className="text-gray-500">
+                            <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-2">Aucune donnée disponible</h3>
+                            <p className="text-xs sm:text-sm text-gray-500">
                                 Aucune classe n'a été configurée pour les paiements ou aucun élève n'est inscrit.
                             </p>
                         </div>
                     ) : (
                         <motion.div
-                            className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6"
                             variants={containerVariants}
                             initial="hidden"
                             animate="visible"
@@ -468,32 +468,32 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                         transition: { duration: 0.2 }
                                     }}
                                 >
-                                    <div className={`p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white`}>
+                                    <div className={`p-3 sm:p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white`}>
                                         <div className="flex justify-between items-center">
-                                            <h3 className="text-xl font-bold">
+                                            <h3 className="text-sm sm:text-base md:text-xl font-bold">
                                                 {data.className}
                                             </h3>
-                                            <span className="bg-white bg-opacity-30 px-2 py-1 rounded text-xs">
+                                            <span className="bg-white bg-opacity-30 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-2xs sm:text-xs">
                                                 Niveau {data.level}
                                             </span>
                                         </div>
-                                        <div className="flex items-center mt-2">
-                                            <Users className="h-4 w-4 mr-1" />
-                                            <span className="text-sm">
+                                        <div className="flex items-center mt-1 sm:mt-2">
+                                            <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                            <span className="text-xs sm:text-sm">
                                                 {data.studentCount} élèves
                                             </span>
                                         </div>
                                     </div>
 
-                                    <div className="p-5">
-                                        <div className="mb-4">
-                                            <div className="flex justify-between mb-1">
-                                                <span className={`${textColorClass} text-sm`}>Progression des paiements</span>
-                                                <span className={`${textColorClass} text-sm font-bold`}>{data.paymentPercentage}%</span>
+                                    <div className="p-3 sm:p-4 md:p-5">
+                                        <div className="mb-3 sm:mb-4">
+                                            <div className="flex justify-between mb-0.5 sm:mb-1">
+                                                <span className={`${textColorClass} text-xs sm:text-sm`}>Progression des paiements</span>
+                                                <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>{data.paymentPercentage}%</span>
                                             </div>
-                                            <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2.5">
                                                 <motion.div
-                                                    className={`h-2.5 rounded-full ${getProgressColor(data.paymentPercentage)}`}
+                                                    className={`h-1.5 sm:h-2.5 rounded-full ${getProgressColor(data.paymentPercentage)}`}
                                                     style={{ width: '0%' }}
                                                     animate={{ width: `${data.paymentPercentage}%` }}
                                                     transition={{ duration: 1, ease: "easeOut" }}
@@ -501,55 +501,55 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-2 gap-3 mb-4">
-                                            <div className={`p-3 rounded-lg ${headerBgColor}`}>
-                                                <h4 className={`text-xs font-bold ${textColorClass} mb-1`}>Frais mensuels ({data.monthCount} mois)</h4>
-                                                <p className={`${textColorClass} font-bold`}>
+                                        <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                                            <div className={`p-2 sm:p-3 rounded-lg ${headerBgColor}`}>
+                                                <h4 className={`text-2xs sm:text-xs font-bold ${textColorClass} mb-0.5 sm:mb-1`}>Frais mensuels ({data.monthCount} mois)</h4>
+                                                <p className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                     {data.monthlyTotal.toLocaleString()} FCFA
                                                 </p>
                                             </div>
-                                            <div className={`p-3 rounded-lg ${headerBgColor}`}>
-                                                <h4 className={`text-xs font-bold ${textColorClass} mb-1`}>Frais d'inscription</h4>
-                                                <p className={`${textColorClass} font-bold`}>
+                                            <div className={`p-2 sm:p-3 rounded-lg ${headerBgColor}`}>
+                                                <h4 className={`text-2xs sm:text-xs font-bold ${textColorClass} mb-0.5 sm:mb-1`}>Frais d'inscription</h4>
+                                                <p className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                     {data.registrationTotal.toLocaleString()} FCFA
                                                 </p>
                                                 {data.newStudentCount > 0 && (
-                                                    <p className={`text-xs ${textColorClass} opacity-70`}>
+                                                    <p className={`text-2xs sm:text-xs ${textColorClass} opacity-70`}>
                                                         ({data.newStudentCount} nouveaux élèves)
                                                     </p>
                                                 )}
                                             </div>
                                         </div>
 
-                                        <div className="space-y-2 pt-2 border-t border-gray-200">
+                                        <div className="space-y-1 sm:space-y-2 pt-2 border-t border-gray-200">
                                             <div className="flex justify-between">
-                                                <span className={`${textColorClass} text-sm`}>Montant prévu:</span>
-                                                <span className={`${textColorClass} font-bold`}>
+                                                <span className={`${textColorClass} text-xs sm:text-sm`}>Montant prévu:</span>
+                                                <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                     {data.expectedAmount.toLocaleString()} FCFA
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className={`${textColorClass} text-sm`}>Montant reçu:</span>
-                                                <span className="font-bold text-green-600">
+                                                <span className={`${textColorClass} text-xs sm:text-sm`}>Montant reçu:</span>
+                                                <span className="text-xs sm:text-sm font-bold text-green-600">
                                                     {data.receivedAmount.toLocaleString()} FCFA
                                                 </span>
                                             </div>
-                                            <div className="flex justify-between pt-2 border-t border-gray-200">
-                                                <span className={`${textColorClass} text-sm`}>Reste à payer:</span>
-                                                <span className={`font-bold ${data.remainingAmount > 0 ? 'text-red-500' : 'text-green-600'}`}>
+                                            <div className="flex justify-between pt-1 sm:pt-2 border-t border-gray-200">
+                                                <span className={`${textColorClass} text-xs sm:text-sm`}>Reste à payer:</span>
+                                                <span className={`text-xs sm:text-sm font-bold ${data.remainingAmount > 0 ? 'text-red-500' : 'text-green-600'}`}>
                                                     {data.remainingAmount.toLocaleString()} FCFA
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-center">
+                                    <div className="p-2 sm:p-3 bg-gradient-to-r from-blue-500 to-purple-600 text-center">
                                         <button
-                                            className="w-full py-2 text-white font-medium rounded hover:bg-white hover:bg-opacity-20 transition-colors flex items-center justify-center"
+                                            className="w-full py-1.5 sm:py-2 text-xs sm:text-sm text-white font-medium rounded hover:bg-white hover:bg-opacity-20 transition-colors flex items-center justify-center"
                                             onClick={() => handleClassClick(data)}
                                         >
                                             <span>Voir les détails</span>
-                                            <ArrowRight className="h-4 w-4 ml-2" />
+                                            <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2" />
                                         </button>
                                     </div>
                                 </motion.div>
@@ -561,83 +561,83 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                     <AnimatePresence>
                         {showDetails && selectedClass && (
                             <motion.div
-                                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+                                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 onClick={() => setShowDetails(false)}
                             >
                                 <motion.div
-                                    className={`${cardBgColor} rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto scrollbar-custom`}
+                                    className={`${cardBgColor} rounded-lg shadow-2xl w-full max-w-sm sm:max-w-xl md:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-custom`}
                                     initial={{ scale: 0.9, y: 20 }}
                                     animate={{ scale: 1, y: 0 }}
                                     exit={{ scale: 0.9, y: 20 }}
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white relative">
+                                    <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-3 sm:p-4 md:p-6 text-white relative">
                                         <button
-                                            className="absolute top-4 right-4 text-white hover:text-gray-200"
+                                            className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 text-white hover:text-gray-200"
                                             onClick={() => setShowDetails(false)}
                                         >
-                                            <X className="h-6 w-6" />
+                                            <X className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
                                         </button>
-                                        <h2 className="text-2xl font-bold">{selectedClass.className}</h2>
-                                        <div className="flex items-center mt-2">
-                                            <Users className="h-5 w-5 mr-2" />
-                                            <span>{selectedClass.studentCount} élèves</span>
+                                        <h2 className="text-base sm:text-xl md:text-2xl font-bold">{selectedClass.className}</h2>
+                                        <div className="flex items-center mt-1 sm:mt-2">
+                                            <Users className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-1 sm:mr-2" />
+                                            <span className="text-xs sm:text-sm">{selectedClass.studentCount} élèves</span>
                                         </div>
                                     </div>
 
-                                    <div className="p-6">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                            <div className={`p-4 rounded-lg ${headerBgColor}`}>
-                                                <h3 className={`text-lg font-bold ${textColorClass} mb-3`}>Détails des frais</h3>
-                                                <div className="space-y-3">
+                                    <div className="p-3 sm:p-4 md:p-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-3 sm:mb-4 md:mb-6">
+                                            <div className={`p-2 sm:p-3 md:p-4 rounded-lg ${headerBgColor}`}>
+                                                <h3 className={`text-sm sm:text-base md:text-lg font-bold ${textColorClass} mb-2 sm:mb-3`}>Détails des frais</h3>
+                                                <div className="space-y-2 sm:space-y-3">
                                                     <div className="flex justify-between">
-                                                        <span className={`${textColorClass}`}>Frais mensuel:</span>
-                                                        <span className={`${textColorClass} font-bold`}>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm`}>Frais mensuel:</span>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                             {selectedClass.monthlyFee.toLocaleString()} FCFA
                                                         </span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className={`${textColorClass}`}>Nombre de mois:</span>
-                                                        <span className={`${textColorClass} font-bold`}>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm`}>Nombre de mois:</span>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                             {selectedClass.monthCount}
                                                         </span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className={`${textColorClass}`}>Frais d'inscription:</span>
-                                                        <span className={`${textColorClass} font-bold`}>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm`}>Frais d'inscription:</span>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                             {selectedClass.registrationFee.toLocaleString()} FCFA
                                                         </span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className={`${textColorClass}`}>Nouveaux élèves:</span>
-                                                        <span className={`${textColorClass} font-bold`}>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm`}>Nouveaux élèves:</span>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                             {selectedClass.newStudentCount}
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div className={`p-4 rounded-lg ${headerBgColor}`}>
-                                                <h3 className={`text-lg font-bold ${textColorClass} mb-3`}>Résumé financier</h3>
-                                                <div className="space-y-3">
+                                            <div className={`p-2 sm:p-3 md:p-4 rounded-lg ${headerBgColor}`}>
+                                                <h3 className={`text-sm sm:text-base md:text-lg font-bold ${textColorClass} mb-2 sm:mb-3`}>Résumé financier</h3>
+                                                <div className="space-y-2 sm:space-y-3">
                                                     <div className="flex justify-between">
-                                                        <span className={`${textColorClass}`}>Budget mensuel total:</span>
-                                                        <span className={`${textColorClass} font-bold`}>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm`}>Budget mensuel total:</span>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                             {selectedClass.monthlyTotal.toLocaleString()} FCFA
                                                         </span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className={`${textColorClass}`}>Budget inscription total:</span>
-                                                        <span className={`${textColorClass} font-bold`}>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm`}>Budget inscription total:</span>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                             {selectedClass.registrationTotal.toLocaleString()} FCFA
                                                         </span>
                                                     </div>
-                                                    <div className="flex justify-between pt-2 border-t border-gray-300">
-                                                        <span className={`${textColorClass}`}>Budget total prévu:</span>
-                                                        <span className={`${textColorClass} font-bold`}>
+                                                    <div className="flex justify-between pt-1 sm:pt-2 border-t border-gray-300">
+                                                        <span className={`${textColorClass} text-xs sm:text-sm`}>Budget total prévu:</span>
+                                                        <span className={`${textColorClass} text-xs sm:text-sm font-bold`}>
                                                             {selectedClass.expectedAmount.toLocaleString()} FCFA
                                                         </span>
                                                     </div>
@@ -645,24 +645,24 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                             </div>
                                         </div>
 
-                                        <div className={`p-4 rounded-lg ${headerBgColor} mb-6`}>
-                                            <h3 className={`text-lg font-bold ${textColorClass} mb-3`}>Progression des paiements</h3>
-                                            <div className="mb-4">
-                                                <div className="flex justify-between mb-2">
-                                                    <span className={`${textColorClass}`}>Montant reçu:</span>
-                                                    <span className="font-bold text-green-600">
+                                        <div className={`p-2 sm:p-3 md:p-4 rounded-lg ${headerBgColor} mb-3 sm:mb-4 md:mb-6`}>
+                                            <h3 className={`text-sm sm:text-base md:text-lg font-bold ${textColorClass} mb-2 sm:mb-3`}>Progression des paiements</h3>
+                                            <div className="mb-3 sm:mb-4">
+                                                <div className="flex justify-between mb-1 sm:mb-2">
+                                                    <span className={`${textColorClass} text-xs sm:text-sm`}>Montant reçu:</span>
+                                                    <span className="text-xs sm:text-sm font-bold text-green-600">
                                                         {selectedClass.receivedAmount.toLocaleString()} FCFA
                                                     </span>
                                                 </div>
-                                                <div className="flex justify-between mb-2">
-                                                    <span className={`${textColorClass}`}>Reste à payer:</span>
-                                                    <span className={`font-bold ${selectedClass.remainingAmount > 0 ? 'text-red-500' : 'text-green-600'}`}>
+                                                <div className="flex justify-between mb-1 sm:mb-2">
+                                                    <span className={`${textColorClass} text-xs sm:text-sm`}>Reste à payer:</span>
+                                                    <span className={`text-xs sm:text-sm font-bold ${selectedClass.remainingAmount > 0 ? 'text-red-500' : 'text-green-600'}`}>
                                                         {selectedClass.remainingAmount.toLocaleString()} FCFA
                                                     </span>
                                                 </div>
-                                                <div className="flex justify-between mb-2">
-                                                    <span className={`${textColorClass}`}>Taux de recouvrement:</span>
-                                                    <span className={`font-bold ${selectedClass.paymentPercentage >= 70 ? 'text-green-600' :
+                                                <div className="flex justify-between mb-1 sm:mb-2">
+                                                    <span className={`${textColorClass} text-xs sm:text-sm`}>Taux de recouvrement:</span>
+                                                    <span className={`text-xs sm:text-sm font-bold ${selectedClass.paymentPercentage >= 70 ? 'text-green-600' :
                                                         selectedClass.paymentPercentage >= 40 ? 'text-yellow-500' :
                                                             'text-red-500'
                                                         }`}>
@@ -670,9 +670,9 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                                            <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 md:h-4 overflow-hidden">
                                                 <motion.div
-                                                    className={`h-4 ${getProgressColor(selectedClass.paymentPercentage)}`}
+                                                    className={`h-2 sm:h-3 md:h-4 ${getProgressColor(selectedClass.paymentPercentage)}`}
                                                     style={{ width: '0%' }}
                                                     animate={{ width: `${selectedClass.paymentPercentage}%` }}
                                                     transition={{ duration: 1.5, ease: "easeOut" }}
@@ -682,7 +682,7 @@ const PayementsYearlyClass = ({ db, theme, app_bg_color, text_color }) => {
 
                                         <div className="flex justify-end">
                                             <button
-                                                className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:opacity-90 transition-opacity"
+                                                className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-xs sm:text-sm bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:opacity-90 transition-opacity"
                                                 onClick={() => setShowDetails(false)}
                                             >
                                                 Fermer

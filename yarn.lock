@@ -1381,6 +1381,18 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-4.6.0.tgz#3c7c9c46e678feefe7a2e5bb609d3dbd665ffb3f"
   integrity sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==
 
+"@stagewise/toolbar-react@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@stagewise/toolbar-react/-/toolbar-react-0.4.5.tgz#2c5d79cd800d9b54acd167974ca80b53068994b9"
+  integrity sha512-/IqqSWZMiS2arPka+dLa4BB5iyLzY33i3gH8f6RXwTgX3FkCIYPs8/k+ie1zWzD+HII9lia9F+OGiSS1uTjiZg==
+  dependencies:
+    "@stagewise/toolbar" "0.4.5"
+
+"@stagewise/toolbar@0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@stagewise/toolbar/-/toolbar-0.4.5.tgz#5f3abea0810265468cb4a167e06cb0fae1d4afd2"
+  integrity sha512-FFOuuBnfcSKwSBnfuclgFygd8mvHnJZXgr2KCJofyww5CZxr7sYl0IuSKLngufK+880o5mR0C8IV9lQV9JY6bg==
+
 "@szmarczak/http-timer@^4.0.5":
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-4.0.6.tgz#b4a914bb62e7c272d4e5989fe4440f812ab1d807"

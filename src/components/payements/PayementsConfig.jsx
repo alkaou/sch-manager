@@ -416,30 +416,30 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
 
     return (
         <motion.div
-            className="container mx-auto p-4"
+            className="container mx-auto p-2 sm:p-3 md:p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
         >
-            <div className="flex justify-between items-center mb-6">
-                <h2 className={`text-2xl font-bold ${text_color}`}>Configuration des Paiements</h2>
+            <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <h2 className={`text-xl sm:text-2xl font-bold ${text_color}`}>Configuration des Paiements</h2>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6 xl:gap-8">
                 {/* Partie gauche: Liste des systèmes de paiement */}
                 <div>
-                    <h3 className={`text-xl font-semibold ${text_color} mb-4`}>Systèmes de paiement</h3>
+                    <h3 className={`text-lg sm:text-xl font-semibold ${text_color} mb-3 sm:mb-4`}>Systèmes de paiement</h3>
 
                     {activeSystems.length === 0 ? (
-                        <div className={`${cardBgColor} rounded-lg shadow-md p-6 text-center ${text_color} border ${borderColor}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto mb-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div className={`${cardBgColor} rounded-lg shadow-md p-4 sm:p-6 text-center ${text_color} border ${borderColor}`}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 mx-auto mb-2 sm:mb-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <p className="text-lg font-medium mb-2">Aucun système de paiement</p>
-                            <p className="text-sm opacity-80 mb-4">Créez votre premier système de paiement pour commencer à gérer les frais scolaires.</p>
+                            <p className="text-base sm:text-lg font-medium mb-1 sm:mb-2">Aucun système de paiement</p>
+                            <p className="text-xs sm:text-sm opacity-80 mb-3 sm:mb-4">Créez votre premier système de paiement pour commencer à gérer les frais scolaires.</p>
                         </div>
                     ) : (
-                        <div className="space-y-4">
+                        <div className="space-y-3 sm:space-y-4">
                             {activeSystems.map(system => (
                                 <motion.div
                                     key={system.id}
@@ -447,49 +447,49 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                     whileHover={{ y: -3 }}
                                     transition={{ duration: 0.2 }}
                                 >
-                                    <div className="p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white flex justify-between items-center">
-                                        <h4 className="text-lg font-bold">{system.name}</h4>
-                                        <div className="flex space-x-2">
+                                    <div className="p-3 sm:p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white flex justify-between items-center">
+                                        <h4 className="text-base sm:text-lg font-bold">{system.name}</h4>
+                                        <div className="flex space-x-1 sm:space-x-2">
                                             <button
                                                 onClick={() => {
                                                     handleEditSystem(system);
                                                     loadData();
                                                 }}
-                                                className="p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
+                                                className="p-1 sm:p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
                                             >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                                 </svg>
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteSystem(system.id)}
-                                                className="p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
+                                                className="p-1 sm:p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
                                             >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                 </svg>
                                             </button>
                                         </div>
                                     </div>
-                                    <div className="p-4">
-                                        <div className="grid grid-cols-2 gap-4 mb-4">
+                                    <div className="p-3 sm:p-4 md:p-5">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4">
                                             <div>
-                                                <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Période</p>
-                                                <p className={`${inputTextColor} font-medium`}>
+                                                <p className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}>Période</p>
+                                                <p className={`${inputTextColor} text-xs sm:text-sm font-medium`}>
                                                     {new Date(system.startDate).toLocaleDateString()} - {new Date(system.endDate).toLocaleDateString()}
                                                 </p>
                                             </div>
                                             <div>
-                                                <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Frais mensuels</p>
-                                                <p className={`${inputTextColor} font-medium`}>
+                                                <p className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}>Frais mensuels</p>
+                                                <p className={`${inputTextColor} text-xs sm:text-sm font-medium`}>
                                                     {system.monthlyFee.toLocaleString()} FCFA
                                                 </p>
                                             </div>
                                         </div>
 
-                                        <div className="mb-4">
-                                            <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Classes concernées</p>
-                                            <div className="flex flex-wrap gap-2">
+                                        <div className="mb-3 sm:mb-4">
+                                            <p className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}>Classes concernées</p>
+                                            <div className="flex flex-wrap gap-1 sm:gap-2">
                                                 {/* Trier par level avant le map */}
                                                 {system.classes.sort((a, b) => {
                                                     const levelA = parseInt(a.split('-')[0], 10);
@@ -500,7 +500,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                     return classObj ? (
                                                         <span
                                                             key={classId}
-                                                            className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
+                                                            className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium"
                                                         >
                                                             {getClasseName(`${classObj.level} ${classObj.name}`, language)}
                                                         </span>
@@ -509,30 +509,30 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                             </div>
                                         </div>
 
-                                        <div className={`p-3 rounded-lg ${inputBgColor} border ${borderColor}`}>
-                                            <h4 className={`text-sm font-bold ${inputTextColor} mb-2`}>Récapitulatif</h4>
+                                        <div className={`p-2 sm:p-3 rounded-lg ${inputBgColor} border ${borderColor}`}>
+                                            <h4 className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}>Récapitulatif</h4>
                                             <div className="flex justify-between">
-                                                <span className={`${inputTextColor} text-sm`}>Mensuel:</span>
-                                                <span className={`${inputTextColor} font-bold`}>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm`}>Mensuel:</span>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                     {system.monthlyFee.toLocaleString()} FCFA
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className={`${inputTextColor} text-sm`}>Annuel:</span>
-                                                <span className={`${inputTextColor} font-bold`}>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm`}>Annuel:</span>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                     {(system.yearlyFee || calculateYearlyFee(system.monthlyFee, system.startDate, system.endDate)).toLocaleString()} FCFA
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className={`${inputTextColor} text-sm`}>Inscription:</span>
-                                                <span className={`${inputTextColor} font-bold`}>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm`}>Inscription:</span>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                     {system.registrationFee ? system.registrationFee.toLocaleString() : "0"} FCFA
                                                 </span>
                                             </div>
                                             {system.otherFees && system.otherFees.length > 0 && (
                                                 <div className="flex justify-between mt-1 pt-1 border-t border-gray-500">
-                                                    <span className={`${inputTextColor} text-sm`}>Supplémentaires:</span>
-                                                    <span className={`${inputTextColor} font-bold`}>
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm`}>Supplémentaires:</span>
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                         {system.otherFees.reduce((sum, fee) => sum + fee.amount, 0).toLocaleString()} FCFA
                                                     </span>
                                                 </div>
@@ -546,14 +546,14 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
 
                     {/* Systèmes de paiement passés */}
                     {pastSystems.length > 0 && (
-                        <div className="mt-8">
-                            <div className="flex items-center mb-4">
+                        <div className="mt-6 sm:mt-8">
+                            <div className="flex items-center mb-3 sm:mb-4">
                                 <div className={`flex-grow border-t ${dividerColor}`}></div>
-                                <span className={`px-3 ${inputTextColor} text-sm font-medium`}>Années scolaires terminées</span>
+                                <span className={`px-2 sm:px-3 ${inputTextColor} text-xs sm:text-sm font-medium`}>Années scolaires terminées</span>
                                 <div className={`flex-grow border-t ${dividerColor}`}></div>
                             </div>
 
-                            <div className="space-y-4">
+                            <div className="space-y-3 sm:space-y-4">
                                 {pastSystems.map(system => (
                                     <motion.div
                                         key={system.id}
@@ -561,22 +561,22 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         whileHover={{ opacity: 1 }}
                                         transition={{ duration: 0.2 }}
                                     >
-                                        <div className="p-4 bg-gradient-to-r from-gray-500 to-gray-700 text-white">
-                                            <h4 className="text-lg font-bold">{system.name}</h4>
-                                            <p className="text-sm opacity-90">
+                                        <div className="p-3 sm:p-4 bg-gradient-to-r from-gray-500 to-gray-700 text-white">
+                                            <h4 className="text-base sm:text-lg font-bold">{system.name}</h4>
+                                            <p className="text-xs sm:text-sm opacity-90">
                                                 {new Date(system.startDate).toLocaleDateString()} - {new Date(system.endDate).toLocaleDateString()}
                                             </p>
                                         </div>
-                                        <div className="p-4">
-                                            <div className="mb-4">
-                                                <p className={`text-sm opacity-70 mb-1 ${inputTextColor}`}>Classes concernées</p>
-                                                <div className="flex flex-wrap gap-2">
+                                        <div className="p-3 sm:p-4">
+                                            <div className="mb-3 sm:mb-4">
+                                                <p className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}>Classes concernées</p>
+                                                <div className="flex flex-wrap gap-1 sm:gap-2">
                                                     {system.classes.map(classId => {
                                                         const classObj = db?.classes?.find(c => c.id === classId);
                                                         return classObj ? (
                                                             <span
                                                                 key={classId}
-                                                                className="px-2 py-1 bg-gray-300 text-gray-800 rounded-full text-xs font-medium"
+                                                                className="px-1.5 sm:px-2 py-0.5 sm:py-1 bg-gray-300 text-gray-800 rounded-full text-xs font-medium"
                                                             >
                                                                 {getClasseName(`${classObj.level} ${classObj.name}`, language)}
                                                             </span>
@@ -585,17 +585,17 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 </div>
                                             </div>
 
-                                            <div className={`p-3 rounded-lg ${inputBgColor} border ${borderColor}`}>
-                                                <h4 className={`text-sm font-bold ${inputTextColor} mb-2`}>Récapitulatif</h4>
+                                            <div className={`p-2 sm:p-3 rounded-lg ${inputBgColor} border ${borderColor}`}>
+                                                <h4 className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}>Récapitulatif</h4>
                                                 <div className="flex justify-between">
-                                                    <span className={`${inputTextColor} text-sm`}>Mensuel:</span>
-                                                    <span className={`${inputTextColor} font-bold`}>
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm`}>Mensuel:</span>
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                         {system.monthlyFee.toLocaleString()} FCFA
                                                     </span>
                                                 </div>
                                                 <div className="flex justify-between">
-                                                    <span className={`${inputTextColor} text-sm`}>Annuel:</span>
-                                                    <span className={`${inputTextColor} font-bold`}>
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm`}>Annuel:</span>
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                         {(system.yearlyFee || calculateYearlyFee(system.monthlyFee, system.startDate, system.endDate)).toLocaleString()} FCFA
                                                     </span>
                                                 </div>
@@ -635,17 +635,17 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         createdAt: new Date().toISOString()
                                     });
                                 }}
-                                className={`${buttonAddColor} text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3`}
+                                className={`${buttonAddColor} text-white px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-lg shadow-lg flex items-center space-x-2 sm:space-x-3`}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
-                                <span className={`text-lg font-medium text-white`}>Créer un nouveau système de paiement</span>
+                                <span className={`text-sm sm:text-base md:text-lg font-medium text-white`}>Créer un nouveau système de paiement</span>
                             </motion.button>
 
-                            <p className={`mt-4 text-center ${text_color} opacity-70 max-w-md`}>
+                            <p className={`mt-3 sm:mt-4 text-center ${text_color} opacity-70 max-w-md text-xs sm:text-sm`}>
                                 Créez un nouveau système de paiement pour définir les frais scolaires et les associer à des classes.
                             </p>
                         </motion.div>
@@ -658,8 +658,8 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <div className="p-4 flex justify-between bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-                                    <h3 className="text-xl font-bold">
+                                <div className="p-3 sm:p-4 flex justify-between bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                                    <h3 className="text-base sm:text-lg md:text-xl font-bold">
                                         {editingSystemId ? "Modifier le système de paiement" : "Nouveau système de paiement"}
                                     </h3>
                                     <button
@@ -668,16 +668,16 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                             setShowNewSystemForm(false);
                                             setEditingSystemId(null);
                                         }}
-                                        className='p-2 rounded-full bg-red-500 hover:bg-red-600 focus:outline-none'
+                                        className='p-1.5 sm:p-2 rounded-full bg-red-500 hover:bg-red-600 focus:outline-none'
                                     >
-                                        <X size={15} className="text-white" />
+                                        <X size={14} className="text-white sm:h-4 sm:w-4" />
                                     </button>
                                 </div>
 
-                                <div className="p-6 space-y-6">
+                                <div className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-6">
                                     {/* Nom du système */}
                                     <div>
-                                        <label className={`block text-sm font-medium ${inputTextColor} mb-1`}>
+                                        <label className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}>
                                             Nom du système de paiement
                                         </label>
                                         <input
@@ -685,14 +685,14 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                             value={newSystem.name}
                                             onChange={(e) => handleSystemChange('name', e.target.value)}
                                             placeholder="Ex: Tarif standard 2024-2025"
-                                            className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                            className={`w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                         />
                                     </div>
 
                                     {/* Période de l'année scolaire */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                                         <div>
-                                            <label className={`block text-sm font-medium ${inputTextColor} mb-1`}>
+                                            <label className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}>
                                                 Début de l'année scolaire
                                             </label>
                                             <input
@@ -701,11 +701,11 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 max={`${DateForInputs + 1}-12-31`}
                                                 value={newSystem.startDate}
                                                 onChange={(e) => handleSystemChange('startDate', e.target.value)}
-                                                className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                                className={`w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                             />
                                         </div>
                                         <div>
-                                            <label className={`block text-sm font-medium ${inputTextColor} mb-1`}>
+                                            <label className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}>
                                                 Fin de l'année scolaire
                                             </label>
                                             <input
@@ -714,15 +714,15 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 max={`${tomorrow.getFullYear() + 2}-12-31`}
                                                 value={newSystem.endDate}
                                                 onChange={(e) => handleSystemChange('endDate', e.target.value)}
-                                                className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                                className={`w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                             />
                                         </div>
                                     </div>
 
                                     {/* Frais */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                                         <div>
-                                            <label className={`block text-sm font-medium ${inputTextColor} mb-1`}>
+                                            <label className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}>
                                                 Frais mensuels (FCFA)
                                             </label>
                                             <input
@@ -730,11 +730,11 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 min="0"
                                                 value={newSystem.monthlyFee}
                                                 onChange={(e) => handleSystemChange('monthlyFee', e.target.value)}
-                                                className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                                className={`w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                             />
                                         </div>
                                         <div>
-                                            <label className={`block text-sm font-medium ${inputTextColor} mb-1`}>
+                                            <label className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}>
                                                 Frais d'inscription (FCFA)
                                             </label>
                                             <input
@@ -742,85 +742,26 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 min="0"
                                                 value={newSystem.registrationFee}
                                                 onChange={(e) => handleSystemChange('registrationFee', e.target.value)}
-                                                className={`w-full px-3 py-2 rounded ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                                                className={`w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                                             />
                                         </div>
                                     </div>
 
-                                    {/* Frais supplémentaires */}
-                                    {/*<div>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <label className={`text-sm font-medium ${inputTextColor}`}>
-                                                Frais supplémentaires
-                                            </label>
-                                            <motion.button
-                                                type="button"
-                                                onClick={handleAddOtherFee}
-                                                className={`text-white px-2 py-1 rounded text-sm ${buttonAddColor}`}
-                                                whileHover={{ scale: 1.05 }}
-                                                whileTap={{ scale: 0.95 }}
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                                </svg>
-                                            </motion.button>
-                                        </div>
-
-                                        {newSystem.otherFees.length === 0 ? (
-                                            <p className={`text-sm ${inputTextColor} opacity-70 text-center py-2`}>
-                                                Aucun frais supplémentaire. Cliquez sur + pour en ajouter.
-                                            </p>
-                                        ) : (
-                                            <div className="space-y-3">
-                                                {newSystem.otherFees.map((fee, index) => (
-                                                    <div key={index} className={`p-3 rounded ${inputBgColor} border ${borderColor} flex items-center space-x-2`}>
-                                                        <div className="flex-grow grid grid-cols-2 gap-2">
-                                                            <input
-                                                                type="text"
-                                                                value={fee.name}
-                                                                onChange={(e) => handleOtherFeeChange(index, 'name', e.target.value)}
-                                                                placeholder="Nom du frais"
-                                                                className={`px-2 py-1 rounded ${cardBgColor} ${inputTextColor} border ${borderColor} text-sm w-full`}
-                                                            />
-                                                            <input
-                                                                type="number"
-                                                                min="0"
-                                                                value={fee.amount}
-                                                                onChange={(e) => handleOtherFeeChange(index, 'amount', e.target.value)}
-                                                                placeholder="Montant (FCFA)"
-                                                                className={`px-2 py-1 rounded ${cardBgColor} ${inputTextColor} border ${borderColor} text-sm w-full`}
-                                                            />
-                                                        </div>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => handleRemoveOtherFee(index)}
-                                                            className={`p-1 rounded-full ${buttonDeleteColor} text-white`}
-                                                        >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>*/}
-
                                     {/* Classes disponibles */}
                                     <div>
-                                        <label className={`block text-sm font-medium ${inputTextColor} mb-2`}>
+                                        <label className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-1 sm:mb-2`}>
                                             Classes concernées
                                         </label>
 
                                         {availableClasses.length === 0 && newSystem.classes.length === 0 ? (
-                                            <div className={`p-4 rounded ${inputBgColor} border ${borderColor} text-center`}>
-                                                <p className={`${inputTextColor} text-sm`}>
+                                            <div className={`p-3 sm:p-4 rounded ${inputBgColor} border ${borderColor} text-center`}>
+                                                <p className={`${inputTextColor} text-xs sm:text-sm`}>
                                                     Toutes les classes sont déjà assignées à un système de paiement.
                                                 </p>
                                             </div>
                                         ) : (
-                                            <div className={`p-4 rounded ${inputBgColor} border ${borderColor} max-h-60 overflow-y-auto`}>
-                                                <div className="grid grid-cols-2 gap-2">
+                                            <div className={`p-3 sm:p-4 rounded ${inputBgColor} border ${borderColor} max-h-40 sm:max-h-60 overflow-y-auto`}>
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
                                                     {/* Classes déjà sélectionnées mais qui ne sont plus disponibles */}
                                                     {newSystem.classes.filter(classId =>
                                                         !availableClasses.some(cls => cls.id === classId) &&
@@ -830,15 +771,15 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                         return classObj ? (
                                                             <div
                                                                 key={classId}
-                                                                className={`flex items-center p-2 rounded ${cardBgColor} border ${borderColor}`}
+                                                                className={`flex items-center p-1.5 sm:p-2 rounded ${cardBgColor} border ${borderColor}`}
                                                             >
                                                                 <input
                                                                     type="checkbox"
                                                                     checked={true}
                                                                     onChange={() => toggleClassSelection(classId)}
-                                                                    className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                                                    className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                                                                 />
-                                                                <label className={`ml-2 text-sm ${inputTextColor}`}>
+                                                                <label className={`ml-1.5 sm:ml-2 text-xs sm:text-sm ${inputTextColor}`}>
                                                                     {getClasseName(`${classObj.level} ${classObj.name}`, language)}
                                                                 </label>
                                                             </div>
@@ -849,15 +790,15 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                     {availableClasses.map(classObj => (
                                                         <div
                                                             key={classObj.id}
-                                                            className={`flex items-center p-2 rounded ${cardBgColor} border ${borderColor}`}
+                                                            className={`flex items-center p-1.5 sm:p-2 rounded ${cardBgColor} border ${borderColor}`}
                                                         >
                                                             <input
                                                                 type="checkbox"
                                                                 checked={newSystem.classes.includes(classObj.id)}
                                                                 onChange={() => toggleClassSelection(classObj.id)}
-                                                                className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                                                className="h-3 w-3 sm:h-4 sm:w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                                                             />
-                                                            <label className={`ml-2 text-sm ${inputTextColor}`}>
+                                                            <label className={`ml-1.5 sm:ml-2 text-xs sm:text-sm ${inputTextColor}`}>
                                                                 {getClasseName(`${classObj.level} ${classObj.name}`, language)}
                                                             </label>
                                                         </div>
@@ -868,19 +809,19 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                     </div>
 
                                     {/* Récapitulatif des frais */}
-                                    <div className={`p-4 rounded-lg ${inputBgColor} border ${borderColor}`}>
-                                        <h4 className={`text-sm font-bold ${inputTextColor} mb-3`}>Récapitulatif des frais</h4>
+                                    <div className={`p-3 sm:p-4 rounded-lg ${inputBgColor} border ${borderColor}`}>
+                                        <h4 className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-2 sm:mb-3`}>Récapitulatif des frais</h4>
 
-                                        <div className="space-y-2">
+                                        <div className="space-y-1.5 sm:space-y-2">
                                             <div className="flex justify-between">
-                                                <span className={`${inputTextColor} text-sm`}>Mensuel:</span>
-                                                <span className={`${inputTextColor} font-bold`}>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm`}>Mensuel:</span>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                     {Number(newSystem.monthlyFee).toLocaleString()} FCFA
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className={`${inputTextColor} text-sm`}>Annuel:</span>
-                                                <span className={`${inputTextColor} font-bold`}>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm`}>Annuel:</span>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                     {(newSystem.yearlyFee || calculateYearlyFee(
                                                         Number(newSystem.monthlyFee),
                                                         newSystem.startDate,
@@ -889,16 +830,16 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 </span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className={`${inputTextColor} text-sm`}>Inscription:</span>
-                                                <span className={`${inputTextColor} font-bold`}>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm`}>Inscription:</span>
+                                                <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                     {Number(newSystem.registrationFee).toLocaleString()} FCFA
                                                 </span>
                                             </div>
 
                                             {newSystem.otherFees.length > 0 && (
-                                                <div className="flex justify-between pt-2 mt-2 border-t border-gray-500">
-                                                    <span className={`${inputTextColor} text-sm`}>Supplémentaires:</span>
-                                                    <span className={`${inputTextColor} font-bold`}>
+                                                <div className="flex justify-between pt-1.5 sm:pt-2 mt-1.5 sm:mt-2 border-t border-gray-500">
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm`}>Supplémentaires:</span>
+                                                    <span className={`${inputTextColor} text-xs sm:text-sm font-bold`}>
                                                         {newSystem.otherFees.reduce((sum, fee) => sum + Number(fee.amount), 0).toLocaleString()} FCFA
                                                     </span>
                                                 </div>
@@ -907,7 +848,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                     </div>
 
                                     {/* Boutons d'action */}
-                                    <div className="flex justify-end space-x-3 pt-2">
+                                    <div className="flex justify-end space-x-2 sm:space-x-3 pt-1 sm:pt-2">
                                         <motion.button
                                             type="button"
                                             onClick={() => {
@@ -915,7 +856,7 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                                 setShowNewSystemForm(false);
                                                 setEditingSystemId(null);
                                             }}
-                                            className={`px-4 py-2 rounded hover:text-white border hover:bg-red-600 border ${borderColor} ${inputTextColor}`}
+                                            className={`px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm hover:text-white border hover:bg-red-600 border ${borderColor} ${inputTextColor}`}
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                             disabled={isLoading}
@@ -926,22 +867,22 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         <motion.button
                                             type="button"
                                             onClick={handleSaveSystem}
-                                            className={`px-4 py-2 rounded ${buttonBgColor} text-white flex items-center space-x-2`}
+                                            className={`px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded text-xs sm:text-sm ${buttonBgColor} text-white flex items-center space-x-1 sm:space-x-2`}
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
                                             disabled={isLoading}
                                         >
                                             {isLoading ? (
                                                 <>
-                                                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                    <svg className="animate-spin h-3 w-3 sm:h-4 sm:w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                                     </svg>
-                                                    <span>Enregistrement...</span>
+                                                    <span>En cours...</span>
                                                 </>
                                             ) : (
                                                 <>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                     </svg>
                                                     <span>Enregistrer</span>
