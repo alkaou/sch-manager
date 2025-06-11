@@ -175,10 +175,6 @@ const ExpensesList = ({
     }).format(amount);
   };
   
-  // Get category name translation
-  const getCategoryName = (category) => {
-    return t(`category_${category}`) || category;
-  };
   
   // Get unique categories from expenses
   const categories = ['all', ...new Set(expenses.map(expense => expense.category))];
@@ -214,12 +210,6 @@ const ExpensesList = ({
     }
   };
   
-  const renderDetailRow = (label, value) => (
-    <div className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-700 text-sm">
-      <span className="text-gray-600 dark:text-gray-400">{label}</span>
-      <span className="font-medium">{value}</span>
-    </div>
-  );
   
   // Render employee payment details
   const renderEmployeePayments = (expense) => {
@@ -355,7 +345,7 @@ const ExpensesList = ({
       </div>
       
       {/* Filter and search section */}
-      <div className={`${cardBgColor} border ${borderColor} rounded-lg mb-6 overflow-hidden shadow-sm`}>
+      <div className={`${cardBgColor} border-2 ${borderColor} rounded-lg mb-6 overflow-hidden shadow-md ring-1 ring-opacity-5 ring-gray-300 dark:ring-gray-700`}>
         <div className="p-4">
           <div className="flex flex-col md:flex-row justify-between gap-4 items-center mb-4">
             <div className="relative w-full md:w-1/3">
@@ -490,7 +480,7 @@ const ExpensesList = ({
       {/* Expenses table */}
       {filteredExpenses.length > 0 ? (
         <motion.div 
-          className={`${cardBgColor} border ${borderColor} rounded-lg overflow-hidden shadow-sm`}
+          className={`mb-10 ${cardBgColor} border-2 ${borderColor} rounded-lg overflow-hidden shadow-md ring-1 ring-opacity-5 ring-gray-300 dark:ring-gray-700 transition-all duration-300 hover:shadow-lg`}
           variants={container}
           initial="hidden"
           animate="visible"

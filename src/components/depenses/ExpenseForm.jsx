@@ -82,7 +82,7 @@ const ExpenseForm = ({
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const textClass = theme === "dark" ? text_color : "text-gray-600";
   const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-  const buttonCancel = "bg-gray-500 hover:bg-gray-600";
+  const buttonCancel = "bg-red-500 hover:bg-red-600";
   const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
 
   // Handle input changes
@@ -254,7 +254,7 @@ const ExpenseForm = ({
 
   return (
     <motion.div
-      className={`w-full ${text_color}`}
+      className={`w-full ${text_color} border-2 border-gray-300 dark:border-gray-600 rounded-lg p-6`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -418,24 +418,24 @@ const ExpenseForm = ({
         }
 
         {/* Form buttons */}
-        <div className="flex justify-end space-x-4 pt-4">
+        <div className="flex justify-between space-x-4 pt-4">
           <button
             type="button"
             onClick={onCancel}
-            className={`px-6 py-3 rounded-lg text-white ${buttonCancel} flex items-center transition-colors`}
+            className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-white ${buttonCancel} flex items-center transition-colors text-xs sm:text-sm`}
             disabled={isSubmitting}
             title={t('cancel_tooltip')}
           >
-            <X size={20} className="mr-2" />
+            <X size={16} className="mr-1 sm:mr-2" />
             {t('cancel')}
           </button>
           <button
             type="submit"
-            className={`px-6 py-3 rounded-lg text-white ${buttonPrimary} flex items-center transition-colors`}
+            className={`px-3 sm:px-6 py-2 sm:py-3 rounded-lg text-white ${buttonPrimary} flex items-center transition-colors text-xs sm:text-sm`}
             disabled={isSubmitting}
             title={isEditMode ? t('update_tooltip') : t('save_tooltip')}
           >
-            <Check size={20} className="mr-2" />
+            <Check size={16} className="mr-1 sm:mr-2" />
             {isSubmitting
               ? t('saving')
               : isEditMode

@@ -242,7 +242,7 @@ const SchoolYearsList = ({
   return (
     <div className="w-full">
       {/* Header with search and filters */}
-      <div className={`flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-4 rounded-lg ${cardBgColor} border ${borderColor} shadow-sm`}>
+      <div className={`flex flex-col md:flex-row justify-between items-center gap-4 mb-6 p-4 rounded-lg ${cardBgColor} border-2 ${borderColor} shadow-md ring-1 ring-opacity-5 ring-gray-300 dark:ring-gray-700`}>
         <div className="relative w-full md:w-2/5">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <Search size={18} className={textClass} />
@@ -360,14 +360,14 @@ const SchoolYearsList = ({
               <motion.div
                 key={year.id}
                 variants={item}
-                className={`${cardBgColor} border ${borderColor} rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200`}
+                className={`${cardBgColor} border-2 ${borderColor} rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 ring-1 ring-opacity-5 ring-gray-300 dark:ring-gray-700`}
               >
-                <div className="p-6">
+                <div className="p-6 overflow-hidden">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className={`text-xl font-bold ${textClass}`}>{year.title}</h3>
-                    <div className="flex space-x-2">
+                    <h3 className={`text-lg sm:text-xl font-bold ${textClass} break-words overflow-hidden max-w-[75%]`}>{year.title}</h3>
+                    <div className="flex space-x-2 flex-shrink-0 ml-2">
                       {isExpired ? (
-                        <div className="flex items-center px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs">
+                        <div className="flex items-center px-2 py-1 bg-red-200 dark:bg-red-700 text-red-700 dark:text-red-300 rounded-full text-xs">
                           <Lock size={12} className="mr-1" />
                           {t('expired')}
                         </div>
@@ -383,16 +383,16 @@ const SchoolYearsList = ({
                   {/* View Description Button */}
                   <button
                     onClick={() => setViewingYearDescription(year)}
-                    className={`mb-3 w-full flex items-center justify-center px-3 py-1.5 text-sm rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
+                    className={`mb-3 w-full flex items-center justify-center px-3 py-1.5 text-xs sm:text-sm rounded-md transition-colors ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600 text-gray-200' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}`}
                     title={t('view_school_year_description')}
                   >
                     <Info size={14} className="mr-1.5 text-blue-500" />
-                    {t('view_school_year_description')}
+                    <span className="truncate">{t('view_school_year_description')}</span>
                   </button>
                   
-                  <div className="flex items-center mb-3">
-                    <Calendar size={16} className={`${textClass} mr-2 opacity-75`} />
-                    <span className={`${textClass} text-sm`}>
+                  <div className="flex items-center mb-3 overflow-hidden">
+                    <Calendar size={16} className={`${textClass} mr-2 opacity-75 flex-shrink-0`} />
+                    <span className={`${textClass} text-xs sm:text-sm truncate`}>
                       {formatDate(year.start_date)} - {formatDate(year.end_date)}
                     </span>
                   </div>
@@ -403,7 +403,7 @@ const SchoolYearsList = ({
                         {t('expenses_count')}
                       </div>
                       <div className="flex items-center">
-                        <span className={`text-xl font-bold ${textClass}`}>
+                        <span className={`text-lg sm:text-xl font-bold ${textClass}`}>
                           {expenseCount}
                         </span>
                       </div>
@@ -413,8 +413,8 @@ const SchoolYearsList = ({
                         {t('total_amount')}
                       </div>
                       <div className="flex items-center">
-                        <DollarSign size={16} className="text-green-500 mr-1" />
-                        <span className={`text-xl font-bold ${textClass}`}>
+                        <DollarSign size={16} className="text-green-500 mr-1 flex-shrink-0" />
+                        <span className={`text-lg sm:text-xl font-bold ${textClass} truncate`}>
                           {formatCurrency(totalAmount)}
                         </span>
                       </div>

@@ -35,7 +35,7 @@ const InfoPopup = ({ isOpen, onClose, theme }) => {
     
     return {
       backdrop: "fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4 backdrop-blur-sm",
-      modal: `w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`,
+      modal: `w-full max-w-5xl max-h-[90vh] overflow-y-auto scrollbar-custom rounded-xl shadow-2xl ${isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`,
       header: `px-6 py-4 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'} flex justify-between items-center sticky top-0 ${isDark ? 'bg-gray-800' : 'bg-white'} z-10`,
       closeButton: `p-2 rounded-full transition-colors ${isDark ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`,
       content: "p-6 space-y-8",

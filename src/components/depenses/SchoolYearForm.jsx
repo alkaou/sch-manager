@@ -80,8 +80,8 @@ const SchoolYearForm = ({
       }
 
       setFormData({
-        title: `Année Scolaire ${startDate.getFullYear()}-${endDate.getFullYear()}`,
-        description: `Année scolaire complète de septembre ${startDate.getFullYear()} à juin ${endDate.getFullYear()}.`,
+        title: `${t("school_year_title_template").replace("YEAR1", startDate.getFullYear()).replace("YEAR2", endDate.getFullYear())}`,
+        description: `${t("school_year_description_template").replace("YEAR1", startDate.getFullYear()).replace("YEAR2", endDate.getFullYear())}`,
         start_date: startDate.toISOString().split('T')[0],
         end_date: endDate.toISOString().split('T')[0]
       });

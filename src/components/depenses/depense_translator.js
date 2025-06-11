@@ -208,9 +208,9 @@ const translations = {
     "Bambara": "Musakaw"
   },
   "total_amount": {
-    "Français": "Total",
-    "Anglais": "Total",
-    "Bambara": "Bɛɛ lajɛlen"
+    "Français": "Montant total",
+    "Anglais": "Total Amount",
+    "Bambara": "Hakɛ lajɛlen"
   },
   "view_details": {
     "Français": "Voir les détails",
@@ -1004,11 +1004,45 @@ const translations = {
     "Français": "Montant total",
     "Anglais": "Total Amount",
     "Bambara": "Hakɛ lajɛlen"
+  },
+  
+  // School year form templates
+  "school_year_title_template": {
+    "Français": "Année Scolaire YEAR1-YEAR2",
+    "Anglais": "School Year YEAR1-YEAR2",
+    "Bambara": "Kalansen san YEAR1-YEAR2"
+  },
+  "school_year_description_template": {
+    "Français": "Année scolaire complète de septembre YEAR1 à juin YEAR2.",
+    "Anglais": "Complete school year from September YEAR1 to June YEAR2.",
+    "Bambara": "Kalansen san dafalen ka bɔ sɛtanburukalo YEAR1 ka se zuwɛnkalo YEAR2."
   }
 };
 
 // Add employee payment translations
 const newTranslations = {
+    // School year form default texts
+    school_year_title_template: {
+        "Français": "Année Scolaire YEAR1-YEAR2",
+        "Anglais": "School Year YEAR1-YEAR2",
+        "Bambara": "Kalansen san YEAR1-YEAR2"
+    },
+    school_year_description_template: {
+        "Français": "Année scolaire complète de septembre YEAR1 à juin YEAR2.",
+        "Anglais": "Complete school year from September YEAR1 to June YEAR2.", 
+        "Bambara": "Kalansen san dafalen ka bɔ sɛtanburukalo YEAR1 ka se zuwɛnkalo YEAR2."
+    },
+    pay_employees: {
+        "Français": "Année Scolaire YEAR1-YEAR2",
+        "Anglais": "School Year YEAR1-YEAR2",
+        "Bambara": "Kalansen san YEAR1-YEAR2"
+    },
+    school_year_description_template: {
+        "Français": "Année scolaire complète de septembre YEAR1 à juin YEAR2.",
+        "Anglais": "Complete school year from September YEAR1 to June YEAR2.", 
+        "Bambara": "Kalansen san dafalen ka bɔ sɛtanburukalo YEAR1 ka se zuwɛnkalo YEAR2."
+    },
+    
     // Employee payment form
     pay_employees: {
         "Français": "Payer les employés",
