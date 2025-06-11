@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { getClasseName, getClasseById } from '../../utils/helpers';
+import { getClasseName, getClasseById, getCurrentMonthScolar } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { Calendar, DollarSign, TrendingUp, Users, ArrowLeft, ArrowRight, Filter } from 'lucide-react';
 
 const PayementsMonthlyClass = ({ db, theme, text_color }) => {
+
     const { language } = useLanguage();
     const [monthlyData, setMonthlyData] = useState([]);
     const [schoolMonths, setSchoolMonths] = useState([]);
@@ -161,7 +162,7 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
         const classes = [];
         db.paymentSystems.map(sys => {
             sys.classes.map(cls => {
-                if(!classes.includes(cls)){
+                if (!classes.includes(cls)) {
                     classes.push(cls);
                 }
             });
@@ -306,10 +307,11 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
     // Obtenir le mois actuel pour l'affichage
     const getCurrentMonthDisplay = () => {
         const currentMonth = schoolMonths.find(month => month.number === selectedSchoolMonth);
+        // Cette méthode ne doit faire que retourner une valeur, pas modifier l'état
         if (currentMonth) {
             return `${currentMonth.name} ${currentMonth.year}`;
         }
-        return "";
+        return "Mois non sélectionné";
     };
 
     // Formater la date pour l'affichage
@@ -317,6 +319,18 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     };
+
+    // Ajout d'un useEffect pour gérer la sélection du mois courant
+    useEffect(() => {
+        // Selection de mois de paiement seulement quand les mois scolaires sont chargés
+        if (schoolMonths && schoolMonths.length > 0) {
+            const currentMonthScolar = getCurrentMonthScolar();
+            const month_number = schoolMonths.length === 8 && currentMonthScolar > 1 ? currentMonthScolar - 1 : currentMonthScolar;
+            if (schoolMonths.length >= month_number) {
+                setSelectedSchoolMonth(month_number);
+            }
+        }
+    }, [schoolMonths]); // Se déclenche uniquement quand schoolMonths change
 
     return (
         <motion.div
@@ -384,62 +398,62 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
                 {/* Résumé global */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     <motion.div
-                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white`}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white overflow-hidden`}
                         whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
                         <div className="flex items-center mb-3">
-                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                            <div className="p-2 bg-white/20 rounded-full mr-3 flex-shrink-0">
                                 <DollarSign className="h-6 w-6" />
                             </div>
                             <h3 className="font-semibold text-lg">Budget Total Prévu</h3>
                         </div>
-                        <p className="text-3xl font-bold mt-2">{formatCurrency(totalExpected)}</p>
+                        <p className="text-3xl font-bold mt-2 break-words">{formatCurrency(totalExpected)}</p>
                         <div className="mt-3 text-sm text-blue-100">Montant total attendu pour ce mois</div>
                     </motion.div>
 
                     <motion.div
-                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-green-500 to-green-600 text-white`}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-green-500 to-green-600 text-white overflow-hidden`}
                         whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
                         <div className="flex items-center mb-3">
-                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                            <div className="p-2 bg-white/20 rounded-full mr-3 flex-shrink-0">
                                 <TrendingUp className="h-6 w-6" />
                             </div>
                             <h3 className="font-semibold text-lg">Montant Total Reçu</h3>
                         </div>
-                        <p className="text-3xl font-bold mt-2">{formatCurrency(totalReceived)}</p>
+                        <p className="text-3xl font-bold mt-2 break-words">{formatCurrency(totalReceived)}</p>
                         <div className="mt-3 text-sm text-green-100">Paiements déjà effectués</div>
                     </motion.div>
 
                     <motion.div
-                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-red-500 to-red-600 text-white`}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-red-500 to-red-600 text-white overflow-hidden`}
                         whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
                         <div className="flex items-center mb-3">
-                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                            <div className="p-2 bg-white/20 rounded-full mr-3 flex-shrink-0">
                                 <Calendar className="h-6 w-6" />
                             </div>
                             <h3 className="font-semibold text-lg">Budget en Attente</h3>
                         </div>
-                        <p className="text-3xl font-bold mt-2">{formatCurrency(totalExpected - totalReceived)}</p>
+                        <p className="text-3xl font-bold mt-2 break-words">{formatCurrency(totalExpected - totalReceived)}</p>
                         <div className="mt-3 text-sm text-red-100">Montant restant à percevoir</div>
                     </motion.div>
 
                     <motion.div
-                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-purple-500 to-purple-600 text-white`}
+                        className={`rounded-lg p-5 shadow-lg bg-gradient-to-br from-purple-500 to-purple-600 text-white overflow-hidden`}
                         whileHover={{ y: -5, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                         transition={{ duration: 0.2 }}
                     >
-                        <div className="flex items-center mb-3">
-                            <div className="p-2 bg-white/20 rounded-full mr-3">
+                        <div className="items-center mb-3">
+                            <div className="p-2 items-center h-10 w-10 bg-white/20 rounded-full mr-3 flex-shrink-0">
                                 <Calendar className="h-6 w-6" />
                             </div>
                             <h3 className="font-semibold text-lg">Taux de Recouvrement</h3>
                         </div>
-                        <p className="text-3xl font-bold mt-2">
+                        <p className="text-3xl font-bold mt-2 break-words">
                             {totalExpected > 0 ? Math.round((totalReceived / totalExpected) * 100) : 0}%
                         </p>
                         <div className="mt-3 text-sm text-purple-100">Pourcentage des paiements reçus</div>
@@ -454,8 +468,8 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
                                 key={month.number}
                                 onClick={() => setSelectedSchoolMonth(month.number)}
                                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all transform hover:scale-105 ${selectedSchoolMonth === month.number
-                                        ? `bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md`
-                                        : `bg-white dark:bg-gray-600 ${textColorClass} shadow hover:shadow-md`
+                                    ? `bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md`
+                                    : `bg-white dark:bg-gray-600 ${textColorClass} shadow hover:shadow-md`
                                     }`}
                             >
                                 {month.name} {month.year}
@@ -509,7 +523,7 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
                                         <div className="flex justify-between mb-2">
                                             <span className={`text-sm font-medium ${_text_color}`}>Progression des paiements</span>
                                             <span className={`text-sm font-bold ${classData.paymentPercentage < 30 ? 'text-red-500' :
-                                                    classData.paymentPercentage < 70 ? 'text-yellow-500' : 'text-green-500'
+                                                classData.paymentPercentage < 70 ? 'text-yellow-500' : 'text-green-500'
                                                 }`}>{classData.paymentPercentage}%</span>
                                         </div>
                                         <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
@@ -545,7 +559,6 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
 
                                     <div className={`p-4 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 shadow-inner`}>
                                         <div className="flex justify-between mb-3">
-                                            <span className={`${textColorClass} text-sm font-medium`}>Prévu:</span>
                                             <span className={`${textColorClass} text-sm font-medium`}>Prévu:</span>
                                             <span className={`text-blue-600 dark:text-blue-400 font-bold`}>
                                                 {formatCurrency(classData.expectedBudget)}

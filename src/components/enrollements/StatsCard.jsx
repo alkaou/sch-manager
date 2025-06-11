@@ -109,7 +109,7 @@ const StatsCard = ({
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className={`${valueTextColor} text-3xl font-bold mb-3`}
+            className={`${valueTextColor} text-3xl font-bold mb-3 break-words`}
           >
             {typeof value === 'number' ? value.toLocaleString() : value}
           </motion.div>

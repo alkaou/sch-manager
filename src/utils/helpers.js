@@ -92,10 +92,10 @@ const areArraysEqual = (arr1, arr2) => {
   );
 }
 
-const getBornInfos = (init_born_date, _born_lieu="", lang = "Français") => {
+const getBornInfos = (init_born_date, _born_lieu = "", lang = "Français") => {
   const born_lieu = _born_lieu.trim() !== "" ? _born_lieu : lang === "Français" ? "*Inconnu*" : lang === "Anglais" ? "*Unknow*" : "*A ma sidɔn*";
   const born_date = new Date(init_born_date).toLocaleDateString();
-  if(lang === "Français" || lang === "Anglais"){
+  if (lang === "Français" || lang === "Anglais") {
     const langText = lang === "Français" ? " à " : " in ";
     const infos = `${born_date}${langText}${born_lieu}`.trim();
     return infos;
@@ -111,21 +111,32 @@ const textToUppercase = (text) => {
 
 const getClasseById = (classes, id, lang = "Français") => {
   const inconnuText = lang === "Français" ? "Inconnu" : lang === "Anglais" ? "Unknow" : "A ma sidɔn";
-  if(!classes || classes.length <= 0 ) return {id:id, level: inconnuText, name: inconnuText};
+  if (!classes || classes.length <= 0) return { id: id, level: inconnuText, name: inconnuText };
   const this_classe = classes.find(cls => {
     return cls.id === id;
   });
-  if (!this_classe) return {id:id, level: inconnuText, name: inconnuText};
+  if (!this_classe) return { id: id, level: inconnuText, name: inconnuText };
   return this_classe;
 }
 
-const getPostNameTrans = (post_name, lang="Français") => {
+const getPostNameTrans = (post_name, lang = "Français") => {
   if (post_name !== "Professeurs" || lang === "Français") return post_name;
   const nameTrans = lang === "Anglais" ? "Teachers" : "Karamɔgɔw";
   return nameTrans;
 }
 
-export { 
+const getCurrentMonthScolar = () => {
+  const now = new Date();
+  const months = now.getMonth() + 1; // 0-11 (janvier = 0)
+  const currentMonth = months === 1 ? 4 : months === 2 ? 5 :
+    months === 3 ? 6 : months === 4 ? 7 :
+      months === 5 ? 8 : months === 6 ? 9 :
+        months === 10 ? 1 : months === 11 ? 2 :
+          months === 12 ? 3 : 1;
+  return currentMonth;
+}
+
+export {
   getFormattedDateTime,
   getAge, getDateTime,
   getClasseName, delay,
@@ -133,5 +144,6 @@ export {
   textToUppercase,
   getClasseById,
   getPostNameTrans,
+  getCurrentMonthScolar,
 }
 

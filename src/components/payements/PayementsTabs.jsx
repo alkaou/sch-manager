@@ -91,7 +91,7 @@ const PayementsTabs = ({
               {tab.icon}
               <span className="hidden xs:inline">{tab.title}</span>
               <span className="xs:hidden">
-                {tab.title.split(' ')[0].substring(0, 3)}{tab.title.includes(' ') ? '.' : ''}
+                {tab.title.split(' ')[0].substring(0, 6)}{tab.title.includes(' ') ? '.' : ''}
               </span>
 
               {/* Indicateur d'onglet actif */}

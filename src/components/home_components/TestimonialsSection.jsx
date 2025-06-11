@@ -249,46 +249,46 @@ const TestimonialsSection = ({ isOthersBGColors }) => {
         {/* Stats summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
           <motion.div
-            className="text-center p-4"
+            className="text-center p-4 overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <h3 className="text-3xl md:text-4xl font-bold text-pink-900 dark:text-pink-200 mb-1">150+</h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-pink-900 dark:text-pink-200 mb-1 break-words">150+</h3>
             <p className="opacity-75">{live_language.schools_using || "Écoles utilisatrices"}</p>
           </motion.div>
 
           <motion.div
-            className="text-center p-4"
+            className="text-center p-4 overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h3 className="text-3xl md:text-4xl font-bold text-purple-900 dark:text-purple-200 mb-1">98%</h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-purple-900 dark:text-purple-200 mb-1 break-words">98%</h3>
             <p className="opacity-75">{live_language.satisfaction_rate || "Taux de satisfaction"}</p>
           </motion.div>
 
           <motion.div
-            className="text-center p-4"
+            className="text-center p-4 overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="text-3xl md:text-4xl font-bold text-green-600 dark:text-green-400 mb-1">45K+</h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-green-600 dark:text-green-400 mb-1 break-words">45K+</h3>
             <p className="opacity-75">{live_language.students_managed || "Élèves gérés"}</p>
           </motion.div>
 
           <motion.div
-            className="text-center p-4"
+            className="text-center p-4 overflow-hidden"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h3 className="text-3xl md:text-4xl font-bold text-amber-900 dark:text-amber-200 mb-1">12K+</h3>
+            <h3 className="text-3xl md:text-4xl font-bold text-amber-900 dark:text-amber-200 mb-1 break-words">12K+</h3>
             <p className="opacity-75">{live_language.hours_saved || "Heures économisées"}</p>
           </motion.div>
         </div>

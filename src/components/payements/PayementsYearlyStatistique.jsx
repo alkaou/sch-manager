@@ -792,18 +792,18 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
             >
               {/* Latest Year Revenue Card */}
-              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-blue-500`}>
+              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-blue-500 overflow-hidden`}>
                 <div className="flex items-center mb-4">
-                  <div className="p-3 rounded-full bg-blue-100 mr-4">
+                  <div className="p-3 rounded-full bg-blue-100 mr-4 flex-shrink-0">
                     <DollarSign className="h-6 w-6 text-blue-500" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Revenu Total</h3>
                   </div>
                 </div>
                 <div className="mt-1">
                   <div className="mb-1">
-                    <p className="text-2xl font-bold text-blue-500">{formatCurrency(yearlyData[0]?.totalReceived || 0)}</p>
+                    <p className="text-2xl font-bold text-blue-500 break-words">{formatCurrency(yearlyData[0]?.totalReceived || 0)}</p>
                   </div>
                   <p className={`text-xs ${textColorClass} opacity-60`}>
                     Année scolaire {yearlyData[0]?.label}
@@ -812,18 +812,18 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
               </div>
 
               {/* Expected Revenue Card */}
-              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-green-500`}>
+              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-green-500 overflow-hidden`}>
                 <div className="flex items-center mb-4">
-                  <div className="p-3 rounded-full bg-green-100 mr-4">
+                  <div className="p-3 rounded-full bg-green-100 mr-4 flex-shrink-0">
                     <Target className="h-6 w-6 text-green-500" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Revenu Attendu</h3>
                   </div>
                 </div>
                 <div className="mt-1">
                   <div className="mb-1">
-                    <p className="text-2xl font-bold text-green-500">{formatCurrency(yearlyData[0]?.totalExpected || 0)}</p>
+                    <p className="text-2xl font-bold text-green-500 break-words">{formatCurrency(yearlyData[0]?.totalExpected || 0)}</p>
                   </div>
                   <p className={`text-xs ${textColorClass} opacity-60`}>
                     Objectif financier pour {yearlyData[0]?.label}
@@ -832,14 +832,14 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
               </div>
 
               {/* Payment Rate Card */}
-              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-purple-500`}>
+              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 border-purple-500 overflow-hidden`}>
                 <div className="flex items-center mb-4">
-                  <div className="p-3 rounded-full bg-purple-100 mr-4">
+                  <div className="p-3 rounded-full bg-purple-100 mr-4 flex-shrink-0">
                     <PieChart className="h-6 w-6 text-purple-500" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Taux de Paiement</h3>
-                    <p className="text-2xl font-bold text-purple-500">{yearlyData[0]?.paymentPercentage || 0}%</p>
+                    <p className="text-2xl font-bold text-purple-500 break-words">{yearlyData[0]?.paymentPercentage || 0}%</p>
                   </div>
                 </div>
                 <div className="mt-2">
@@ -850,18 +850,18 @@ const PayementsYearlyStatistique = ({ db, theme, app_bg_color, text_color }) => 
               </div>
 
               {/* Year-over-Year Growth Card */}
-              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 ${yearOverYearGrowth >= 0 ? 'border-amber-500' : 'border-red-500'}`}>
+              <div className={`${cardBgColor} rounded-lg p-6 shadow-lg border-l-4 ${yearOverYearGrowth >= 0 ? 'border-amber-500' : 'border-red-500'} overflow-hidden`}>
                 <div className="flex items-center mb-4">
-                  <div className={`p-3 rounded-full ${yearOverYearGrowth >= 0 ? 'bg-amber-100' : 'bg-red-100'} mr-4`}>
+                  <div className={`p-3 rounded-full ${yearOverYearGrowth >= 0 ? 'bg-amber-100' : 'bg-red-100'} mr-4 flex-shrink-0`}>
                     {yearOverYearGrowth >= 0 ? (
                       <ArrowUpRight className="h-6 w-6 text-amber-500" />
                     ) : (
                       <ArrowDownRight className="h-6 w-6 text-red-500" />
                     )}
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <h3 className={`text-sm font-medium ${textColorClass} opacity-70`}>Croissance Annuelle</h3>
-                    <p className={`text-2xl font-bold ${yearOverYearGrowth >= 0 ? 'text-amber-500' : 'text-red-500'}`}>
+                    <p className={`text-2xl font-bold ${yearOverYearGrowth >= 0 ? 'text-amber-500' : 'text-red-500'} break-words`}>
                       {yearOverYearGrowth >= 0 ? '+' : ''}{yearOverYearGrowth.toFixed(1)}%
                     </p>
                   </div>

@@ -635,14 +635,16 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
                                         createdAt: new Date().toISOString()
                                     });
                                 }}
-                                className={`${buttonAddColor} text-white px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 rounded-lg shadow-lg flex items-center space-x-2 sm:space-x-3`}
-                                whileHover={{ scale: 1.05 }}
+                                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base rounded-lg shadow-md flex items-center space-x-2 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                                whileHover={{ scale: 1.03 }}
                                 whileTap={{ scale: 0.95 }}
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className={`text-sm sm:text-base md:text-lg font-medium text-white`}>Créer un nouveau système de paiement</span>
+                                <span className="flex items-center justify-center p-1 bg-white/20 rounded-full border-2 border-white/70 shadow-inner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                    </svg>
+                                </span>
+                                <span className="font-medium">Créer un nouveau système de paiement</span>
                             </motion.button>
 
                             <p className={`mt-3 sm:mt-4 text-center ${text_color} opacity-70 max-w-md text-xs sm:text-sm`}>

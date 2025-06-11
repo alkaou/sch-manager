@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getClasseName, areArraysEqual } from '../../utils/helpers';
+import { getClasseName, areArraysEqual, getCurrentMonthScolar } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { useFlashNotification } from "../contexts";
 import { Search, CheckCircle, XCircle, RefreshCcw, ChevronDown, ChevronUp, ToggleLeft, ToggleRight } from 'lucide-react';
@@ -415,6 +415,19 @@ const PayementsStudentList = ({
 
 		return Number(paymentSystem.registrationFee) * validatedStudentsWithFee;
 	};
+
+	// Ajout d'un useEffect pour gérer la sélection du mois courant
+    useEffect(() => {
+        // Selection de mois de paiement seulement quand les mois scolaires sont chargés
+        if (months && months.length > 0) {
+            const currentMonthScolar = getCurrentMonthScolar();
+            const month_number = months.length === 8 && currentMonthScolar > 1 ? currentMonthScolar - 1 : currentMonthScolar;
+            if (months.length >= month_number) {
+                setSelectedMonth(month_number);
+            }
+        }
+    }, [months]); // Se déclenche uniquement quand months change
+
 
 	return (
 		<motion.div
