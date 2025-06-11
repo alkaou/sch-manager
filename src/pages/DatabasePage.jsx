@@ -29,7 +29,7 @@ const DatabasePageContent = ({
 
   if (loading) {
     return (
-      <div style={{marginLeft: "7%"}} className={`p-4 mt-20 min-h-screen ${app_bg_color}`}>
+      <div style={{ marginLeft: "4%" }} className={`p-4 mt-20 min-h-screen ${app_bg_color}`}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -42,7 +42,10 @@ const DatabasePageContent = ({
   }
 
   return (
-    <div style={{marginLeft: "7%"}} className={`p-4 mt-20 ml-20 min-h-screen ${app_bg_color}`}>
+    <div
+      className={`h-screen ${app_bg_color} overflow-auto scrollbar-custom`}
+      style={{ marginLeft: "4%", height: "88vh", marginTop: "6%" }}
+    >
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -51,18 +54,18 @@ const DatabasePageContent = ({
         <h1 className={`text-3xl text-center font-bold mb-6 ${text_color}`}>
           Gestionnaire de Base de Données
         </h1>
-        
+
         {currentUser && networkIsAvailavle && isAuthenticated ? (
-          <DatabaseManager 
+          <DatabaseManager
             user={currentUser}
-            theme={theme} 
-            textColor={text_color} 
+            theme={theme}
+            textColor={text_color}
             bgColor={app_bg_color}
           />
           // <div/>
         ) : (
-          <NotConnectedView 
-            theme={theme} 
+          <NotConnectedView
+            theme={theme}
             setLoginModalOpen={setLoginModalOpen}
             isAuthenticated={isAuthenticated}
           />

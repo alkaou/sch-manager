@@ -108,7 +108,7 @@ const EmployeeSidebar = ({
       variants={sidebarVariants}
       initial="hidden"
       animate="visible"
-      className={`w-14 xs:w-36 mt-16 sm:w-48 md:w-56 lg:w-64 h-full ${sidebarBgColor} ${borderColor} border-r shadow-lg overflow-hidden flex flex-col`}
+      className={`w-14 xs:w-36 sm:w-48 md:w-56 lg:w-64 h-full ${sidebarBgColor} ${borderColor} border-r shadow-lg overflow-hidden flex flex-col`}
     >
       <div className="p-2 sm:p-3 md:p-4 border-b border-gray-200 flex justify-between items-center">
         <h2 className={`font-bold text-xs xs:text-sm md:text-lg ${_text_color} truncate`}>Postes</h2>

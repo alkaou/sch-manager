@@ -28,7 +28,7 @@ const StartedPageContent = ({
 }) => {
   // États pour l'affichage des statistiques d'effectifs
   const [showEnrollmentStats, setShowEnrollmentStats] = useState(false);
-  
+
   // Générer un snapshot au démarrage de l'application
   useEffect(() => {
     const initializeSnapshot = async () => {
@@ -40,21 +40,21 @@ const StartedPageContent = ({
         }
       }
     };
-    
+
     initializeSnapshot();
   }, [database, loadingData]);
-  
+
   // Styles spécifiques au contenu - using percentage-based dimensions for better responsiveness
   const style_1 = {
     width: "100%",
     maxWidth: "100%",
-    marginTop: "6%",
   };
-  
+
   const style_2 = {
     width: "96%",
     maxWidth: "96%",
-    marginLeft: "4%"
+    marginLeft: "4%",
+    marginTop: "6%",
   };
 
   if (loadingData) {
@@ -66,8 +66,14 @@ const StartedPageContent = ({
   // Rendu conditionnel selon l'action sélectionnée dans le sidebar
   if (isAddStudentActive) {
     return (
-      <div className="w-full px-2 md:px-4" style={style_1}>
-        <div className="w-full" style={style_2}>
+      <div
+        style={{ ...style_1, height: "100vh" }}
+        className="w-full px-2 md:px-4 overflow-hidden"
+      >
+        <div
+          className="w-full scrollbar-custom overflow-auto"
+          style={{ ...style_2, height: "90vh" }}
+        >
           <AddStudent
             setIsAddStudentActive={setIsAddStudentActive}
             app_bg_color={app_bg_color}
@@ -81,8 +87,14 @@ const StartedPageContent = ({
     );
   } else if (isManageClassesActive) {
     return (
-      <div className="w-full px-2 md:px-4" style={style_1}>
-        <div className="w-full" style={style_2}>
+      <div
+        className="w-full px-2 md:px-4 overflow-hidden"
+        style={{ ...style_1, height: "100vh" }}
+      >
+        <div
+          className="w-full scrollbar-custom overflow-auto"
+          style={{ ...style_2, height: "88vh" }}
+        >
           <ManageClasses
             setIsManageClassesActive={setIsManageClassesActive}
             app_bg_color={app_bg_color}
@@ -110,8 +122,21 @@ const StartedPageContent = ({
     );
   } else {
     return (
-      <div style={style_1} className="overflow-hidden">
-        <div style={style_2} className="scrollbar-custom">
+      <div
+        className="w-full px-2 md:px-4 overflow-hidden"
+        style={{ ...style_1, height: "100vh", overflow: "hidden" }}
+      >
+        <div
+          style={{
+            width: "96%",
+            maxWidth: "96%",
+            marginLeft: "4%",
+            overflow: "auto",
+            maxHeight: "87vh",
+            marginTop: "6.5%",
+          }}
+          className="scrollbar-custom border-2 rounded border-emerald-400 p-1"
+        >
           <StudentsTable
             students={students}
             classes={classes}

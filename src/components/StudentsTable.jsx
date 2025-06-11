@@ -228,7 +228,7 @@ const StudentsTable = ({
 
   return (
     <div
-      className="p-2 sm:p-3 md:p-4 scrollbar-custom overflow-y-auto overflow-x-auto w-full h-full"
+      className="p-2 sm:p-3 md:p-4 scrollbar-custom overflow-y-hidden overflow-x-auto w-full h-full"
     >
       {students.length <= 0 ? (
         <div
@@ -462,7 +462,7 @@ const StudentsTable = ({
           </div>
 
           {/* Tableau des élèves avec scroll horizontal si nécessaire */}
-          <div className="animate-fadeIn rounded-lg shadow-md overflow-x-auto">
+          <div className="animate-fadeIn rounded-lg shadow-md scrollbar-custom overflow-x-auto">
             <table
               className={`min-w-full border-collapse ${tableBorderColor} text-xs md:text-sm`}
               style={{

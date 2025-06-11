@@ -131,7 +131,7 @@ const StudentListSidebar = ({
   const buttonSecondary = theme === "dark" ? "bg-gray-600 hover:bg-gray-500 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
 
   return (
-    <div className={`p-4 ${textClass} ${appBgColor} h-full`}>
+    <div className={`p-1 ${textClass} ${appBgColor} h-full`}>
       <h2 className="text-lg font-semibold mb-4">Paramètres de la liste</h2>
 
       <div className="max-h-500 overflow-y-auto scrollbar-custom">

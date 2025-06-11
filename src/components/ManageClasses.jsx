@@ -248,7 +248,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
 
   return (
     <motion.div
-      className={`mx-auto p-6 ${formBgColor} mt-20 rounded-lg shadow-2xl border-2 ${shinyBorderColor} shadow-lg`}
+      className={`mx-auto p-6 ${formBgColor} mt-2 mb-5 rounded-lg shadow-2xl border-2 ${shinyBorderColor} shadow-lg`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}

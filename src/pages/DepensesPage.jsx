@@ -363,10 +363,10 @@ const DepensesPageContent = ({
 
   return (
     <div
-      style={{ marginLeft: "4%", height: "100vh", overflow: "auto" }}
+      style={{ marginLeft: "4%", height: "88vh", overflow: "auto", marginTop: "6%" }}
       className={`${app_bg_color} ${text_color} h-screen scrollbar-custom`}
     >
-      <div className="p-4 mt-16">
+      <div className="p-4">
         <motion.div
           className="max-w-7xl mx-auto"
           initial={{ opacity: 0 }}

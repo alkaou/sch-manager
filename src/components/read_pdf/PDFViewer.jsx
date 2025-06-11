@@ -46,6 +46,7 @@ const PDFViewer = ({
                   width: '900px',
                   marginLeft: 'auto',
                   marginRight: 'auto',
+                  color: "black",
               }}
           >
               <Viewer 

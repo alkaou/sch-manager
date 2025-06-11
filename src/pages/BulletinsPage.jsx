@@ -293,10 +293,10 @@ const BulletinsPageContent = ({
 
   return (
     <div
-      style={{ marginLeft: "4%", height: "100vh", overflow: "hidden" }}
-      className={`${app_bg_color} flex flex-col sm:flex-row h-screen`}
+      style={{ marginLeft: "4%", height: "90vh", overflow: "hidden", marginTop: "5%" }}
+      className={`${app_bg_color} flex flex-col sm:flex-row h-screen p-1`}
     >
-      <div className="flex-1 overflow-y-auto scrollbar-custom">
+      <div className="flex-1 overflow-y-auto scrollbar-custom mt-2 p-4">
         <motion.div
           className={`max-w-7xl mx-auto p-6 ${formBgColor} rounded-lg shadow-2xl border-2 ${shinyBorderColor}`}
           initial={{ opacity: 0, y: 20 }}

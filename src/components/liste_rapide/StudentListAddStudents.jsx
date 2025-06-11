@@ -114,6 +114,7 @@ const StudentListAddStudents = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        style={{ width: "95%" }}
       >
         {/* Header */}
         <div className={`flex justify-between items-center p-4 border-b ${borderColor}`}>

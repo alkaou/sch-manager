@@ -48,10 +48,8 @@ const ReadPageContent = ({
     <div
       className={`flex h-screen ${app_bg_color}`}
       style={{
-        marginLeft: "7%",
-        width: "93%",
-        maxWidth: "93%",
-        minWidth: "93%",
+        marginLeft: "4%",
+        height: "100vh",
         overflow: "hidden",
       }}
     >
@@ -67,7 +65,8 @@ const ReadPageContent = ({
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className={`w-64 h-screen fixed top-0 pt-20 shadow-lg z-10 ${app_bg_color}`}
+          className={`h-screen fixed top-0 shadow-lg z-10 ${app_bg_color}`}
+          style={{ width: "20%" }}
         >
           <PDFSidebar
             pdfFiles={pdfFiles}
@@ -83,32 +82,38 @@ const ReadPageContent = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex-1 ml-64 pt-20 flex flex-col"
+          className="flex flex-col"
         >
           {loading ? (
             <PageLoading />
           ) : selectedPdf ? (
             <>
-              <PDFControls
-                currentPage={currentPage}
-                totalPages={totalPages}
-                setCurrentPage={setCurrentPage}
-                zoomLevel={zoomLevel}
-                setZoomLevel={setZoomLevel}
-                isSpeaking={isSpeaking}
-                setIsSpeaking={setIsSpeaking}
-                speakingRate={speakingRate}
-                setSpeakingRate={setSpeakingRate}
-                theme={theme}
-                textColor={text_color}
-                app_bg_color={app_bg_color}
-              />
+              <div
+                className="sticky z-5 w-full"
+                style={{ marginTop: "6%" }}
+              >
+                <PDFControls
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                  zoomLevel={zoomLevel}
+                  setZoomLevel={setZoomLevel}
+                  isSpeaking={isSpeaking}
+                  setIsSpeaking={setIsSpeaking}
+                  speakingRate={speakingRate}
+                  setSpeakingRate={setSpeakingRate}
+                  theme={theme}
+                  textColor={text_color}
+                  app_bg_color={app_bg_color}
+                />
+              </div>
               <div
                 style={{
-                  width: "100%",
-                  maxWidth: "100%",
-                  minWidth: "100%",
-                  height: "calc(100vh - 150px)",
+                  width: "76%",
+                  maxWidth: "76%",
+                  minWidth: "76%",
+                  marginLeft: "22%", 
+                  height: "80vh",
                   overflowY: "auto"
                 }}
                 className="scrollbar-custom"
@@ -125,7 +130,7 @@ const ReadPageContent = ({
                   app_bg_color={app_bg_color}
                   theme={theme}
                 />
-            </div>
+              </div>
             </>
           ) : (
             <div className={`flex justify-center items-center h-full ${text_color}`}>

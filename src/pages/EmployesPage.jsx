@@ -150,8 +150,8 @@ const EmployesPage = () => {
 
   return (
     <motion.div
-      style={{ marginLeft: "4%", height: "100vh" }}
-      className={`overflow-hidden flex flex-col sm:flex-row h-screen ${app_bg_color} ${text_color}`}
+      style={{ marginLeft: "4%", height: "89vh", marginTop: "5.5%" }}
+      className={`p-1 overflow-hidden flex flex-col sm:flex-row h-screen ${app_bg_color} ${text_color}`}
       variants={pageVariants}
       initial="hidden"
       animate="visible"
@@ -182,7 +182,6 @@ const EmployesPage = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="space-y-3 sm:space-y-4 mt-16"
             >
               <EmployeeFilters
                 filters={filters}

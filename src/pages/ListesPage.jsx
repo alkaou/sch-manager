@@ -176,9 +176,12 @@ const ListesPagePageContent = ({
   const some_text_color = theme === "dark" ? text_color : "text-gray-700";
 
   return (
-    <div style={{marginLeft: "4%", marginTop: "4%"}} className={`p-4 ${app_bg_color}`}>
+    <div
+      className="p-4 overflow-auto scrollbar-custom"
+      style={{ marginLeft: "4%", height: "88vh", marginTop: "6%" }}
+    >
       {isLoading ? (
-        <div 
+        <div
           className="items-center absolute z-40 justify-center"
           style={{
             top: "50%",
@@ -190,7 +193,7 @@ const ListesPagePageContent = ({
       ) : (
         <>
           {isSmallLoading && (
-            <div 
+            <div
               className="bg-blue-100 bg-opacity-40 z-40 justify-center fixed"
               style={{
                 borderRadius: "100%",

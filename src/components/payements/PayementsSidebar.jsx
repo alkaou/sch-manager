@@ -134,8 +134,8 @@ const PayementsSidebar = ({
       className={`h-full ${sidebarBgColor} flex flex-col border-b border-r border-r-2 ${borderColor} rounded-lg`}>
 
       <div
-        style={{ height: "100vh" }}
-        className="mt-12 overflow-y-auto scrollbar-custom scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent"
+        style={{ height: "90vh", marginTop: "30%" }}
+        className="overflow-y-auto scrollbar-custom scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent"
       >
 
         {/* Header Section with Glass Effect */}

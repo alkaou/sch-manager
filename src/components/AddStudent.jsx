@@ -646,7 +646,8 @@ const AddStudent = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       style={{
-        marginTop: "6em",
+        marginTop: "2em",
+        marginBottom: "2em",
         boxShadow: theme === "dark"
           ? "0 0 25px rgba(66, 153, 225, 0.6)"
           : "0 0 25px rgba(159, 122, 234, 0.6)",

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, Search, Filter, Check, CheckSquare, Square, Briefcase } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { X, Search, Check, CheckSquare, Square } from 'lucide-react';
 
 const EmployeListAddEmployees = ({
   db,
@@ -14,22 +14,22 @@ const EmployeListAddEmployees = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPosition, setSelectedPosition] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('actif');
-  
+
   // Load employees from database and initialize selected employees
   useEffect(() => {
     if (db && db.employees) {
       setEmployees(db.employees.filter(employee => employee.status === selectedStatus));
-      
+
       // Pre-select employees that are already in the list
       if (currentEmployees && currentEmployees.length > 0) {
-        const preSelectedEmployees = db.employees.filter(employee => 
+        const preSelectedEmployees = db.employees.filter(employee =>
           currentEmployees.some(e => e.id === employee.id)
         );
         setSelectedEmployees(preSelectedEmployees);
       }
     }
   }, [db, currentEmployees, selectedStatus]);
-  
+
   // Handle select all employees
   const handleSelectAll = () => {
     if (selectedEmployees.length === filteredEmployees.length) {
@@ -38,7 +38,7 @@ const EmployeListAddEmployees = ({
       setSelectedEmployees(filteredEmployees);
     }
   };
-  
+
   // Handle select an employee
   const handleSelectEmployee = (employee) => {
     if (selectedEmployees.find(e => e.id === employee.id)) {
@@ -47,32 +47,32 @@ const EmployeListAddEmployees = ({
       setSelectedEmployees([...selectedEmployees, employee]);
     }
   };
-  
+
   // Handle add selected employees
   const handleAddEmployees = () => {
     onAddEmployees(selectedEmployees);
   };
-  
+
   // Get unique positions
   const positions = db?.positions ? [...new Set(db.positions.map(p => p.name))] : [];
-  
+
   // Filter employees based on search term, position, and status
   const filteredEmployees = employees.filter(employee => {
     // Filter by search term
-    const searchMatch = 
-      searchTerm === '' || 
+    const searchMatch =
+      searchTerm === '' ||
       employee.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.sure_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.matricule?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.name_complet?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     // Filter by position
     const positionMatch = selectedPosition === 'all' || employee.postes.includes(selectedPosition);
-    
+
     return searchMatch && positionMatch;
   });
-  
+
   // Styles based on theme
   const textClass = theme === "dark" ? "text-white" : "text-gray-700";
   const modalBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -80,7 +80,7 @@ const EmployeListAddEmployees = ({
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
   const buttonSuccess = "bg-green-600 hover:bg-green-700 text-white";
-  
+
   return (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
@@ -94,6 +94,7 @@ const EmployeListAddEmployees = ({
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        style={{ width: "95%" }}
       >
         {/* Header */}
         <div className={`flex justify-between items-center p-4 border-b ${borderColor}`}>
@@ -108,7 +109,7 @@ const EmployeListAddEmployees = ({
             <X size={24} />
           </motion.button>
         </div>
-        
+
         {/* Filters */}
         <div className={`p-4 border-b ${borderColor} flex flex-wrap gap-4`}>
           {/* Search */}
@@ -124,7 +125,7 @@ const EmployeListAddEmployees = ({
               />
             </div>
           </div>
-          
+
           {/* Position filter */}
           <div className="w-64">
             <select
@@ -141,7 +142,7 @@ const EmployeListAddEmployees = ({
               ))}
             </select>
           </div>
-          
+
           {/* Status filter */}
           <div className="w-64">
             <select
@@ -155,7 +156,7 @@ const EmployeListAddEmployees = ({
             </select>
           </div>
         </div>
-        
+
         {/* Employees list */}
         <div className="flex-1 overflow-y-auto scrollbar-custom p-4">
           <div className="mb-4 flex justify-between items-center">
@@ -179,17 +180,16 @@ const EmployeListAddEmployees = ({
               </span>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredEmployees.map(employee => {
               const isSelected = selectedEmployees.some(e => e.id === employee.id);
-              
+
               return (
                 <motion.div
                   key={employee.id}
-                  className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-50"} rounded-lg p-4 cursor-pointer ${
-                    isSelected ? (theme === "dark" ? "ring-2 ring-blue-500" : "ring-2 ring-blue-500") : ""
-                  }`}
+                  className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-50"} rounded-lg p-4 cursor-pointer ${isSelected ? (theme === "dark" ? "ring-2 ring-blue-500" : "ring-2 ring-blue-500") : ""
+                    }`}
                   onClick={() => handleSelectEmployee(employee)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -229,7 +229,7 @@ const EmployeListAddEmployees = ({
                 </motion.div>
               );
             })}
-            
+
             {filteredEmployees.length === 0 && (
               <div className={`col-span-3 text-center p-8 ${textClass}`}>
                 <p className="text-lg">Aucun employé trouvé</p>
@@ -238,7 +238,7 @@ const EmployeListAddEmployees = ({
             )}
           </div>
         </div>
-        
+
         {/* Footer */}
         <div className={`p-4 border-t ${borderColor} flex justify-end space-x-3`}>
           <motion.button

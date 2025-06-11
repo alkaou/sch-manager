@@ -226,7 +226,7 @@ const CompositionsPageContent = ({
     try {
       // Check if this composition has more than 2 bulletins and all are locked
       const isFullyLocked = await compostionBuelletinsAreLocked(compositionToDelete);
-        
+
       // If fully locked, don't allow deletion
       if (isFullyLocked) {
         setGlobalError("Cette composition ne peut pas être supprimée car tous ses bulletins sont verrouillés.");
@@ -245,7 +245,7 @@ const CompositionsPageContent = ({
       // Update the database with both changes
       let updatedDB;
 
-      if(db.bulletins && db.bulletins.length > 0 && updatedBulletins){
+      if (db.bulletins && db.bulletins.length > 0 && updatedBulletins) {
         updatedDB = {
           ...db,
           compositions: updatedCompositions,
@@ -354,12 +354,12 @@ const CompositionsPageContent = ({
   };
 
   return (
-    <div 
-      className="p-4 mt-20"
-      style={{marginLeft: "4%"}}
+    <div
+      className="p-4 overflow-auto scrollbar-custom"
+      style={{ marginLeft: "4%", height: "88vh", marginTop: "6%" }}
     >
       <motion.div
-        className={`max-w-7xl mx-auto p-6 ${formBgColor} rounded-lg shadow-2xl border-2 ${shinyBorderColor}`}
+        className={`max-w-7xl mx-auto p-6 mt-5 ${formBgColor} rounded-lg shadow-2xl border-2 ${shinyBorderColor}`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

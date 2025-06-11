@@ -582,7 +582,7 @@ const StudentListEditor = ({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className={`flex items-center justify-between p-4 border-b ${appBgColor}`}>
+      <div className={`flex items-center justify-between border-b ${appBgColor}`}>
         <div className="flex items-center">
           <motion.button
             onClick={handleReturn}
@@ -715,7 +715,9 @@ const StudentListEditor = ({
               initial={{ width: 0, opacity: 0 }}
               animate={{ width: 300, opacity: 1 }}
               exit={{ width: 0, opacity: 0 }}
-              className={`border-r ${theme === "dark" ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-gray-50"} overflow-y-auto`}
+              className={`border-r ${theme === "dark" ? "border-gray-700 bg-gray-800" : 
+                "border-gray-200 bg-gray-50"} overflow-y-auto scrollbar-custom
+              `}
             >
               <StudentListSidebar
                 list={currentList}
