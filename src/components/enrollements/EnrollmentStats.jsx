@@ -1,15 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { 
   Users, 
   UserCheck, 
   TrendingUp, 
-  Calendar,
   BarChart3,
   PieChart,
   LineChart,
-  Filter,
-  Download,
   RefreshCw,
   RotateCw
 } from 'lucide-react';

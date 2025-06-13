@@ -11,6 +11,8 @@ import {
   getFirestore
 } from 'firebase/firestore';
 import firebaseConfig from './firebaseConfig';
+import { useLanguage } from '../components/contexts';
+import translations from './auth_translator';
 
 // Initialiser Firebase
 const app = initializeApp(firebaseConfig);
@@ -25,13 +27,25 @@ googleProvider.setCustomParameters({
   prompt: 'select_account' // Force l'affichage du popup pour sélectionner un compte
 });
 
+// Helper function to get translations
+const getTranslation = (key) => {
+  try {
+    // Try to get the current language from localStorage as a fallback
+    const storedLanguage = localStorage.getItem('app_language') || 'Français';
+    return translations[key][storedLanguage] || translations[key]['Français'];
+  } catch (e) {
+    // Fallback to French if something goes wrong
+    return translations[key]['Français'];
+  }
+};
+
 // Connexion avec Google via pop-up
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user;
   } catch (error) {
-    alert("Erreur lors de la connexion à votre compte !");
+    alert(getTranslation('login_account_error'));
     throw error;
   }
 };
@@ -41,12 +55,12 @@ export const logoutUser = async () => {
   try {
     await signOut(auth);
   } catch (error) {
-    alert("Erreur lors de la déconnexion !");
+    alert(getTranslation('logout_firebase_error'));
     throw error;
   }
 };
 
-// Écoute des changements d’état d’authentification
+// Écoute des changements d'état d'authentification
 export const subscribeToAuthChanges = (callback) => {
   return onAuthStateChanged(auth, callback);
 };

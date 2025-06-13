@@ -3,10 +3,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { useTheme } from '../components/contexts';
+import { useLanguage } from '../components/contexts';
+import translations from './auth_translator';
 
 const LoginModal = ({ isOpen, onClose }) => {
   const { login, loading, error } = useAuth();
   const { theme } = useTheme();
+  const { language } = useLanguage();
+  
+  // Translation helper function
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
   
   const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
   const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-800';
@@ -46,9 +55,9 @@ const LoginModal = ({ isOpen, onClose }) => {
               >
                 <X size={20} className={textColor} />
               </button>
-              <h2 className={`text-2xl font-bold ${textColor}`}>Login to School Manager</h2>
+              <h2 className={`text-2xl font-bold ${textColor}`}>{t('login_to_school_manager')}</h2>
               <p className={`mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                Sign in to access premium features and sync your data across devices
+                {t('sign_in_to_access')}
               </p>
             </div>
             
@@ -85,14 +94,14 @@ const LoginModal = ({ isOpen, onClose }) => {
                     />
                   </svg>
                   <span className="font-medium">
-                    {loading ? 'Signing in...' : 'Sign in with Google'}
+                    {loading ? t('signing_in') : t('sign_in_with_google')}
                   </span>
                 </button>
               </div>
               
               <div className="mt-6 text-center">
                 <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                  By signing in, you agree to our Terms of Service and Privacy Policy
+                  {t('terms_agreement')}
                 </p>
               </div>
             </div>

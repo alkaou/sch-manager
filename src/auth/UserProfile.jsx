@@ -4,12 +4,19 @@ import { motion } from 'framer-motion';
 import { User, Mail, LogOut, Crown, ArrowLeft } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { useTheme, useLanguage } from '../components/contexts';
+import translations from './auth_translator';
 
 const UserProfile = () => {
   const { currentUser, logout, isAuthenticated } = useAuth();
   const { theme } = useTheme();
   const [loading, setLoading] = useState(false);
-  const { live_language, language } = useLanguage();
+  const { language } = useLanguage();
+
+  // Translation helper function
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
 
   // Theme-based styles
   const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -27,32 +34,20 @@ const UserProfile = () => {
     }
   };
 
-  // Language-specific text content
-  const getContent = (fr, en, bm) => {
-    if (language === 'Français') return fr;
-    if (language === 'Anglais') return en;
-    if (language === 'Bambara') return bm;
-    return fr; // Default to French
-  };
-
   if (!isAuthenticated) {
     return (
       <div className="flex flex-col items-center justify-center mt-40 p-8">
         <div className={`${bgColor} rounded-lg shadow-lg p-8 max-w-md w-full`}>
           <div className="text-center">
             <User size={64} className={`mx-auto ${textColor} opacity-20`} />
-            <h2 className={`mt-4 text-xl font-bold ${textColor}`}>Not Logged In</h2>
+            <h2 className={`mt-4 text-xl font-bold ${textColor}`}>{t('not_logged_in')}</h2>
             <p className={`mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-              Please log in to view your profile
+              {t('please_login')}
             </p>
 
             <Link to="/" style={{fontWeight: "bold"}} className={`inline-flex items-center mt-6 btn btn-primary`}>
               <ArrowLeft className="mr-2" size={18} />
-              {getContent(
-                'Retour à l\'accueil', 
-                'Back to Home',
-                'Segin so kɔnɔ'
-              )}
+              {t('back_to_home')}
             </Link>
 
           </div>
@@ -90,7 +85,7 @@ const UserProfile = () => {
           {currentUser?.isPremium && (
             <div className="mt-2 flex items-center bg-amber-500 text-white px-3 py-1 rounded-full text-sm">
               <Crown size={14} className="mr-1" />
-              Premium Member
+              {t('premium_member')}
             </div>
           )}
         </div>
@@ -101,7 +96,7 @@ const UserProfile = () => {
             <div className="flex items-center">
               <Mail size={18} className={`mr-2 ${textColor}`} />
               <div>
-                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>Email</p>
+                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{t('email')}</p>
                 <p className={`${textColor} font-medium`}>{currentUser?.email}</p>
               </div>
             </div>
@@ -111,7 +106,7 @@ const UserProfile = () => {
             <div className="flex items-center">
               <User size={18} className={`mr-2 ${textColor}`} />
               <div>
-                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>User ID</p>
+                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>{t('user_id')}</p>
                 <p className={`${textColor} font-medium`}>{currentUser?.uid.substring(0, 12)}...</p>
               </div>
             </div>
@@ -123,16 +118,12 @@ const UserProfile = () => {
             className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
           >
             <LogOut size={18} />
-            <span>{loading ? 'Logging out...' : 'Logout'}</span>
+            <span>{loading ? t('logging_out') : t('logout')}</span>
           </button>
 
           <Link to="/" style={{fontWeight: "bold"}} className={`inline-flex items-center mt-6 btn btn-primary`}>
             <ArrowLeft className="mr-2" size={18} />
-            {getContent(
-              'Retour à l\'accueil', 
-              'Back to Home',
-              'Segin so kɔnɔ'
-            )}
+            {t('back_to_home')}
           </Link>
           
         </div>

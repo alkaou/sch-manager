@@ -416,17 +416,20 @@ const PayementsStudentList = ({
 		return Number(paymentSystem.registrationFee) * validatedStudentsWithFee;
 	};
 
+	const [monthIsGetted, setMonthIsGetted] = useState(false);
+
 	// Ajout d'un useEffect pour gérer la sélection du mois courant
     useEffect(() => {
         // Selection de mois de paiement seulement quand les mois scolaires sont chargés
-        if (months && months.length > 0) {
+        if (months && months.length > 0 && !monthIsGetted) {
             const currentMonthScolar = getCurrentMonthScolar();
             const month_number = months.length === 8 && currentMonthScolar > 1 ? currentMonthScolar - 1 : currentMonthScolar;
             if (months.length >= month_number) {
                 setSelectedMonth(month_number);
+                setMonthIsGetted(true);
             }
         }
-    }, [months]); // Se déclenche uniquement quand months change
+    }, [months, monthIsGetted]); // Se déclenche uniquement quand months change
 
 
 	return (

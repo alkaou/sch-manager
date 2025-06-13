@@ -2,15 +2,31 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check, Crown, AlertCircle } from 'lucide-react';
 import { useTheme } from '../components/contexts';
+import { useLanguage } from '../components/contexts';
 import { useAuth } from './AuthContext';
 import AlertPopup from '../components/AlertPopup.jsx';
+import translations from './auth_translator';
 
 const PremiumModal = ({ isOpen, onClose }) => {
   const { theme } = useTheme();
+  const { language } = useLanguage();
   const { isAuthenticated, currentUser } = useAuth();
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
+  
+  // Translation helper function
+  const t = (key, replacements = {}) => {
+    if (!translations[key]) return key;
+    let text = translations[key][language] || translations[key]["Français"];
+    
+    // Handle replacements for dynamic content
+    Object.entries(replacements).forEach(([key, value]) => {
+      text = text.replace(`{${key}}`, value);
+    });
+    
+    return text;
+  };
   
   // Theme-based styles
   const bgColor = theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700';
@@ -21,40 +37,40 @@ const PremiumModal = ({ isOpen, onClose }) => {
   const plans = [
     {
       id: 'monthly',
-      name: 'Monthly',
+      name: t('monthly'),
       price: '5,000',
-      period: 'FCFA / month',
+      period: t('fcfa_month'),
       features: [
-        'All premium features',
-        'Priority support',
-        'Cloud backup',
-        'Advanced analytics'
+        t('all_premium_features'),
+        t('priority_support'),
+        t('cloud_backup'),
+        t('advanced_analytics')
       ]
     },
     {
       id: 'quarterly',
-      name: 'Quarterly',
+      name: t('quarterly'),
       price: '12,000',
-      period: 'FCFA / 3 months',
+      period: t('fcfa_3months'),
       features: [
-        'All premium features',
-        'Priority support',
-        'Cloud backup',
-        'Advanced analytics',
-        '20% savings compared to monthly'
+        t('all_premium_features'),
+        t('priority_support'),
+        t('cloud_backup'),
+        t('advanced_analytics'),
+        t('savings_monthly_20')
       ]
     },
     {
       id: 'yearly',
-      name: 'Yearly',
+      name: t('yearly'),
       price: '45,000',
-      period: 'FCFA / year',
+      period: t('fcfa_year'),
       features: [
-        'All premium features',
-        'Priority support',
-        'Cloud backup',
-        'Advanced analytics',
-        '25% savings compared to monthly'
+        t('all_premium_features'),
+        t('priority_support'),
+        t('cloud_backup'),
+        t('advanced_analytics'),
+        t('savings_monthly_25')
       ]
     }
   ];
@@ -63,7 +79,8 @@ const PremiumModal = ({ isOpen, onClose }) => {
   const handleSubscribe = () => {
     // Here you would implement your payment processing logic
     // Show custom alert popup instead of using alert()
-    setAlertMessage(`Subscription to ${selectedPlan} plan initiated. This would connect to a payment processor in production.`);
+    const planName = plans.find(p => p.id === selectedPlan)?.name || selectedPlan;
+    setAlertMessage(t('subscription_message', { plan: planName }));
     setIsAlertOpen(true);
   };
   
@@ -91,7 +108,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ type: 'spring', damping: 20 }}
-              className={`${bgColor} rounded-lg shadow-xl w-full max-w-full md:max-w-4xl mx-4 overflow-hidden overflow-y-auto max-h-[90vh]`}
+              className={`${bgColor} rounded-lg shadow-xl w-full max-w-full md:max-w-4xl mx-4 overflow-hidden overflow-y-auto scrollbar-custom max-h-[90vh]`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -104,10 +121,10 @@ const PremiumModal = ({ isOpen, onClose }) => {
                 </button>
                 <div className="flex items-center gap-2 sm:gap-3">
                   <Crown size={20} className="sm:w-6 sm:h-6 md:w-7 md:h-7 text-amber-500" />
-                  <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${textColor}`}>Upgrade to Premium</h2>
+                  <h2 className={`text-lg sm:text-xl md:text-2xl font-bold ${textColor}`}>{t('upgrade_to_premium')}</h2>
                 </div>
                 <p className={`mt-2 text-sm sm:text-base ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Unlock all features and take your school management to the next level
+                  {t('unlock_all_features')}
                 </p>
               </div>
               
@@ -117,8 +134,8 @@ const PremiumModal = ({ isOpen, onClose }) => {
                   <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 rounded-lg flex items-start gap-2 sm:gap-3 text-sm">
                     <AlertCircle size={18} className="mt-0.5 flex-shrink-0 sm:w-5 sm:h-5" />
                     <div>
-                      <p className="font-medium">Authentication Required</p>
-                      <p className="mt-1 text-xs sm:text-sm">You need to log in before subscribing to premium features.</p>
+                      <p className="font-medium">{t('authentication_required')}</p>
+                      <p className="mt-1 text-xs sm:text-sm">{t('login_before_subscribing')}</p>
                     </div>
                   </div>
                 )}
@@ -168,7 +185,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
                     onClick={onClose}
                     className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100"} ${borderColor} border ${textColor} transition-colors text-sm sm:text-base`}
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                   <button
                     onClick={handleSubscribe}
@@ -178,7 +195,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
                     }`}
                   >
                     <Crown size={16} className="sm:w-5 sm:h-5" />
-                    <span>Subscribe Now</span>
+                    <span>{t('subscribe_now')}</span>
                   </button>
                 </div>
               </div>
@@ -189,7 +206,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
           <AlertPopup 
             isOpenAlertPopup={isAlertOpen}
             setIsOpenAlertPopup={handleAlertClose}
-            title="Subscription Initiated"
+            title={t('subscription_initiated')}
             message={alertMessage}
           />
         </>

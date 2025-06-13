@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import StudentsTable from "../components/StudentsTable.jsx";
 import AddStudent from "../components/AddStudent.jsx";
 import ManageClasses from "../components/ManageClasses.jsx";
 import PageLoading from "../components/PageLoading.jsx";
-import EnrollmentStats from "../components/enrollements/EnrollmentStats.jsx";
 import { updateCurrentSnapshot } from "../utils/snapshotManager.js";
 
 const StartedPageContent = ({
@@ -26,8 +25,7 @@ const StartedPageContent = ({
   text_color,
   theme,
 }) => {
-  // États pour l'affichage des statistiques d'effectifs
-  const [showEnrollmentStats, setShowEnrollmentStats] = useState(false);
+
 
   // Générer un snapshot au démarrage de l'application
   useEffect(() => {
@@ -105,21 +103,7 @@ const StartedPageContent = ({
         </div>
       </div>
     );
-  } else if (showEnrollmentStats) {
-    return (
-      <div className="w-full px-2 md:px-4 mt-4" style={style_1}>
-        <div className="w-full" style={style_2}>
-          <EnrollmentStats
-            setShowEnrollmentStats={setShowEnrollmentStats}
-            app_bg_color={app_bg_color}
-            text_color={text_color}
-            theme={theme}
-            database={database}
-            refreshData={refreshData}
-          />
-        </div>
-      </div>
-    );
+
   } else {
     return (
       <div

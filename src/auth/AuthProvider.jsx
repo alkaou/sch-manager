@@ -8,12 +8,21 @@ import {
 } from './firebaseService';
 import { getUserPremiumData, createOrUpdateUser } from './firebaseFirestore';
 import secureLocalStorage from 'react-secure-storage';
+import { useLanguage } from '../components/contexts';
+import translations from './auth_translator';
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isOnline, setIsOnline] = useState(false);
+  const { language } = useLanguage();
+  
+  // Translation helper function
+  const t = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
 
   // Fonction de vérification de la connectivité via une requête de test
   const checkInternetConnection = async () => {
@@ -104,7 +113,7 @@ const AuthProvider = ({ children }) => {
     const isInternet = await checkInternetConnection();
     // console.log("internet est : " + isInternet);
     if(!isInternet) {
-      alert("Veuillez s'il vous plaît vérifier votre connexion internet !");
+      alert(t('connection_error'));
       return;
     }
     try {
@@ -113,7 +122,7 @@ const AuthProvider = ({ children }) => {
       await signInWithGoogle();
     } catch (err) {
       setError(err.message);
-      alert('Erreur lors de la connexion');
+      alert(t('login_error'));
       // console.error('Erreur lors de la connexion:', err);
     } finally {
       setLoading(false);
@@ -132,7 +141,7 @@ const AuthProvider = ({ children }) => {
       await logoutUser();
     } catch (err) {
       setError(err.message);
-      alert("Erreur lors de la déconnexion !");
+      alert(t('logout_error'));
       // console.error('Erreur lors de la déconnexion:', err);
     } finally {
       setLoading(false);
