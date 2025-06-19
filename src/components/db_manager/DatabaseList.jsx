@@ -1,12 +1,23 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaDatabase, FaCalendarAlt, FaEdit } from "react-icons/fa";
+import translations from "./db_manager_translator";
+import { useLanguage } from "../contexts";
 
 const DatabaseList = ({ databases, onSelect, theme, textColor }) => {
   const isDark = theme === "dark";
 
+  const { language } = useLanguage();
+
+  // Translation function
+  const translation = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
+
   const formatDate = (timestamp) => {
-    if (!timestamp) return "Date inconnue";
+    const unknow_date = translation("unknown_date");
+    if (!timestamp) return unknow_date;
     
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     return new Intl.DateTimeFormat("fr-FR", {
@@ -44,10 +55,10 @@ const DatabaseList = ({ databases, onSelect, theme, textColor }) => {
       >
         <FaDatabase className={`mx-auto text-4xl mb-4 ${textColor} opacity-50`} />
         <h3 className={`text-xl font-medium ${textColor}`}>
-          Aucune base de données trouvée
+          {translation("no_database_found")}
         </h3>
         <p className={`mt-2 ${textColor} opacity-70`}>
-          Créez votre première base de données pour commencer à sauvegarder vos données.
+          {translation("create_first_database")}
         </p>
       </motion.div>
     );
@@ -83,7 +94,7 @@ const DatabaseList = ({ databases, onSelect, theme, textColor }) => {
                 </h3>
                 <div className={`flex items-center mt-1 text-sm ${textColor} opacity-70`}>
                   <FaCalendarAlt className="mr-1" />
-                  <span>Mis à jour: {formatDate(database.updatedAt)}</span>
+                  <span>{translation("updated_on")}: {formatDate(database.updatedAt)}</span>
                 </div>
               </div>
             </div>
@@ -101,7 +112,7 @@ const DatabaseList = ({ databases, onSelect, theme, textColor }) => {
           )}
           
           <div className={`mt-3 text-xs ${textColor} opacity-60`}>
-            Créé le: {formatDate(database.createdAt)}
+            {translation("created_on")}: {formatDate(database.createdAt)}
           </div>
         </motion.div>
       ))}

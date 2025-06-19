@@ -2,16 +2,26 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FaDatabase, FaLock, FaSignInAlt } from "react-icons/fa";
+import translations from "./db_manager_translator";
+import { useLanguage } from "../contexts";
 
 const NotConnectedView = ({ theme, setLoginModalOpen, isAuthenticated }) => {
   const isDark = theme === "dark";
+
+  const { language } = useLanguage();
+
+  // Translation function
+  const translation = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className={`rounded-lg p-8 ${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-700"
+      className={`mb-10 rounded-lg p-8 ${isDark ? "bg-gray-800 text-white" : "bg-white text-gray-700"
         } shadow-xl max-w-4xl mx-auto`}
     >
       <div className="flex flex-col items-center text-center">
@@ -26,13 +36,11 @@ const NotConnectedView = ({ theme, setLoginModalOpen, isAuthenticated }) => {
         </motion.div>
 
         <h2 className={`text-2xl font-bold mb-4`}>
-          Connexion Requise
+          {translation("connection_required")}
         </h2>
 
         <p className={`mb-8 text-lg opacity-80`}>
-          Pour accéder au système de sauvegarde de base de données à distance,
-          veuillez vous connecter à votre compte. Cette fonctionnalité vous permet
-          de sauvegarder vos données en toute sécurité et d'y accéder depuis n'importe quel appareil.
+          {translation("login_message")}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
@@ -43,10 +51,10 @@ const NotConnectedView = ({ theme, setLoginModalOpen, isAuthenticated }) => {
           >
             <FaDatabase className={`text-4xl mb-4`} />
             <h3 className={`text-xl font-semibold mb-2`}>
-              Sauvegarde Sécurisée
+              {translation("secure_backup")}
             </h3>
             <p className={`text-sm opacity-80`}>
-              Protégez vos données contre les pertes accidentelles en les sauvegardant dans le cloud.
+              {translation("secure_backup_desc")}
             </p>
           </motion.div>
 
@@ -57,10 +65,10 @@ const NotConnectedView = ({ theme, setLoginModalOpen, isAuthenticated }) => {
           >
             <FaDatabase className={`text-4xl mb-4`} />
             <h3 className={`text-xl font-semibold mb-2`}>
-              Synchronisation
+              {translation("synchronization")}
             </h3>
             <p className={`text-sm opacity-80`}>
-              Synchronisez facilement vos données entre différents appareils ou après une réinstallation.
+              {translation("synchronization_desc")}
             </p>
           </motion.div>
         </div>
@@ -79,7 +87,7 @@ const NotConnectedView = ({ theme, setLoginModalOpen, isAuthenticated }) => {
                 } text-white font-medium transition-colors`}
             >
               <FaSignInAlt />
-              Se Connecter
+              {translation("login")}
             </Link>
           </motion.div>
         )}

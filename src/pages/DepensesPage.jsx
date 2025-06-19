@@ -74,7 +74,7 @@ const DepensesPageContent = ({
         const sortedExpenses = (freshData.expenses || []).sort((a, b) => {
           return new Date(b.date) - new Date(a.date);
         });
-
+        // console.log(sortedExpenses);
         setSchoolYears(sortedSchoolYears);
         setExpenses(sortedExpenses);
 
@@ -434,7 +434,7 @@ const DepensesPageContent = ({
         <ActionConfirmePopup
           isOpenConfirmPopup={showDeleteConfirm !== null}
           setIsOpenConfirmPopup={() => setShowDeleteConfirm(null)}
-          handleConfirmeAction={confirmDeleteSchoolYear}
+          handleConfirmeAction={() => confirmDeleteSchoolYear()}
           title={t('confirm_delete_year')}
           message={t('confirm_delete_year_msg')}
           element_info={showDeleteConfirm?.title}

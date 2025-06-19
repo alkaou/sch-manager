@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Search, SortAsc, SortDesc, Filter } from 'lucide-react';
+import { Search, SortAsc, SortDesc } from 'lucide-react';
 import { useTheme } from '../contexts';
 
 const EmployeeFilters = ({ 

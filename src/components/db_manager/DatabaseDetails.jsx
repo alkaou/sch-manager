@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { db } from "../../auth/firebaseService";
 import { FaTimes, FaEdit, FaCloudUploadAlt, FaCloudDownloadAlt, FaCheck, FaExclamationTriangle } from "react-icons/fa";
+import translations from "./db_manager_translator";
+import { useLanguage } from "../contexts";
 
 const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -14,10 +16,19 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
   const [localData, setLocalData] = useState({});
   const isDark = theme === "dark";
 
+  const { language } = useLanguage();
+
+  // Translation function
+  const translation = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
+
   const getLocalDatabase = async () => {
     await window.electron.getDatabase().then((data) => {
       if (!data) {
-        return "no data";
+        const no_data_textes = translation("no_database_found");
+        return no_data_textes;
       }
       setLocalData(data);
     });
@@ -35,7 +46,8 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
   }, [user]);
 
   const formatDate = (timestamp) => {
-    if (!timestamp) return "Date inconnue";
+    const unknow_date = translation("unknown_date");
+    if (!timestamp) return unknow_date;
     
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
     return new Intl.DateTimeFormat("fr-FR", {
@@ -51,7 +63,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
     if (name.trim().length < 6) {
       setMessage({
         type: "error",
-        text: "Le nom doit contenir au moins 6 caractères."
+        text: translation("name_min_length"),
       });
       return;
     }
@@ -59,7 +71,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
     if (name.trim().length > 100) {
       setMessage({
         type: "error",
-        text: "Le nom ne peut pas dépasser 100 caractères."
+        text: translation("name_max_length"),
       });
       return;
     }
@@ -67,7 +79,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
     if (description.length > 1000) {
       setMessage({
         type: "error",
-        text: "La description ne peut pas dépasser 1000 caractères."
+        text: translation("description_max_length"),
       });
       return;
     }
@@ -84,7 +96,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       setIsEditing(false);
       setMessage({
         type: "success",
-        text: "Base de données mise à jour avec succès!"
+        text: translation("database_updated"),
       });
       
       onUpdate();
@@ -92,7 +104,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       console.error("Error updating database:", error);
       setMessage({
         type: "error",
-        text: "Erreur lors de la mise à jour de la base de données."
+        text: translation("error_updating_database"),
       });
     }
   };
@@ -108,7 +120,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       if (!localData) {
         setMessage({
           type: "error",
-          text: "Impossible de lire la base de données locale."
+          text: translation("local_db_read_error"),
         });
         return;
       }
@@ -122,7 +134,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       
       setMessage({
         type: "success",
-        text: "Base de données locale sauvegardée avec succès!"
+        text: translation("upload_success"),
       });
       
       onUpdate();
@@ -130,7 +142,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       console.error("Error uploading database:", error);
       setMessage({
         type: "error",
-        text: "Erreur lors de la sauvegarde de la base de données."
+        text: translation("upload_error"),
       });
     } finally {
       setIsUploading(false);
@@ -149,7 +161,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       if (!docSnap.exists()) {
         setMessage({
           type: "error",
-          text: "Base de données distante introuvable."
+          text: translation("remote_db_not_found"),
         });
         return;
       }
@@ -161,7 +173,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       if (!remoteData.version) {
         setMessage({
           type: "error",
-          text: "La base de données distante est vide."
+          text: translation("remote_db_empty"),
         });
         return;
       }
@@ -171,13 +183,13 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
       
       setMessage({
         type: "success",
-        text: "Base de données locale mise à jour avec succès!"
+        text: translatione("download_success"),
       });
     } catch (error) {
       console.error("Error downloading database:", error);
       setMessage({
         type: "error",
-        text: "Erreur lors de la récupération de la base de données."
+        text: translation("download_error"),
       });
     } finally {
       setIsDownloading(false);
@@ -215,7 +227,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
                   className={`text-2xl font-bold px-2 py-1 rounded ${
                     isDark ? "bg-gray-600 text-white" : "bg-white text-gray-800"
                   } border ${isDark ? "border-gray-500" : "border-gray-300"}`}
-                  placeholder="Nom de la base de données"
+                  placeholder={translation("database_name")}
                 />
               )}
               
@@ -264,13 +276,13 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className={`text-lg font-semibold mb-2 ${textColor}`}>Informations</h3>
+              <h3 className={`text-lg font-semibold mb-2 ${textColor}`}>{translation("database_info")}</h3>
               <div className={`p-4 rounded-lg ${isDark ? "bg-gray-700" : "bg-gray-100"}`}>
                 <div className="mb-4">
-                  <p className={`text-sm opacity-70 ${textColor}`}>Description:</p>
+                  <p className={`text-sm opacity-70 ${textColor}`}>{translation("description_text")}:</p>
                   {!isEditing ? (
                     <p className={`${textColor} ${!database.description && "italic opacity-50"}`}>
-                      {database.description || "Aucune description"}
+                      {database.description || translation("no_description")}
                     </p>
                   ) : (
                     <textarea
@@ -279,7 +291,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
                       className={`w-full p-2 rounded ${
                         isDark ? "bg-gray-600 text-white" : "bg-white text-gray-800"
                       } border ${isDark ? "border-gray-500" : "border-gray-300"}`}
-                      placeholder="Description (optionnelle)"
+                      placeholder={translation("description")}
                       rows={4}
                     />
                   )}
@@ -287,11 +299,11 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className={`text-sm opacity-70 ${textColor}`}>Créé le:</p>
+                    <p className={`text-sm opacity-70 ${textColor}`}>{translation("created_on")}:</p>
                     <p className={textColor}>{formatDate(database.createdAt)}</p>
                   </div>
                   <div>
-                    <p className={`text-sm opacity-70 ${textColor}`}>Mis à jour le:</p>
+                    <p className={`text-sm opacity-70 ${textColor}`}>{translation("updated_on")}:</p>
                     <p className={textColor}>{formatDate(database.updatedAt)}</p>
                   </div>
                 </div>
@@ -309,7 +321,7 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
                         : "bg-gray-300 hover:bg-gray-400"
                     } ${textColor}`}
                   >
-                    Annuler
+                    {translation("cancel")}
                   </motion.button>
                   
                   <motion.button
@@ -322,14 +334,14 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
                         : "bg-blue-500 hover:bg-blue-600"
                     } text-white`}
                   >
-                    Enregistrer
+                    {translation("save_changes")}
                   </motion.button>
                 </div>
               )}
             </div>
             
             <div>
-              <h3 className={`text-lg font-semibold mb-2 ${textColor}`}>Actions</h3>
+              <h3 className={`text-lg font-semibold mb-2 ${textColor}`}>{translation("actions")}</h3>
               <div className={`p-4 rounded-lg ${isDark ? "bg-gray-700" : "bg-gray-100"} space-y-4`}>
                 <div>
                   <motion.button
@@ -346,17 +358,17 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
                     {isUploading ? (
                       <div className="flex items-center">
                         <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
-                        Sauvegarde en cours...
+                        {translation("uploading")}
                       </div>
                     ) : (
                       <>
                         <FaCloudUploadAlt className="text-xl mr-2" />
-                        Sauvegarder la base locale vers le cloud
+                        {translation("upload_local_db")}
                       </>
                     )}
                   </motion.button>
                   <p className={`mt-2 text-xs ${textColor} opacity-70 text-center`}>
-                    Remplace les données distantes par celles de votre base locale
+                    {translation("upload_description")}
                   </p>
                 </div>
                 
@@ -375,17 +387,17 @@ const DatabaseDetails = ({ database, onClose, onUpdate, theme, textColor, user }
                     {isDownloading ? (
                       <div className="flex items-center">
                         <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
-                        Récupération en cours...
+                        {translation("downloading")}
                       </div>
                     ) : (
                       <>
                         <FaCloudDownloadAlt className="text-xl mr-2" />
-                        Récupérer la base distante
+                        {translation("download_remote_db")}
                       </>
                     )}
                   </motion.button>
                   <p className={`mt-2 text-xs ${textColor} opacity-70 text-center`}>
-                    Remplace les données de votre base locale par celles du cloud
+                    {translation("upload_description")}
                   </p>
                 </div>
               </div>

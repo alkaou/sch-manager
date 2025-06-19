@@ -48,7 +48,7 @@ const EmployeeSelector = ({
 
   // Apply filters when they change
   useEffect(() => {
-    const all_employees = employees.length === 0 ? db.employees : employees;
+    const all_employees = employees.length === 0 ? (db?.employees || []) : employees;
     applyFilters(all_employees, searchTerm, filters);
   }, [searchTerm, filters]);
 
@@ -65,6 +65,9 @@ const EmployeeSelector = ({
   }, [selectedEmployees, filteredEmployees]);
 
   const applyFilters = (employeesList, search, activeFilters) => {
+    if (!Array.isArray(employeesList)) {
+      employeesList = [];
+    }
     let result = [...employeesList];
     
     // Apply search term filter

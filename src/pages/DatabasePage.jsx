@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { useAuth } from "../auth/AuthContext";
 import DatabaseManager from "../components/db_manager/DatabaseManager.jsx";
 import NotConnectedView from "../components/db_manager/NotConnectedView.jsx";
+import translations from "../components/db_manager/db_manager_translator";
+import { useLanguage } from "../components/contexts";
 
 const DatabasePageContent = ({
   app_bg_color,
@@ -14,6 +16,13 @@ const DatabasePageContent = ({
   const [networkIsAvailavle, setNetworkIsAvailavle] = useState(false);
   const { isAuthenticated, currentUser, checkInternetConnection } = useAuth();
   const [loading, setLoading] = useState(true);
+
+  const { language } = useLanguage();
+  // Translation function
+  const translation = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
 
   useEffect(() => {
     const checkConnection = async () => {
@@ -51,8 +60,8 @@ const DatabasePageContent = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className={`text-3xl text-center font-bold mb-6 ${text_color}`}>
-          Gestionnaire de Base de Données
+        <h1 className={`text-3xl text-center font-bold mb-6 mt-5 ${text_color}`}>
+          {translation("database_manager_title")}
         </h1>
 
         {currentUser && networkIsAvailavle && isAuthenticated ? (

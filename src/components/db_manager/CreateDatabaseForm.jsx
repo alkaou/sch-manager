@@ -4,6 +4,8 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../auth/firebaseService";
 import { FaTimes, FaDatabase, FaExclamationTriangle } from "react-icons/fa";
 // import { getLocalDatabase } from "./databaseUtils";
+import translations from "./db_manager_translator";
+import { useLanguage } from "../contexts";
 
 const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user }) => {
   const [name, setName] = useState("");
@@ -12,21 +14,29 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
   const [error, setError] = useState("");
   const isDark = theme === "dark";
 
+  const { language } = useLanguage();
+
+  // Translation function
+  const translation = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (name.trim().length < 6) {
-      setError("Le nom doit contenir au moins 6 caractères.");
+      setError(translation("name_min_length"));
       return;
     }
 
     if (name.trim().length > 100) {
-      setError("Le nom ne peut pas dépasser 100 caractères.");
+      setError(translation("name_max_length"));
       return;
     }
 
     if (description.length > 1000) {
-      setError("La description ne peut pas dépasser 1000 caractères.");
+      setError(translation("description_max_length"));
       return;
     }
 
@@ -53,8 +63,8 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
       
       onDatabaseCreated();
     } catch (error) {
+      setError(translation("error_creating_database"));
       console.error("Error creating database:", error);
-      setError("Erreur lors de la création de la base de données.");
     } finally {
       setIsCreating(false);
     }
@@ -83,7 +93,7 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
             <div className="flex items-center">
               <FaDatabase className={`mr-3 text-xl ${textColor}`} />
               <h2 className={`text-xl font-bold ${textColor}`}>
-                Nouvelle Base de Données
+                {translation("new_database")}
               </h2>
             </div>
             
@@ -114,7 +124,7 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
           
           <div className="mb-4">
             <label htmlFor="name" className={`block mb-2 font-medium ${textColor}`}>
-              Nom de la base de données *
+              {translation("database_name")} *
             </label>
             <input
               type="text"
@@ -124,17 +134,17 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
               className={`w-full p-3 rounded ${
                 isDark ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-800"
               } border ${isDark ? "border-gray-600" : "border-gray-300"}`}
-              placeholder="Entrez un nom (min 6, max 100 caractères)"
+              placeholder={translation("database_name_placeholder")}
               required
             />
             <p className={`mt-1 text-xs ${textColor} opacity-70`}>
-              {name.length}/100 caractères
+              {name.length}/100 {translation("characters")}
             </p>
           </div>
           
           <div className="mb-6">
             <label htmlFor="description" className={`block mb-2 font-medium ${textColor}`}>
-              Description (optionnelle)
+              {translation("description")}
             </label>
             <textarea
               id="description"
@@ -143,11 +153,11 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
               className={`w-full p-3 rounded ${
                 isDark ? "bg-gray-700 text-white" : "bg-gray-100 text-gray-800"
               } border ${isDark ? "border-gray-600" : "border-gray-300"}`}
-              placeholder="Entrez une description (max 1000 caractères)"
+              placeholder={translation("description_placeholder")}
               rows={4}
             />
             <p className={`mt-1 text-xs ${textColor} opacity-70`}>
-              {description.length}/1000 caractères
+              {description.length}/1000 {translation("characters")}
             </p>
           </div>
           
@@ -163,7 +173,7 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
                   : "bg-gray-300 hover:bg-gray-400"
               } ${textColor}`}
             >
-              Annuler
+              {translation("cancel")}
             </motion.button>
             
             <motion.button
@@ -180,10 +190,10 @@ const CreateDatabaseForm = ({ onClose, onDatabaseCreated, theme, textColor, user
               {isCreating ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
-                  Création...
+                  {translation("creating")}
                 </>
               ) : (
-                "Créer"
+                translation("create")
               )}
             </motion.button>
           </div>

@@ -1,0 +1,50 @@
+
+Maintenant, vue que je n'utilise que trois langues (Français, Bamabra, Anglais) pour les utilisateurs de mon logiciel. je te demande de coder cette partie pour moi dans chaque partie de l'application. Je t'explique, le système est très simple, j'ai déjà fais des exemples. je te fournis ces exemples et t'expliquant comment tu dois continuer.
+
+1 - Dans les codes, certains textes sont codés en dur soit en français ou en Anglais. donc notre objectif est de traduire automatiquement tous les textes dans les codes sans exception dèsque la langue du logiciel change.
+
+2 - Dans le dossier `components` nous avons des sous-dossiers et chacun de ces sous-dossiers contient qui gère une fonctionnatilé particulière spécifique du logiciel. Donc tu dois parcourir chaque fichier de chaque sous-dossier pour trouver les tous textes en dur exception et les remplace par la logique dois retoure leur traduction. Et pour faire cette logique c'est très:
+
+3 - Dans chaque sous-dossier, tu crées un fichier `le nom d'indication + _translation.js` et tu mets les traductions de tous les textes à traduire de cette fonctionnalité pour les trois langues (Français, Bamabra, Anglais). Pour bien comprendre ceci tu te base sur les code de `depense_translator.js` et les codes du sous-dossier `depenses` sur des fichier comme `EmployeePaymentConfig.jsx`.
+
+4 - Voici le code de base :
+`
+import translations from "./depense_translator";
+import { useLanguage } from "../contexts";
+
+const { language } = useLanguage();
+
+const translate = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+ };
+`
+
+NB : Je te demande de faire uniquement les traductions des textes, rien de plus. Ne touche à plus rien dans le code. Tout ce que je te demande c'est la traduction des textes.
+
+Attention : Le logiciel est un logiciel proffessionnel, donc ne change pas des choses que je t'ai pas demandé de changé. Fais seulement la traduction. Mais malgré tout, à certains niveaux la traduction peut être compliqué à cause de certaines logqiue dans le code. Dans ce cas tu utilise très propre technique experte pour la gérer sans briser quoi ce soit dans le code.
+
+
+
+
+Mon logiciel est logiciel proffessionnel qui gère de manière efficace les données d'un établissement scolaire.
+Maintenant, je dois intégrer la partie statistique de l'application. Dans le statistique devons voir l'évolution de tous les données du logiciel en temps réel de manière très expertise avec une vue et une interface experte avec pleine d'animation.
+Pour se faire, je dois créer des graphiques qui montre l'évolution des données de l'année en cours.
+On peut observer l'état d'une données spécifique et aussi on peut comparer les données de même type des différentes années.
+expemple :
+entre les dépenses des différentes années
+entre les frais de scolarité non payés des différentes années.
+entre les frais de scolarité payés des différentes années.
+entre les frais de scolarité totales des différentes années.
+entre les recettes des années et les dépenses des années.
+entre les recettes des différentes années et les dépenses des différentes années.
+
+Il faut bien faire l'interface et elle doit prendre en charge le darktheme pour plus d'information à ce niveau, base toi sur ces codes ``.
+
+NB : Tu enlève complètement `EnrollmentStats.jsx` dans `StartedPage.jsx` et tu l'amène dans le domaine statistique.
+Tu dois faire de sorte que toutes les données soit accessible dans le domaine statistique facilement sans problème avec un système de navigation très expert.
+N'églige jamais le responsive surtout pour les pétits écrans, car le logiciel est un logiciel proffessionnel, il est utiliser par les grandes entreprise. Donc rien ne doit être n'égliger ni oublier.
+Tu décomposes les codes en plusieurs parties dans des différents fichiers regroupés dans un sous-dossier `components\statistiques\`
+
+
+

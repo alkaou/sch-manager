@@ -5,6 +5,8 @@ import DatabaseList from "./DatabaseList.jsx";
 import DatabaseDetails from "./DatabaseDetails.jsx";
 import CreateDatabaseForm from "./CreateDatabaseForm.jsx";
 import { FaPlus, FaDatabase } from "react-icons/fa";
+import translations from "./db_manager_translator";
+import { useLanguage } from "../contexts";
 
 const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
   const [databases, setDatabases] = useState([]);
@@ -12,6 +14,14 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(true);
   const isDark = theme === "dark";
+
+  const { language } = useLanguage();
+
+  // Translation function
+  const translation = (key) => {
+    if (!translations[key]) return key;
+    return translations[key][language] || translations[key]["Français"];
+  };
 
   useEffect(() => {
     fetchDatabases();
@@ -65,7 +75,7 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
           <div className="flex items-center">
             <FaDatabase className={`mr-3 text-2xl ${_textColor}`} />
             <h2 className={`text-2xl font-bold ${_textColor}`}>
-              Mes Bases de Données
+              {translation("my_databases")}
             </h2>
           </div>
           
@@ -80,7 +90,7 @@ const DatabaseManager = ({ user, theme, textColor, bgColor }) => {
             } text-white font-medium transition-colors`}
           >
             <FaPlus />
-            Nouvelle Base de Données
+            {translation("new_database")}
           </motion.button>
         </div>
 

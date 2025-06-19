@@ -201,10 +201,10 @@ const BulletinPhysique1 = ({
                             <td className="border-r border-black p-2 text-center">{mainCoefficients}</td>
                             <td className="border-r border-black p-2 text-center">{calculateMainPoints(mainSubjects, students, student)}</td>
                             <td className="p-2 text-center">
-                                { 
-                                    calculateMainPoints(mainSubjects, students, student) >= 10 ? 
+                                {
+                                    calculateMainPoints(mainSubjects, students, student) >= 10 ?
                                         language === "Français" ? student.sexe === "F" ? "ADMISE" : "ADMIS" : language === "Anglais" ? "ALLOWED" : "A TƐMƐNA"
-                                    : 
+                                        :
                                         language === "Français" ? student.sexe === "F" ? "ÉCHOUÉE" : "ÉCHOUÉ" : language === "Anglais" ? "FAILED" : "A MA SE KA TƐMƐ"
                                 }
                             </td>
@@ -335,7 +335,15 @@ const BulletinPhysique1 = ({
                             {student.parents_contact}
                         </div>
                     </div>
-                    <div className="p-2"></div>
+                    <div className="p-2">
+                    <div className="font-bold mb-2">Mention :</div>
+                        <div className="text-xl font-bold">
+                            {
+                                parseFloat(calculateGeneralAverage(students, student.id, subjects)) >= 10 ?
+                                    "L'élève a eu la moyenne" : "L'élève n'a pas eu la moyenne"
+                            }
+                        </div>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 border-t-2 border-black">
