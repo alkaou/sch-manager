@@ -1,12 +1,23 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Save, RefreshCcw, X, UserMinus, Check, Eye, ArrowUp, ArrowDown } from 'lucide-react';
-import { useLanguage, useFlashNotification } from './contexts.js';
-import BulletinComponent from './BulletinComponent.jsx';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  calculateSubjectAverage, calculateSubjectAverageForStudent,
-  formatNote, calculateGeneralAverage,
-} from './bulletin_utils/BulletinMethods.js';
+  Save,
+  RefreshCcw,
+  X,
+  UserMinus,
+  Check,
+  Eye,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+import { useLanguage, useFlashNotification } from "./contexts.js";
+import BulletinComponent from "./BulletinComponent.jsx";
+import {
+  calculateSubjectAverage,
+  calculateSubjectAverageForStudent,
+  formatNote,
+  calculateGeneralAverage,
+} from "./bulletin_utils/BulletinMethods.js";
 
 const BulletinNotes = ({
   selectedComposition,
@@ -48,19 +59,25 @@ const BulletinNotes = ({
   const tableHeaderBg = `${app_bg_color} ${textClass}`;
   const tableSubHeaderBg = `${app_bg_color} ${textClass}`;
   const tableRowHoverBg = "hover:bg-opacity-80";
-  const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
+  const tableBorderColor =
+    theme === "dark" ? "border-gray-700" : "border-gray-200";
   const tableBorderWidth = "border-2";
-  const cellActiveBgColor = "bg-white text-gray-700";
-  const noteCellHoverEffect = "hover:bg-blue-100 hover:bg-opacity-30 transition-colors duration-150";
-  const dropdownBgColor = theme === "dark" ? tableBgColor : "bg-gray-50 text-gray-700";
-  const dropdownHoverBgColor = theme === "dark" ? tableBgColor : "bg-gray-50 text-gray-700";
+  const cellActiveBgColor = "bg-green-200 text-gray-700";
+  const noteCellHoverEffect =
+    "hover:bg-blue-100 hover:bg-opacity-30 transition-colors duration-150";
+  const dropdownBgColor =
+    theme === "dark" ? tableBgColor : "bg-gray-50 text-gray-700";
+  const hoverNumber = "hover:bg-blue-400 hover:text-white hover:font-bold";
 
   // Générer les options pour les notes
   const wholeNumberOptions = Array.from({ length: 21 }, (_, i) => i);
   const decimalOptions = ["00", "25", "50", "75"];
 
   // Coefficients disponibles
-  const coefficients = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10];
+  const coefficients = [
+    0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5,
+    10,
+  ];
 
   // Calculer la somme totale des coefficients
   const calculateTotalCoefficients = useCallback(() => {
@@ -75,47 +92,59 @@ const BulletinNotes = ({
 
     // Trouver le bulletin correspondant
     const existingBulletin = db.bulletins?.find(
-      bulletin => bulletin.compositionId === selectedComposition.id && bulletin.classId === selectedClass
+      (bulletin) =>
+        bulletin.compositionId === selectedComposition.id &&
+        bulletin.classId === selectedClass
     );
 
     if (existingBulletin) {
       setBulletin(existingBulletin);
 
       // S'assurer que "Conduite" a toujours un coefficient de 1
-      const updatedSubjects = existingBulletin.subjects.map(subject =>
+      const updatedSubjects = existingBulletin.subjects.map((subject) =>
         subject.name === "Conduite" ? { ...subject, coefficient: 1 } : subject
       );
 
       setSubjects(updatedSubjects);
 
       // Préparer les données des élèves avec leurs notes
-      const studentsWithNotes = existingBulletin.students.map(student => {
+      const studentsWithNotes = existingBulletin.students.map((student) => {
         // S'assurer que chaque élève a un objet notes pour chaque matière
         const notes = { ...student.notes };
 
-        updatedSubjects.forEach(subject => {
+        updatedSubjects.forEach((subject) => {
           if (!notes[subject.name]) {
             notes[subject.name] = {
               classe: null,
               composition: null,
               moyenne_generale: null,
-              moyenne_coef: null
+              moyenne_coef: null,
             };
-          } else if (!notes[subject.name].moyenne_generale || !notes[subject.name].moyenne_coef) {
+          } else if (
+            !notes[subject.name].moyenne_generale ||
+            !notes[subject.name].moyenne_coef
+          ) {
             // Calculer les moyennes si elles n'existent pas
             const classeNote = notes[subject.name].classe;
             const compoNote = notes[subject.name].composition;
 
             if (classeNote !== null || compoNote !== null) {
-              const moyenne_generale = calculateSubjectAverage(classeNote, compoNote);
-              const moyenne_coef = moyenne_generale !== "-"
-                ? parseFloat(moyenne_generale) * subject.coefficient
-                : null;
+              const moyenne_generale = calculateSubjectAverage(
+                classeNote,
+                compoNote
+              );
+              const moyenne_coef =
+                moyenne_generale !== "-"
+                  ? parseFloat(moyenne_generale) * subject.coefficient
+                  : null;
 
               notes[subject.name] = {
                 ...notes[subject.name],
-                moyenne_generale: moyenne_generale !== "-" ? parseFloat(moyenne_generale) : null,
-                moyenne_coef: moyenne_coef
+                moyenne_generale:
+                  moyenne_generale !== "-"
+                    ? parseFloat(moyenne_generale)
+                    : null,
+                moyenne_coef: moyenne_coef,
               };
             }
           }
@@ -123,7 +152,7 @@ const BulletinNotes = ({
 
         return {
           ...student,
-          notes
+          notes,
         };
       });
 
@@ -140,14 +169,17 @@ const BulletinNotes = ({
         setActiveCell(null);
       }
 
-      if (coefDropdownRef.current && !coefDropdownRef.current.contains(event.target)) {
+      if (
+        coefDropdownRef.current &&
+        !coefDropdownRef.current.contains(event.target)
+      ) {
         setActiveCoef(null);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -158,21 +190,21 @@ const BulletinNotes = ({
     let sortedSubjects = [...subjects];
 
     switch (sortType) {
-      case 'alpha':
+      case "alpha":
         sortedSubjects.sort((a, b) => {
           if (a.name === "Conduite") return 1;
           if (b.name === "Conduite") return -1;
           return a.name.localeCompare(b.name);
         });
         break;
-      case 'coef':
+      case "coef":
         sortedSubjects.sort((a, b) => {
           if (a.name === "Conduite") return 1;
           if (b.name === "Conduite") return -1;
           return b.coefficient - a.coefficient;
         });
         break;
-      case 'manual':
+      case "manual":
         break;
       default:
         sortedSubjects.sort((a, b) => {
@@ -186,11 +218,10 @@ const BulletinNotes = ({
     setSubjects(sortedSubjects);
   }, [sortType, subjects.length]); // 👈 Ajoute "subjects.length" pour s'assurer qu'on trie dès qu'ils sont disponibles
 
-
   // Mettre à jour une note
   const updateNote = async (studentId, subjectName, noteType, value) => {
     // Trouver l'élève
-    const studentIndex = students.findIndex(s => s.id === studentId);
+    const studentIndex = students.findIndex((s) => s.id === studentId);
     if (studentIndex === -1) return;
 
     // Créer une copie des élèves
@@ -202,7 +233,7 @@ const BulletinNotes = ({
         classe: null,
         composition: null,
         moyenne_generale: null,
-        moyenne_coef: null
+        moyenne_coef: null,
       };
     }
 
@@ -210,26 +241,29 @@ const BulletinNotes = ({
 
     // Calculer et mettre à jour moyenne_generale et moyenne_coef
     const classeNote = updatedStudents[studentIndex].notes[subjectName].classe;
-    const compoNote = updatedStudents[studentIndex].notes[subjectName].composition;
+    const compoNote =
+      updatedStudents[studentIndex].notes[subjectName].composition;
 
     if (classeNote !== null || compoNote !== null) {
       const moyenne_generale = calculateSubjectAverage(classeNote, compoNote);
-      const subject = subjects.find(s => s.name === subjectName);
+      const subject = subjects.find((s) => s.name === subjectName);
       const coefficient = subject ? subject.coefficient : 1;
 
-      const moyenne_coef = moyenne_generale !== "-"
-        ? parseFloat(moyenne_generale) * coefficient
-        : null;
+      const moyenne_coef =
+        moyenne_generale !== "-"
+          ? parseFloat(moyenne_generale) * coefficient
+          : null;
 
       updatedStudents[studentIndex].notes[subjectName].moyenne_generale =
         moyenne_generale !== "-" ? parseFloat(moyenne_generale) : null;
-      updatedStudents[studentIndex].notes[subjectName].moyenne_coef = moyenne_coef;
+      updatedStudents[studentIndex].notes[subjectName].moyenne_coef =
+        moyenne_coef;
     }
 
     // Mettre à jour l'état
     setStudents(updatedStudents);
     setHasChanges(true);
-    
+
     // S'assurer que le popup est fermé
     setActiveCell(null);
 
@@ -243,7 +277,7 @@ const BulletinNotes = ({
     if (subjectName === "Conduite") return;
 
     // Créer une copie des matières
-    const updatedSubjects = subjects.map(subject =>
+    const updatedSubjects = subjects.map((subject) =>
       subject.name === subjectName
         ? { ...subject, coefficient: newCoefficient }
         : subject
@@ -254,19 +288,23 @@ const BulletinNotes = ({
     setHasChanges(true);
 
     // Mettre à jour les moyennes_coef pour tous les élèves
-    const updatedStudents = students.map(student => {
+    const updatedStudents = students.map((student) => {
       const updatedNotes = { ...student.notes };
 
-      if (updatedNotes[subjectName] && updatedNotes[subjectName].moyenne_generale !== null) {
+      if (
+        updatedNotes[subjectName] &&
+        updatedNotes[subjectName].moyenne_generale !== null
+      ) {
         updatedNotes[subjectName] = {
           ...updatedNotes[subjectName],
-          moyenne_coef: updatedNotes[subjectName].moyenne_generale * newCoefficient
+          moyenne_coef:
+            updatedNotes[subjectName].moyenne_generale * newCoefficient,
         };
       }
 
       return {
         ...student,
-        notes: updatedNotes
+        notes: updatedNotes,
       };
     });
 
@@ -281,20 +319,23 @@ const BulletinNotes = ({
     // Ne pas permettre de déplacer "Conduite"
     if (subjectName === "Conduite") return;
 
-    const subjectIndex = subjects.findIndex(s => s.name === subjectName);
+    const subjectIndex = subjects.findIndex((s) => s.name === subjectName);
     if (subjectIndex === -1) return;
 
     // Ne pas permettre de déplacer au-delà des limites
-    if (direction === 'up' && subjectIndex === 0) return;
-    if (direction === 'down' && subjectIndex === subjects.length - 2) return; // -2 car "Conduite" est toujours à la fin
+    if (direction === "up" && subjectIndex === 0) return;
+    if (direction === "down" && subjectIndex === subjects.length - 2) return; // -2 car "Conduite" est toujours à la fin
 
     // Créer une copie des matières
     const updatedSubjects = [...subjects];
 
     // Échanger les positions
-    const targetIndex = direction === 'up' ? subjectIndex - 1 : subjectIndex + 1;
-    [updatedSubjects[subjectIndex], updatedSubjects[targetIndex]] =
-      [updatedSubjects[targetIndex], updatedSubjects[subjectIndex]];
+    const targetIndex =
+      direction === "up" ? subjectIndex - 1 : subjectIndex + 1;
+    [updatedSubjects[subjectIndex], updatedSubjects[targetIndex]] = [
+      updatedSubjects[targetIndex],
+      updatedSubjects[subjectIndex],
+    ];
 
     // Mettre à jour l'état
     setSubjects(updatedSubjects);
@@ -305,17 +346,20 @@ const BulletinNotes = ({
   };
 
   // Sauvegarder les changements dans la base de données
-  const saveChangesToDatabase = async (updatedStudents = students, updatedSubjects = subjects) => {
+  const saveChangesToDatabase = async (
+    updatedStudents = students,
+    updatedSubjects = subjects
+  ) => {
     setSaving(true);
 
     try {
       // Mettre à jour le bulletin
-      const updatedBulletins = db.bulletins.map(b => {
+      const updatedBulletins = db.bulletins.map((b) => {
         if (b.id === bulletin.id) {
           return {
             ...b,
             students: updatedStudents,
-            subjects: updatedSubjects
+            subjects: updatedSubjects,
           };
         }
         return b;
@@ -329,7 +373,7 @@ const BulletinNotes = ({
       setBulletin({
         ...bulletin,
         students: updatedStudents,
-        subjects: updatedSubjects
+        subjects: updatedSubjects,
       });
 
       setHasChanges(false);
@@ -337,14 +381,14 @@ const BulletinNotes = ({
       setFlashMessage({
         message: "Les notes ont été enregistrées avec succès !",
         type: "success",
-        duration: 3000
+        duration: 3000,
       });
     } catch (error) {
       console.error("Erreur lors de la sauvegarde des notes:", error);
       setFlashMessage({
         message: "Une erreur est survenue lors de la sauvegarde des notes.",
         type: "error",
-        duration: 5000
+        duration: 5000,
       });
     } finally {
       setSaving(false);
@@ -355,7 +399,9 @@ const BulletinNotes = ({
   const removeStudentFromBulletin = async (studentId) => {
     try {
       // Filtrer l'élève à supprimer
-      const updatedStudents = students.filter(student => student.id !== studentId);
+      const updatedStudents = students.filter(
+        (student) => student.id !== studentId
+      );
 
       // Mettre à jour la base de données
       await saveChangesToDatabase(updatedStudents);
@@ -367,14 +413,14 @@ const BulletinNotes = ({
       setFlashMessage({
         message: "L'élève a été retiré du bulletin avec succès !",
         type: "success",
-        duration: 3000
+        duration: 3000,
       });
     } catch (error) {
       console.error("Erreur lors de la suppression de l'élève:", error);
       setFlashMessage({
         message: "Une erreur est survenue lors de la suppression de l'élève.",
         type: "error",
-        duration: 5000
+        duration: 5000,
       });
     }
   };
@@ -386,11 +432,12 @@ const BulletinNotes = ({
       updateNote(studentId, subjectName, noteType, 20);
     } else {
       // Récupérer la partie décimale actuelle
-      const student = students.find(s => s.id === studentId);
+      const student = students.find((s) => s.id === studentId);
       const currentNote = student?.notes[subjectName]?.[noteType];
-      const decimalPart = currentNote !== null && currentNote !== undefined
-        ? Math.round((currentNote % 1) * 100) / 100
-        : 0;
+      const decimalPart =
+        currentNote !== null && currentNote !== undefined
+          ? Math.round((currentNote % 1) * 100) / 100
+          : 0;
 
       // Mettre à jour avec la nouvelle partie entière et l'ancienne partie décimale
       updateNote(studentId, subjectName, noteType, value + decimalPart);
@@ -401,13 +448,19 @@ const BulletinNotes = ({
   };
 
   // Gérer la sélection d'une partie décimale
-  const handleDecimalSelect = (studentId, subjectName, noteType, decimalStr) => {
+  const handleDecimalSelect = (
+    studentId,
+    subjectName,
+    noteType,
+    decimalStr
+  ) => {
     // Récupérer la partie entière actuelle
-    const student = students.find(s => s.id === studentId);
+    const student = students.find((s) => s.id === studentId);
     const currentNote = student?.notes[subjectName]?.[noteType];
-    const wholePart = currentNote !== null && currentNote !== undefined
-      ? Math.floor(currentNote)
-      : 0;
+    const wholePart =
+      currentNote !== null && currentNote !== undefined
+        ? Math.floor(currentNote)
+        : 0;
 
     // Convertir la partie décimale en nombre
     const decimalPart = parseInt(decimalStr) / 100;
@@ -451,8 +504,13 @@ const BulletinNotes = ({
   };
 
   // Obtenir le nom de la classe
-  const className = db?.classes?.find(cls => cls.id === selectedClass)
-    ? getClasseName(`${db.classes.find(cls => cls.id === selectedClass).level} ${db.classes.find(cls => cls.id === selectedClass).name}`, language)
+  const className = db?.classes?.find((cls) => cls.id === selectedClass)
+    ? getClasseName(
+        `${db.classes.find((cls) => cls.id === selectedClass).level} ${
+          db.classes.find((cls) => cls.id === selectedClass).name
+        }`,
+        language
+      )
     : "";
 
   return (
@@ -472,9 +530,7 @@ const BulletinNotes = ({
         transition={{ duration: 0.3 }}
       >
         {/* En-tête global */}
-        <div
-          className="sticky top-0 z-10 bg-opacity-95 p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
-        >
+        <div className="sticky top-0 z-10 bg-opacity-95 p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h3 className="text-xl font-semibold mb-2">
               Saisie des notes pour le bulletin :
@@ -515,10 +571,11 @@ const BulletinNotes = ({
               whileTap={{ scale: 0.95 }}
               onClick={() => saveChangesToDatabase()}
               disabled={saving || !hasChanges}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${hasChanges
-                ? "bg-green-600 hover:bg-green-700 text-white"
-                : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                } transition-colors duration-300`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                hasChanges
+                  ? "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              } transition-colors duration-300`}
             >
               {saving ? (
                 <RefreshCcw className="animate-spin" size={18} />
@@ -541,10 +598,10 @@ const BulletinNotes = ({
         </div>
 
         {/* Conteneur scrollable pour le tableau */}
-        <div className="overflow-auto max-h-[calc(100vh-25%)] scrollbar-custom">
+        <div className="overflow-y-auto overflow-x-auto max-h-[calc(100vh-25%)] scrollbar-custom">
           <table
             className={`min-w-full border ${tableBorderColor} ${tableBorderWidth} border-collapse`}
-            style={{ marginBottom: "40%" }}
+            style={{ marginBottom: "1%" }}
           >
             <thead className="sticky -top-1 z-20">
               <tr className={`${tableHeaderBg}`}>
@@ -593,8 +650,8 @@ const BulletinNotes = ({
                             activeCoef === null
                               ? handleHeadMouseMove
                               : activeCoef === subject.name
-                                ? handleHeadMouseMove
-                                : () => { }
+                              ? handleHeadMouseMove
+                              : () => {}
                           }
                           className="ml-1 text-xs font-medium underline hover:text-blue-500"
                         >
@@ -622,10 +679,11 @@ const BulletinNotes = ({
                                     updateCoefficient(subject.name, coef);
                                     setActiveCoef(null);
                                   }}
-                                  className={`px-2 py-1 text-center rounded ${coef === subject.coefficient
-                                    ? cellActiveBgColor
-                                    : dropdownHoverBgColor
-                                    }`}
+                                  className={`px-2 py-1 text-center rounded ${
+                                    coef === subject.coefficient
+                                      ? cellActiveBgColor
+                                      : hoverNumber
+                                  }`}
                                 >
                                   {coef}
                                 </button>
@@ -659,13 +717,19 @@ const BulletinNotes = ({
               <tr className={`${tableSubHeaderBg}`}>
                 {subjects.map((subject) => (
                   <React.Fragment key={`sub-${subject.name}`}>
-                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}>
+                    <th
+                      className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}
+                    >
                       Classe
                     </th>
-                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}>
+                    <th
+                      className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}
+                    >
                       Compo
                     </th>
-                    <th className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}>
+                    <th
+                      className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}
+                    >
                       Moy
                     </th>
                   </React.Fragment>
@@ -697,7 +761,9 @@ const BulletinNotes = ({
                     key={student.id}
                     className={`${tableRowHoverBg} border ${tableBorderColor} ${tableBorderWidth}`}
                   >
-                    <td className={`px-4 py-2 border ${tableBorderColor} ${tableBorderWidth}`}>
+                    <td
+                      className={`px-4 py-2 border ${tableBorderColor} ${tableBorderWidth}`}
+                    >
                       {student.first_name} {student.sure_name}
                       <div style={{ fontSize: 14, opacity: 0.7 }}>
                         {student.last_name}
@@ -708,73 +774,107 @@ const BulletinNotes = ({
                       <React.Fragment key={`${student.id}-${subject.name}`}>
                         {/* Note de classe */}
                         <td
-                          className={`px-2 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell === `${student.id}-${subject.name}-classe`
-                            ? cellActiveBgColor
-                            : ""
-                            } cursor-pointer ${noteCellHoverEffect}`}
-                          onClick={(event) => {
-                            setActiveCell(`${student.id}-${subject.name}-classe`);
-                            if (activeCell !== `${student.id}-${subject.name}-classe`) {
-                              handleMouseMove(event);
-                            }
-                          }}
+                          className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
+                            activeCell ===
+                            `${student.id}-${subject.name}-classe`
+                              ? cellActiveBgColor
+                              : ""
+                          } ${noteCellHoverEffect}`}
                         >
-                          {student.notes[subject.name]?.classe !== null
-                            ? formatNote(student.notes[subject.name]?.classe)
-                            : "-"}
+                          <div
+                            className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-blue-400"
+                            title={`${student.first_name} ${student.sure_name} ${student.last_name}`}
+                            onClick={(event) => {
+                              setActiveCell(
+                                `${student.id}-${subject.name}-classe`
+                              );
+                              if (
+                                activeCell !==
+                                `${student.id}-${subject.name}-classe`
+                              ) {
+                                handleMouseMove(event);
+                              }
+                            }}
+                          >
+                            {student.notes[subject.name]?.classe !== null
+                              ? formatNote(student.notes[subject.name]?.classe)
+                              : "-"}
+                          </div>
                           {/* Menu déroulant pour la note de classe */}
-                          {activeCell === `${student.id}-${subject.name}-classe` && (
+                          {activeCell ===
+                            `${student.id}-${subject.name}-classe` && (
                             <div
                               ref={dropdownRef}
-                              className={`absolute z-20 mt-1 py-1 rounded-md shadow-lg ${dropdownBgColor} border ${tableBorderColor}`}
+                              className={`absolute z-20 mt-1 py-1 rounded-md shadow-lg ${dropdownBgColor} border-4 border-indigo-500 ${tableBorderColor}`}
                               style={{
-                                minWidth: "200px",
-                                top: `${position.y}px`,
-                                left: `${position.x}px`,
-                                transform: "translate(-50%, 0)",
+                                minWidth: "300px",
+                                top: "41%",
+                                left: `45%`,
+                                // transform: "translate(-50%, 0)",
                               }}
                             >
                               <div className="p-2">
                                 <div className="mb-2">
                                   <button
                                     onClick={() => {
-                                      updateNote(student.id, subject.name, "classe", null);
+                                      updateNote(
+                                        student.id,
+                                        subject.name,
+                                        "classe",
+                                        null
+                                      );
                                       setActiveCell(null);
                                     }}
-                                    className={`w-full px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                    className={`w-full px-2 py-1 text-center rounded bg-blue-300 ${hoverNumber}`}
                                   >
                                     Effacer
                                   </button>
+                                </div>
+                                <div className="mb-2">
+                                  <p className="`w-full px-2 py-1 text-center">
+                                    {`${student.first_name} ${student.sure_name} ${student.last_name} - M.Class - ${subject.name}`}
+                                  </p>
                                 </div>
                                 <div className="grid grid-cols-5 gap-1 mb-2">
                                   {wholeNumberOptions.map((num) => (
                                     <button
                                       key={num}
                                       onClick={() =>
-                                        handleWholeNumberSelect(student.id, subject.name, "classe", num)
+                                        handleWholeNumberSelect(
+                                          student.id,
+                                          subject.name,
+                                          "classe",
+                                          num
+                                        )
                                       }
-                                      className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                      className={`px-2 py-1 text-center rounded ${hoverNumber}`}
                                     >
                                       {num}
                                     </button>
                                   ))}
                                 </div>
-                                {student?.notes[subject.name]?.["classe"] === 20 ? null :
+                                {student?.notes[subject.name]?.["classe"] ===
+                                20 ? null : (
                                   <div className="grid grid-cols-4 gap-1">
                                     {decimalOptions.map((decimal) => (
                                       <button
                                         key={decimal}
                                         onClick={() => {
                                           // console.log(student?.notes[subject.name]?.["classe"]);
-                                          handleDecimalSelect(student.id, subject.name, "classe", decimal)
+                                          handleDecimalSelect(
+                                            student.id,
+                                            subject.name,
+                                            "classe",
+                                            decimal
+                                          );
                                         }}
-                                        className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                        className={`px-2 py-1 text-center rounded ${hoverNumber}`}
                                       >
                                         0.{decimal}
                                       </button>
                                     ))}
                                   </div>
-                                }
+                                )}
                               </div>
                             </div>
                           )}
@@ -782,111 +882,167 @@ const BulletinNotes = ({
 
                         {/* Note de composition */}
                         <td
-                          className={`px-2 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell === `${student.id}-${subject.name}-composition`
-                            ? cellActiveBgColor
-                            : ""
-                            } cursor-pointer ${noteCellHoverEffect}`}
-                          onClick={(event) => {
-                            setActiveCell(`${student.id}-${subject.name}-composition`);
-                            if (activeCell !== `${student.id}-${subject.name}-composition`) {
-                              handleMouseMove(event);
-                            }
-                          }}
+                          className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
+                            activeCell ===
+                            `${student.id}-${subject.name}-composition`
+                              ? cellActiveBgColor
+                              : ""
+                          } ${noteCellHoverEffect}`}
                         >
-                          {student.notes[subject.name]?.composition !== null
-                            ? formatNote(student.notes[subject.name]?.composition)
-                            : "-"}
+                          <div
+                            className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-orange-400"
+                            title={`${student.first_name} ${student.sure_name} ${student.last_name}`}
+                            onClick={(event) => {
+                              setActiveCell(
+                                `${student.id}-${subject.name}-composition`
+                              );
+                              if (
+                                activeCell !==
+                                `${student.id}-${subject.name}-composition`
+                              ) {
+                                handleMouseMove(event);
+                              }
+                            }}
+                          >
+                            {student.notes[subject.name]?.composition !== null
+                              ? formatNote(
+                                  student.notes[subject.name]?.composition
+                                )
+                              : "-"}
+                          </div>
                           {/* Menu déroulant pour la note de composition */}
-                          {activeCell === `${student.id}-${subject.name}-composition` && (
+                          {activeCell ===
+                            `${student.id}-${subject.name}-composition` && (
                             <div
                               ref={dropdownRef}
-                              className={`absolute z-20 mt-1 py-1 rounded-md shadow-lg ${dropdownBgColor} border ${tableBorderColor}`}
+                              className={`absolute z-20 mt-1 py-1 rounded-md shadow-lg ${dropdownBgColor} border-4 border-indigo-500 ${tableBorderColor}`}
                               style={{
-                                minWidth: "200px",
-                                top: `${position.y}px`,
-                                left: `${position.x}px`,
-                                transform: "translate(-50%, 0)",
+                                minWidth: "300px",
+                                top: "41%",
+                                left: `45%`,
+                                // transform: "translate(-50%, 0)",
                               }}
                             >
                               <div className="p-2">
                                 <div className="mb-2">
                                   <button
                                     onClick={() => {
-                                      updateNote(student.id, subject.name, "composition", null);
+                                      updateNote(
+                                        student.id,
+                                        subject.name,
+                                        "composition",
+                                        null
+                                      );
                                       setActiveCell(null);
                                     }}
-                                    className={`w-full px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                    className={`w-full px-2 py-1 text-center rounded bg-blue-300 ${hoverNumber}`}
                                   >
                                     Effacer
                                   </button>
+                                </div>
+                                <div className="mb-2">
+                                  <p className="`w-full px-2 py-1 text-center">
+                                    {`${student.first_name} ${student.sure_name} ${student.last_name} - M.Comp - ${subject.name}`}
+                                  </p>
                                 </div>
                                 <div className="grid grid-cols-5 gap-1 mb-2">
                                   {wholeNumberOptions.map((num) => (
                                     <button
                                       key={num}
                                       onClick={() =>
-                                        handleWholeNumberSelect(student.id, subject.name, "composition", num)
+                                        handleWholeNumberSelect(
+                                          student.id,
+                                          subject.name,
+                                          "composition",
+                                          num
+                                        )
                                       }
-                                      className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                      className={`px-2 py-1 text-center rounded ${hoverNumber}`}
                                     >
                                       {num}
                                     </button>
                                   ))}
                                 </div>
-                                {student?.notes[subject.name]?.["composition"] === 20 ? null :
+                                {student?.notes[subject.name]?.[
+                                  "composition"
+                                ] === 20 ? null : (
                                   <div className="grid grid-cols-4 gap-1">
                                     {decimalOptions.map((decimal) => (
                                       <button
                                         key={decimal}
                                         onClick={() =>
-                                          handleDecimalSelect(student.id, subject.name, "composition", decimal)
+                                          handleDecimalSelect(
+                                            student.id,
+                                            subject.name,
+                                            "composition",
+                                            decimal
+                                          )
                                         }
-                                        className={`px-2 py-1 text-center rounded ${dropdownHoverBgColor}`}
+                                        className={`px-2 py-1 text-center rounded ${hoverNumber}`}
                                       >
                                         0.{decimal}
                                       </button>
                                     ))}
                                   </div>
-                                }
+                                )}
                               </div>
                             </div>
                           )}
                         </td>
 
                         {/* Moyenne */}
-                        <td className={`px-2 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} font-medium`}>
-                          {calculateSubjectAverageForStudent(students, student.id, subject.name)}
+                        <td
+                          className={`px-2 py-2 bg-green-400 text-white text-center border ${tableBorderColor} ${tableBorderWidth} font-medium`}
+                          title={`${student.first_name} ${student.sure_name} ${student.last_name}`}
+                        >
+                          {calculateSubjectAverageForStudent(
+                            students,
+                            student.id,
+                            subject.name
+                          )}
                         </td>
                       </React.Fragment>
                     ))}
 
                     {/* Moyenne générale */}
-                    <td className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} font-bold`}>
+                    <td
+                      className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth} font-bold`}
+                      title={`${student.first_name} ${student.sure_name} ${student.last_name}`}
+                    >
                       {calculateGeneralAverage(students, student.id, subjects)}
                     </td>
 
                     {/* Visualiseur de bulletin */}
-                    <td className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth}`}>
+                    <td
+                      className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth}`}
+                    >
                       <button
                         onClick={() => handleViewStudentBulletin(student)}
                         className="p-1 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-300"
+                        title={`${student.first_name} ${student.sure_name} ${student.last_name}`}
                       >
                         <Eye size={18} />
                       </button>
                     </td>
 
                     {/* Actions */}
-                    <td className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth}`}>
+                    <td
+                      className={`px-4 py-2 text-center border ${tableBorderColor} ${tableBorderWidth}`}
+                    >
                       {showRemoveConfirm === student.id ? (
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => removeStudentFromBulletin(student.id)}
+                            title="Retirer"
+                            onClick={() =>
+                              removeStudentFromBulletin(student.id)
+                            }
                             className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-300"
                           >
                             <Check size={18} />
                           </button>
                           <button
                             onClick={() => setShowRemoveConfirm(null)}
+                            title="Annuler"
                             className="p-1 rounded-full bg-gray-500 hover:bg-gray-600 text-white transition-colors duration-300"
                           >
                             <X size={18} />
@@ -895,6 +1051,7 @@ const BulletinNotes = ({
                       ) : (
                         <button
                           onClick={() => setShowRemoveConfirm(student.id)}
+                          title="Retirer"
                           className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-300"
                         >
                           <UserMinus size={18} />
@@ -926,11 +1083,14 @@ const BulletinNotes = ({
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3 }}
               style={{
-                marginTop: "70%",
+                marginTop: "90%",
+                marginBottom: "2%",
               }}
             >
               <div className="flex justify-between items-center mb-4 sm:mt-7">
-                <h3 className="text-xl font-semibold">Prévisualisation du bulletin</h3>
+                <h3 className="text-xl font-semibold">
+                  Prévisualisation du bulletin
+                </h3>
                 <button
                   onClick={handleCloseBulletinPreview}
                   className="p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-300"
@@ -943,7 +1103,9 @@ const BulletinNotes = ({
                 subjects={subjects}
                 composition={selectedComposition}
                 className={className}
-                calculateSubjectAverageForStudent={calculateSubjectAverageForStudent}
+                calculateSubjectAverageForStudent={
+                  calculateSubjectAverageForStudent
+                }
                 calculateGeneralAverage={calculateGeneralAverage}
                 theme={theme}
                 textClass={textClass}
@@ -959,7 +1121,6 @@ const BulletinNotes = ({
         )}
       </AnimatePresence>
     </motion.div>
-
   );
 };
 export default BulletinNotes;

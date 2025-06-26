@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
 import BulletinComponent from '../BulletinComponent.jsx';
 import { calculateSubjectAverageForStudent, calculateGeneralAverage } from '../bulletin_utils/BulletinMethods';
@@ -15,6 +15,7 @@ const BulletinCard = ({
   school_name,
   school_short_name,
   school_zone_name,
+  type,
   getStudentBulletinRef,
 }) => {
 
@@ -44,6 +45,7 @@ const BulletinCard = ({
         school_zone_name={school_zone_name}
         showPrintBottonBtn={false}
         printRef={printRef}
+        type={type}
         getStudentBulletinRef={getStudentBulletinRef}
       />
     </motion.div>

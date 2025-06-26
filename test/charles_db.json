@@ -1,0 +1,3754 @@
+{
+    "name": "COMPLEXE-SCOLAIRE-CHARLES-YANABA",
+    "short_name": "CSCY",
+    "academie": "KATI",
+    "zone": "KATI",
+    "version": "1.0.0",
+    "created_at": 1750239482729,
+    "created_time": "09:38:02:728",
+    "updated_at": 1750239482729,
+    "updated_time": "09:38:02:728",
+    "classes": [
+        {
+            "id": "7--1750239538400",
+            "level": 7,
+            "name": ""
+        },
+        {
+            "id": "8--1750239538400",
+            "level": 8,
+            "name": ""
+        }
+    ],
+    "students": [
+        {
+            "id": "273709af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Daba Coulibaly",
+            "first_name": "Daba",
+            "last_name": "Coulibaly",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Coulibaly",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "M",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "2737099af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Toni Dit Vieux Diarra",
+            "first_name": "Toni",
+            "last_name": "Diarra",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Diarra",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "M",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273f709af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Abdoulaye Maïga",
+            "first_name": "Abdoulaye",
+            "last_name": "Maïga",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Maïga",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "M",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "27370009af-a004-41e1-b990-605cc66b9a2688",
+            "name_complet": "Oumou Samaké",
+            "first_name": "Oumou",
+            "last_name": "Samaké",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Samaké",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750786654630
+        },
+        {
+            "id": "273709af-a004-yu41e1-b990-605cc66b9a26",
+            "name_complet": "Kadidia S Sanfo",
+            "first_name": "Kadidia",
+            "last_name": "Sanfo",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Sanfo",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273709aaaf-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Mariam Sangaré",
+            "first_name": "Mariam",
+            "last_name": "Sangaré",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Sangaré",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273tt709af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Aminata Sow",
+            "first_name": "Aminata",
+            "last_name": "Sow",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Sow",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273yu709af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Oumar Traoré",
+            "first_name": "Oumar",
+            "last_name": "Traoré",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Traoré",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "M",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "27eef3709af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Sitan Founè Traoré",
+            "first_name": "Sitan Founè",
+            "last_name": "Traoré",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Traoré",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "8",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "27370009af-a0yu04-41e1-b990-605cc66b9a26",
+            "name_complet": "Chitan Berthé",
+            "first_name": "Chitan",
+            "last_name": "Berthé",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Berthé",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750787194750
+        },
+        {
+            "id": "273709ajjf-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Maïmouna Coulibaly",
+            "first_name": "Maïmouna",
+            "last_name": "Coulibaly",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Coulibaly",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273709afnn-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Alassane Coulibaly",
+            "first_name": "Alassane",
+            "last_name": "Coulibaly",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Coulibaly",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "M",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "27370gh9af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Mariam Diabaté",
+            "first_name": "Mariam",
+            "last_name": "Diabaté",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Diabaté",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "27370hh9af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Seydou Diabaté",
+            "first_name": "Seydou",
+            "last_name": "Diabaté",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Diabaté",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "M",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "2ppo73709af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Aminata Diallo",
+            "first_name": "Aminata",
+            "last_name": "Diallo",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Diallo",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273iio709af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Fatoumata Haïdara",
+            "first_name": "Fatoumata",
+            "last_name": "Haïdara",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Haïdara",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273709azzaf-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Assétou Konaré",
+            "first_name": "Assétou",
+            "last_name": "Konaré",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Konaré",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273709akklf-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Rokia Sinayoko",
+            "first_name": "Rokia",
+            "last_name": "Sinayoko",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Sinayoko",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "273709akndf-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Fatoumata Sow",
+            "first_name": "Fatoumata",
+            "last_name": "Sow",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Sow",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "27370kllss9af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Youssouf Traoré",
+            "first_name": "Youssouf",
+            "last_name": "Traoré",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Traoré",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "M",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        },
+        {
+            "id": "27370jhds9af-a004-41e1-b990-605cc66b9a26",
+            "name_complet": "Aïssata Diallo",
+            "first_name": "Aïssata",
+            "last_name": "Diallo",
+            "birth_place": "Kati",
+            "sure_name": "",
+            "father_name": "Amadou Diallo",
+            "mother_name": "Aminata Demba",
+            "parents_contact": "77323260",
+            "classe": "7",
+            "sexe": "F",
+            "birth_date": 1266624000000,
+            "status": "actif",
+            "added_at": 1750239792845,
+            "updated_at": 1750239792845
+        }
+    ],
+    "enrollments": [
+        {
+            "id": "43a9d348-688f-44c9-beb8-6faaf208eb4b",
+            "studentId": "273709af-a004-41e1-b990-605cc66b9a26",
+            "studentName": "Daba Coulibaly",
+            "classId": "8",
+            "schoolYear": "2024-2025",
+            "status": "new-entry",
+            "timestamp": "2025-06-18T09:43:12.845Z",
+            "createdAt": 1750239792845
+        },
+        {
+            "id": "4d852945-1a5c-4650-8135-32f19f882eb2",
+            "studentId": "27370009af-a0yu04-41e1-b990-605cc66b9a26",
+            "studentName": "Chitan Berthé",
+            "classId": "8",
+            "schoolYear": "2024-2025",
+            "status": "class-change",
+            "timestamp": "2025-06-24T17:44:36.263Z",
+            "createdAt": 1750787076263
+        },
+        {
+            "id": "82680899-0a83-4c59-82ef-0590dc05ae4f",
+            "studentId": "27370009af-a0yu04-41e1-b990-605cc66b9a26",
+            "studentName": "Chitan Berthé",
+            "classId": "7",
+            "schoolYear": "2024-2025",
+            "status": "class-change",
+            "timestamp": "2025-06-24T17:46:34.751Z",
+            "createdAt": 1750787194751
+        }
+    ],
+    "snapshots": [
+        {
+            "id": "snapshot_2024-2025_1750239792861",
+            "schoolYear": "2024-2025",
+            "timestamp": "2025-06-26T17:08:00.958Z",
+            "createdAt": 1750239792861,
+            "summary": {
+                "totalStudents": 21,
+                "totalMale": 7,
+                "totalFemale": 14,
+                "totalClasses": 2
+            },
+            "classCounts": [
+                {
+                    "classId": "7--1750239538400",
+                    "className": "",
+                    "level": 7,
+                    "total": 12,
+                    "male": 3,
+                    "female": 9,
+                    "students": [
+                        {
+                            "id": "27370009af-a0yu04-41e1-b990-605cc66b9a26",
+                            "name": "Chitan Berthé",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273709ajjf-a004-41e1-b990-605cc66b9a26",
+                            "name": "Maïmouna Coulibaly",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273709afnn-a004-41e1-b990-605cc66b9a26",
+                            "name": "Alassane Coulibaly",
+                            "sexe": "M"
+                        },
+                        {
+                            "id": "27370gh9af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Mariam Diabaté",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "27370hh9af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Seydou Diabaté",
+                            "sexe": "M"
+                        },
+                        {
+                            "id": "2ppo73709af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Aminata Diallo",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273iio709af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Fatoumata Haïdara",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273709azzaf-a004-41e1-b990-605cc66b9a26",
+                            "name": "Assétou Konaré",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273709akklf-a004-41e1-b990-605cc66b9a26",
+                            "name": "Rokia Sinayoko",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273709akndf-a004-41e1-b990-605cc66b9a26",
+                            "name": "Fatoumata Sow",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "27370kllss9af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Youssouf Traoré",
+                            "sexe": "M"
+                        },
+                        {
+                            "id": "27370jhds9af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Aïssata Diallo",
+                            "sexe": "F"
+                        }
+                    ]
+                },
+                {
+                    "classId": "8--1750239538400",
+                    "className": "",
+                    "level": 8,
+                    "total": 9,
+                    "male": 4,
+                    "female": 5,
+                    "students": [
+                        {
+                            "id": "273709af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Daba Coulibaly",
+                            "sexe": "M"
+                        },
+                        {
+                            "id": "2737099af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Toni Dit Vieux Diarra",
+                            "sexe": "M"
+                        },
+                        {
+                            "id": "273f709af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Abdoulaye Maïga",
+                            "sexe": "M"
+                        },
+                        {
+                            "id": "27370009af-a004-41e1-b990-605cc66b9a2688",
+                            "name": "Oumou Samaké",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273709af-a004-yu41e1-b990-605cc66b9a26",
+                            "name": "Kadidia S Sanfo",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273709aaaf-a004-41e1-b990-605cc66b9a26",
+                            "name": "Mariam Sangaré",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273tt709af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Aminata Sow",
+                            "sexe": "F"
+                        },
+                        {
+                            "id": "273yu709af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Oumar Traoré",
+                            "sexe": "M"
+                        },
+                        {
+                            "id": "27eef3709af-a004-41e1-b990-605cc66b9a26",
+                            "name": "Sitan Founè Traoré",
+                            "sexe": "F"
+                        }
+                    ]
+                }
+            ],
+            "metadata": {
+                "generatedBy": "auto-snapshot",
+                "version": "1.0"
+            }
+        }
+    ],
+    "compositions": [
+        {
+            "id": "composition-1750252438093",
+            "name": "12",
+            "helper": "Trim",
+            "label": "3ème Trimestre",
+            "date": "2025-06-16",
+            "classes": [
+                "7--1750239538400",
+                "8--1750239538400"
+            ],
+            "created_at": "2025-06-18T13:13:58.093Z"
+        }
+    ],
+    "bulletins": [
+        {
+            "id": "1750252464001",
+            "compositionId": "composition-1750252438093",
+            "schoolYear": "2024-2025",
+            "classId": "7--1750239538400",
+            "isLocked": false,
+            "subjects": [
+                {
+                    "name": "Rédaction",
+                    "coefficient": 3
+                },
+                {
+                    "name": "Mathématique",
+                    "coefficient": 3
+                },
+                {
+                    "name": "Dictée & Question",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Biologie",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Anglais",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Histoire-Géo",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Physique",
+                    "coefficient": 1.5
+                },
+                {
+                    "name": "Chimie",
+                    "coefficient": 1.5
+                },
+                {
+                    "name": "ECM",
+                    "coefficient": 1
+                },
+                {
+                    "name": "EPS",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Dessin",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Musique",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Lecture",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Récitation",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Conduite",
+                    "coefficient": 1
+                }
+            ],
+            "students": [
+                {
+                    "id": "27370009af-a0yu04-41e1-b990-605cc66b9a26",
+                    "first_name": "Chitan",
+                    "sure_name": "",
+                    "last_name": "Berthé",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 13,
+                            "composition": 13,
+                            "moyenne_generale": 13,
+                            "moyenne_coef": 39
+                        },
+                        "Mathématique": {
+                            "classe": 14,
+                            "composition": 14,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 42
+                        },
+                        "Biologie": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 34
+                        },
+                        "Anglais": {
+                            "classe": 12.5,
+                            "composition": 12.5,
+                            "moyenne_generale": 12.5,
+                            "moyenne_coef": 25
+                        },
+                        "Dictée & Question": {
+                            "classe": 14.5,
+                            "composition": 12.5,
+                            "moyenne_generale": 13.17,
+                            "moyenne_coef": 26.34
+                        },
+                        "Physique": {
+                            "classe": 17.25,
+                            "composition": 17.25,
+                            "moyenne_generale": 17.25,
+                            "moyenne_coef": 25.875
+                        },
+                        "Chimie": {
+                            "classe": 17.5,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.5,
+                            "moyenne_coef": 26.25
+                        },
+                        "Histoire-Géo": {
+                            "classe": 18.25,
+                            "composition": 18.25,
+                            "moyenne_generale": 18.25,
+                            "moyenne_coef": 36.5
+                        },
+                        "ECM": {
+                            "classe": 18,
+                            "composition": 18.5,
+                            "moyenne_generale": 18.33,
+                            "moyenne_coef": 18.33
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 16.67
+                        },
+                        "Musique": {
+                            "classe": 16.5,
+                            "composition": 17,
+                            "moyenne_generale": 16.83,
+                            "moyenne_coef": 16.83
+                        },
+                        "Lecture": {
+                            "classe": 12,
+                            "composition": 12,
+                            "moyenne_generale": 12,
+                            "moyenne_coef": 12
+                        },
+                        "Récitation": {
+                            "classe": 13,
+                            "composition": 13,
+                            "moyenne_generale": 13,
+                            "moyenne_coef": 13
+                        }
+                    }
+                },
+                {
+                    "id": "273709ajjf-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Maïmouna",
+                    "sure_name": "",
+                    "last_name": "Coulibaly",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 14,
+                            "composition": 14,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 42
+                        },
+                        "Mathématique": {
+                            "classe": 18.5,
+                            "composition": 17,
+                            "moyenne_generale": 17.5,
+                            "moyenne_coef": 52.5
+                        },
+                        "Biologie": {
+                            "classe": 19,
+                            "composition": 19,
+                            "moyenne_generale": 19,
+                            "moyenne_coef": 38
+                        },
+                        "Anglais": {
+                            "classe": 17.5,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.5,
+                            "moyenne_coef": 35
+                        },
+                        "Dictée & Question": {
+                            "classe": 18.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 17.17,
+                            "moyenne_coef": 34.34
+                        },
+                        "Physique": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 27
+                        },
+                        "Chimie": {
+                            "classe": 18.5,
+                            "composition": 18.5,
+                            "moyenne_generale": 18.5,
+                            "moyenne_coef": 27.75
+                        },
+                        "Histoire-Géo": {
+                            "classe": 19.5,
+                            "composition": 19.5,
+                            "moyenne_generale": 19.5,
+                            "moyenne_coef": 39
+                        },
+                        "ECM": {
+                            "classe": 19,
+                            "composition": 19.5,
+                            "moyenne_generale": 19.33,
+                            "moyenne_coef": 19.33
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16.5,
+                            "composition": 17,
+                            "moyenne_generale": 16.83,
+                            "moyenne_coef": 16.83
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 18,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 17.67
+                        },
+                        "Lecture": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "Récitation": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        }
+                    }
+                },
+                {
+                    "id": "273709afnn-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Alassane",
+                    "sure_name": "",
+                    "last_name": "Coulibaly",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 16,
+                            "composition": 15.5,
+                            "moyenne_generale": 15.67,
+                            "moyenne_coef": 47.01
+                        },
+                        "Biologie": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 32
+                        },
+                        "Anglais": {
+                            "classe": 12,
+                            "composition": 13,
+                            "moyenne_generale": 12.67,
+                            "moyenne_coef": 25.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 11,
+                            "composition": 9,
+                            "moyenne_generale": 9.67,
+                            "moyenne_coef": 19.34
+                        },
+                        "Physique": {
+                            "classe": 16.25,
+                            "composition": 16.25,
+                            "moyenne_generale": 16.25,
+                            "moyenne_coef": 24.375
+                        },
+                        "Chimie": {
+                            "classe": 16.75,
+                            "composition": 16.75,
+                            "moyenne_generale": 16.75,
+                            "moyenne_coef": 25.125
+                        },
+                        "Histoire-Géo": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 20
+                        },
+                        "ECM": {
+                            "classe": 17,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.33,
+                            "moyenne_coef": 17.33
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.33,
+                            "moyenne_coef": 16.33
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 16.67
+                        },
+                        "Lecture": {
+                            "classe": 14,
+                            "composition": 14,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 14
+                        },
+                        "Récitation": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        }
+                    }
+                },
+                {
+                    "id": "27370gh9af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Mariam",
+                    "sure_name": "",
+                    "last_name": "Diabaté",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 14,
+                            "composition": 12,
+                            "moyenne_generale": 12.67,
+                            "moyenne_coef": 38.01
+                        },
+                        "Biologie": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 32
+                        },
+                        "Anglais": {
+                            "classe": 9.5,
+                            "composition": 11.5,
+                            "moyenne_generale": 10.83,
+                            "moyenne_coef": 21.66
+                        },
+                        "Dictée & Question": {
+                            "classe": 8,
+                            "composition": 6,
+                            "moyenne_generale": 6.67,
+                            "moyenne_coef": 13.34
+                        },
+                        "Physique": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 24
+                        },
+                        "Chimie": {
+                            "classe": 16.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.5,
+                            "moyenne_coef": 24.75
+                        },
+                        "Histoire-Géo": {
+                            "classe": 11,
+                            "composition": 11,
+                            "moyenne_generale": 11,
+                            "moyenne_coef": 22
+                        },
+                        "ECM": {
+                            "classe": 16,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.33,
+                            "moyenne_coef": 16.33
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.33,
+                            "moyenne_coef": 16.33
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.33,
+                            "moyenne_coef": 16.33
+                        },
+                        "Lecture": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Récitation": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        }
+                    }
+                },
+                {
+                    "id": "27370hh9af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Seydou",
+                    "sure_name": "",
+                    "last_name": "Diabaté",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 18,
+                            "composition": 16,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 50.010000000000005
+                        },
+                        "Biologie": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 32
+                        },
+                        "Anglais": {
+                            "classe": 7,
+                            "composition": 10,
+                            "moyenne_generale": 9,
+                            "moyenne_coef": 18
+                        },
+                        "Dictée & Question": {
+                            "classe": 9,
+                            "composition": 7,
+                            "moyenne_generale": 7.67,
+                            "moyenne_coef": 15.34
+                        },
+                        "Physique": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 24
+                        },
+                        "Chimie": {
+                            "classe": 16.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.5,
+                            "moyenne_coef": 24.75
+                        },
+                        "Histoire-Géo": {
+                            "classe": 10.5,
+                            "composition": 10.5,
+                            "moyenne_generale": 10.5,
+                            "moyenne_coef": 21
+                        },
+                        "ECM": {
+                            "classe": 16,
+                            "composition": 16.25,
+                            "moyenne_generale": 16.17,
+                            "moyenne_coef": 16.17
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16.5,
+                            "composition": 17,
+                            "moyenne_generale": 16.83,
+                            "moyenne_coef": 16.83
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 16.25,
+                            "moyenne_generale": 16.17,
+                            "moyenne_coef": 16.17
+                        },
+                        "Lecture": {
+                            "classe": 12,
+                            "composition": 12,
+                            "moyenne_generale": 12,
+                            "moyenne_coef": 12
+                        },
+                        "Récitation": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        }
+                    }
+                },
+                {
+                    "id": "2ppo73709af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Aminata",
+                    "sure_name": "",
+                    "last_name": "Diallo",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 11,
+                            "composition": 11,
+                            "moyenne_generale": 11,
+                            "moyenne_coef": 33
+                        },
+                        "Mathématique": {
+                            "classe": 10,
+                            "composition": 12,
+                            "moyenne_generale": 11.33,
+                            "moyenne_coef": 33.99
+                        },
+                        "Biologie": {
+                            "classe": 16.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.5,
+                            "moyenne_coef": 33
+                        },
+                        "Anglais": {
+                            "classe": 13,
+                            "composition": 11,
+                            "moyenne_generale": 11.67,
+                            "moyenne_coef": 23.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 8,
+                            "composition": 6,
+                            "moyenne_generale": 6.67,
+                            "moyenne_coef": 13.34
+                        },
+                        "Physique": {
+                            "classe": 16.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.5,
+                            "moyenne_coef": 24.75
+                        },
+                        "Chimie": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 25.5
+                        },
+                        "Histoire-Géo": {
+                            "classe": 14.25,
+                            "composition": 14.25,
+                            "moyenne_generale": 14.25,
+                            "moyenne_coef": 28.5
+                        },
+                        "ECM": {
+                            "classe": 18,
+                            "composition": 18.25,
+                            "moyenne_generale": 18.17,
+                            "moyenne_coef": 18.17
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.33,
+                            "moyenne_coef": 16.33
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 16.67
+                        },
+                        "Lecture": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Récitation": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        }
+                    }
+                },
+                {
+                    "id": "27370jhds9af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Aïssata",
+                    "sure_name": "",
+                    "last_name": "Diallo",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 13,
+                            "composition": 13,
+                            "moyenne_generale": 13,
+                            "moyenne_coef": 39
+                        },
+                        "Mathématique": {
+                            "classe": 15,
+                            "composition": 14.5,
+                            "moyenne_generale": 14.67,
+                            "moyenne_coef": 44.01
+                        },
+                        "Biologie": {
+                            "classe": 19,
+                            "composition": 19,
+                            "moyenne_generale": 19,
+                            "moyenne_coef": 38
+                        },
+                        "Anglais": {
+                            "classe": 18,
+                            "composition": 19,
+                            "moyenne_generale": 18.67,
+                            "moyenne_coef": 37.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 19.5,
+                            "composition": 17.5,
+                            "moyenne_generale": 18.17,
+                            "moyenne_coef": 36.34
+                        },
+                        "Physique": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 27
+                        },
+                        "Chimie": {
+                            "classe": 18.5,
+                            "composition": 18.5,
+                            "moyenne_generale": 18.5,
+                            "moyenne_coef": 27.75
+                        },
+                        "Histoire-Géo": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 20
+                        },
+                        "ECM": {
+                            "classe": 19,
+                            "composition": 19.5,
+                            "moyenne_generale": 19.33,
+                            "moyenne_coef": 19.33
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 17,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.33,
+                            "moyenne_coef": 17.33
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 18,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 17.67
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        }
+                    }
+                },
+                {
+                    "id": "273iio709af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Fatoumata",
+                    "sure_name": "",
+                    "last_name": "Haïdara",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 11,
+                            "composition": 11,
+                            "moyenne_generale": 11,
+                            "moyenne_coef": 33
+                        },
+                        "Mathématique": {
+                            "classe": 13,
+                            "composition": 12,
+                            "moyenne_generale": 12.33,
+                            "moyenne_coef": 36.99
+                        },
+                        "Biologie": {
+                            "classe": 18.5,
+                            "composition": 18.5,
+                            "moyenne_generale": 18.5,
+                            "moyenne_coef": 37
+                        },
+                        "Anglais": {
+                            "classe": 13.5,
+                            "composition": 14.5,
+                            "moyenne_generale": 14.17,
+                            "moyenne_coef": 28.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 14,
+                            "composition": 12,
+                            "moyenne_generale": 12.67,
+                            "moyenne_coef": 25.34
+                        },
+                        "Physique": {
+                            "classe": 17.75,
+                            "composition": 17.75,
+                            "moyenne_generale": 17.75,
+                            "moyenne_coef": 26.625
+                        },
+                        "Chimie": {
+                            "classe": 18.25,
+                            "composition": 18.25,
+                            "moyenne_generale": 18.25,
+                            "moyenne_coef": 27.375
+                        },
+                        "Histoire-Géo": {
+                            "classe": 16.75,
+                            "composition": 16.75,
+                            "moyenne_generale": 16.75,
+                            "moyenne_coef": 33.5
+                        },
+                        "ECM": {
+                            "classe": 18.5,
+                            "composition": 19.25,
+                            "moyenne_generale": 19,
+                            "moyenne_coef": 19
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16.5,
+                            "composition": 17,
+                            "moyenne_generale": 16.83,
+                            "moyenne_coef": 16.83
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.33,
+                            "moyenne_coef": 17.33
+                        },
+                        "Lecture": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Récitation": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        }
+                    }
+                },
+                {
+                    "id": "273709azzaf-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Assétou",
+                    "sure_name": "",
+                    "last_name": "Konaré",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 10,
+                            "composition": 12,
+                            "moyenne_generale": 11.33,
+                            "moyenne_coef": 33.99
+                        },
+                        "Biologie": {
+                            "classe": 16.25,
+                            "composition": 16.25,
+                            "moyenne_generale": 16.25,
+                            "moyenne_coef": 32.5
+                        },
+                        "Anglais": {
+                            "classe": 9.5,
+                            "composition": 11.5,
+                            "moyenne_generale": 10.83,
+                            "moyenne_coef": 21.66
+                        },
+                        "Dictée & Question": {
+                            "classe": 11,
+                            "composition": 11,
+                            "moyenne_generale": 11,
+                            "moyenne_coef": 22
+                        },
+                        "Physique": {
+                            "classe": 16.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.5,
+                            "moyenne_coef": 24.75
+                        },
+                        "Chimie": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 25.5
+                        },
+                        "Histoire-Géo": {
+                            "classe": 11.75,
+                            "composition": 11.75,
+                            "moyenne_generale": 11.75,
+                            "moyenne_coef": 23.5
+                        },
+                        "ECM": {
+                            "classe": 18,
+                            "composition": 18.25,
+                            "moyenne_generale": 18.17,
+                            "moyenne_coef": 18.17
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.33,
+                            "moyenne_coef": 16.33
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 16.67
+                        },
+                        "Lecture": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Récitation": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        }
+                    }
+                },
+                {
+                    "id": "273709akklf-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Rokia",
+                    "sure_name": "",
+                    "last_name": "Sinayoko",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 12.5,
+                            "composition": 12.5,
+                            "moyenne_generale": 12.5,
+                            "moyenne_coef": 37.5
+                        },
+                        "Mathématique": {
+                            "classe": 17,
+                            "composition": 15.5,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 48
+                        },
+                        "Biologie": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 36
+                        },
+                        "Anglais": {
+                            "classe": 14.5,
+                            "composition": 15.5,
+                            "moyenne_generale": 15.17,
+                            "moyenne_coef": 30.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 12.5,
+                            "composition": 10.5,
+                            "moyenne_generale": 11.17,
+                            "moyenne_coef": 22.34
+                        },
+                        "Physique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 25.5
+                        },
+                        "Chimie": {
+                            "classe": 17.5,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.5,
+                            "moyenne_coef": 26.25
+                        },
+                        "Histoire-Géo": {
+                            "classe": 19.25,
+                            "composition": 19.25,
+                            "moyenne_generale": 19.25,
+                            "moyenne_coef": 38.5
+                        },
+                        "ECM": {
+                            "classe": 18.75,
+                            "composition": 19.5,
+                            "moyenne_generale": 19.25,
+                            "moyenne_coef": 19.25
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16.5,
+                            "composition": 17,
+                            "moyenne_generale": 16.83,
+                            "moyenne_coef": 16.83
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 18,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 17.67
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        }
+                    }
+                },
+                {
+                    "id": "273709akndf-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Fatoumata",
+                    "sure_name": "",
+                    "last_name": "Sow",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 12,
+                            "composition": 12,
+                            "moyenne_generale": 12,
+                            "moyenne_coef": 36
+                        },
+                        "Biologie": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 32
+                        },
+                        "Anglais": {
+                            "classe": 9,
+                            "composition": 9.5,
+                            "moyenne_generale": 9.33,
+                            "moyenne_coef": 18.66
+                        },
+                        "Dictée & Question": {
+                            "classe": 8.5,
+                            "composition": 6.5,
+                            "moyenne_generale": 7.17,
+                            "moyenne_coef": 14.34
+                        },
+                        "Physique": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 24
+                        },
+                        "Chimie": {
+                            "classe": 16.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.5,
+                            "moyenne_coef": 24.75
+                        },
+                        "Histoire-Géo": {
+                            "classe": 10.25,
+                            "composition": 10.25,
+                            "moyenne_generale": 10.25,
+                            "moyenne_coef": 20.5
+                        },
+                        "ECM": {
+                            "classe": 17,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.33,
+                            "moyenne_coef": 17.33
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.33,
+                            "moyenne_coef": 16.33
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 16.67
+                        },
+                        "Lecture": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Récitation": {
+                            "classe": 12,
+                            "composition": 12,
+                            "moyenne_generale": 12,
+                            "moyenne_coef": 12
+                        }
+                    }
+                },
+                {
+                    "id": "27370kllss9af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Youssouf",
+                    "sure_name": "",
+                    "last_name": "Traoré",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 11,
+                            "composition": 11,
+                            "moyenne_generale": 11,
+                            "moyenne_coef": 33
+                        },
+                        "Mathématique": {
+                            "classe": 10,
+                            "composition": 12,
+                            "moyenne_generale": 11.33,
+                            "moyenne_coef": 33.99
+                        },
+                        "Biologie": {
+                            "classe": 17.25,
+                            "composition": 17.25,
+                            "moyenne_generale": 17.25,
+                            "moyenne_coef": 34.5
+                        },
+                        "Anglais": {
+                            "classe": 15,
+                            "composition": 16,
+                            "moyenne_generale": 15.67,
+                            "moyenne_coef": 31.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 11.5,
+                            "composition": 9.5,
+                            "moyenne_generale": 10.17,
+                            "moyenne_coef": 20.34
+                        },
+                        "Physique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 25.5
+                        },
+                        "Chimie": {
+                            "classe": 17.5,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.5,
+                            "moyenne_coef": 26.25
+                        },
+                        "Histoire-Géo": {
+                            "classe": 14,
+                            "composition": 14,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 28
+                        },
+                        "ECM": {
+                            "classe": 18.5,
+                            "composition": 19,
+                            "moyenne_generale": 18.83,
+                            "moyenne_coef": 18.83
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16.5,
+                            "composition": 17,
+                            "moyenne_generale": 16.83,
+                            "moyenne_coef": 16.83
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 0.5,
+                            "moyenne_generale": 6,
+                            "moyenne_coef": 6
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 13,
+                            "composition": 13,
+                            "moyenne_generale": 13,
+                            "moyenne_coef": 13
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": "1750252486854",
+            "compositionId": "composition-1750252438093",
+            "schoolYear": "2024-2025",
+            "classId": "8--1750239538400",
+            "isLocked": false,
+            "subjects": [
+                {
+                    "name": "Rédaction",
+                    "coefficient": 3
+                },
+                {
+                    "name": "Mathématique",
+                    "coefficient": 3
+                },
+                {
+                    "name": "Dictée & Question",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Biologie",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Anglais",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Histoire-Géo",
+                    "coefficient": 2
+                },
+                {
+                    "name": "Physique",
+                    "coefficient": 1.5
+                },
+                {
+                    "name": "Chimie",
+                    "coefficient": 1.5
+                },
+                {
+                    "name": "ECM",
+                    "coefficient": 1
+                },
+                {
+                    "name": "EPS",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Dessin",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Musique",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Lecture",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Récitation",
+                    "coefficient": 1
+                },
+                {
+                    "name": "Conduite",
+                    "coefficient": 1
+                }
+            ],
+            "students": [
+                {
+                    "id": "273709af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Daba",
+                    "sure_name": "",
+                    "last_name": "Coulibaly",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 11,
+                            "composition": 11,
+                            "moyenne_generale": 11,
+                            "moyenne_coef": 33
+                        },
+                        "Mathématique": {
+                            "classe": 9,
+                            "composition": 10,
+                            "moyenne_generale": 9.67,
+                            "moyenne_coef": 29.009999999999998
+                        },
+                        "Biologie": {
+                            "classe": 14,
+                            "composition": 15.5,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 30
+                        },
+                        "Anglais": {
+                            "classe": 14,
+                            "composition": 16.25,
+                            "moyenne_generale": 15.5,
+                            "moyenne_coef": 31
+                        },
+                        "Dictée & Question": {
+                            "classe": 12.5,
+                            "composition": 10.5,
+                            "moyenne_generale": 11.17,
+                            "moyenne_coef": 22.34
+                        },
+                        "Physique": {
+                            "classe": 15,
+                            "composition": 16.25,
+                            "moyenne_generale": 15.83,
+                            "moyenne_coef": 23.745
+                        },
+                        "Chimie": {
+                            "classe": 13,
+                            "composition": 16,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 22.5
+                        },
+                        "Histoire-Géo": {
+                            "classe": 10,
+                            "composition": 6,
+                            "moyenne_generale": 7.33,
+                            "moyenne_coef": 14.66
+                        },
+                        "ECM": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "Lecture": {
+                            "classe": 14,
+                            "composition": 14,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 14
+                        },
+                        "Récitation": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        }
+                    }
+                },
+                {
+                    "id": "2737099af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Toni",
+                    "sure_name": "",
+                    "last_name": "Diarra",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 8,
+                            "composition": 10,
+                            "moyenne_generale": 9.33,
+                            "moyenne_coef": 27.990000000000002
+                        },
+                        "Biologie": {
+                            "classe": 13,
+                            "composition": 14.5,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 28
+                        },
+                        "Anglais": {
+                            "classe": 9.5,
+                            "composition": 10.5,
+                            "moyenne_generale": 10.17,
+                            "moyenne_coef": 20.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 10.5,
+                            "composition": 10.5,
+                            "moyenne_generale": 10.5,
+                            "moyenne_coef": 21
+                        },
+                        "Physique": {
+                            "classe": 13.5,
+                            "composition": 14.5,
+                            "moyenne_generale": 14.17,
+                            "moyenne_coef": 21.255
+                        },
+                        "Chimie": {
+                            "classe": 12,
+                            "composition": 13,
+                            "moyenne_generale": 12.67,
+                            "moyenne_coef": 19.005
+                        },
+                        "Histoire-Géo": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 20
+                        },
+                        "ECM": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Lecture": {
+                            "classe": 13,
+                            "composition": 13,
+                            "moyenne_generale": 13,
+                            "moyenne_coef": 13
+                        },
+                        "Récitation": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        }
+                    }
+                },
+                {
+                    "id": "273f709af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Abdoulaye",
+                    "sure_name": "",
+                    "last_name": "Maïga",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 13,
+                            "composition": 13,
+                            "moyenne_generale": 13,
+                            "moyenne_coef": 39
+                        },
+                        "Mathématique": {
+                            "classe": 18,
+                            "composition": 17,
+                            "moyenne_generale": 17.33,
+                            "moyenne_coef": 51.989999999999995
+                        },
+                        "Biologie": {
+                            "classe": 17,
+                            "composition": 18.5,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 36
+                        },
+                        "Anglais": {
+                            "classe": 19.5,
+                            "composition": 20,
+                            "moyenne_generale": 19.83,
+                            "moyenne_coef": 39.66
+                        },
+                        "Dictée & Question": {
+                            "classe": 16.5,
+                            "composition": 14.5,
+                            "moyenne_generale": 15.17,
+                            "moyenne_coef": 30.34
+                        },
+                        "Physique": {
+                            "classe": 17,
+                            "composition": 18,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 26.505000000000003
+                        },
+                        "Chimie": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 25.5
+                        },
+                        "Histoire-Géo": {
+                            "classe": 15.5,
+                            "composition": 15.5,
+                            "moyenne_generale": 15.5,
+                            "moyenne_coef": 31
+                        },
+                        "ECM": {
+                            "classe": 19,
+                            "composition": 19,
+                            "moyenne_generale": 19,
+                            "moyenne_coef": 19
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        }
+                    }
+                },
+                {
+                    "id": "27370009af-a004-41e1-b990-605cc66b9a2688",
+                    "first_name": "Oumou",
+                    "sure_name": "",
+                    "last_name": "Samaké",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 15,
+                            "composition": 16.5,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 48
+                        },
+                        "Biologie": {
+                            "classe": 13.5,
+                            "composition": 15,
+                            "moyenne_generale": 14.5,
+                            "moyenne_coef": 29
+                        },
+                        "Anglais": {
+                            "classe": 13.5,
+                            "composition": 14.5,
+                            "moyenne_generale": 14.17,
+                            "moyenne_coef": 28.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 12,
+                            "composition": 10,
+                            "moyenne_generale": 10.67,
+                            "moyenne_coef": 21.34
+                        },
+                        "Physique": {
+                            "classe": 14,
+                            "composition": 15.25,
+                            "moyenne_generale": 14.83,
+                            "moyenne_coef": 22.245
+                        },
+                        "Chimie": {
+                            "classe": 15,
+                            "composition": 16.5,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 24
+                        },
+                        "Histoire-Géo": {
+                            "classe": 7,
+                            "composition": 3,
+                            "moyenne_generale": 4.33,
+                            "moyenne_coef": 8.66
+                        },
+                        "ECM": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 15,
+                            "composition": 16,
+                            "moyenne_generale": 15.67,
+                            "moyenne_coef": 15.67
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        }
+                    }
+                },
+                {
+                    "id": "273709af-a004-yu41e1-b990-605cc66b9a26",
+                    "first_name": "Kadidia",
+                    "sure_name": "",
+                    "last_name": "Sanfo",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 13,
+                            "composition": 13,
+                            "moyenne_generale": 13,
+                            "moyenne_coef": 39
+                        },
+                        "Mathématique": {
+                            "classe": 15,
+                            "composition": 14.5,
+                            "moyenne_generale": 14.67,
+                            "moyenne_coef": 44.01
+                        },
+                        "Biologie": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 34
+                        },
+                        "Anglais": {
+                            "classe": 17.5,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.5,
+                            "moyenne_coef": 35
+                        },
+                        "Dictée & Question": {
+                            "classe": 19,
+                            "composition": 17,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 35.34
+                        },
+                        "Physique": {
+                            "classe": 15.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.17,
+                            "moyenne_coef": 24.255000000000003
+                        },
+                        "Chimie": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 25.005000000000003
+                        },
+                        "Histoire-Géo": {
+                            "classe": 13.5,
+                            "composition": 13.5,
+                            "moyenne_generale": 13.5,
+                            "moyenne_coef": 27
+                        },
+                        "ECM": {
+                            "classe": 19,
+                            "composition": 19,
+                            "moyenne_generale": 19,
+                            "moyenne_coef": 19
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 18.5,
+                            "composition": 18.5,
+                            "moyenne_generale": 18.5,
+                            "moyenne_coef": 18.5
+                        }
+                    }
+                },
+                {
+                    "id": "273709aaaf-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Mariam",
+                    "sure_name": "",
+                    "last_name": "Sangaré",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 13.5,
+                            "composition": 13.5,
+                            "moyenne_generale": 13.5,
+                            "moyenne_coef": 40.5
+                        },
+                        "Mathématique": {
+                            "classe": 12,
+                            "composition": 10,
+                            "moyenne_generale": 10.67,
+                            "moyenne_coef": 32.01
+                        },
+                        "Biologie": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 33.34
+                        },
+                        "Anglais": {
+                            "classe": 16.5,
+                            "composition": 16.5,
+                            "moyenne_generale": 16.5,
+                            "moyenne_coef": 33
+                        },
+                        "Dictée & Question": {
+                            "classe": 17.5,
+                            "composition": 15.5,
+                            "moyenne_generale": 16.17,
+                            "moyenne_coef": 32.34
+                        },
+                        "Physique": {
+                            "classe": 15,
+                            "composition": 16,
+                            "moyenne_generale": 15.67,
+                            "moyenne_coef": 23.505
+                        },
+                        "Chimie": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 25.005000000000003
+                        },
+                        "Histoire-Géo": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 34
+                        },
+                        "ECM": {
+                            "classe": 18.5,
+                            "composition": 19,
+                            "moyenne_generale": 18.83,
+                            "moyenne_coef": 18.83
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        }
+                    }
+                },
+                {
+                    "id": "273tt709af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Aminata",
+                    "sure_name": "",
+                    "last_name": "Sow",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 14,
+                            "composition": 14,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 42
+                        },
+                        "Mathématique": {
+                            "classe": 18,
+                            "composition": 15,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 48
+                        },
+                        "Biologie": {
+                            "classe": 17,
+                            "composition": 18,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 35.34
+                        },
+                        "Anglais": {
+                            "classe": 18.5,
+                            "composition": 18,
+                            "moyenne_generale": 18.17,
+                            "moyenne_coef": 36.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 19.5,
+                            "composition": 17.5,
+                            "moyenne_generale": 18.17,
+                            "moyenne_coef": 36.34
+                        },
+                        "Physique": {
+                            "classe": 17,
+                            "composition": 18,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 26.505000000000003
+                        },
+                        "Chimie": {
+                            "classe": 17,
+                            "composition": 18,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 26.505000000000003
+                        },
+                        "Histoire-Géo": {
+                            "classe": 14,
+                            "composition": 14,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 28
+                        },
+                        "ECM": {
+                            "classe": 19,
+                            "composition": 19,
+                            "moyenne_generale": 19,
+                            "moyenne_coef": 19
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        }
+                    }
+                },
+                {
+                    "id": "273yu709af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Oumar",
+                    "sure_name": "",
+                    "last_name": "Traoré",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 12,
+                            "composition": 12,
+                            "moyenne_generale": 12,
+                            "moyenne_coef": 36
+                        },
+                        "Mathématique": {
+                            "classe": 16,
+                            "composition": 18,
+                            "moyenne_generale": 17.33,
+                            "moyenne_coef": 51.989999999999995
+                        },
+                        "Biologie": {
+                            "classe": 16,
+                            "composition": 17.5,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 34
+                        },
+                        "Anglais": {
+                            "classe": 18,
+                            "composition": 17.5,
+                            "moyenne_generale": 17.67,
+                            "moyenne_coef": 35.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 12.5,
+                            "composition": 10.5,
+                            "moyenne_generale": 11.17,
+                            "moyenne_coef": 22.34
+                        },
+                        "Physique": {
+                            "classe": 15,
+                            "composition": 16,
+                            "moyenne_generale": 15.67,
+                            "moyenne_coef": 23.505
+                        },
+                        "Chimie": {
+                            "classe": 16,
+                            "composition": 17,
+                            "moyenne_generale": 16.67,
+                            "moyenne_coef": 25.005000000000003
+                        },
+                        "Histoire-Géo": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 34
+                        },
+                        "ECM": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Musique": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        },
+                        "Lecture": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Récitation": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        }
+                    }
+                },
+                {
+                    "id": "27eef3709af-a004-41e1-b990-605cc66b9a26",
+                    "first_name": "Sitan Founè",
+                    "sure_name": "",
+                    "last_name": "Traoré",
+                    "matricule": "",
+                    "sexe": "M",
+                    "parents_contact": "77323260",
+                    "notes": {
+                        "Conduite": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Rédaction": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 30
+                        },
+                        "Mathématique": {
+                            "classe": 7,
+                            "composition": 13,
+                            "moyenne_generale": 11,
+                            "moyenne_coef": 33
+                        },
+                        "Biologie": {
+                            "classe": 14,
+                            "composition": 16,
+                            "moyenne_generale": 15.33,
+                            "moyenne_coef": 30.66
+                        },
+                        "Anglais": {
+                            "classe": 10,
+                            "composition": 11,
+                            "moyenne_generale": 10.67,
+                            "moyenne_coef": 21.34
+                        },
+                        "Dictée & Question": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 20
+                        },
+                        "Physique": {
+                            "classe": 13,
+                            "composition": 14.5,
+                            "moyenne_generale": 14,
+                            "moyenne_coef": 21
+                        },
+                        "Chimie": {
+                            "classe": 15,
+                            "composition": 16,
+                            "moyenne_generale": 15.67,
+                            "moyenne_coef": 23.505
+                        },
+                        "Histoire-Géo": {
+                            "classe": 10,
+                            "composition": 10,
+                            "moyenne_generale": 10,
+                            "moyenne_coef": 20
+                        },
+                        "ECM": {
+                            "classe": 16.5,
+                            "composition": 17,
+                            "moyenne_generale": 16.83,
+                            "moyenne_coef": 16.83
+                        },
+                        "EPS": {
+                            "classe": 18,
+                            "composition": 18,
+                            "moyenne_generale": 18,
+                            "moyenne_coef": 18
+                        },
+                        "Dessin": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Musique": {
+                            "classe": 16,
+                            "composition": 16,
+                            "moyenne_generale": 16,
+                            "moyenne_coef": 16
+                        },
+                        "Lecture": {
+                            "classe": 15,
+                            "composition": 15,
+                            "moyenne_generale": 15,
+                            "moyenne_coef": 15
+                        },
+                        "Récitation": {
+                            "classe": 17,
+                            "composition": 17,
+                            "moyenne_generale": 17,
+                            "moyenne_coef": 17
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "student_lists": [
+        {
+            "id": "1750253569699",
+            "listType": "students",
+            "name": "Liste des élèves de la 7ème année",
+            "createdAt": "2025-06-18T13:32:49.699Z",
+            "updatedAt": "2025-06-19T01:11:39.076Z",
+            "headers": [
+                "Prénom",
+                "Nom",
+                "N°",
+                "Classe",
+                "Sexe"
+            ],
+            "customHeaders": [
+                "Cadeaux"
+            ],
+            "students": [
+                {
+                    "id": "27370009af-a0yu04-41e1-b990-605cc66b9a26",
+                    "name_complet": "Chitan Berthé",
+                    "first_name": "Chitan",
+                    "last_name": "Berthé",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Berthé",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845,
+                    "Moyenne": "16",
+                    "Cadeaux": "Un sac"
+                },
+                {
+                    "id": "273709afnn-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Alassane Coulibaly",
+                    "first_name": "Alassane",
+                    "last_name": "Coulibaly",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Coulibaly",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "273709ajjf-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Maïmouna Coulibaly",
+                    "first_name": "Maïmouna",
+                    "last_name": "Coulibaly",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Coulibaly",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "27370gh9af-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Mariam Diabaté",
+                    "first_name": "Mariam",
+                    "last_name": "Diabaté",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Diabaté",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "27370hh9af-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Seydou Diabaté",
+                    "first_name": "Seydou",
+                    "last_name": "Diabaté",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Diabaté",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "27370jhds9af-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Aïssata Diallo",
+                    "first_name": "Aïssata",
+                    "last_name": "Diallo",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Diallo",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "2ppo73709af-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Aminata Diallo",
+                    "first_name": "Aminata",
+                    "last_name": "Diallo",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Diallo",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "273iio709af-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Fatoumata Haïdara",
+                    "first_name": "Fatoumata",
+                    "last_name": "Haïdara",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Haïdara",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "273709azzaf-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Assétou Konaré",
+                    "first_name": "Assétou",
+                    "last_name": "Konaré",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Konaré",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "273709akklf-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Rokia Sinayoko",
+                    "first_name": "Rokia",
+                    "last_name": "Sinayoko",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Sinayoko",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "273709akndf-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Fatoumata Sow",
+                    "first_name": "Fatoumata",
+                    "last_name": "Sow",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Sow",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                },
+                {
+                    "id": "27370kllss9af-a004-41e1-b990-605cc66b9a26",
+                    "name_complet": "Youssouf Traoré",
+                    "first_name": "Youssouf",
+                    "last_name": "Traoré",
+                    "birth_place": "Kati",
+                    "sure_name": "",
+                    "father_name": "Amadou Traoré",
+                    "mother_name": "Aminata Demba",
+                    "parents_contact": "77323260",
+                    "classe": "7",
+                    "sexe": "M",
+                    "birth_date": 1266624000000,
+                    "status": "actif",
+                    "added_at": 1750239792845,
+                    "updated_at": 1750239792845
+                }
+            ],
+            "employees": [],
+            "title": {
+                "text": "Liste des élèves de la 7ème année",
+                "style": {
+                    "fontSize": 22,
+                    "fontWeight": "bold",
+                    "textAlign": "center",
+                    "color": "#000000",
+                    "fontFamily": "Georgia",
+                    "fontStyle": "italic",
+                    "textDecoration": "underline",
+                    "border": "4px double black",
+                    "padding": "8px",
+                    "borderRadius": "4px",
+                    "borderBottom": "2px solid black",
+                    "borderTop": "2px solid black",
+                    "boxShadow": "0 1.8px 9px rgba(0,0,0,0.3)",
+                    "backgroundColor": "#f3f4f6",
+                    "background": "linear-gradient(to right, #E5E7EB, #D1D5DB)",
+                    "textShadow": "1px 1px 2px rgba(0,0,0,0.3)",
+                    "textTransform": "uppercase"
+                }
+            },
+            "orientation": "portrait",
+            "langue": "Français",
+            "customMessage": {
+                "show": true,
+                "text": "Le Directeur",
+                "name": "Guanon Coulibaly",
+                "date": "2025-06-18"
+            },
+            "countryInfosHeader": {
+                "show": true,
+                "isCAP": true
+            }
+        }
+    ],
+    "paymentSystems": [
+        {
+            "id": "1750254317488",
+            "name": "Frais scolaire 2025 2026",
+            "monthlyFee": "7500",
+            "registrationFee": "5000",
+            "startDate": "2025-10-01",
+            "endDate": "2026-06-30",
+            "classes": [
+                "8--1750239538400",
+                "7--1750239538400"
+            ],
+            "otherFees": [],
+            "isActive": true,
+            "createdAt": "2025-06-18T13:41:44.630Z",
+            "yearlyFee": 67500
+        }
+    ],
+    "payments": {
+        "students_1750254317488_8--1750239538400": [
+            {
+                "id": "273709af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Daba Coulibaly",
+                "first_name": "Daba",
+                "last_name": "Coulibaly",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Coulibaly",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            },
+            {
+                "id": "2737099af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Toni Dit Vieux Diarra",
+                "first_name": "Toni",
+                "last_name": "Diarra",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Diarra",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            },
+            {
+                "id": "273f709af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Abdoulaye Maïga",
+                "first_name": "Abdoulaye",
+                "last_name": "Maïga",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Maïga",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ]
+            },
+            {
+                "id": "27370009af-a004-41e1-b990-605cc66b9a2688",
+                "name_complet": "Oumou Samaké",
+                "first_name": "Oumou",
+                "last_name": "Samaké",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Samaké",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "F",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750786563724,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            },
+            {
+                "id": "273709af-a004-yu41e1-b990-605cc66b9a26",
+                "name_complet": "Kadidia S Sanfo",
+                "first_name": "Kadidia",
+                "last_name": "Sanfo",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Sanfo",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            },
+            {
+                "id": "273709aaaf-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Mariam Sangaré",
+                "first_name": "Mariam",
+                "last_name": "Sangaré",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Sangaré",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            },
+            {
+                "id": "273tt709af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Aminata Sow",
+                "first_name": "Aminata",
+                "last_name": "Sow",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Sow",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            },
+            {
+                "id": "273yu709af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Oumar Traoré",
+                "first_name": "Oumar",
+                "last_name": "Traoré",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Traoré",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            },
+            {
+                "id": "27eef3709af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Sitan Founè Traoré",
+                "first_name": "Sitan Founè",
+                "last_name": "Traoré",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Traoré",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "8",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1",
+                    "2"
+                ]
+            }
+        ],
+        "students_1750254317488_7--1750239538400": [
+            {
+                "id": "27370009af-a0yu04-41e1-b990-605cc66b9a26",
+                "name_complet": "Chitan Berthé",
+                "first_name": "Chitan",
+                "last_name": "Berthé",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Berthé",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "273709ajjf-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Maïmouna Coulibaly",
+                "first_name": "Maïmouna",
+                "last_name": "Coulibaly",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Coulibaly",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "273709afnn-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Alassane Coulibaly",
+                "first_name": "Alassane",
+                "last_name": "Coulibaly",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Coulibaly",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "27370gh9af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Mariam Diabaté",
+                "first_name": "Mariam",
+                "last_name": "Diabaté",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Diabaté",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "27370hh9af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Seydou Diabaté",
+                "first_name": "Seydou",
+                "last_name": "Diabaté",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Diabaté",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "2ppo73709af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Aminata Diallo",
+                "first_name": "Aminata",
+                "last_name": "Diallo",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Diallo",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "273iio709af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Fatoumata Haïdara",
+                "first_name": "Fatoumata",
+                "last_name": "Haïdara",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Haïdara",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "273709azzaf-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Assétou Konaré",
+                "first_name": "Assétou",
+                "last_name": "Konaré",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Konaré",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "273709akklf-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Rokia Sinayoko",
+                "first_name": "Rokia",
+                "last_name": "Sinayoko",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Sinayoko",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "273709akndf-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Fatoumata Sow",
+                "first_name": "Fatoumata",
+                "last_name": "Sow",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Sow",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "27370kllss9af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Youssouf Traoré",
+                "first_name": "Youssouf",
+                "last_name": "Traoré",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Traoré",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            },
+            {
+                "id": "27370jhds9af-a004-41e1-b990-605cc66b9a26",
+                "name_complet": "Aïssata Diallo",
+                "first_name": "Aïssata",
+                "last_name": "Diallo",
+                "birth_place": "Kati",
+                "sure_name": "",
+                "father_name": "Amadou Diallo",
+                "mother_name": "Aminata Demba",
+                "parents_contact": "77323260",
+                "classe": "7",
+                "sexe": "M",
+                "birth_date": 1266624000000,
+                "status": "actif",
+                "added_at": 1750239792845,
+                "updated_at": 1750239792845,
+                "schoolar_month_number": 9,
+                "month_payed": [
+                    "1"
+                ]
+            }
+        ]
+    },
+    "registrationFees": {
+        "registration_fee_1750254317488_8--1750239538400": {
+            "273f709af-a004-41e1-b990-605cc66b9a26": true,
+            "273709af-a004-41e1-b990-605cc66b9a26": false,
+            "273tt709af-a004-41e1-b990-605cc66b9a26": true,
+            "273709af-a004-yu41e1-b990-605cc66b9a26": true,
+            "273709aaaf-a004-41e1-b990-605cc66b9a26": true,
+            "273yu709af-a004-41e1-b990-605cc66b9a26": true
+        },
+        "registration_fee_1750254317488_7--1750239538400": {
+            "27370jhds9af-a004-41e1-b990-605cc66b9a26": true,
+            "273709afnn-a004-41e1-b990-605cc66b9a26": true,
+            "2ppo73709af-a004-41e1-b990-605cc66b9a26": true
+        }
+    },
+    "schoolYears": [
+        {
+            "id": "school-year-1750255884779",
+            "title": "Année Scolaire 2024-2025",
+            "description": "Année scolaire complète de septembre 2024 à juin 2025.",
+            "start_date": "2025-10-01",
+            "end_date": "2026-06-19",
+            "created_at": 1750294439147,
+            "updated_at": 1750294439147
+        }
+    ],
+    "expenses": [
+        {
+            "id": "expense-1750256029743",
+            "depense_scolaire_id": "school-year-1750255884779",
+            "name": "Achats de craies",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "amount": "1000",
+            "date": "2025-06-18",
+            "category": "equipment",
+            "created_at": 1750256029743,
+            "created_time": "14:13:49",
+            "updated_at": 1750256029743,
+            "updated_time": "14:13:49"
+        },
+        {
+            "id": "expense-1750256093253",
+            "depense_scolaire_id": "school-year-1750255884779",
+            "name": "reparation des bangs",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "amount": "50000",
+            "date": "2025-06-18",
+            "category": "maintenance",
+            "created_at": 1750256093253,
+            "created_time": "14:14:53",
+            "updated_at": 1750256118766,
+            "updated_time": "14:15:18"
+        },
+        {
+            "id": "expense-1750295276128",
+            "depense_scolaire_id": "school-year-1750255884779",
+            "name": "Paiement de Juin",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\ntempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,\nquis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo\nconsequat. Duis aute irure dolor in reprehenderit in voluptate velit esse\ncillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non\nproident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+            "amount_for_payed": "172000",
+            "amount": "172000",
+            "date": "2025-06-19",
+            "type": "employees",
+            "category": "salary",
+            "created_at": 1750295276128,
+            "created_time": "01:07:56",
+            "updated_at": 1750295276128,
+            "updated_time": "01:07:56",
+            "payment_details": {
+                "employees": [
+                    {
+                        "employee_id": "emp-1750295174915-689",
+                        "employee_name": "Samba Diallo",
+                        "positions": [
+                            {
+                                "position_name": "Professeurs",
+                                "original_amount": 100000,
+                                "percentage": 100,
+                                "paid_amount": 100000,
+                                "work_hours": null
+                            }
+                        ]
+                    },
+                    {
+                        "employee_id": "emp-1750256260989-430",
+                        "employee_name": "Amadou Dembélé",
+                        "positions": [
+                            {
+                                "position_name": "Professeurs",
+                                "original_amount": 72000,
+                                "percentage": 100,
+                                "paid_amount": 72000,
+                                "work_hours": {
+                                    "hours": 72,
+                                    "minutes": 0
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ],
+    "positions": [
+        {
+            "id": "pos-1750256177744",
+            "name": "Professeurs",
+            "description": "Enseignants de l'établissement.",
+            "created_at": 1750256177744,
+            "updated_at": 1750256177744
+        }
+    ],
+    "employees": [
+        {
+            "first_name": "Amadou",
+            "sure_name": "",
+            "last_name": "Dembélé",
+            "name_complet": "Amadou Dembélé",
+            "postes": [
+                "Professeurs"
+            ],
+            "sexe": "M",
+            "proffesseur_config": {
+                "is_permanent": false,
+                "speciality": "Généraliste",
+                "salaire_monthly": 0,
+                "salaire_hourly": 1000
+            },
+            "others_employe_config": {
+                "salaire_monthly": 0
+            },
+            "classes": [
+                "7--1750239538400",
+                "8--1750239538400"
+            ],
+            "birth_date": "2002-01-18",
+            "contact": "788676856",
+            "matricule": "",
+            "status": "actif",
+            "service_started_at": "2025-01-18",
+            "service_ended_at": "",
+            "added_at": 1750256260989,
+            "updated_at": 1750256260989,
+            "id": "emp-1750256260989-430"
+        },
+        {
+            "first_name": "Samba",
+            "sure_name": "",
+            "last_name": "Diallo",
+            "name_complet": "Samba Diallo",
+            "postes": [
+                "Professeurs"
+            ],
+            "sexe": "M",
+            "proffesseur_config": {
+                "is_permanent": true,
+                "speciality": "LHG",
+                "salaire_monthly": "100000",
+                "salaire_hourly": 0
+            },
+            "others_employe_config": {
+                "salaire_monthly": 0
+            },
+            "classes": [
+                "8--1750239538400",
+                "7--1750239538400"
+            ],
+            "birth_date": "2000-12-12",
+            "contact": "89876656",
+            "matricule": "",
+            "status": "actif",
+            "service_started_at": "2025-11-12",
+            "service_ended_at": "",
+            "added_at": 1750295174915,
+            "updated_at": 1750295174915,
+            "id": "emp-1750295174915-689"
+        }
+    ]
+}
