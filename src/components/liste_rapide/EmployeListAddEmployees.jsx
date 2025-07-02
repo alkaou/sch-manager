@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { X, Search, Check, CheckSquare, Square } from "lucide-react";
+import { X, Search, Check, CheckSquare, Square, User } from "lucide-react";
 import { translate } from "./liste_rapide_translator";
 import { useLanguage } from "../contexts";
 import { return_prof_trans } from "../employes/utils";
@@ -170,10 +170,14 @@ const EmployeListAddEmployees = ({
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
               className={`w-full p-2 border ${borderColor} rounded-lg ${inputBgColor} ${textClass}`}
-              title="Filtrer par statut"
+              title={translate("filter_by_status", language)}
             >
-              <option value="actif">Employés actifs</option>
-              <option value="inactif">Employés inactifs</option>
+              <option value="actif">
+                {translate("active_employees", language)}
+              </option>
+              <option value="inactif">
+                {translate("inactive_employees", language)}
+              </option>
             </select>
           </div>
         </div>
@@ -187,25 +191,26 @@ const EmployeListAddEmployees = ({
                 className={`p-2 rounded-lg mr-2 ${buttonSecondary} flex items-center`}
                 title={
                   selectedEmployees.length === filteredEmployees.length &&
-                  filteredEmployees.length > 0
-                    ? "Désélectionner tout"
-                    : "Sélectionner tout"
+                    filteredEmployees.length > 0
+                    ? translate("deselect_all", language)
+                    : translate("select_all", language)
                 }
               >
                 {selectedEmployees.length === filteredEmployees.length &&
-                filteredEmployees.length > 0 ? (
+                  filteredEmployees.length > 0 ? (
                   <CheckSquare size={20} className="mr-2" />
                 ) : (
                   <Square size={20} className="mr-2" />
                 )}
                 {selectedEmployees.length === filteredEmployees.length &&
-                filteredEmployees.length > 0
-                  ? "Désélectionner tout"
-                  : "Sélectionner tout"}
+                  filteredEmployees.length > 0
+                  ? translate("deselect_all", language)
+                  : translate("select_all", language)}
               </button>
               <span className={`${textClass}`}>
-                {selectedEmployees.length} employé(s) sélectionné(s) sur{" "}
-                {filteredEmployees.length} affiché(s)
+                {selectedEmployees.length}{" "}
+                {translate("employees_selected", language)}{" "}
+                {filteredEmployees.length} {translate("displayed", language)}
               </span>
             </div>
           </div>
@@ -219,53 +224,42 @@ const EmployeListAddEmployees = ({
               return (
                 <motion.div
                   key={employee.id}
-                  className={`${
-                    theme === "dark" ? "bg-gray-700" : "bg-gray-50"
-                  } rounded-lg p-4 cursor-pointer ${
-                    isSelected
+                  className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-50"
+                    } rounded-lg p-4 cursor-pointer ${isSelected
                       ? theme === "dark"
                         ? "ring-2 ring-blue-500"
                         : "ring-2 ring-blue-500"
                       : ""
-                  }`}
+                    }`}
                   onClick={() => handleSelectEmployee(employee)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-start">
                     <div
-                      className={`p-2 rounded-full ${
-                        isSelected
-                          ? "bg-blue-500"
-                          : theme === "dark"
+                      className={`p-2 rounded-full ${isSelected
+                        ? "bg-blue-500"
+                        : theme === "dark"
                           ? "bg-gray-600"
                           : "bg-gray-200"
-                      } mr-3`}
+                        } mr-3`}
                     >
                       {isSelected ? (
                         <Check size={20} className="text-white" />
                       ) : (
-                        <div className="w-5 h-5"></div>
+                        <User size={20} className="text-blue-500" />
                       )}
                     </div>
                     <div className="flex-1">
                       <h3 className={`font-semibold ${textClass}`}>
                         {employee.name_complet}
                       </h3>
-                      <p
-                        className={`text-sm ${
-                          theme === "dark" ? "text-gray-300" : "text-gray-500"
-                        }`}
-                      >
-                        {employee.postes.join(", ")}
-                      </p>
                       {employee.matricule && (
                         <p
-                          className={`text-sm ${
-                            theme === "dark" ? "text-gray-300" : "text-gray-500"
-                          }`}
+                          className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-500"
+                            }`}
                         >
-                          Matricule: {employee.matricule}
+                          {translate("matricule", language)}: {employee.matricule}
                         </p>
                       )}
                       <div className="mt-1 flex flex-wrap gap-1">
@@ -274,7 +268,7 @@ const EmployeListAddEmployees = ({
                             key={idx}
                             className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                           >
-                            {poste}
+                            {return_prof_trans(poste, language)}
                           </span>
                         ))}
                       </div>
@@ -286,9 +280,11 @@ const EmployeListAddEmployees = ({
 
             {filteredEmployees.length === 0 && (
               <div className={`col-span-3 text-center p-8 ${textClass}`}>
-                <p className="text-lg">Aucun employé trouvé</p>
+                <p className="text-lg">
+                  {translate("no_employees_found", language)}
+                </p>
                 <p className="opacity-75">
-                  Essayez de modifier vos filtres de recherche
+                  {translate("try_modify_filters", language)}
                 </p>
               </div>
             )}
@@ -304,22 +300,21 @@ const EmployeListAddEmployees = ({
             className={`${buttonSecondary} px-4 py-2 rounded-lg`}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title="Annuler et fermer"
+            title={translate("cancel_and_close", language)}
           >
-            Annuler
+            {translate("cancel", language)}
           </motion.button>
           <motion.button
             onClick={handleAddEmployees}
             disabled={selectedEmployees.length === 0}
-            className={`${
-              selectedEmployees.length > 0 ? buttonSuccess : "bg-green-400"
-            } px-4 py-2 rounded-lg text-white flex items-center`}
+            className={`${selectedEmployees.length > 0 ? buttonSuccess : "bg-green-400"
+              } px-4 py-2 rounded-lg text-white flex items-center`}
             whileHover={selectedEmployees.length > 0 ? { scale: 1.05 } : {}}
             whileTap={selectedEmployees.length > 0 ? { scale: 0.95 } : {}}
-            title={`Ajouter ${selectedEmployees.length} employé(s) à la liste`}
+            title={`${translate("add", language)} ${selectedEmployees.length} ${translate("employees_added_to_list", language)}`}
           >
             <Check size={20} className="mr-2" />
-            Ajouter {selectedEmployees.length} employé(s)
+            {translate("add", language)} {selectedEmployees.length} {translate("employees_or_employee", language)}
           </motion.button>
         </div>
       </motion.div>

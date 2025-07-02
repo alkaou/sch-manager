@@ -172,7 +172,7 @@ const translations = {
   filters_actifs: {
     Français: "Filtres actifs",
     Anglais: "Filters actives",
-    Bambara: "Minnuw bɛ baarala sisan",
+    Bambara: "Minnu bɛ baarala sisan",
   },
   search_notify: {
     Français: "Rechercher...",
@@ -520,7 +520,7 @@ const translations = {
   active_employees: {
     Français: "Employés actifs",
     Anglais: "Active Employees",
-    Bambara: "Baarakɛlaw minnuw bɛ baara la",
+    Bambara: "Baarakɛlaw minnu bɛ baara la",
   },
   total_active_employees: {
     Français: "Total des employés actifs",

@@ -151,7 +151,8 @@ const EmployeeForm = ({
     const validationErrors = validateEmployee(
       dataToSubmit,
       translate,
-      language
+      language,
+      setFlashMessage
     );
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -202,8 +203,8 @@ const EmployeeForm = ({
 
   const _text_color =
     app_bg_color === gradients[1] ||
-    app_bg_color === gradients[2] ||
-    theme === "dark"
+      app_bg_color === gradients[2] ||
+      theme === "dark"
       ? text_color
       : "text-gray-700";
 
@@ -274,22 +275,20 @@ const EmployeeForm = ({
             <div className="flex border-b border-gray-200">
               <button
                 onClick={() => setActiveSection("general")}
-                className={`px-4 py-2 font-medium ${
-                  activeSection === "general"
+                className={`px-4 py-2 font-medium ${activeSection === "general"
                     ? `${tabActiveBg} text-white`
                     : `${tabInactiveBg} ${_text_color}`
-                }`}
+                  }`}
               >
                 {translate("general_information", language)}
               </button>
               {formData.postes.includes("Professeurs") && (
                 <button
                   onClick={() => setActiveSection("professor")}
-                  className={`px-4 py-2 font-medium ${
-                    activeSection === "professor"
+                  className={`px-4 py-2 font-medium ${activeSection === "professor"
                       ? `${tabActiveBg} text-white`
                       : `${tabInactiveBg} ${_text_color}`
-                  }`}
+                    }`}
                 >
                   {translate("professor_configuration", language)}
                 </button>
@@ -297,11 +296,10 @@ const EmployeeForm = ({
               {formData.postes.some((pos) => pos !== "Professeurs") && (
                 <button
                   onClick={() => setActiveSection("other")}
-                  className={`px-4 py-2 font-medium ${
-                    activeSection === "other"
+                  className={`px-4 py-2 font-medium ${activeSection === "other"
                       ? `${tabActiveBg} text-white`
                       : `${tabInactiveBg} ${_text_color}`
-                  }`}
+                    }`}
                 >
                   {translate("other_positions_configuration", language)}
                 </button>
@@ -381,11 +379,10 @@ const EmployeeForm = ({
                           <AutocompleteInput
                             suggestions={suggestNames}
                             value={formData.first_name}
-                            placeholder={`${
-                              language === "Bambara"
+                            placeholder={`${language === "Bambara"
                                 ? "MI : Fatumata"
                                 : "EX : Fatoumata"
-                            }`}
+                              }`}
                             inputClass={inputClass}
                             onChange={(e) =>
                               handleChange({
@@ -418,11 +415,10 @@ const EmployeeForm = ({
                           <AutocompleteInput
                             suggestions={suggestNames}
                             value={formData.sure_name || ""}
-                            placeholder={`${
-                              language === "Bambara"
+                            placeholder={`${language === "Bambara"
                                 ? "MI : Yacuba"
                                 : "EX : Yacouba"
-                            }`}
+                              }`}
                             inputClass={inputClass}
                             onChange={(e) =>
                               handleChange({
@@ -446,11 +442,10 @@ const EmployeeForm = ({
                           <AutocompleteInput
                             suggestions={suggestLastNames}
                             value={formData.last_name}
-                            placeholder={`${
-                              language === "Bambara"
+                            placeholder={`${language === "Bambara"
                                 ? "MI : Danbele"
                                 : "EX : Dembélé"
-                            }`}
+                              }`}
                             inputClass={inputClass}
                             onChange={(e) =>
                               handleChange({
@@ -523,8 +518,8 @@ const EmployeeForm = ({
                             value={
                               formData.birth_date
                                 ? new Date(formData.birth_date)
-                                    .toISOString()
-                                    .split("T")[0]
+                                  .toISOString()
+                                  .split("T")[0]
                                 : ""
                             }
                             onChange={handleChange}
@@ -555,9 +550,8 @@ const EmployeeForm = ({
                             name="contact"
                             value={formData.contact}
                             onChange={handleChange}
-                            placeholder={`${
-                              language === "Bambara" ? "MI" : "EX"
-                            } : +223 70 00 00 00`}
+                            placeholder={`${language === "Bambara" ? "MI" : "EX"
+                              } : +223 70 00 00 00`}
                             className={inputClass}
                           />
                           {errors.contact && (
@@ -584,9 +578,8 @@ const EmployeeForm = ({
                             name="matricule"
                             value={formData.matricule || ""}
                             onChange={handleChange}
-                            placeholder={`${
-                              language === "Bambara" ? "MI" : "EX"
-                            } : MAT12345`}
+                            placeholder={`${language === "Bambara" ? "MI" : "EX"
+                              } : MAT12345`}
                             className={inputClass}
                           />
                         </div>
@@ -648,8 +641,8 @@ const EmployeeForm = ({
                             value={
                               formData.service_started_at
                                 ? new Date(formData.service_started_at)
-                                    .toISOString()
-                                    .split("T")[0]
+                                  .toISOString()
+                                  .split("T")[0]
                                 : ""
                             }
                             onChange={handleChange}
@@ -680,8 +673,8 @@ const EmployeeForm = ({
                             value={
                               formData.service_ended_at
                                 ? new Date(formData.service_ended_at)
-                                    .toISOString()
-                                    .split("T")[0]
+                                  .toISOString()
+                                  .split("T")[0]
                                 : ""
                             }
                             onChange={handleChange}
@@ -756,8 +749,8 @@ const EmployeeForm = ({
                                         formData.classes || [];
                                       const newClasses = isSelected
                                         ? currentClasses.filter(
-                                            (id) => id !== classId
-                                          )
+                                          (id) => id !== classId
+                                        )
                                         : [...currentClasses, classId];
 
                                       setFormData((prev) => ({
@@ -1004,11 +997,10 @@ const EmployeeForm = ({
                   type="button"
                   onClick={onClose}
                   title={translate("cancel", language)}
-                  className={`px-4 py-2 rounded-md ${
-                    theme === "dark"
+                  className={`px-4 py-2 rounded-md ${theme === "dark"
                       ? "bg-gray-700 hover:bg-gray-600"
                       : "bg-gray-200 hover:bg-gray-300"
-                  } ${_text_color}`}
+                    } ${_text_color}`}
                 >
                   {translate("cancel", language)}
                 </motion.button>
@@ -1017,11 +1009,10 @@ const EmployeeForm = ({
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   disabled={loading}
-                  className={`px-4 py-2 rounded-md text-white ${
-                    loading
+                  className={`px-4 py-2 rounded-md text-white ${loading
                       ? "bg-gray-400 cursor-not-allowed"
                       : buttonPrimaryColor
-                  }`}
+                    }`}
                 >
                   {loading ? (
                     <span className="flex items-center">

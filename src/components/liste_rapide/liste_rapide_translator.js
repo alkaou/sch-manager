@@ -102,17 +102,22 @@ const translations = {
   save: {
     Français: "Enregistrer",
     Anglais: "Save",
-    Bambara: "Maradon",
+    Bambara: "A mara",
   },
   save_new_name: {
     Français: "Enregistrer le nouveau nom",
     Anglais: "Save New Name",
-    Bambara: "Tɔgɔ kura maradon",
+    Bambara: "Tɔgɔ kura a mara",
   },
   cancel: {
     Français: "Annuler",
     Anglais: "Cancel",
     Bambara: "A dabila",
+  },
+  cancel_and_close: {
+    Français: "Annuler et fermer",
+    Anglais: "Cancel and close",
+    Bambara: "A dabila ni ka datugu",
   },
   cancel_rename: {
     Français: "Annuler le renommage",
@@ -158,19 +163,34 @@ const translations = {
     Anglais: "No Employee Lists",
     Bambara: "Baarakɛlaw lisi foyi tɛ",
   },
+  no_list_available: {
+    Français: "Aucune liste disponible",
+    Anglais: "No lists available",
+    Bambara: "Lisi foyi tɛɲin",
+  },
   add_students_button: {
     Français: "Ajouter des élèves",
     Anglais: "Add students",
     Bambara: "Kalandenw fara",
+  },
+  add: {
+    Français: "Ajouter",
+    Anglais: "Add",
+    Bambara: "A Fara",
   },
   add_employees_button: {
     Français: "Ajouter des employés",
     Anglais: "Add employees",
     Bambara: "Baarakɛlaw fara",
   },
+  add_employees_indication_msg: {
+    Français: `Créez une nouvelle liste en cliquant sur le bouton "Nouvelle liste"`,
+    Anglais: `Create a new list by clicking on the "New list" button`,
+    Bambara: `"Lisi kura" Butɔn digi walasa ka lisi kura dɔ labɛn`,
+  },
   add_employees_text: {
     Français: "Ajouter des employés à la liste",
-    Anglais: "Add employees to list", 
+    Anglais: "Add employees to list",
     Bambara: "Baarakɛlaw fara lisi kan",
   },
   click_to_add_students: {
@@ -204,12 +224,27 @@ const translations = {
   displayed: {
     Français: "affiché(s)",
     Anglais: "displayed",
-    Bambara: "jiralen",
+    Bambara: "jiralen(w) na",
   },
   employees_selected: {
     Français: "employé(s) sélectionné(s) sur",
     Anglais: "employee(s) selected out of",
-    Bambara: "baarakɛla sugandilen ka bɔ",
+    Bambara: "baarakɛla(w) sugandila ka bɔ",
+  },
+  employees_or_employee: {
+    Français: "employé(s)",
+    Anglais: "employee(s)",
+    Bambara: "baarakɛla(w)",
+  },
+  active_employees: {
+    Français: "Employés actifs",
+    Anglais: "Active Employees",
+    Bambara: "Baarakɛla minnu bɛ baara la",
+  },
+  inactive_employees: {
+    Français: "Employés inactifs",
+    Anglais: "Inactive Employees",
+    Bambara: "Baarakɛla minnu ye baara bila",
   },
 
   // Confirmation dialog
@@ -218,13 +253,21 @@ const translations = {
     Anglais: "Confirm Deletion",
     Bambara: "Jɔsili jɛtigɛ",
   },
-  confirm_delete_list_message: {
+  confirm_delete_list_message_1: {
     Français:
-      "Êtes-vous sûr de vouloir supprimer la liste '{listName}' ? Cette action ne peut pas être annulée.",
+      "Êtes-vous sûr de vouloir supprimer la liste",
     Anglais:
-      "Are you sure you want to delete the list '{listName}'? This action cannot be undone.",
+      "Are you sure you want to delete the list",
     Bambara:
-      "I dalen don i bɛ lisi '{listName}' jɔsi? Nin baara tɛ se ka sɛgɛn kɔ.",
+      "I b'a fɛ ka ni lisi jɔsi sɛbɛ yɛrɛ la wa",
+  },
+  confirm_delete_list_message_2: {
+    Français:
+      "Cette action ne peut pas être annulée.",
+    Anglais:
+      "This action cannot be undone.",
+    Bambara:
+      "Nin baara tɛ se ka sɛgɛn kɔ.",
   },
 
   // Additional keys
@@ -232,6 +275,11 @@ const translations = {
     Français: "Ouvrir",
     Anglais: "Open",
     Bambara: "A dayɛlɛ",
+  },
+  open_liste: {
+    Français: "Ouvrir la liste",
+    Anglais: "Open the list",
+    Bambara: "lisi dayɛlɛ",
   },
   rename_list: {
     Français: "Renommer la liste",
@@ -312,11 +360,6 @@ const translations = {
     Anglais: "students selected of",
     Bambara: "kalandenw sugandilen ka bɔ",
   },
-  displayed: {
-    Français: "affichés",
-    Anglais: "displayed",
-    Bambara: "jiralen",
-  },
   no_assigned_class: {
     Français: "Pas de classe assignée",
     Anglais: "No assigned class",
@@ -325,12 +368,17 @@ const translations = {
   matricule: {
     Français: "Matricule",
     Anglais: "ID Number",
-    Bambara: "Tɔgɔ sɛbɛnni nimɔrɔ",
+    Bambara: "Matirikili",
   },
   add_count_students: {
     Français: "Ajouter {count} élève(s)",
     Anglais: "Add {count} student(s)",
     Bambara: "Kalanden {count} fara",
+  },
+  students_or_student: {
+    Français: "élève(s)",
+    Anglais: "student(s)",
+    Bambara: "kalanden(w)",
   },
 
   // Textes généraux de la liste rapide
@@ -341,23 +389,13 @@ const translations = {
   },
   student_list: {
     Français: "Liste d'Élèves",
-    Anglais: "Student List",
-    Bambara: "Kalanden Lisi",
+    Anglais: "Students List",
+    Bambara: "Kalandenw Lisi",
   },
   employee_list: {
     Français: "Liste d'Employés",
     Anglais: "Employee List",
     Bambara: "Baarakɛlaw Lisi",
-  },
-  create_new_list: {
-    Français: "Créer une nouvelle liste",
-    Anglais: "Create New List",
-    Bambara: "Lisi kura dilan",
-  },
-  edit_list: {
-    Français: "Modifier la liste",
-    Anglais: "Edit List",
-    Bambara: "Lisi labɛn",
   },
   preview: {
     Français: "Aperçu",
@@ -367,7 +405,7 @@ const translations = {
   save: {
     Français: "Enregistrer",
     Anglais: "Save",
-    Bambara: "Maradon",
+    Bambara: "A mara",
   },
   cancel: {
     Français: "Annuler",
@@ -500,6 +538,11 @@ const translations = {
     Anglais: "Filter by position",
     Bambara: "Woloma ni baara ye",
   },
+  filter_by_status: {
+    Français: "Filtrer par Statut",
+    Anglais: "Filter by Status",
+    Bambara: "Woloma ni Cogoya ye",
+  },
   all_postes: {
     Français: "Tous les postes",
     Anglais: "All positions",
@@ -519,6 +562,11 @@ const translations = {
     Français: "Toutes les classes",
     Anglais: "All Classes",
     Bambara: "Kalankɔnɔna bɛɛ",
+  },
+  all: {
+    Français: "Toutes",
+    Anglais: "All",
+    Bambara: "A bɛɛ",
   },
   all_grades: {
     Français: "Tous les niveaux",
@@ -564,6 +612,11 @@ const translations = {
     Français: "Aucun employé trouvé",
     Anglais: "No Employees Found",
     Bambara: "Baarakɛla si ma sɔrɔ",
+  },
+  try_modify_filters: {
+    Français: "Essayez de modifier vos filtres de recherche",
+    Anglais: "Try to modify your filters of search",
+    Bambara: "A filɛ tan i ka wolomali cogo falen tan",
   },
 
   // Éditeur de liste
@@ -701,7 +754,7 @@ const translations = {
   confirm_delete_title: {
     Français: "Confirmer la suppression",
     Anglais: "Confirm Deletion",
-    Bambara: "Jɔsili jɛtigɛ",
+    Bambara: "Jɔsili yamaruya",
   },
   required_field: {
     Français: "Ce champ est obligatoire",
@@ -861,7 +914,7 @@ const translations = {
   list_saved_successfully: {
     Français: "Liste sauvegardée avec succès",
     Anglais: "List saved successfully",
-    Bambara: "Lisi maradonnen don ni ɲɛtaa ye",
+    Bambara: "Lisi mara la ni ɲɛtaa ye",
   },
   list_deleted_successfully: {
     Français: "Liste supprimée avec succès",
@@ -871,7 +924,7 @@ const translations = {
   error_saving_list: {
     Français: "Erreur lors de la sauvegarde de la liste",
     Anglais: "Error saving list",
-    Bambara: "Lisi maradonni la filɛli kɛra",
+    Bambara: "Lisi marali la fili kɛra",
   },
   error_deleting_list: {
     Français: "Erreur lors de la suppression de la liste",
@@ -906,9 +959,9 @@ const translations = {
     Bambara: "Kalanden kura foyi ma fara lisi kan",
   },
   employees_added_to_list: {
-    Français: "{count} employé(s) ajouté(s) à la liste",
-    Anglais: "{count} employee(s) added to the list",
-    Bambara: "Baarakɛla {count} farala lisi kan",
+    Français: "employé(s) ajouté(s) à la liste",
+    Anglais: "employee(s) added to the list",
+    Bambara: "baarakɛla farala lisi kan",
   },
   no_new_employees_added: {
     Français: "Aucun nouvel employé ajouté à la liste",
@@ -991,7 +1044,7 @@ const translations = {
   save_list: {
     Français: "Sauvegarder la liste",
     Anglais: "Save list",
-    Bambara: "Lisi maradon",
+    Bambara: "Lisi mara la",
   },
   download_pdf: {
     Français: "Télécharger la liste en PDF",

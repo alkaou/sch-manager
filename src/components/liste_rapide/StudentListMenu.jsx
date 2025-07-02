@@ -4,6 +4,8 @@ import { Plus, Edit, Trash, FileText, Clock, Calendar, Users, Briefcase } from '
 import ActionConfirmePopup from '../ActionConfirmePopup.jsx';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { translate } from './liste_rapide_translator';
+import { useLanguage } from '../contexts';
 
 const StudentListMenu = ({
   studentLists,
@@ -18,6 +20,7 @@ const StudentListMenu = ({
   const [editingName, setEditingName] = useState(null);
   const [newName, setNewName] = useState('');
   const [filterType, setFilterType] = useState('all'); // 'all', 'students', 'employees'
+  const { language } = useLanguage();
 
   // Sort lists by updatedAt (most recent first)
   const sortedLists = [...studentLists].sort((a, b) =>
@@ -66,21 +69,21 @@ const StudentListMenu = ({
         locale: fr
       });
     } catch (error) {
-      return "Date inconnue";
+      return translate("unknown_date", language);
     }
   };
 
   // Get the list type icon and label
   const getListTypeInfo = (list) => {
     if (list.listType === 'employees') {
-      return { 
-        icon: <Briefcase size={16} className="mr-1" />, 
-        label: "Liste d'employés" 
+      return {
+        icon: <Briefcase size={16} className="mr-1" />,
+        label: translate("employee_list", language)
       };
     } else {
-      return { 
-        icon: <Users size={16} className="mr-1" />, 
-        label: "Liste d'élèves" 
+      return {
+        icon: <Users size={16} className="mr-1" />,
+        label: translate("student_list", language)
       };
     }
   };
@@ -94,54 +97,54 @@ const StudentListMenu = ({
   const filterButtonActive = "bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-white";
   const filterButtonInactive = "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600";
   const some_text_color = theme === "dark" ? textClass : "text-gray-700";
-  
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className={`text-2xl font-bold ${textClass}`}>Gestion des listes</h1>
+          <h1 className={`text-2xl font-bold ${textClass}`}>{translate("list_management", language)}</h1>
           <p className={`${textClass} opacity-75`}>
-            {studentListsCount} liste(s) d'élèves, {employeeListsCount} liste(s) d'employés
+            {studentListsCount} {translate("student_lists_count", language)}, {employeeListsCount} {translate("employee_lists_count", language)}
           </p>
         </div>
-        
+
         <div className="flex flex-wrap gap-4">
           <div className="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
             <button
               className={`px-3 py-2 flex items-center ${filterType === 'all' ? filterButtonActive : filterButtonInactive}`}
               onClick={() => setFilterType('all')}
-              title="Afficher toutes les listes"
+              title={translate("show_all_lists", language)}
             >
               <FileText size={16} className="mr-1" />
-              Toutes
+              {translate("all", language)}
             </button>
             <button
               className={`px-3 py-2 flex items-center ${filterType === 'students' ? filterButtonActive : filterButtonInactive}`}
               onClick={() => setFilterType('students')}
-              title="Afficher les listes d'élèves"
+              title={translate("show_student_lists", language)}
             >
               <Users size={16} className="mr-1" />
-              Élèves
+              {translate("students", language)}
             </button>
             <button
               className={`px-3 py-2 flex items-center ${filterType === 'employees' ? filterButtonActive : filterButtonInactive}`}
               onClick={() => setFilterType('employees')}
-              title="Afficher les listes d'employés"
+              title={translate("show_employee_lists", language)}
             >
               <Briefcase size={16} className="mr-1" />
-              Employés
+              {translate("employees", language)}
             </button>
           </div>
-          
+
           <motion.button
             className={`${buttonPrimary} text-white px-4 py-2 rounded-lg flex items-center space-x-2`}
             onClick={onCreateNew}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title="Créer une nouvelle liste"
+            title={translate("create_new_list", language)}
           >
             <Plus size={20} />
-            <span>Nouvelle liste</span>
+            <span>{translate("create_new_list", language)}</span>
           </motion.button>
         </div>
       </div>
@@ -150,25 +153,25 @@ const StudentListMenu = ({
         <div className={`${cardBgColor} rounded-lg p-8 text-center ${borderColor} border`}>
           <FileText size={48} className="mx-auto mb-4 text-gray-400" />
           <h2 className={`text-xl font-semibold mb-2 ${textClass}`}>
-            {filterType === 'students' 
-              ? "Aucune liste d'élèves"
+            {filterType === 'students'
+              ? translate("no_students", language)
               : filterType === 'employees'
-                ? "Aucune liste d'employés"
-                : "Aucune liste disponible"
+                ? translate("no_employees", language)
+                : translate("no_list_available", language)
             }
           </h2>
           <p className={`opacity-75 mb-6 ${textClass}`}>
-            Créez une nouvelle liste en cliquant sur le bouton "Nouvelle liste"
+            {translate("add_employees_indication_msg", language)}
           </p>
           <motion.button
             className={`${buttonPrimary} text-white px-4 py-2 rounded-lg flex items-center space-x-2 mx-auto`}
             onClick={onCreateNew}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            title="Créer une nouvelle liste"
+            title={translate("create_new_list", language)}
           >
             <Plus size={20} />
-            <span>Nouvelle liste</span>
+            <span>{translate("new_list", language)}</span>
           </motion.button>
         </div>
       ) : (
@@ -176,7 +179,7 @@ const StudentListMenu = ({
           {filteredLists.map((list) => {
             const listTypeInfo = getListTypeInfo(list);
             const itemCount = list.listType === 'employees' ? list.employees?.length || 0 : list.students?.length || 0;
-            
+
             return (
               <motion.div
                 key={list.id}
@@ -192,11 +195,11 @@ const StudentListMenu = ({
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         className={`w-full px-3 py-2 rounded-lg border ${borderColor} ${theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-gray-700"} focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                        placeholder="Nom de la liste"
+                        placeholder={translate("list_name", language)}
                         autoFocus
                       />
                       {!newName.trim() && (
-                        <p className="text-red-500 text-sm mt-1">Le nom ne peut pas être vide</p>
+                        <p className="text-red-500 text-sm mt-1">{translate("name_cant_be_empty", language)}</p>
                       )}
                       <div className="flex space-x-3 mt-3">
                         <motion.button
@@ -205,18 +208,18 @@ const StudentListMenu = ({
                           className={`${newName.trim() ? buttonPrimary : "bg-gray-400"} text-white px-4 py-2 rounded-lg flex-1 font-medium flex justify-center items-center`}
                           whileHover={newName.trim() ? { scale: 1.03 } : {}}
                           whileTap={newName.trim() ? { scale: 0.97 } : {}}
-                          title="Enregistrer le nouveau nom"
+                          title={translate("save_new_name", language)}
                         >
-                          Enregistrer
+                          {translate("save", language)}
                         </motion.button>
                         <motion.button
                           onClick={() => setEditingName(null)}
                           className={`${buttonSecondary} px-4 py-2 rounded-lg flex-1 font-medium flex justify-center items-center`}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          title="Annuler le renommage"
+                          title={translate("cancel_rename", language)}
                         >
-                          Annuler
+                          {translate("cancel", language)}
                         </motion.button>
                       </div>
                     </div>
@@ -232,24 +235,24 @@ const StudentListMenu = ({
                   <div className="flex flex-col space-y-2 mb-4">
                     <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                       <Clock size={14} className="mr-1.5 flex-shrink-0" />
-                      <span className="truncate">Modifié {formatDate(list.updatedAt)}</span>
+                      <span className="truncate">{translate("modified", language)} {formatDate(list.updatedAt)}</span>
                     </div>
 
                     <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                       <Calendar size={14} className="mr-1.5 flex-shrink-0" />
-                      <span className="truncate">Créé le {new Date(list.createdAt).toLocaleDateString()}</span>
+                      <span className="truncate">{translate("created_on", language)} {new Date(list.createdAt).toLocaleDateString()}</span>
                     </div>
-                    
+
                     <div className={`flex items-center text-sm font-medium ${theme === "dark" ? "bg-gray-700/70" : "bg-gray-100"} px-2.5 py-1 rounded-full w-fit`}>
                       {list.listType === 'employees' ? (
                         <>
                           <Briefcase size={14} className={`mr-1.5 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
-                          <span className={`${some_text_color}`}>{itemCount} employé(s)</span>
+                          <span className={`${some_text_color}`}>{itemCount} {translate("employees_or_employee", language)}</span>
                         </>
                       ) : (
                         <>
                           <Users size={14} className={`mr-1.5 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`} />
-                          <span className={`${some_text_color}`}>{itemCount} élève(s)</span>
+                          <span className={`${some_text_color}`}>{itemCount} {translate("students_or_student", language)}</span>
                         </>
                       )}
                     </div>
@@ -261,10 +264,10 @@ const StudentListMenu = ({
                       className={`${buttonPrimary} text-white px-3 py-2 rounded-lg flex items-center justify-center font-medium shadow-sm`}
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.97 }}
-                      title="Ouvrir la liste"
+                      title={translate("open_liste", language)}
                     >
                       <FileText size={16} className="mr-1.5" />
-                      Ouvrir
+                      {translate("open", language)}
                     </motion.button>
 
                     {editingName !== list.id ? (
@@ -274,7 +277,7 @@ const StudentListMenu = ({
                           className={`${buttonSecondary} px-3 py-2 rounded-lg flex items-center justify-center flex-1`}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          title="Renommer la liste"
+                          title={translate("rename_list", language)}
                         >
                           <Edit size={16} />
                         </motion.button>
@@ -287,7 +290,7 @@ const StudentListMenu = ({
                           className={`${buttonDanger} text-white px-3 py-2 rounded-lg flex items-center justify-center flex-1`}
                           whileHover={{ scale: 1.03 }}
                           whileTap={{ scale: 0.97 }}
-                          title="Supprimer la liste"
+                          title={translate("delete_list", language)}
                         >
                           <Trash size={16} />
                         </motion.button>
@@ -310,8 +313,8 @@ const StudentListMenu = ({
             setListToDelete(null);
           }}
           handleConfirmeAction={handleConfirmDelete}
-          title="Confirmer la suppression"
-          message={`Êtes-vous sûr de vouloir supprimer la liste "${listToDelete?.name}" ? Cette action est irréversible.`}
+          title={translate("confirm_delete_title", language)}
+          message={`${translate("confirm_delete_list_message_1", language)} "${listToDelete?.name}" ? ${translate("confirm_delete_list_message_2", language)}`}
           actionType="danger"
         />
       )}

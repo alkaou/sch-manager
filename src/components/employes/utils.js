@@ -66,7 +66,7 @@ export const getDefaultEmployee = () => ({
 });
 
 // Validate employee data
-export const validateEmployee = (employee, translate, language) => {
+export const validateEmployee = (employee, translate, language, setFlashMessage = null) => {
   const errors = {};
 
   // Required fields validation
@@ -99,6 +99,11 @@ export const validateEmployee = (employee, translate, language) => {
         "monthly_salary_must_be_positive",
         language
       );
+      setFlashMessage({
+        message: translate("monthly_salary_must_be_positive", language),
+        type: "error", // 'success', 'error', 'warning' ou 'info'
+        duration: 5000, // durée d'affichage en ms
+      });
     }
     if (
       !config.is_permanent &&
@@ -123,6 +128,11 @@ export const validateEmployee = (employee, translate, language) => {
         "monthly_salary_must_be_positive",
         language
       );
+      setFlashMessage({
+        message: translate("monthly_salary_must_be_positive", language),
+        type: "error", // 'success', 'error', 'warning' ou 'info'
+        duration: 5000, // durée d'affichage en ms
+      });
     }
   }
 
@@ -224,10 +234,10 @@ export const return_prof_trans = (positionName, language) => {
     positionName !== "Professeurs"
       ? positionName
       : language === "Anglais"
-      ? "Professors"
-      : language === "Bambara"
-      ? "Karamɔgɔw"
-      : "Professeurs";
+        ? "Professors"
+        : language === "Bambara"
+          ? "Karamɔgɔw"
+          : "Professeurs";
   return text_trans;
 };
 
@@ -240,8 +250,8 @@ export const return_prof_desc_trans = (
     positionNamename !== "Professeurs" || language === "Français"
       ? description
       : language === "Anglais"
-      ? "Professors of the school."
-      : "Kalanso karamɔgɔw.";
+        ? "Professors of the school."
+        : "Kalanso karamɔgɔw.";
   return _description;
 };
 
@@ -263,8 +273,8 @@ export const return_speciality_trans = (
     specialityName === "Généraliste"
       ? "generalist"
       : specialityName === "Autre"
-      ? "other"
-      : specialityName;
+        ? "other"
+        : specialityName;
   const text_trans = translate(speciality, language);
   return text_trans;
 };
