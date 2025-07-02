@@ -1,10 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { User, Edit, Trash, CheckCircle, XCircle, UserPlus, RefreshCw, ChevronRight, ChevronDown, Briefcase, Users, UserCheck } from 'lucide-react';
-import { useTheme, useFlashNotification, useLanguage } from '../contexts';
-import { deleteEmployee, activateEmployee, deactivateEmployee } from '../../utils/database_methods';
-import { formatDate, formatCurrency } from './utils';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  User,
+  Edit,
+  Trash,
+  CheckCircle,
+  XCircle,
+  UserPlus,
+  RefreshCw,
+  ChevronRight,
+  ChevronDown,
+  Briefcase,
+  Users,
+  UserCheck,
+} from "lucide-react";
+import { useTheme, useFlashNotification, useLanguage } from "../contexts";
+import {
+  deleteEmployee,
+  activateEmployee,
+  deactivateEmployee,
+} from "../../utils/database_methods";
+import {
+  formatDate,
+  formatCurrency,
+  return_prof_trans,
+  return_speciality_trans,
+} from "./utils";
 import { getClasseName } from "../../utils/helpers";
+import { translate } from "./employes_translator";
 
 const EmployeesList = ({
   employees,
@@ -13,7 +36,7 @@ const EmployeesList = ({
   onAddNew,
   refreshData,
   database,
-  loading
+  loading,
 }) => {
   const { text_color, theme, gradients, app_bg_color } = useTheme();
   const { setFlashMessage } = useFlashNotification();
@@ -23,7 +46,7 @@ const EmployeesList = ({
   const [confirmModal, setConfirmModal] = useState(null);
   const [localLoading, setLocalLoading] = useState(false);
   const [expandedClassRows, setExpandedClassRows] = useState({});
-  
+
   // Reset local loading when parent loading changes
   useEffect(() => {
     if (!loading) {
@@ -50,79 +73,91 @@ const EmployeesList = ({
 
   // Toggle expanded classes for a specific employee
   const toggleExpandClasses = (employeeId) => {
-    setExpandedClassRows(prev => ({
+    setExpandedClassRows((prev) => ({
       ...prev,
-      [employeeId]: !prev[employeeId]
+      [employeeId]: !prev[employeeId],
     }));
   };
 
   // Status operations
   const handleActivateSelected = () => {
     setConfirmModal({
-      type: 'activate',
-      title: 'Activer les employés',
-      message: 'Voulez-vous activer les employés sélectionnés?',
+      type: "activate",
+      title: translate("activate_employees", language),
+      message: translate("confirm_activate_selected_msg", language),
       onConfirm: async () => {
         try {
           setLocalLoading(true);
           for (const id of selected) {
-            await activateEmployee(id, database, setFlashMessage);
+            await activateEmployee(id, database, setFlashMessage, language);
           }
           setSelected([]);
           await refreshData();
         } catch (error) {
-          console.error('Error activating employees:', error);
+          console.error("Error activating employees:", error);
         } finally {
           setConfirmModal(null);
           setTimeout(() => setLocalLoading(false), 300);
         }
-      }
+      },
     });
   };
 
   const handleDeactivateSelected = () => {
     setConfirmModal({
-      type: 'deactivate',
-      title: 'Désactiver les employés',
-      message: 'Voulez-vous désactiver les employés sélectionnés?',
+      type: "deactivate",
+      title: translate("deactivate_employees", language),
+      message: translate("confirm_deactivate_selected_msg", language),
       onConfirm: async () => {
         try {
           setLocalLoading(true);
           for (const id of selected) {
-            await deactivateEmployee(id, database, setFlashMessage);
+            await deactivateEmployee(id, database, setFlashMessage, language);
           }
           setSelected([]);
           await refreshData();
         } catch (error) {
-          console.error('Error deactivating employees:', error);
+          console.error("Error deactivating employees:", error);
         } finally {
           setConfirmModal(null);
           setTimeout(() => setLocalLoading(false), 300);
         }
-      }
+      },
     });
   };
 
   const handleDeleteSelected = () => {
+    const deleteMessage =
+      language === "Français"
+        ? `Voulez-vous supprimer définitivement ${
+            selected.length > 1 ? "les" : "l'"
+          } employé${selected.length > 1 ? "s" : ""} sélectionné${
+            selected.length > 1 ? "s" : ""
+          }?`
+        : language === "Anglais"
+        ? `Do you want to permanently delete the selected employee${
+            selected.length > 1 ? "s" : ""
+          }?`
+        : "I b'a fɛ ka baara kɛla sugandilen ninnu jɔsi pewu wa?";
     setConfirmModal({
-      type: 'delete',
-      title: 'Supprimer les employés',
-      message: `Voulez-vous supprimer définitivement ${selected.length > 1 ? 'les' : 'l\''} employé${selected.length > 1 ? 's' : ''} sélectionné${selected.length > 1 ? 's' : ''}?`,
+      type: "delete",
+      title: translate("delete_employees", language),
+      message: deleteMessage,
       onConfirm: async () => {
         try {
           setLocalLoading(true);
           for (const id of selected) {
-            await deleteEmployee(id, database, setFlashMessage);
+            await deleteEmployee(id, database, setFlashMessage, language);
           }
           setSelected([]);
           await refreshData();
         } catch (error) {
-          console.error('Error deleting employees:', error);
+          console.error("Error deleting employees:", error);
         } finally {
           setConfirmModal(null);
           setTimeout(() => setLocalLoading(false), 300);
         }
-      }
+      },
     });
   };
 
@@ -136,34 +171,47 @@ const EmployeesList = ({
   };
 
   // Check if all selected employees are active or inactive
-  const allActive = selected.length > 0 && selected.every(id =>
-    employees.find(e => e.id === id)?.status === 'actif'
-  );
+  const allActive =
+    selected.length > 0 &&
+    selected.every(
+      (id) => employees.find((e) => e.id === id)?.status === "actif"
+    );
 
-  const allInactive = selected.length > 0 && selected.every(id =>
-    employees.find(e => e.id === id)?.status === 'inactif'
-  );
+  const allInactive =
+    selected.length > 0 &&
+    selected.every(
+      (id) => employees.find((e) => e.id === id)?.status === "inactif"
+    );
 
   // Calculate statistics
-  const activeEmployeesInPosition = employees.filter(e => e.status === 'actif').length;
-  const totalActiveEmployees = database?.employees?.filter(e => e.status === 'actif').length || 0;
+  const activeEmployeesInPosition = employees.filter(
+    (e) => e.status === "actif"
+  ).length;
+  const totalActiveEmployees =
+    database?.employees?.filter((e) => e.status === "actif").length || 0;
   const totalPositions = database?.positions?.length || 0;
 
   // Theme styling
-  const tableBgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
-  const tableHeaderBg = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100';
-  const tableBorderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
-  const tableRowHoverBg = theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200';
+  const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+  const tableHeaderBg = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
+  const tableBorderColor =
+    theme === "dark" ? "border-gray-700" : "border-gray-200";
+  const tableRowHoverBg =
+    theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200";
   const buttonDeleteColor = "bg-red-600 hover:bg-red-700 text-white";
   const buttonSuccessColor = "bg-green-600 hover:bg-green-700 text-white";
   const buttonWarningColor = "bg-yellow-500 hover:bg-yellow-600 text-white";
   const buttonPrimaryColor = "bg-blue-600 hover:bg-blue-700 text-white";
-  const statsBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-blue-50';
-  const statsBorderColor = theme === 'dark' ? 'border-gray-600' : 'border-blue-200';
-  const statsIconColor = theme === 'dark' ? 'text-blue-400' : 'text-blue-500';
-  const _text_color = app_bg_color === gradients[1] ||
-      app_bg_color === gradients[2] ||
-      theme === "dark" ? text_color : "text-gray-700";
+  const statsBgColor = theme === "dark" ? "bg-gray-700" : "bg-blue-50";
+  const statsBorderColor =
+    theme === "dark" ? "border-gray-600" : "border-blue-200";
+  const statsIconColor = theme === "dark" ? "text-blue-400" : "text-blue-500";
+  const _text_color =
+    app_bg_color === gradients[1] ||
+    app_bg_color === gradients[2] ||
+    theme === "dark"
+      ? text_color
+      : "text-gray-700";
 
   // Animation variants
   const tableVariants = {
@@ -172,9 +220,9 @@ const EmployeesList = ({
       opacity: 1,
       transition: {
         duration: 0.3,
-        staggerChildren: 0.03
-      }
-    }
+        staggerChildren: 0.03,
+      },
+    },
   };
 
   const rowVariants = {
@@ -182,8 +230,8 @@ const EmployeesList = ({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.2 }
-    }
+      transition: { duration: 0.2 },
+    },
   };
 
   const modalVariants = {
@@ -192,16 +240,16 @@ const EmployeesList = ({
       opacity: 1,
       scale: 1,
       transition: {
-        type: 'spring',
+        type: "spring",
         damping: 25,
-        stiffness: 300
-      }
+        stiffness: 300,
+      },
     },
     exit: {
       opacity: 0,
       scale: 0.8,
-      transition: { duration: 0.15 }
-    }
+      transition: { duration: 0.15 },
+    },
   };
 
   const statsVariants = {
@@ -209,20 +257,26 @@ const EmployeesList = ({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.3 }
-    }
+      transition: { duration: 0.3 },
+    },
   };
 
   const handleRefreshData = async () => {
+    const success_message = translate("success_refresh_data", language);
     setLocalLoading(true);
     await refreshData();
+    setFlashMessage({
+      message: success_message,
+      type: "success",
+      duration: 5000,
+    });
     setTimeout(() => setLocalLoading(false), 300);
   };
 
   return (
     <div className={`relative ${_text_color} overflow-hidden`}>
       {/* Statistics display */}
-      <motion.div 
+      <motion.div
         className={`mb-6 rounded-lg ${statsBgColor} border ${statsBorderColor} p-4 shadow-md overflow-hidden`}
         variants={statsVariants}
         initial="hidden"
@@ -230,31 +284,44 @@ const EmployeesList = ({
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="flex items-center p-3 bg-opacity-40 bg-blue-500 bg-opacity-10 rounded-lg">
-            <div className={`p-3 rounded-full ${statsIconColor} bg-white bg-opacity-30 mr-4`}>
+            <div
+              className={`p-3 rounded-full ${statsIconColor} bg-white bg-opacity-30 mr-4`}
+            >
               <UserCheck size={24} />
             </div>
             <div>
-              <h4 className="text-sm font-medium opacity-70">Employés actifs ({position})</h4>
+              <h4 className="text-sm font-medium opacity-70">
+                {translate("active_employees", language)} (
+                {return_prof_trans(position, language)})
+              </h4>
               <p className="text-2xl font-bold">{activeEmployeesInPosition}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center p-3 bg-opacity-40 bg-green-500 bg-opacity-10 rounded-lg">
-            <div className={`p-3 rounded-full text-green-500 bg-white bg-opacity-30 mr-4`}>
+            <div
+              className={`p-3 rounded-full text-green-500 bg-white bg-opacity-30 mr-4`}
+            >
               <Users size={24} />
             </div>
             <div>
-              <h4 className="text-sm font-medium opacity-70">Total des employés actifs</h4>
+              <h4 className="text-sm font-medium opacity-70">
+                {translate("total_active_employees", language)}
+              </h4>
               <p className="text-2xl font-bold">{totalActiveEmployees}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center p-3 bg-opacity-70 bg-purple-500 bg-opacity-10 rounded-lg">
-            <div className={`p-3 rounded-full text-purple-500 bg-white bg-opacity-30 mr-4`}>
+            <div
+              className={`p-3 rounded-full text-purple-500 bg-white bg-opacity-30 mr-4`}
+            >
               <Briefcase size={24} />
             </div>
             <div>
-              <h4 className="text-sm font-medium opacity-70">Total des postes</h4>
+              <h4 className="text-sm font-medium opacity-70">
+                {translate("total_positions", language)}
+              </h4>
               <p className="text-2xl font-bold">{totalPositions}</p>
             </div>
           </div>
@@ -269,9 +336,12 @@ const EmployeesList = ({
           onClick={handleRefreshData}
           className={`p-2 rounded-full ${buttonPrimaryColor} shadow-md`}
           disabled={loading || localLoading}
-          title="Actualiser les données"
+          title={translate("refresh_data", language)}
         >
-          <RefreshCw size={20} className={(loading || localLoading) ? 'animate-spin' : ''} />
+          <RefreshCw
+            size={20}
+            className={loading || localLoading ? "animate-spin" : ""}
+          />
         </motion.button>
 
         {selected.length > 0 && (
@@ -281,7 +351,7 @@ const EmployeesList = ({
               whileTap={{ scale: 0.95 }}
               onClick={handleDeleteSelected}
               className={`p-2 rounded-full ${buttonDeleteColor} shadow-md`}
-              title="Supprimer les employés"
+              title={translate("delete_employees", language)}
             >
               <Trash size={20} />
             </motion.button>
@@ -292,7 +362,7 @@ const EmployeesList = ({
                 whileTap={{ scale: 0.95 }}
                 onClick={handleDeactivateSelected}
                 className={`p-2 rounded-full ${buttonWarningColor} shadow-md`}
-                title="Désactiver les employés"
+                title={translate("deactivate_employees", language)}
               >
                 <XCircle size={20} />
               </motion.button>
@@ -304,7 +374,7 @@ const EmployeesList = ({
                 whileTap={{ scale: 0.95 }}
                 onClick={handleActivateSelected}
                 className={`p-2 rounded-full ${buttonSuccessColor} shadow-md`}
-                title="Activer les employés"
+                title={translate("activate_employees", language)}
               >
                 <CheckCircle size={20} />
               </motion.button>
@@ -317,7 +387,7 @@ const EmployeesList = ({
                   whileTap={{ scale: 0.95 }}
                   onClick={handleActivateSelected}
                   className={`p-2 rounded-full ${buttonSuccessColor} shadow-md`}
-                  title="Activer les employés"
+                  title={translate("activate_employees", language)}
                 >
                   <CheckCircle size={20} />
                 </motion.button>
@@ -326,7 +396,7 @@ const EmployeesList = ({
                   whileTap={{ scale: 0.95 }}
                   onClick={handleDeactivateSelected}
                   className={`p-2 rounded-full ${buttonWarningColor} shadow-md`}
-                  title="Désactiver les employés"
+                  title={translate("deactivate_employees", language)}
                 >
                   <XCircle size={20} />
                 </motion.button>
@@ -339,7 +409,7 @@ const EmployeesList = ({
                 whileTap={{ scale: 0.95 }}
                 onClick={handleEditSelected}
                 className={`p-2 rounded-full ${buttonPrimaryColor} shadow-md`}
-                title="Modifier l'employé"
+                title={translate("update_employees", language)}
               >
                 <Edit size={20} />
               </motion.button>
@@ -352,14 +422,16 @@ const EmployeesList = ({
           whileTap={{ scale: 0.95 }}
           onClick={onAddNew}
           className={`p-2 rounded-full ${buttonSuccessColor} shadow-md`}
-          title="Ajouter un employé"
+          title={translate("add_employee", language)}
         >
           <UserPlus size={20} />
         </motion.button>
       </div>
 
       {/* Employees table */}
-      <div className={`rounded-lg scrollbar-custom overflow-x-auto shadow-lg border ${tableBorderColor}`}>
+      <div
+        className={`rounded-lg scrollbar-custom overflow-x-auto shadow-lg border ${tableBorderColor}`}
+      >
         <AnimatePresence mode="wait" initial={false}>
           {loading || localLoading ? (
             <motion.div
@@ -370,7 +442,9 @@ const EmployeesList = ({
               className="flex flex-col items-center justify-center py-12"
             >
               <div className="w-16 h-16 border-4 border-t-blue-500 border-b-blue-700 rounded-full animate-spin"></div>
-              <p className={`mt-4 text-lg ${_text_color}`}>Chargement des données...</p>
+              <p className={`mt-4 text-lg ${_text_color}`}>
+                {translate("loading_data", language)}
+              </p>
             </motion.div>
           ) : employees.length === 0 ? (
             <motion.div
@@ -382,16 +456,17 @@ const EmployeesList = ({
             >
               <User size={48} className={`${_text_color} opacity-40`} />
               <p className={`mt-4 text-lg ${_text_color}`}>
-                Aucun employé trouvé pour le poste "{position}"
+                {translate("post_not_found_data", language)} "{position}"
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={onAddNew}
+                title={translate("add_employee", language)}
                 className={`mt-4 px-4 py-2 rounded-md ${buttonPrimaryColor} shadow-md flex items-center`}
               >
                 <UserPlus size={20} className="mr-2" />
-                Ajouter un employé
+                {translate("add_employee", language)}
               </motion.button>
             </motion.div>
           ) : (
@@ -407,33 +482,69 @@ const EmployeesList = ({
                   <th className="w-10 py-3 px-4 text-left">
                     <input
                       type="checkbox"
-                      checked={selected.length === employees.length && employees.length > 0}
+                      checked={
+                        selected.length === employees.length &&
+                        employees.length > 0
+                      }
                       onChange={toggleSelectAll}
+                      title={translate("selected_employee", language)}
                       className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
                     />
                   </th>
-                  <th className="w-12 py-3 px-4 text-left">Photo</th>
-                  <th className="py-3 px-4 text-left">Nom complet</th>
-                  <th className="py-3 px-4 text-left">Sexe</th>
-                  <th className="py-3 px-4 text-left">Contact</th>
-                  <th className="py-3 px-4 text-left">Date de naissance</th>
-                  <th className="py-3 px-4 text-left">Matricule</th>
-                  <th className="py-3 px-4 text-left">Status</th>
-                  <th className="py-3 px-4 text-left">Postes</th>
-                  <th className="py-3 px-4 text-left">Début service</th>
-                  <th className="py-3 px-4 text-left">Fin service</th>
-                  {position === 'Professeurs' && (
+                  <th className="w-12 py-3 px-4 text-left">
+                    {translate("profile", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("name_complete", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("sexe", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("contact", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("date_of_birth", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("matricule", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("status", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("position", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("service_start", language)}
+                  </th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("service_end", language)}
+                  </th>
+                  {position === "Professeurs" && (
                     <>
-                      <th className="py-3 px-4 text-left">Type</th>
-                      <th className="py-3 px-4 text-left">Spécialité</th>
-                      <th className="py-3 px-4 text-left">Classes</th>
-                      <th className="py-3 px-4 text-left">Salaire</th>
+                      <th className="py-3 px-4 text-left">
+                        {translate("type", language)}
+                      </th>
+                      <th className="py-3 px-4 text-left">
+                        {translate("specialties", language)}
+                      </th>
+                      <th className="py-3 px-4 text-left">
+                        {translate("classes", language)}
+                      </th>
+                      <th className="py-3 px-4 text-left">
+                        {translate("salary", language)}
+                      </th>
                     </>
                   )}
-                  {position !== 'Professeurs' && (
-                    <th className="py-3 px-4 text-left">Salaire mensuel</th>
+                  {position !== "Professeurs" && (
+                    <th className="py-3 px-4 text-left">
+                      {translate("monthly_salary", language)}
+                    </th>
                   )}
-                  <th className="py-3 px-4 text-left">Actions</th>
+                  <th className="py-3 px-4 text-left">
+                    {translate("actions", language)}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -447,6 +558,7 @@ const EmployeesList = ({
                     <td className="py-3 px-4">
                       <input
                         type="checkbox"
+                        title={translate("selected_employee", language)}
                         checked={selected.includes(employee.id)}
                         onChange={() => toggleSelectEmployee(employee.id)}
                         className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
@@ -457,74 +569,113 @@ const EmployeesList = ({
                         <User size={16} className="text-blue-600" />
                       </div>
                     </td>
-                    <td className="py-3 px-4 font-medium">{employee.name_complet}</td>
+                    <td className="py-3 px-4 font-medium">
+                      {employee.name_complet}
+                    </td>
                     <td className="py-3 px-4">
-                      <span 
+                      <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          employee.sexe === 'M' 
-                            ? 'bg-blue-100 text-blue-800' 
-                            : 'bg-pink-100 text-pink-800'
+                          employee.sexe === "M"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-pink-100 text-pink-800"
                         }`}
                       >
-                        {employee.sexe === 'M' ? 'Homme' : 'Femme'}
+                        {employee.sexe === "M"
+                          ? translate("male", language)
+                          : translate("female", language)}
                       </span>
                     </td>
                     <td className="py-3 px-4">{employee.contact}</td>
-                    <td className="py-3 px-4">{formatDate(employee.birth_date)}</td>
-                    <td className="py-3 px-4">{employee.matricule || "-"}</td>
                     <td className="py-3 px-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${employee.status === 'actif'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
-                        }`}>
-                        {employee.status === 'actif' ? 'Actif' : 'Inactif'}
-                      </span>
+                      {formatDate(employee.birth_date)}
+                    </td>
+                    <td className="py-3 px-4">{employee.matricule || "-"}</td>
+                    <td className="py-3 px-4 items-center text-center">
+                      <div
+                        className={`items-center text-center rounded ${
+                          employee.status === "actif"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        <span className="text-xs font-medium">
+                          {employee.status === "actif"
+                            ? translate("active", language)
+                            : translate("inactive", language)}
+                        </span>
+                      </div>
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex flex-wrap gap-1">
                         {employee.postes.map((poste, idx) => (
                           <span
                             key={idx}
-                            className={`px-2 py-1 rounded-full text-xs font-medium ${poste === position
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-gray-100 text-gray-800'
-                              }`}
+                            className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              poste === position
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gray-100 text-gray-800"
+                            }`}
                           >
-                            {poste}
+                            {return_prof_trans(poste, language)}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td className="py-3 px-4">{formatDate(employee.service_started_at)}</td>
-                    <td className="py-3 px-4">{employee.service_ended_at === "" ? "Indéfinie" : formatDate(employee.service_ended_at)}
+                    <td className="py-3 px-4">
+                      {formatDate(employee.service_started_at)}
                     </td>
-                    {position === 'Professeurs' && (
+                    <td className="py-3 px-4">
+                      {employee.service_ended_at === ""
+                        ? translate("undefined", language)
+                        : formatDate(employee.service_ended_at)}
+                    </td>
+                    {position === "Professeurs" && (
                       <>
-                        <td className="py-3 px-4">
-                          <span 
+                        <td className="py-3 px-4 items-center text-center">
+                          <span
                             className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              employee.proffesseur_config.is_permanent 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-orange-100 text-orange-800'
+                              employee.proffesseur_config.is_permanent
+                                ? "bg-green-100 text-green-800"
+                                : "bg-orange-100 text-orange-800"
                             }`}
                           >
-                            {employee.proffesseur_config.is_permanent ? 'Permanent' : 'Vacataire'}
+                            {employee.proffesseur_config.is_permanent
+                              ? translate("permanent", language)
+                              : translate("vacataire", language)}
                           </span>
                         </td>
-                        <td className="py-3 px-4">{employee.proffesseur_config.speciality}</td>
+                        <td className="py-3 px-4">
+                          {return_speciality_trans(
+                            translate,
+                            employee.proffesseur_config.speciality,
+                            language
+                          )}
+                        </td>
                         <td className="py-3 px-4">
                           {employee.classes && employee.classes.length > 0 ? (
                             <div className="relative">
                               {!expandedClassRows[employee.id] ? (
-                                <div 
+                                <div
                                   className="text-center flex items-center cursor-pointer hover:bg-blue-50 hover:text-blue-600 p-1 rounded transition-colors"
-                                  onClick={() => toggleExpandClasses(employee.id)}
+                                  onClick={() =>
+                                    toggleExpandClasses(employee.id)
+                                  }
                                 >
                                   {(() => {
-                                    const firstClass = database?.classes?.find(c => c.id === employee.classes[0]);
-                                    if (!firstClass) return <span className="text-gray-400 text-xs">Aucune classe</span>;
-                                    
-                                    const className = getClasseName(`${firstClass.level} ${firstClass.name}`.trim(), language);
+                                    const firstClass = database?.classes?.find(
+                                      (c) => c.id === employee.classes[0]
+                                    );
+                                    if (!firstClass)
+                                      return (
+                                        <span className="text-gray-400 text-xs">
+                                          {translate("none_classes", language)}
+                                        </span>
+                                      );
+
+                                    const className = getClasseName(
+                                      `${firstClass.level} ${firstClass.name}`.trim(),
+                                      language
+                                    );
                                     return (
                                       <>
                                         <span className="text-center inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 mr-2">
@@ -532,8 +683,12 @@ const EmployeesList = ({
                                         </span>
                                         {employee.classes.length > 1 && (
                                           <span className="text-xs font-medium text-blue-600 flex items-center">
-                                            <ChevronRight size={14} className="mr-1" />
-                                            +{employee.classes.length - 1} autres
+                                            <ChevronRight
+                                              size={14}
+                                              className="mr-1"
+                                            />
+                                            +{employee.classes.length - 1}{" "}
+                                            {translate("others", language)}
                                           </span>
                                         )}
                                       </>
@@ -542,23 +697,31 @@ const EmployeesList = ({
                                 </div>
                               ) : (
                                 <div>
-                                  <div 
+                                  <div
                                     className="text-center flex items-center cursor-pointer hover:bg-blue-50 hover:text-blue-600 p-1 rounded transition-colors mb-2"
-                                    onClick={() => toggleExpandClasses(employee.id)}
+                                    onClick={() =>
+                                      toggleExpandClasses(employee.id)
+                                    }
                                   >
                                     <span className="text-xs font-medium text-blue-600 flex items-center">
                                       <ChevronDown size={14} className="mr-1" />
-                                      Classes ({employee.classes.length})
+                                      {translate("classes", language)} (
+                                      {employee.classes.length})
                                     </span>
                                   </div>
                                   <div className="text-center grid grid-cols-1 gap-1 max-w-xs p-2 bg-blue-50 rounded-md border border-blue-100 animate-fadeIn">
-                                    {employee.classes.map(classId => {
-                                      const classInfo = database?.classes?.find(c => c.id === classId);
+                                    {employee.classes.map((classId) => {
+                                      const classInfo = database?.classes?.find(
+                                        (c) => c.id === classId
+                                      );
                                       if (!classInfo) return null;
-                                      
-                                      const className = getClasseName(`${classInfo.level} ${classInfo.name}`.trim(), language);
+
+                                      const className = getClasseName(
+                                        `${classInfo.level} ${classInfo.name}`.trim(),
+                                        language
+                                      );
                                       return (
-                                        <span 
+                                        <span
                                           key={classId}
                                           className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-white text-blue-800 border border-blue-200"
                                         >
@@ -571,19 +734,27 @@ const EmployeesList = ({
                               )}
                             </div>
                           ) : (
-                            <span className="text-gray-400 text-xs">Aucune classe</span>
+                            <span className="text-gray-400 text-xs">
+                              {translate("none_classes", language)}
+                            </span>
                           )}
                         </td>
                         <td className="py-3 px-4">
-                          {employee.proffesseur_config.is_permanent 
-                            ? `${formatCurrency(employee.proffesseur_config.salaire_monthly)}/mois`
-                            : `${formatCurrency(employee.proffesseur_config.salaire_hourly)}/heure`}
+                          {employee.proffesseur_config.is_permanent
+                            ? `${formatCurrency(
+                                employee.proffesseur_config.salaire_monthly
+                              )}/${translate("month", language)}`
+                            : `${formatCurrency(
+                                employee.proffesseur_config.salaire_hourly
+                              )}/${translate("hour", language)}`}
                         </td>
                       </>
                     )}
-                    {position !== 'Professeurs' && (
+                    {position !== "Professeurs" && (
                       <td className="py-3 px-4">
-                        {`${formatCurrency(employee.others_employe_config.salaire_monthly)}/mois`}
+                        {`${formatCurrency(
+                          employee.others_employe_config.salaire_monthly
+                        )}/${translate("month", language)}`}
                       </td>
                     )}
                     <td className="py-3 px-4">
@@ -593,6 +764,7 @@ const EmployeesList = ({
                           whileTap={{ scale: 0.9 }}
                           onClick={() => onEdit(employee)}
                           className="text-blue-600 hover:text-blue-800"
+                          title={translate("update_employees", language)}
                         >
                           <Edit size={16} />
                         </motion.button>
@@ -616,7 +788,9 @@ const EmployeesList = ({
             className="fixed bottom-4 right-4 z-50"
           >
             <div className="bg-blue-600 px-4 py-2 rounded-lg shadow-lg text-white flex items-center">
-              <span className="font-medium">{selected.length} employé(s) sélectionné(s)</span>
+              <span className="font-medium">
+                {selected.length} {translate("employee_selected", language)}
+              </span>
             </div>
           </motion.div>
         )}
@@ -636,31 +810,40 @@ const EmployeesList = ({
               initial="hidden"
               animate="visible"
               exit="exit"
-              className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} p-6 rounded-lg shadow-xl max-w-md mx-auto`}
+              className={`${
+                theme === "dark" ? "bg-gray-800" : "bg-white"
+              } p-6 rounded-lg shadow-xl max-w-md mx-auto`}
             >
-              <h3 className={`text-xl font-semibold mb-4 ${_text_color}`}>{confirmModal.title}</h3>
+              <h3 className={`text-xl font-semibold mb-4 ${_text_color}`}>
+                {confirmModal.title}
+              </h3>
               <p className={`${_text_color} mb-6`}>{confirmModal.message}</p>
               <div className="flex justify-end space-x-3">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setConfirmModal(null)}
-                  className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} ${_text_color}`}
+                  className={`px-4 py-2 rounded-md ${
+                    theme === "dark"
+                      ? "bg-gray-700 hover:bg-gray-600"
+                      : "bg-gray-200 hover:bg-gray-300"
+                  } ${_text_color}`}
                 >
-                  Annuler
+                  {translate("cancel", language)}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={confirmModal.onConfirm}
-                  className={`px-4 py-2 rounded-md text-white ${confirmModal.type === 'delete'
-                    ? buttonDeleteColor
-                    : confirmModal.type === 'activate'
+                  className={`px-4 py-2 rounded-md text-white ${
+                    confirmModal.type === "delete"
+                      ? buttonDeleteColor
+                      : confirmModal.type === "activate"
                       ? buttonSuccessColor
                       : buttonWarningColor
-                    }`}
+                  }`}
                 >
-                  Confirmer
+                  {translate("confirm_delete", language)}
                 </motion.button>
               </div>
             </motion.div>
@@ -671,4 +854,4 @@ const EmployeesList = ({
   );
 };
 
-export default EmployeesList; 
+export default EmployeesList;

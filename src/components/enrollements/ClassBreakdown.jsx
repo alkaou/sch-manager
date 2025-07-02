@@ -1,14 +1,14 @@
-import React, { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronDownIcon, 
-  ChevronUpIcon,
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ChevronDownIcon,
   UserGroupIcon,
   AcademicCapIcon,
-  ChartBarIcon
-} from '@heroicons/react/24/outline';
-import translations from './enrollements_traduction';
-import { useLanguage } from '../contexts';
+  ChartBarIcon,
+} from "@heroicons/react/24/outline";
+import translations from "./enrollements_traduction";
+import { useLanguage } from "../contexts";
+import { getClasseName } from "../../utils/helpers";
 
 /**
  * Composant pour afficher la répartition détaillée par classe
@@ -19,8 +19,8 @@ import { useLanguage } from '../contexts';
  */
 const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
   const [expandedClasses, setExpandedClasses] = useState(new Set());
-  const [sortBy, setSortBy] = useState('total'); // 'total', 'name', 'male', 'female'
-  const [sortOrder, setSortOrder] = useState('desc');
+  const [sortBy, setSortBy] = useState("total"); // 'total', 'name', 'male', 'female'
+  const [sortOrder, setSortOrder] = useState("desc");
   const { language } = useLanguage();
   const isDarkMode = theme === "dark";
 
@@ -36,17 +36,17 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
 
     return [...classData].sort((a, b) => {
       let aValue, bValue;
-      
+
       switch (sortBy) {
-        case 'name':
-          aValue = a.className || '';
-          bValue = b.className || '';
+        case "name":
+          aValue = a.className || "";
+          bValue = b.className || "";
           break;
-        case 'male':
+        case "male":
           aValue = a.male || 0;
           bValue = b.male || 0;
           break;
-        case 'female':
+        case "female":
           aValue = a.female || 0;
           bValue = b.female || 0;
           break;
@@ -55,13 +55,13 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
           bValue = b.total || 0;
       }
 
-      if (typeof aValue === 'string') {
-        return sortOrder === 'asc' 
+      if (typeof aValue === "string") {
+        return sortOrder === "asc"
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       }
-      
-      return sortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+
+      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
     });
   }, [classData, sortBy, sortOrder]);
 
@@ -79,10 +79,10 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
   // Changer le tri
   const handleSort = (newSortBy) => {
     if (sortBy === newSortBy) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortBy(newSortBy);
-      setSortOrder('desc');
+      setSortOrder("desc");
     }
   };
 
@@ -93,10 +93,10 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
 
   // Obtenir la couleur de la barre de progression
   const getProgressColor = (percentage) => {
-    if (percentage >= 80) return 'bg-green-500';
-    if (percentage >= 60) return 'bg-blue-500';
-    if (percentage >= 40) return 'bg-yellow-500';
-    return 'bg-red-500';
+    if (percentage >= 80) return "bg-green-500";
+    if (percentage >= 60) return "bg-blue-500";
+    if (percentage >= 40) return "bg-yellow-500";
+    return "bg-red-500";
   };
 
   if (!classData || classData.length === 0) {
@@ -105,14 +105,16 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className={`p-8 text-center rounded-xl border-2 border-dashed ${
-          isDarkMode 
-            ? 'border-gray-600 bg-gray-800/50 text-gray-300' 
-            : 'border-gray-300 bg-gray-50 text-gray-500'
+          isDarkMode
+            ? "border-gray-600 bg-gray-800/50 text-gray-300"
+            : "border-gray-300 bg-gray-50 text-gray-500"
         }`}
       >
         <ChartBarIcon className="w-12 h-12 mx-auto mb-4 opacity-50" />
-        <p className="text-lg font-medium mb-2">{t('no_data_available')}</p>
-        <p className="text-sm">{t('will_appear_here')} {selectedYear}</p>
+        <p className="text-lg font-medium mb-2">{t("no_data_available")}</p>
+        <p className="text-sm">
+          {t("will_appear_here")} {selectedYear}
+        </p>
       </motion.div>
     );
   }
@@ -120,47 +122,51 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
   return (
     <div className="space-y-4">
       {/* En-tête avec options de tri */}
-      <div className={`flex flex-wrap items-center justify-between p-4 rounded-lg ${
-        isDarkMode ? 'bg-gray-800' : 'bg-gray-50'
-      }`}>
-        <h3 className={`text-lg font-semibold flex items-center gap-2 ${
-          isDarkMode ? 'text-white' : 'text-gray-900'
-        }`}>
+      <div
+        className={`flex flex-wrap items-center justify-between p-4 rounded-lg ${
+          isDarkMode ? "bg-gray-800" : "bg-gray-50"
+        }`}
+      >
+        <h3
+          className={`text-lg font-semibold flex items-center gap-2 ${
+            isDarkMode ? "text-white" : "text-gray-900"
+          }`}
+        >
           <AcademicCapIcon className="w-5 h-5" />
-          {t('class_breakdown')} ({sortedClassData.length} {t('classes_count')})
+          {t("class_breakdown")} ({sortedClassData.length} {t("classes_count")})
         </h3>
-        
+
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`text-sm ${
-            isDarkMode ? 'text-gray-300' : 'text-gray-600'
-          }`}>
-            {t('sort_by')}:
+          <span
+            className={`text-sm ${
+              isDarkMode ? "text-gray-300" : "text-gray-600"
+            }`}
+          >
+            {t("sort_by")}:
           </span>
           {[
-            { key: 'total', label: t('total') },
-            { key: 'name', label: t('name') },
-            { key: 'male', label: t('male') },
-            { key: 'female', label: t('female') }
+            { key: "total", label: t("total") },
+            { key: "name", label: t("name") },
+            { key: "male", label: t("male") },
+            { key: "female", label: t("female") },
           ].map(({ key, label }) => (
             <button
               key={key}
               onClick={() => handleSort(key)}
-              title={`${t('sort_by')} ${label}`}
+              title={`${t("sort_by")} ${label}`}
               className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-200 ${
                 sortBy === key
                   ? isDarkMode
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-blue-500 text-white'
+                    ? "bg-blue-600 text-white"
+                    : "bg-blue-500 text-white"
                   : isDarkMode
-                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                  ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
               }`}
             >
               {label}
               {sortBy === key && (
-                <span className="ml-1">
-                  {sortOrder === 'asc' ? '↑' : '↓'}
-                </span>
+                <span className="ml-1">{sortOrder === "asc" ? "↑" : "↓"}</span>
               )}
             </button>
           ))}
@@ -187,8 +193,8 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
                 transition={{ delay: index * 0.05 }}
                 className={`rounded-xl border transition-all duration-200 ${
                   isDarkMode
-                    ? 'bg-gray-800 border-gray-700 hover:border-gray-600'
-                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    ? "bg-gray-800 border-gray-700 hover:border-gray-600"
+                    : "bg-white border-gray-200 hover:border-gray-300"
                 } hover:shadow-lg`}
               >
                 {/* En-tête de classe */}
@@ -198,48 +204,65 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${
-                        isDarkMode ? 'bg-blue-600' : 'bg-blue-500'
-                      }`}>
+                      <div
+                        className={`p-2 rounded-lg ${
+                          isDarkMode ? "bg-blue-600" : "bg-blue-500"
+                        }`}
+                      >
                         <UserGroupIcon className="w-5 h-5 text-white" />
                       </div>
                       <div>
-                        <h4 className={`font-semibold text-lg ${
-                          isDarkMode ? 'text-white' : 'text-gray-900'
-                        }`}>
-                          {classItem.className}
+                        <h4
+                          className={`font-semibold text-lg ${
+                            isDarkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
+                          {getClasseName(
+                            `${classItem.level} ${
+                              classItem.className ? classItem.className : ""
+                            }`,
+                            language
+                          )}
                         </h4>
                         {classItem.level && (
-                          <p className={`text-sm ${
-                            isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                          }`}>
-                            {t('level')}: {classItem.level}
+                          <p
+                            className={`text-sm ${
+                              isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            {t("level")}: {classItem.level}
                           </p>
                         )}
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <div className={`text-2xl font-bold ${
-                          isDarkMode ? 'text-white' : 'text-gray-900'
-                        }`}>
+                        <div
+                          className={`text-2xl font-bold ${
+                            isDarkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
                           {total}
                         </div>
-                        <div className={`text-sm ${
-                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                        }`}>
-                          {t('students')}
+                        <div
+                          className={`text-sm ${
+                            isDarkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        >
+                          {t("students")}
                         </div>
                       </div>
-                      
+
                       <motion.div
                         animate={{ rotate: isExpanded ? 180 : 0 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <ChevronDownIcon className={`w-5 h-5 ${
-                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                        }`} />
+                        <ChevronDownIcon
+                          className={`w-5 h-5 ${
+                            isDarkMode ? "text-gray-400" : "text-gray-500"
+                          }`}
+                        />
                       </motion.div>
                     </div>
                   </div>
@@ -247,23 +270,33 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
                   {/* Barres de progression pour les genres */}
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                        {t('boys_count')}: {male} ({malePercentage}%)
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-300" : "text-gray-600"
+                        }
+                      >
+                        {t("boys_count")}: {male} ({malePercentage}%)
                       </span>
-                      <span className={isDarkMode ? 'text-gray-300' : 'text-gray-600'}>
-                        {t('girls_count')}: {female} ({femalePercentage}%)
+                      <span
+                        className={
+                          isDarkMode ? "text-gray-300" : "text-gray-600"
+                        }
+                      >
+                        {t("girls_count")}: {female} ({femalePercentage}%)
                       </span>
                     </div>
-                    
-                    <div className={`h-2 rounded-full overflow-hidden ${
-                      isDarkMode ? 'bg-gray-700' : 'bg-gray-200'
-                    }`}>
+
+                    <div
+                      className={`h-2 rounded-full overflow-hidden ${
+                        isDarkMode ? "bg-gray-700" : "bg-gray-200"
+                      }`}
+                    >
                       <div className="h-full flex">
-                        <div 
+                        <div
                           className="bg-blue-500 transition-all duration-500"
                           style={{ width: `${malePercentage}%` }}
                         />
-                        <div 
+                        <div
                           className="bg-pink-500 transition-all duration-500"
                           style={{ width: `${femalePercentage}%` }}
                         />
@@ -277,20 +310,23 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
                   {isExpanded && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
+                      animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.3 }}
                       className={`border-t overflow-hidden ${
-                        isDarkMode ? 'border-gray-700' : 'border-gray-200'
+                        isDarkMode ? "border-gray-700" : "border-gray-200"
                       }`}
                     >
                       <div className="p-4">
-                        <h5 className={`font-medium mb-3 ${
-                          isDarkMode ? 'text-white' : 'text-gray-900'
-                        }`}>
-                          {t('student_list')} ({classItem.students?.length || 0})
+                        <h5
+                          className={`font-medium mb-3 ${
+                            isDarkMode ? "text-white" : "text-gray-900"
+                          }`}
+                        >
+                          {t("student_list")} ({classItem.students?.length || 0}
+                          )
                         </h5>
-                        
+
                         {classItem.students && classItem.students.length > 0 ? (
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                             {classItem.students.map((student, studentIndex) => (
@@ -300,25 +336,35 @@ const ClassBreakdown = ({ classData = [], selectedYear, theme }) => {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: studentIndex * 0.05 }}
                                 className={`p-2 rounded-lg flex items-center gap-2 ${
-                                  isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
+                                  isDarkMode ? "bg-gray-700" : "bg-gray-50"
                                 }`}
                               >
-                                <div className={`w-2 h-2 rounded-full ${
-                                  student.sexe === 'M' ? 'bg-blue-500' : 'bg-pink-500'
-                                }`} />
-                                <span className={`text-sm ${
-                                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                                }`}>
+                                <div
+                                  className={`w-2 h-2 rounded-full ${
+                                    student.sexe === "M"
+                                      ? "bg-blue-500"
+                                      : "bg-pink-500"
+                                  }`}
+                                />
+                                <span
+                                  className={`text-sm ${
+                                    isDarkMode
+                                      ? "text-gray-300"
+                                      : "text-gray-700"
+                                  }`}
+                                >
                                   {student.name}
                                 </span>
                               </motion.div>
                             ))}
                           </div>
                         ) : (
-                          <p className={`text-sm italic ${
-                            isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                          }`}>
-                            {t('no_students')}
+                          <p
+                            className={`text-sm italic ${
+                              isDarkMode ? "text-gray-400" : "text-gray-500"
+                            }`}
+                          >
+                            {t("no_students")}
                           </p>
                         )}
                       </div>

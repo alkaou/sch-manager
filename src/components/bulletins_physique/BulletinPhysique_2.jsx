@@ -67,7 +67,7 @@ const BulletinPhysique2 = ({
   return (
     <div
       ref={printRef}
-      className={`bg-white text-gray-700 p-4 rounded-lg shadow-lg print:shadow-none print:p-0`}
+      className={`bg-white text-black p-4 rounded-lg shadow-lg print:shadow-none print:p-0`}
     >
       {/* En-tête du bulletin */}
       <div className="border-2 border-black">

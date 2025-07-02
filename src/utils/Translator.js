@@ -70,6 +70,7 @@ const Translator = {
         create_students_btn_text: "Kalandew dɔw ladon sissan",
         setting_text: "Paramɛtiri",
         dashboard_text: "Tabulo",
+        parameters : "Paramɛtiri",
         week_days_name_array: ["Kar", "Tɛn", "Tar", "Ara", "Ala", "Jum", "Sib"],
 
         // NavBar translations
@@ -509,6 +510,7 @@ const Translator = {
         create_students_btn_text: "Ajouter des élèves maintenant",
         setting_text: "Paramètre",
         dashboard_text: "Tableau de bord",
+        parameters : "Paramètre",
         week_days_name_array: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
 
         // NavBar translations
@@ -948,6 +950,7 @@ const Translator = {
         create_students_btn_text: "Add students now",
         setting_text: "Settings",
         dashboard_text: "Dashboard",
+        parameters : "parameter",
         week_days_name_array: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 
         // NavBar translations

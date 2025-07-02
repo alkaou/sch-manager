@@ -1,106 +1,118 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, AlignLeft, Info, Eye, EyeOff, Scissors } from 'lucide-react';
-import { useTheme, useFlashNotification } from '../contexts';
-import { savePosition, updatePosition } from '../../utils/database_methods';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, AlignLeft, Info, Eye, EyeOff, Scissors } from "lucide-react";
+import { useTheme, useFlashNotification, useLanguage } from "../contexts";
+import { savePosition, updatePosition } from "../../utils/database_methods";
+import { translate } from "./employes_translator";
 
-const PositionForm = ({ 
-  isOpen, 
-  onClose, 
-  position = null, 
-  database, 
-  refreshData 
+const PositionForm = ({
+  isOpen,
+  onClose,
+  position = null,
+  database,
+  refreshData,
 }) => {
   const { app_bg_color, text_color, theme, gradients } = useTheme();
   const { setFlashMessage } = useFlashNotification();
-  
+  const { language } = useLanguage();
+
   const [formData, setFormData] = useState({
-    name: '',
-    description: ''
+    name: "",
+    description: "",
   });
-  
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [charCount, setCharCount] = useState(0);
-  
+
   // Reset form when opening or changing position
   useEffect(() => {
     if (position) {
       setFormData({
         name: position.name.trim(),
-        description: position.description.trim() || ''
+        description: position.description.trim() || "",
       });
       setCharCount(position.description?.length || 0);
     } else {
       setFormData({
-        name: '',
-        description: ''
+        name: "",
+        description: "",
       });
       setCharCount(0);
     }
     setErrors({});
   }, [position, isOpen]);
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // For description field, check character limit
-    if (name === 'description') {
+    if (name === "description") {
       const newValue = value.substring(0, 1000);
       setCharCount(newValue.length);
-      setFormData(prev => ({ ...prev, [name]: newValue }));
+      setFormData((prev) => ({ ...prev, [name]: newValue }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    
+
     // Clear error when field is changed
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: null }));
+      setErrors((prev) => ({ ...prev, [name]: null }));
     }
   };
-  
+
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Name validation
     if (!formData.name.trim()) {
-      newErrors.name = "Le nom du poste est obligatoire";
+      newErrors.name = translate("position_name_required", language);
     } else if (formData.name.trim().length < 3) {
-      newErrors.name = "Le nom doit contenir au moins 3 caractères";
+      newErrors.name = translate("name_min_length", language);
     } else if (formData.name.trim().length > 60) {
-      newErrors.name = "Le nom ne peut pas dépasser 60 caractères";
+      newErrors.name = translate("name_max_length", language);
     }
-    
+
     // Description validation
     if (formData.description.trim().length > 1000) {
-      newErrors.description = "La description ne peut pas dépasser 1000 caractères";
+      newErrors.description = translate("description_max_length", language);
     }
-    
+
     // Check if trying to rename Professeurs
-    if (position && position.name === 'Professeurs' && formData.name !== 'Professeurs') {
-      newErrors.name = "Le poste 'Professeurs' ne peut pas être renommé";
+    if (
+      position &&
+      position.name === "Professeurs" &&
+      formData.name !== "Professeurs"
+    ) {
+      newErrors.name = translate("professors_position_rename_error", language);
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
-    
+
     setLoading(true);
     try {
       if (position) {
         // Update existing position
-        await updatePosition(position.id, formData, database, setFlashMessage);
+        await updatePosition(
+          position.id,
+          formData,
+          database,
+          setFlashMessage,
+          language
+        );
       } else {
         // Create new position
-        await savePosition(formData, database, setFlashMessage);
+        await savePosition(formData, database, setFlashMessage, language);
       }
-      
+
       refreshData();
       onClose();
     } catch (error) {
@@ -108,76 +120,80 @@ const PositionForm = ({
         setErrors({ [error.field]: error.message });
       } else {
         setFlashMessage({
-          type: 'error',
-          message: error.message || 'Une erreur est survenue'
+          type: "error",
+          message: error.message || translate("error_occurred", language),
         });
       }
     } finally {
       setLoading(false);
     }
   };
-  
-  // Background and text colors based on theme
-  const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
-  const inputBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-white';
-  const inputBorderColor = theme === 'dark' ? 'border-gray-600' : 'border-gray-300';
-  const buttonBgColor = theme === 'dark' ? 'bg-blue-600' : 'bg-blue-500';
-  const previewBgColor = theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50';
 
-  const _text_color = app_bg_color === gradients[1] ||
-        app_bg_color === gradients[2] ||
-        theme === "dark" ? text_color : "text-gray-700";
-  
+  // Background and text colors based on theme
+  const bgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+  const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
+  const inputBorderColor =
+    theme === "dark" ? "border-gray-600" : "border-gray-300";
+  const buttonBgColor = theme === "dark" ? "bg-blue-600" : "bg-blue-500";
+  const previewBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-50";
+
+  const _text_color =
+    app_bg_color === gradients[1] ||
+    app_bg_color === gradients[2] ||
+    theme === "dark"
+      ? text_color
+      : "text-gray-700";
+
   // Animation variants
   const overlayVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1 }
+    visible: { opacity: 1 },
   };
-  
+
   const modalVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
+    visible: {
+      opacity: 1,
+      y: 0,
       scale: 1,
-      transition: { type: 'spring', stiffness: 300, damping: 30 }
+      transition: { type: "spring", stiffness: 300, damping: 30 },
     },
-    exit: { 
-      opacity: 0, 
-      y: 50, 
+    exit: {
+      opacity: 0,
+      y: 50,
       scale: 0.9,
-      transition: { duration: 0.2 }
-    }
+      transition: { duration: 0.2 },
+    },
   };
 
   const previewVariants = {
     hidden: { opacity: 0, height: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      height: 'auto',
-      transition: { duration: 0.3 }
-    }
+      height: "auto",
+      transition: { duration: 0.3 },
+    },
   };
-  
+
   // Calculate character count color based on proximity to limit
   const getCharCountColor = () => {
     if (charCount > 900) {
-      return 'text-red-500';
+      return "text-red-500";
     } else if (charCount > 700) {
-      return 'text-yellow-500';
+      return "text-yellow-500";
     }
-    return 'text-green-500';
+    return "text-green-500";
   };
 
   // Format preview text with proper line breaks
   const formatPreviewText = (text) => {
-    return text.split('\n').map((line, index) => (
-      <p key={index} className={`${_text_color} ${line.trim() ? '' : 'h-3'}`}>
-        {line || '\u00A0'}
+    return text.split("\n").map((line, index) => (
+      <p key={index} className={`${_text_color} ${line.trim() ? "" : "h-3"}`}>
+        {line || "\u00A0"}
       </p>
     ));
   };
-  
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -197,7 +213,9 @@ const PositionForm = ({
           >
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <h3 className={`text-lg font-semibold ${_text_color}`}>
-                {position ? 'Modifier un poste' : 'Ajouter un nouveau poste'}
+                {position
+                  ? translate("edit_position", language)
+                  : translate("add_new_position", language)}
               </h3>
               <motion.button
                 whileHover={{ scale: 1.1, rotate: 90 }}
@@ -208,24 +226,40 @@ const PositionForm = ({
                 <X size={20} />
               </motion.button>
             </div>
-            
-            <form onSubmit={handleSubmit} className="p-4 overflow-y-auto max-h-[calc(90vh-4rem)]">
+
+            <form
+              onSubmit={handleSubmit}
+              className="p-4 overflow-y-auto max-h-[calc(90vh-4rem)]"
+            >
               <div className="mb-4">
-                <label className={`block mb-2 text-sm font-medium ${_text_color}`}>
-                  Nom du poste <span className="text-red-500">*</span>
+                <label
+                  className={`block mb-2 text-sm font-medium ${_text_color}`}
+                >
+                  {translate("position_name", language)}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  disabled={position && position.name === 'Professeurs'}
+                  disabled={position && position.name === "Professeurs"}
                   className={`w-full px-3 py-2 text-sm rounded-lg transition-all duration-300 
                     focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
                     ${inputBgColor} ${inputBorderColor} ${_text_color}
-                    ${position && position.name === 'Professeurs' ? 'opacity-60 cursor-not-allowed' : ''}
+                    ${
+                      position && position.name === "Professeurs"
+                        ? "opacity-60 cursor-not-allowed"
+                        : ""
+                    }
                   `}
-                  placeholder="Ex: Directeur"
+                  placeholder={`${
+                    language === "Bambara"
+                      ? "MI : Yɔrɔkɔlɔsi"
+                      : language === "Français"
+                      ? "EX : Gardiennage"
+                      : "Guarding"
+                  }`}
                 />
                 {errors.name && (
                   <motion.p
@@ -237,11 +271,11 @@ const PositionForm = ({
                   </motion.p>
                 )}
               </div>
-              
+
               <div className="mb-6">
                 <div className="flex justify-between items-center mb-2">
                   <label className={`text-sm font-medium ${_text_color}`}>
-                    Description
+                    {translate("description", language)}
                   </label>
                   <div className="flex items-center space-x-2">
                     <span className={`text-xs ${getCharCountColor()}`}>
@@ -271,7 +305,7 @@ const PositionForm = ({
                       focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
                       ${inputBgColor} ${inputBorderColor} ${_text_color}
                     `}
-                    placeholder="Description du poste (optionnel)"
+                    placeholder={translate("position_description", language)}
                   />
                 </div>
                 {errors.description && (
@@ -283,7 +317,7 @@ const PositionForm = ({
                     {errors.description}
                   </motion.p>
                 )}
-                
+
                 <AnimatePresence>
                   {showPreview && formData.description && (
                     <motion.div
@@ -295,7 +329,9 @@ const PositionForm = ({
                     >
                       <div className="flex items-center mb-2">
                         <AlignLeft size={16} className="text-blue-500 mr-2" />
-                        <span className={`text-sm font-medium ${_text_color}`}>Aperçu</span>
+                        <span className={`text-sm font-medium ${_text_color}`}>
+                          {translate("preview", language)}
+                        </span>
                       </div>
                       <div className="text-sm">
                         {formatPreviewText(formData.description)}
@@ -303,48 +339,81 @@ const PositionForm = ({
                     </motion.div>
                   )}
                 </AnimatePresence>
-                
+
                 <div className="mt-2 flex flex-wrap gap-2">
                   <div className="text-xs text-gray-500 flex items-center">
-                    <Scissors size={12} className="mr-1" /> 
-                    Limite: 1000 caractères
+                    <Scissors size={12} className="mr-1" />
+                    {translate("description_limit", language)}
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex justify-end space-x-3">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="button"
+                  title={translate("cancel", language)}
                   onClick={onClose}
-                  className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'} ${_text_color}`}
+                  className={`px-4 py-2 rounded-md ${
+                    theme === "dark"
+                      ? "bg-gray-700 hover:bg-gray-600"
+                      : "bg-gray-200 hover:bg-gray-300"
+                  } ${_text_color}`}
                 >
-                  Annuler
+                  {translate("cancel", language)}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  disabled={loading || (position && position.name === 'Professeurs')}
+                  title={
+                    position
+                      ? translate("update", language)
+                      : translate("add", language)
+                  }
+                  disabled={
+                    loading || (position && position.name === "Professeurs")
+                  }
                   className={`px-4 py-2 rounded-md text-white 
-                    ${loading 
-                      ? 'bg-gray-400 cursor-not-allowed' 
-                      : position && position.name === 'Professeurs'
-                        ? 'bg-gray-400 cursor-not-allowed'
+                    ${
+                      loading
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : position && position.name === "Professeurs"
+                        ? "bg-gray-400 cursor-not-allowed"
                         : `${buttonBgColor} hover:bg-blue-600`
                     }
                   `}
                 >
                   {loading ? (
                     <span className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
-                      Traitement...
+                      {translate("traitement_loading", language)}
                     </span>
-                  ) : position ? 'Mettre à jour' : 'Ajouter'}
+                  ) : position ? (
+                    translate("update", language)
+                  ) : (
+                    translate("add", language)
+                  )}
                 </motion.button>
               </div>
             </form>
@@ -355,4 +424,4 @@ const PositionForm = ({
   );
 };
 
-export default PositionForm; 
+export default PositionForm;

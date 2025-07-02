@@ -1,29 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { X, Search, Check, CheckSquare, Square } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { X, Search, Check, CheckSquare, Square } from "lucide-react";
+import { translate } from "./liste_rapide_translator";
+import { useLanguage } from "../contexts";
+import { return_prof_trans } from "../employes/utils";
 
 const EmployeListAddEmployees = ({
   db,
   onClose,
   onAddEmployees,
   theme,
-  currentEmployees = []
+  currentEmployees = [],
 }) => {
   const [employees, setEmployees] = useState([]);
   const [selectedEmployees, setSelectedEmployees] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedPosition, setSelectedPosition] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('actif');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedPosition, setSelectedPosition] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("actif");
+
+  const { language } = useLanguage();
 
   // Load employees from database and initialize selected employees
   useEffect(() => {
     if (db && db.employees) {
-      setEmployees(db.employees.filter(employee => employee.status === selectedStatus));
+      setEmployees(
+        db.employees.filter((employee) => employee.status === selectedStatus)
+      );
 
       // Pre-select employees that are already in the list
       if (currentEmployees && currentEmployees.length > 0) {
-        const preSelectedEmployees = db.employees.filter(employee =>
-          currentEmployees.some(e => e.id === employee.id)
+        const preSelectedEmployees = db.employees.filter((employee) =>
+          currentEmployees.some((e) => e.id === employee.id)
         );
         setSelectedEmployees(preSelectedEmployees);
       }
@@ -41,8 +48,10 @@ const EmployeListAddEmployees = ({
 
   // Handle select an employee
   const handleSelectEmployee = (employee) => {
-    if (selectedEmployees.find(e => e.id === employee.id)) {
-      setSelectedEmployees(selectedEmployees.filter(e => e.id !== employee.id));
+    if (selectedEmployees.find((e) => e.id === employee.id)) {
+      setSelectedEmployees(
+        selectedEmployees.filter((e) => e.id !== employee.id)
+      );
     } else {
       setSelectedEmployees([...selectedEmployees, employee]);
     }
@@ -54,13 +63,15 @@ const EmployeListAddEmployees = ({
   };
 
   // Get unique positions
-  const positions = db?.positions ? [...new Set(db.positions.map(p => p.name))] : [];
+  const positions = db?.positions
+    ? [...new Set(db.positions.map((p) => p.name))]
+    : [];
 
   // Filter employees based on search term, position, and status
-  const filteredEmployees = employees.filter(employee => {
+  const filteredEmployees = employees.filter((employee) => {
     // Filter by search term
     const searchMatch =
-      searchTerm === '' ||
+      searchTerm === "" ||
       employee.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.sure_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       employee.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -68,7 +79,8 @@ const EmployeListAddEmployees = ({
       employee.name_complet?.toLowerCase().includes(searchTerm.toLowerCase());
 
     // Filter by position
-    const positionMatch = selectedPosition === 'all' || employee.postes.includes(selectedPosition);
+    const positionMatch =
+      selectedPosition === "all" || employee.postes.includes(selectedPosition);
 
     return searchMatch && positionMatch;
   });
@@ -78,7 +90,10 @@ const EmployeListAddEmployees = ({
   const modalBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
-  const buttonSecondary = theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800";
+  const buttonSecondary =
+    theme === "dark"
+      ? "bg-gray-700 hover:bg-gray-600 text-white"
+      : "bg-gray-200 hover:bg-gray-300 text-gray-800";
   const buttonSuccess = "bg-green-600 hover:bg-green-700 text-white";
 
   return (
@@ -93,18 +108,22 @@ const EmployeListAddEmployees = ({
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        transition={{ type: "spring", damping: 25, stiffness: 300 }}
         style={{ width: "95%" }}
       >
         {/* Header */}
-        <div className={`flex justify-between items-center p-4 border-b ${borderColor}`}>
-          <h2 className={`text-xl font-semibold ${textClass}`}>Ajouter des employés à la liste</h2>
+        <div
+          className={`flex justify-between items-center p-4 border-b ${borderColor}`}
+        >
+          <h2 className={`text-xl font-semibold ${textClass}`}>
+            {translate("add_employees_text", language)}
+          </h2>
           <motion.button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            title="Fermer"
+            title={translate("close", language)}
           >
             <X size={24} />
           </motion.button>
@@ -114,13 +133,15 @@ const EmployeListAddEmployees = ({
         <div className={`p-4 border-b ${borderColor} flex flex-wrap gap-4`}>
           {/* Search */}
           <div className="flex-1 min-w-[200px]">
-            <div className={`flex items-center border ${borderColor} rounded-lg overflow-hidden ${inputBgColor}`}>
+            <div
+              className={`flex items-center border ${borderColor} rounded-lg overflow-hidden ${inputBgColor}`}
+            >
               <Search size={20} className="ml-3 text-gray-400" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Rechercher un employé..."
+                placeholder={translate("search_employees", language)}
                 className={`flex-1 p-2 outline-none ${inputBgColor} ${textClass}`}
               />
             </div>
@@ -132,12 +153,12 @@ const EmployeListAddEmployees = ({
               value={selectedPosition}
               onChange={(e) => setSelectedPosition(e.target.value)}
               className={`w-full p-2 border ${borderColor} rounded-lg ${inputBgColor} ${textClass}`}
-              title="Filtrer par poste"
+              title={translate("filter_by_poste", language)}
             >
-              <option value="all">Tous les postes</option>
-              {positions.sort().map(position => (
+              <option value="all">{translate("all_postes", language)}</option>
+              {positions.sort().map((position) => (
                 <option key={position} value={position}>
-                  {position}
+                  {return_prof_trans(position, language)}
                 </option>
               ))}
             </select>
@@ -164,38 +185,63 @@ const EmployeListAddEmployees = ({
               <button
                 onClick={handleSelectAll}
                 className={`p-2 rounded-lg mr-2 ${buttonSecondary} flex items-center`}
-                title={selectedEmployees.length === filteredEmployees.length && filteredEmployees.length > 0 ? "Désélectionner tout" : "Sélectionner tout"}
+                title={
+                  selectedEmployees.length === filteredEmployees.length &&
+                  filteredEmployees.length > 0
+                    ? "Désélectionner tout"
+                    : "Sélectionner tout"
+                }
               >
-                {selectedEmployees.length === filteredEmployees.length && filteredEmployees.length > 0 ? (
+                {selectedEmployees.length === filteredEmployees.length &&
+                filteredEmployees.length > 0 ? (
                   <CheckSquare size={20} className="mr-2" />
                 ) : (
                   <Square size={20} className="mr-2" />
                 )}
-                {selectedEmployees.length === filteredEmployees.length && filteredEmployees.length > 0
+                {selectedEmployees.length === filteredEmployees.length &&
+                filteredEmployees.length > 0
                   ? "Désélectionner tout"
                   : "Sélectionner tout"}
               </button>
               <span className={`${textClass}`}>
-                {selectedEmployees.length} employé(s) sélectionné(s) sur {filteredEmployees.length} affiché(s)
+                {selectedEmployees.length} employé(s) sélectionné(s) sur{" "}
+                {filteredEmployees.length} affiché(s)
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredEmployees.map(employee => {
-              const isSelected = selectedEmployees.some(e => e.id === employee.id);
+            {filteredEmployees.map((employee) => {
+              const isSelected = selectedEmployees.some(
+                (e) => e.id === employee.id
+              );
 
               return (
                 <motion.div
                   key={employee.id}
-                  className={`${theme === "dark" ? "bg-gray-700" : "bg-gray-50"} rounded-lg p-4 cursor-pointer ${isSelected ? (theme === "dark" ? "ring-2 ring-blue-500" : "ring-2 ring-blue-500") : ""
-                    }`}
+                  className={`${
+                    theme === "dark" ? "bg-gray-700" : "bg-gray-50"
+                  } rounded-lg p-4 cursor-pointer ${
+                    isSelected
+                      ? theme === "dark"
+                        ? "ring-2 ring-blue-500"
+                        : "ring-2 ring-blue-500"
+                      : ""
+                  }`}
                   onClick={() => handleSelectEmployee(employee)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-start">
-                    <div className={`p-2 rounded-full ${isSelected ? "bg-blue-500" : theme === "dark" ? "bg-gray-600" : "bg-gray-200"} mr-3`}>
+                    <div
+                      className={`p-2 rounded-full ${
+                        isSelected
+                          ? "bg-blue-500"
+                          : theme === "dark"
+                          ? "bg-gray-600"
+                          : "bg-gray-200"
+                      } mr-3`}
+                    >
                       {isSelected ? (
                         <Check size={20} className="text-white" />
                       ) : (
@@ -206,11 +252,19 @@ const EmployeListAddEmployees = ({
                       <h3 className={`font-semibold ${textClass}`}>
                         {employee.name_complet}
                       </h3>
-                      <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-500"}`}>
-                        {employee.postes.join(', ')}
+                      <p
+                        className={`text-sm ${
+                          theme === "dark" ? "text-gray-300" : "text-gray-500"
+                        }`}
+                      >
+                        {employee.postes.join(", ")}
                       </p>
                       {employee.matricule && (
-                        <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-500"}`}>
+                        <p
+                          className={`text-sm ${
+                            theme === "dark" ? "text-gray-300" : "text-gray-500"
+                          }`}
+                        >
                           Matricule: {employee.matricule}
                         </p>
                       )}
@@ -233,14 +287,18 @@ const EmployeListAddEmployees = ({
             {filteredEmployees.length === 0 && (
               <div className={`col-span-3 text-center p-8 ${textClass}`}>
                 <p className="text-lg">Aucun employé trouvé</p>
-                <p className="opacity-75">Essayez de modifier vos filtres de recherche</p>
+                <p className="opacity-75">
+                  Essayez de modifier vos filtres de recherche
+                </p>
               </div>
             )}
           </div>
         </div>
 
         {/* Footer */}
-        <div className={`p-4 border-t ${borderColor} flex justify-end space-x-3`}>
+        <div
+          className={`p-4 border-t ${borderColor} flex justify-end space-x-3`}
+        >
           <motion.button
             onClick={onClose}
             className={`${buttonSecondary} px-4 py-2 rounded-lg`}
@@ -253,7 +311,9 @@ const EmployeListAddEmployees = ({
           <motion.button
             onClick={handleAddEmployees}
             disabled={selectedEmployees.length === 0}
-            className={`${selectedEmployees.length > 0 ? buttonSuccess : "bg-green-400"} px-4 py-2 rounded-lg text-white flex items-center`}
+            className={`${
+              selectedEmployees.length > 0 ? buttonSuccess : "bg-green-400"
+            } px-4 py-2 rounded-lg text-white flex items-center`}
             whileHover={selectedEmployees.length > 0 ? { scale: 1.05 } : {}}
             whileTap={selectedEmployees.length > 0 ? { scale: 0.95 } : {}}
             title={`Ajouter ${selectedEmployees.length} employé(s) à la liste`}
@@ -267,4 +327,4 @@ const EmployeListAddEmployees = ({
   );
 };
 
-export default EmployeListAddEmployees; 
+export default EmployeListAddEmployees;

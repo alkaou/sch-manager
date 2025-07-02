@@ -67,7 +67,7 @@ const BulletinPhysique1 = ({
   return (
     <div
       ref={printRef}
-      className={`bg-white text-gray-700 p-4 rounded-lg shadow-lg print:shadow-none print:p-0`}
+      className={`bg-white text-black p-4 rounded-lg shadow-lg print:shadow-none print:p-0`}
     >
       {/* En-tête du bulletin */}
       <div className="border-2 border-black">
@@ -226,7 +226,7 @@ const BulletinPhysique1 = ({
                   }`}
                 >
                   <td className="border-r border-black p-2 text-left">
-                    {subject.name}
+                    <p className="text-black">{subject.name}</p>
                   </td>
                   <td className="border-r border-black p-2 text-center">
                     {classeNote !== "-" && classeNote !== undefined
@@ -239,13 +239,13 @@ const BulletinPhysique1 = ({
                       : "-"}
                   </td>
                   <td className="border-r border-black p-2 text-center">
-                    {moyenne}
+                    <p className="text-black">{moyenne}</p>
                   </td>
                   <td className="border-r border-black p-2 text-center">
-                    {subject.coefficient}
+                    <p className="text-black">{subject.coefficient}</p>
                   </td>
                   <td className="border-r border-black p-2 text-center">
-                    {moyenneCoef}
+                    <p className="text-black">{moyenneCoef}</p>
                   </td>
                   <td className="p-2 text-center">{appreciation}</td>
                 </tr>
