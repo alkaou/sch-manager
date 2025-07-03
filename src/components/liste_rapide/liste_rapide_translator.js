@@ -67,6 +67,11 @@ const translations = {
     Anglais: "Create New List",
     Bambara: "Lisi kura dilan",
   },
+  create_list: {
+    Français: "Créer la liste",
+    Anglais: "Create the List",
+    Bambara: "Lisi dilan",
+  },
   edit_list: {
     Français: "Modifier la liste",
     Anglais: "Edit List",
@@ -194,15 +199,14 @@ const translations = {
     Bambara: "Baarakɛlaw fara lisi kan",
   },
   click_to_add_students: {
-    Français:
-      "Cliquez sur le bouton ci-dessous pour créer votre première liste.",
-    Anglais: "Click the button below to create your first list.",
-    Bambara: "I ka butɔn digi jukɔrɔ walasa ka i ka lisi fɔlɔ dilan.",
+    Français: 'Cliquez sur le bouton "Ajouter des élèves" pour commencer',
+    Anglais: 'Click on the "Add students" button to get started',
+    Bambara: 'A digi butɔn kan ka "Kalandenw fara" walasa ka daminɛ',
   },
   click_to_add_employees: {
     Français: 'Cliquez sur le bouton "Ajouter des employés" pour commencer',
     Anglais: 'Click on the "Add employees" button to get started',
-    Bambara: 'A digi "Baarakɛlaw fara" digi kan ka daminɛ',
+    Bambara: 'A digi butɔn kan ka "Baarakɛlaw fara" walasa ka daminɛ',
   },
 
   // Selection actions
@@ -219,7 +223,7 @@ const translations = {
   students_selected: {
     Français: "élève(s) sélectionné(s) sur",
     Anglais: "student(s) selected out of",
-    Bambara: "kalanden sugandilen ka bɔ",
+    Bambara: "kalanden(w) sugandila ka bɔ",
   },
   displayed: {
     Français: "affiché(s)",
@@ -246,28 +250,52 @@ const translations = {
     Anglais: "Inactive Employees",
     Bambara: "Baarakɛla minnu ye baara bila",
   },
+  active: {
+    Français: "Actif",
+    Anglais: "Active",
+    Bambara: "A bɛ baara la",
+  },
+  inactive: {
+    Français: "Inactif",
+    Anglais: "Inactive",
+    Bambara: "A ye baara jɔ",
+  },
+  male: {
+    Français: "Homme",
+    Anglais: "Male",
+    Bambara: "Cɛ",
+  },
+  female: {
+    Français: "Femme",
+    Anglais: "Female",
+    Bambara: "Muso",
+  },
+  month: {
+    Français: "mois",
+    Anglais: "month",
+    Bambara: "kalo",
+  },
+  hour: {
+    Français: "heure",
+    Anglais: "hour",
+    Bambara: "nɛkɛ kaɲɛ",
+  },
 
   // Confirmation dialog
   confirm_deletion: {
     Français: "Confirmer la suppression",
     Anglais: "Confirm Deletion",
-    Bambara: "Jɔsili jɛtigɛ",
+    Bambara: "Jɔsili Yamaruya",
   },
   confirm_delete_list_message_1: {
-    Français:
-      "Êtes-vous sûr de vouloir supprimer la liste",
-    Anglais:
-      "Are you sure you want to delete the list",
-    Bambara:
-      "I b'a fɛ ka ni lisi jɔsi sɛbɛ yɛrɛ la wa",
+    Français: "Êtes-vous sûr de vouloir supprimer la liste",
+    Anglais: "Are you sure you want to delete the list",
+    Bambara: "I b'a fɛ ka ni lisi jɔsi sɛbɛ yɛrɛ la wa",
   },
   confirm_delete_list_message_2: {
-    Français:
-      "Cette action ne peut pas être annulée.",
-    Anglais:
-      "This action cannot be undone.",
-    Bambara:
-      "Nin baara tɛ se ka sɛgɛn kɔ.",
+    Français: "Cette action ne peut pas être annulée.",
+    Anglais: "This action cannot be undone.",
+    Bambara: "Nin baara tɛ se ka sɛgɛn kɔ.",
   },
 
   // Additional keys
@@ -316,12 +344,12 @@ const translations = {
   student_list_placeholder: {
     Français: "Ex: Liste des élèves de 6ème A",
     Anglais: "Ex: 6th Grade A Student List",
-    Bambara: "Ex: 6ème A kalandenw lisi",
+    Bambara: "Mi: 6 nan A kalandenw lisi",
   },
   employee_list_placeholder: {
     Français: "Ex: Liste du personnel enseignant",
     Anglais: "Ex: Teaching Staff List",
-    Bambara: "Ex: Karamɔgɔw lisi",
+    Bambara: "Mi: Karamɔgɔw lisi",
   },
   list_type: {
     Français: "Type de liste",
@@ -358,12 +386,12 @@ const translations = {
   students_selected: {
     Français: "élèves sélectionnés sur",
     Anglais: "students selected of",
-    Bambara: "kalandenw sugandilen ka bɔ",
+    Bambara: "kalanden(w) sugandilen ka bɔ",
   },
   no_assigned_class: {
     Français: "Pas de classe assignée",
     Anglais: "No assigned class",
-    Bambara: "Kalankɔnɔna ta tɛ",
+    Bambara: "A tɛ kilasi kɔnɔ",
   },
   matricule: {
     Français: "Matricule",
@@ -561,7 +589,7 @@ const translations = {
   all_classes: {
     Français: "Toutes les classes",
     Anglais: "All Classes",
-    Bambara: "Kalankɔnɔna bɛɛ",
+    Bambara: "Kilasiw bɛɛ",
   },
   all: {
     Français: "Toutes",
@@ -944,14 +972,14 @@ const translations = {
     Bambara: "PDF dialanna ka ɲɛ",
   },
   error_generating_pdf: {
-    Français: "Erreur lors de la génération du PDF",
-    Anglais: "Error generating PDF",
-    Bambara: "PDF dilan filɛli kɛra",
+    Français: "Erreur lors de la génération du PDF.",
+    Anglais: "Error generating PDF.",
+    Bambara: "PDF dilantɔla gɛlɛya dɔw sɔrɔ la, segin a kan.",
   },
   students_added_to_list: {
-    Français: "{count} élève(s) ajouté(s) à la liste",
-    Anglais: "{count} student(s) added to the list",
-    Bambara: "Kalanden {count} farala lisi kan",
+    Français: "élève(s) ajouté(s) à la liste",
+    Anglais: "student(s) added to the list",
+    Bambara: "kalanden(w) farala lisi kan",
   },
   no_new_students_added: {
     Français: "Aucun nouvel élève ajouté à la liste",
@@ -961,7 +989,7 @@ const translations = {
   employees_added_to_list: {
     Français: "employé(s) ajouté(s) à la liste",
     Anglais: "employee(s) added to the list",
-    Bambara: "baarakɛla farala lisi kan",
+    Bambara: "baarakɛla(w) farala lisi kan",
   },
   no_new_employees_added: {
     Français: "Aucun nouvel employé ajouté à la liste",
@@ -999,9 +1027,9 @@ const translations = {
     Bambara: "I tɛ se ka kunfɛla 10 tɛmɛ sugandi",
   },
   orientation_changed: {
-    Français: "Orientation changée en {orientation}",
-    Anglais: "Orientation changed to {orientation}",
-    Bambara: "Cogoya yɛlɛmana ka kɛ {orientation}",
+    Français: "Orientation changée en",
+    Anglais: "Orientation changed to",
+    Bambara: "Cogoya yɛlɛmana ka kɛ",
   },
   portrait: {
     Français: "portrait",
@@ -1013,18 +1041,20 @@ const translations = {
     Anglais: "landscape",
     Bambara: "dajanfantama",
   },
-  cannot_change_list_type: {
-    Français:
-      "Cette liste contient déjà des {type}. Veuillez les supprimer avant de changer le type.",
-    Anglais:
-      "This list already contains {type}. Please remove them before changing the type.",
-    Bambara:
-      "Nin lisi in kɔnɔ {type} bɛ ka ban. I k'olu bɔ lisi in na sani i ka suguyali yɛlɛma.",
+  cannot_change_list_type_1: {
+    Français: "Cette liste contient déjà des",
+    Anglais: "This list already contains",
+    Bambara: "Nin lisi in kɔnɔ dɔw bɛɲin ka ban",
+  },
+  cannot_change_list_type_2: {
+    Français: "Veuillez les supprimer avant de changer le type.",
+    Anglais: "Please remove them before changing the type.",
+    Bambara: "I k'olu bɔ lisi in na sani i ka suguyali yɛlɛma.",
   },
   list_type_changed: {
-    Français: "Type de liste changé en {type}",
-    Anglais: "List type changed to {type}",
-    Bambara: "Lisi suguyali yɛlɛmana ka kɛ {type}",
+    Français: "Type de liste changé en",
+    Anglais: "List type changed to",
+    Bambara: "Lisi suguyali yɛlɛmana ka kɛ",
   },
   change_language: {
     Français: "Changer la langue",
@@ -1034,7 +1064,7 @@ const translations = {
   settings: {
     Français: "Paramètres",
     Anglais: "Settings",
-    Bambara: "Labɛnw",
+    Bambara: "Paramɛtiri",
   },
   add_employees: {
     Français: "Ajouter des employés",
@@ -1052,9 +1082,9 @@ const translations = {
     Bambara: "Lisi lajɛ PDF la",
   },
   language_changed: {
-    Français: "Langue changée en {language}",
-    Anglais: "Language changed to {language}",
-    Bambara: "Kan yɛlɛmana ka kɛ {language}",
+    Français: "Langue changée en",
+    Anglais: "Language changed to",
+    Bambara: "Kan yɛlɛmana ka kɛ",
   },
 
   // Traductions pour StudentListSidebar.jsx
@@ -1391,9 +1421,9 @@ const translations = {
     Bambara: "Baarakɛla foyi tɛ nin lisi in na",
   },
   click_button_to_start: {
-    Français: 'Cliquez sur le bouton "{button}" pour commencer',
-    Anglais: 'Click the "{button}" button to start',
-    Bambara: '"{button}" butɔn digi walasa ka daminɛ',
+    Français: "Cliquez sur le bouton pour commencer",
+    Anglais: "Click the button to start",
+    Bambara: "Butɔn digi walasa ka daminɛ",
   },
   remove_student: {
     Français: "Retirer l'élève",

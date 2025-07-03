@@ -1,40 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Trash, Check, X } from 'lucide-react';
-import { getClasseName, getBornInfos, getClasseById } from "../../utils/helpers";
+import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import { Trash, Check, X } from "lucide-react";
+import {
+  getClasseName,
+  getBornInfos,
+  getClasseById,
+} from "../../utils/helpers";
 import { useLanguage, useTheme } from "../contexts";
-import CountryInfosHeader from '../CountryInfosHeader.jsx';
-import { getHeaderNameByLang } from './utils';
+import CountryInfosHeader from "../CountryInfosHeader.jsx";
+import { getHeaderNameByLang } from "./utils";
+import { translate } from "./liste_rapide_translator";
+import { return_prof_trans, return_speciality_trans } from "../employes/utils";
+import { translate as employes_translator } from "../employes/employes_translator";
 
 const StudentListPreview = ({
   list,
   onRemoveStudent,
   onUpdateStudentCustomData,
   isEmployeeList = false,
-  db = { db }
+  db = { db },
 }) => {
   const [editingCell, setEditingCell] = useState(null);
-  const [editValue, setEditValue] = useState('');
+  const [editValue, setEditValue] = useState("");
   const inputRef = useRef(null);
 
-  const { live_language, language, Translator } = useLanguage();
+  const { language, Translator } = useLanguage();
   const { text_color } = useTheme();
   const list_lang = list.langue ? list.langue : "Français";
   // console.log(list_lang);
 
-  const made_text = list_lang === "Français" ? "Fait, le" : list_lang === "Anglais" ? "Done," : "Kɛra,";
+  const translate_postes = (postes = []) => {
+    let poste_trans = [];
+    postes.forEach((poste) => {
+      if (!poste_trans.includes(poste)) {
+        const _post = return_prof_trans(poste, list_lang);
+        poste_trans.push(_post);
+      }
+    });
+    return poste_trans;
+  };
+  const translate_speciality = (speciality = null) => {
+    const _speciality = return_speciality_trans(
+      employes_translator,
+      speciality,
+      list_lang
+    );
+    // console.log(_speciality);
+    return _speciality;
+  };
+
+  const made_text =
+    list_lang === "Français"
+      ? "Fait, le"
+      : list_lang === "Anglais"
+      ? "Done,"
+      : "Kɛra,";
 
   // Handle click outside to cancel editing
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (editingCell && inputRef.current && !inputRef.current.contains(event.target)) {
+      if (
+        editingCell &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target)
+      ) {
         handleCancelEdit();
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [editingCell]);
 
@@ -42,48 +78,80 @@ const StudentListPreview = ({
   const allHeaders = [...list.headers, ...list.customHeaders];
 
   // Always ensure Prénom and Nom are included
-  if (!allHeaders.includes('Prénom')) allHeaders.unshift('Prénom');
-  if (!allHeaders.includes('Nom') && allHeaders.includes('Prénom')) allHeaders.splice(1, 0, 'Nom');
+  if (!allHeaders.includes("Prénom")) allHeaders.unshift("Prénom");
+  if (!allHeaders.includes("Nom") && allHeaders.includes("Prénom"))
+    allHeaders.splice(1, 0, "Nom");
 
   // If N° is selected, move it to the first position
-  if (allHeaders.includes('N°')) {
-    const index = allHeaders.indexOf('N°');
+  if (allHeaders.includes("N°")) {
+    const index = allHeaders.indexOf("N°");
     allHeaders.splice(index, 1);
-    allHeaders.unshift('N°');
+    allHeaders.unshift("N°");
   }
 
   // Determine which array to use (students or employees)
-  const listItems = isEmployeeList ? (list.employees || []) : (list.students || []);
+  const listItems = isEmployeeList ? list.employees || [] : list.students || [];
 
   // Get data for a specific header
   const getItemData = (item, header, index) => {
-    if (header === 'N°') {
+    if (header === "N°") {
       return index + 1;
     }
 
     if (isEmployeeList) {
       // Employee data
-      if (header === 'Prénom') return `${item?.first_name} ${item?.sure_name}`.trim() || '';
-      if (header === 'Nom') return item.last_name || '';
-      if (header === 'Matricule') return item.matricule || item.Matricule || '';
-      if (header === 'Contact') return item.contact || '';
-      if (header === 'Date de naissance') return item.birth_date ? new Date(item.birth_date).toLocaleDateString() : '';
-      if (header === 'Date de début') return item.service_started_at ? new Date(item.service_started_at).toLocaleDateString() : '';
-      if (header === 'Postes') return item.postes?.join(', ') || '';
-      if (header === 'Sexe') return item.sexe === 'M' ? 'Homme' : 'Femme';
-      if (header === 'Statut') return item.status === 'actif' ? 'Actif' : 'Inactif';
-      if (header === 'Signature') return '';
-      if (header === 'Salaire') {
-        if (item.postes?.includes('Professeurs')) {
+      if (header === "Prénom")
+        return `${item?.first_name} ${item?.sure_name}`.trim() || "";
+      if (header === "Nom") return item.last_name || "";
+      if (header === "Matricule") return item.matricule || item.Matricule || "";
+      if (header === "Contact") return item.contact || "";
+      if (header === "Date de naissance")
+        return item.birth_date
+          ? new Date(item.birth_date).toLocaleDateString()
+          : "";
+      if (header === "Date de début")
+        return item.service_started_at
+          ? new Date(item.service_started_at).toLocaleDateString()
+          : "";
+      if (header === "Postes")
+        return translate_postes(item.postes)?.join(", ") || "";
+      if (header === "Sexe")
+        return item.sexe === "M"
+          ? translate("male", list_lang)
+          : translate("female", list_lang);
+      if (header === "Statut")
+        return item.status === "actif"
+          ? translate("active", list_lang)
+          : translate("inactive", list_lang);
+      if (header === "Signature") return "";
+      if (header === "Salaire") {
+        if (item.postes?.includes("Professeurs")) {
           return item.proffesseur_config?.is_permanent
-            ? `${item.proffesseur_config?.salaire_monthly?.toLocaleString()} XOF/mois`
-            : `${item.proffesseur_config?.salaire_hourly?.toLocaleString()} XOF/heure`;
+            ? `${item.proffesseur_config?.salaire_monthly?.toLocaleString()} XOF/${translate(
+                "month",
+                list_lang
+              )}`
+            : `${item.proffesseur_config?.salaire_hourly?.toLocaleString()} XOF/${translate(
+                "hour",
+                list_lang
+              )}`;
         } else {
-          return `${item.others_employe_config?.salaire_monthly?.toLocaleString()} XOF/mois`;
+          return `${item.others_employe_config?.salaire_monthly?.toLocaleString()} XOF/${translate(
+            "month",
+            list_lang
+          )}`;
         }
       }
-      if (header === 'Spécialité') return item.postes?.includes('Professeurs') ? item.proffesseur_config?.speciality : '';
-      if ((header === 'classes' || header === 'Classes') && item.classes && Array.isArray(item.classes) && item.classes.length > 0) {
+      if (header === "Spécialité")
+        return item.postes?.includes("Professeurs")
+          ? translate_speciality(item.proffesseur_config?.speciality)
+          : "";
+      if (
+        (header === "classes" || header === "Classes") &&
+        item.classes &&
+        Array.isArray(item.classes) &&
+        item.classes.length > 0
+      ) {
         let prof_classes = [];
         for (let i = 0; i < item.classes.length; i++) {
           const classe = getClasseById(db.classes, item.classes[i], list_lang);
@@ -92,24 +160,30 @@ const StudentListPreview = ({
           prof_classes.push(classeName);
         }
         console.log(prof_classes);
-        return prof_classes.join(" , ");
-      };
+        return prof_classes.join(", ");
+      }
     } else {
       // Student data
-      if (header === 'Prénom') return `${item?.first_name} ${item?.sure_name}`.trim() || '';
-      if (header === 'Nom') return item.last_name || '';
-      if (header === 'Matricule') return item.matricule || item.Matricule || '';
-      if (header === 'Père') return item.father_name || '';
-      if (header === 'Mère') return item.mother_name || '';
-      if (header === 'Contact') return item.parents_contact || '';
-      if (header === 'Date & Lieu de naissance') {
+      if (header === "Prénom")
+        return `${item?.first_name} ${item?.sure_name}`.trim() || "";
+      if (header === "Nom") return item.last_name || "";
+      if (header === "Matricule") return item.matricule || item.Matricule || "";
+      if (header === "Père") return item.father_name || "";
+      if (header === "Mère") return item.mother_name || "";
+      if (header === "Contact") return item.parents_contact || "";
+      if (header === "Date & Lieu de naissance") {
         // const _birth_date = new Date(student.birth_date).toLocaleDateString() || '';
-        return `${getBornInfos(item.birth_date, item.birth_place, list_lang)}`.trim();
-      };
-      if (header === 'Moyenne') return item.Moyenne || '';
-      if (header === 'Classe') return getClasseName(item.classe) || '';
-      if (header === 'Âge') {
-        if (!item.birth_date) return '';
+        return `${getBornInfos(
+          item.birth_date,
+          item.birth_place,
+          list_lang
+        )}`.trim();
+      }
+      if (header === "Moyenne") return item.Moyenne || "";
+      if (header === "Classe")
+        return getClasseName(item.classe, list_lang) || "";
+      if (header === "Âge") {
+        if (!item.birth_date) return "";
         const birthDate = new Date(item.birth_date);
         const today = new Date();
         let age = today.getFullYear() - birthDate.getFullYear();
@@ -117,20 +191,26 @@ const StudentListPreview = ({
         if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
           age--;
         }
-        const student_age = list_lang === "Bambara" ? `${Translator[list_lang].years_text} ${age.toString()}` : `${age.toString()} ${Translator[list_lang].years_text}`;
+        const student_age =
+          list_lang === "Bambara"
+            ? `${Translator[list_lang].years_text} ${age.toString()}`
+            : `${age.toString()} ${Translator[list_lang].years_text}`;
         return student_age;
       }
-      if (header === 'Sexe') return item.sexe || '';
-      if (header === 'Signature') return '';
+      if (header === "Sexe")
+        return list_lang === "Bambara"
+          ? item.sexe === "F"
+            ? "M"
+            : "C"
+          : item.sexe || "";
+      if (header === "Signature") return "";
     }
 
-    // Custom header 
+    // Custom header
     // console.log(item);
     // console.log(header);
     // console.log(item[header]);
-    return item[header] && item[header] !== undefined
-      ? item[header]
-      : '';
+    return item[header] && item[header] !== undefined ? item[header] : "";
   };
 
   // Handle cell click for custom data
@@ -139,7 +219,7 @@ const StudentListPreview = ({
     const isCustomHeader = list.customHeaders.includes(header);
     const value = getItemData(item, header, index);
 
-    if (isCustomHeader || value === '') {
+    if (isCustomHeader || value === "") {
       setEditingCell({ itemId: item.id, header });
       setEditValue(value);
     }
@@ -152,11 +232,15 @@ const StudentListPreview = ({
 
     if (editingCell) {
       // Call the appropriate update function based on list type
-      onUpdateStudentCustomData(editingCell.itemId, editingCell.header, editValue);
+      onUpdateStudentCustomData(
+        editingCell.itemId,
+        editingCell.header,
+        editValue
+      );
 
       // Close the editor after saving
       setEditingCell(null);
-      setEditValue('');
+      setEditValue("");
     }
   };
 
@@ -166,23 +250,23 @@ const StudentListPreview = ({
     if (e) e.stopPropagation();
 
     setEditingCell(null);
-    setEditValue('');
+    setEditValue("");
   };
 
   // Handle key press in input
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSaveCell();
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       handleCancelEdit();
     }
   };
 
   // Calculate page dimensions based on orientation
-  const pageWidth = list.orientation === 'portrait' ? '210mm' : '297mm';
+  const pageWidth = list.orientation === "portrait" ? "210mm" : "297mm";
 
   // Number of items to display per page
-  const FIRST_PAGE_COUNT = list.orientation === 'portrait' ? 15 : 12;
+  const FIRST_PAGE_COUNT = list.orientation === "portrait" ? 15 : 12;
   const OTHER_PAGE_COUNT = 20;
 
   const totalItems = listItems.length;
@@ -221,11 +305,11 @@ const StudentListPreview = ({
           className="mb-8 shadow-lg bg-white student-list-preview-container"
           style={{
             width: pageWidth,
-            padding: '10mm',
-            position: 'relative',
-            overflow: 'hidden',
-            breakInside: 'avoid',
-            pageBreakAfter: 'always',
+            padding: "10mm",
+            position: "relative",
+            overflow: "hidden",
+            breakInside: "avoid",
+            pageBreakAfter: "always",
           }}
           data-page={pageIndex + 1}
           data-total-pages={totalPages}
@@ -233,11 +317,13 @@ const StudentListPreview = ({
           {/* Title - Only on first page */}
           {pageIndex === 0 && (
             <>
-              {list.countryInfosHeader.show &&
-                <div className='mb-10'>
+              {list.countryInfosHeader.show && (
+                <div className="mb-10">
                   <CountryInfosHeader
                     Head_language={list_lang}
-                    centerType={list.countryInfosHeader.isCAP ? "CAP" : "ACADEMIE"}
+                    centerType={
+                      list.countryInfosHeader.isCAP ? "CAP" : "ACADEMIE"
+                    }
                     school_name={db.name}
                     school_short_name={db.short_name}
                     school_zone_name={db.zone}
@@ -245,12 +331,12 @@ const StudentListPreview = ({
                     margLeft=""
                   />
                 </div>
-              }
+              )}
 
               <div
                 style={{
                   ...list.title.style,
-                  marginBottom: '10mm',
+                  marginBottom: "10mm",
                 }}
               >
                 {list.title.text}
@@ -260,22 +346,29 @@ const StudentListPreview = ({
 
           {/* Table */}
           {pageItems.length > 0 && (
-            <table className={`w-full border-collapse ${tableBorderColor} border`}>
+            <table
+              className={`w-full border-collapse ${tableBorderColor} border`}
+            >
               <thead>
                 <tr className={`${tableHeaderBgColor}`}>
-                  {allHeaders.map(header => (
+                  {allHeaders.map((header) => (
                     <th
                       key={header}
                       className={`border ${tableBorderColor} p-2 text-left`}
                       style={{
-                        minWidth: header === 'N°' ? '50px' : 'auto',
-                        maxWidth: header === 'Prénom' || header === 'Nom' ? '150px' : 'auto'
+                        minWidth: header === "N°" ? "50px" : "auto",
+                        maxWidth:
+                          header === "Prénom" || header === "Nom"
+                            ? "150px"
+                            : "auto",
                       }}
                     >
                       {getHeaderNameByLang(header, list_lang)}
                     </th>
                   ))}
-                  <th className={`border ${tableBorderColor} p-2 text-center w-12 no-print`}>
+                  <th
+                    className={`border ${tableBorderColor} p-2 text-center w-12 no-print`}
+                  >
                     {list_lang === "Bambara" ? "Yεlεma" : "Actions"}
                   </th>
                 </tr>
@@ -283,21 +376,28 @@ const StudentListPreview = ({
               <tbody>
                 {pageItems.map((item, index) => {
                   // Calculate the actual item index across all pages
-                  const globalIndex = pageIndex === 0 ? index :
-                    FIRST_PAGE_COUNT + (OTHER_PAGE_COUNT * (pageIndex - 1)) + index;
+                  const globalIndex =
+                    pageIndex === 0
+                      ? index
+                      : FIRST_PAGE_COUNT +
+                        OTHER_PAGE_COUNT * (pageIndex - 1) +
+                        index;
 
                   return (
                     <tr
                       key={item.id}
-                      className={`${index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor}`}
+                      className={`${
+                        index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor
+                      }`}
                     >
-                      {allHeaders.map(header => (
+                      {allHeaders.map((header) => (
                         <td
                           key={`${item.id}-${header}`}
                           className={`
                             border p-2 
                             ${tableBorderColor} 
-                            ${header === "Sexe" ||
+                            ${
+                              header === "Sexe" ||
                               header === "Classe" ||
                               header === "Moyenne" ||
                               header === "Date de naissance" ||
@@ -308,21 +408,36 @@ const StudentListPreview = ({
                               header === "Statut" ||
                               header === "Salaire" ||
                               (header === "Prénom" && item.sure_name !== "")
-                              ? "text-center" : ""
+                                ? "text-center"
+                                : ""
                             }
                           `}
                           onClick={() => {
-                            if (header === "Signature" || header === "signature") return;
+                            if (
+                              header === "Signature" ||
+                              header === "signature"
+                            )
+                              return;
                             handleCellClick(item, header, globalIndex);
                           }}
-                          style={{ cursor: list.customHeaders.includes(header) || getItemData(item, header, globalIndex) === '' ? 'pointer' : 'default' }}
+                          style={{
+                            cursor:
+                              list.customHeaders.includes(header) ||
+                              getItemData(item, header, globalIndex) === ""
+                                ? "pointer"
+                                : "default",
+                          }}
                         >
                           {editingCell &&
-                            editingCell.itemId === item.id &&
-                            editingCell.header === header &&
-                            header !== "Signature" &&
-                            header !== "signature" ? (
-                            <div className="flex items-center" ref={inputRef} onClick={(e) => e.stopPropagation()}>
+                          editingCell.itemId === item.id &&
+                          editingCell.header === header &&
+                          header !== "Signature" &&
+                          header !== "signature" ? (
+                            <div
+                              className="flex items-center"
+                              ref={inputRef}
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <input
                                 type="text"
                                 value={editValue}
@@ -337,7 +452,7 @@ const StudentListPreview = ({
                                   className="p-1 bg-green-600 text-white rounded mr-1"
                                   whileHover={{ scale: 1.1 }}
                                   whileTap={{ scale: 0.9 }}
-                                  title="Enregistrer"
+                                  title={translate("save", language)}
                                 >
                                   <Check size={16} />
                                 </motion.button>
@@ -346,7 +461,7 @@ const StudentListPreview = ({
                                   className="p-1 bg-red-600 text-white rounded"
                                   whileHover={{ scale: 1.1 }}
                                   whileTap={{ scale: 0.9 }}
-                                  title="Annuler"
+                                  title={translate("cancel", language)}
                                 >
                                   <X size={16} />
                                 </motion.button>
@@ -357,13 +472,19 @@ const StudentListPreview = ({
                           )}
                         </td>
                       ))}
-                      <td className={`border ${tableBorderColor} p-2 text-center no-print`}>
+                      <td
+                        className={`border ${tableBorderColor} p-2 text-center no-print`}
+                      >
                         <motion.button
                           onClick={() => onRemoveStudent(item.id)}
                           className={`${buttonDanger} p-1 rounded`}
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          title={`Retirer ${isEmployeeList ? "l'employé" : "l'élève"}`}
+                          title={
+                            isEmployeeList
+                              ? translate("remove_employee", language)
+                              : translate("remove_student", language)
+                          }
                         >
                           <Trash size={16} />
                         </motion.button>
@@ -376,7 +497,7 @@ const StudentListPreview = ({
           )}
 
           {/* Custom message (only on the last page) */}
-          {list.customMessage.show &&
+          {list.customMessage.show && (
             <>
               {pageIndex === totalPages - 1 && (
                 <div className="mt-5 text-right">
@@ -387,16 +508,23 @@ const StudentListPreview = ({
                       textDecorationStyle: "solid",
                     }}
                     className="text-lg font-bold mb-1"
-                  >{list.customMessage.text} : </div>
+                  >
+                    {list.customMessage.text} :{" "}
+                  </div>
                   <div
                     className="text-small italic font-medium"
                     style={{ marginBottom: "20%" }}
-                  >{list.customMessage.name}</div>
-                  <div className="mb-10">{made_text} {new Date(list.customMessage.date).toLocaleDateString()}</div>
+                  >
+                    {list.customMessage.name}
+                  </div>
+                  <div className="mb-10">
+                    {made_text}{" "}
+                    {new Date(list.customMessage.date).toLocaleDateString()}
+                  </div>
                 </div>
               )}
             </>
-          }
+          )}
 
           {/* Page number */}
           <div className="text-center text-sm mt-4">
@@ -408,10 +536,14 @@ const StudentListPreview = ({
       {listItems.length === 0 && (
         <div className="text-center p-8">
           <p className={`text-lg ${text_color}`}>
-            {isEmployeeList ? "Aucun employé dans cette liste" : "Aucun élève dans cette liste"}
+            {isEmployeeList
+              ? translate("no_employees_in_list", language)
+              : translate("no_students_in_list", language)}
           </p>
           <p className={`${text_color} opacity-75`}>
-            Cliquez sur le bouton "{isEmployeeList ? "Ajouter des employés" : "Ajouter des élèves"}" pour commencer
+            {isEmployeeList
+              ? translate("click_to_add_employees", language)
+              : translate("click_to_add_students", language)}
           </p>
         </div>
       )}
