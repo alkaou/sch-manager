@@ -92,6 +92,11 @@ const translations = {
     Anglais: "Change list type",
     Bambara: "Lisi suguyali yɛlɛma",
   },
+  type: {
+    Français: "Type",
+    Anglais: "Type",
+    Bambara: "Suguya",
+  },
 
   // List editing
   list_name: {
@@ -861,7 +866,7 @@ const translations = {
   bold: {
     Français: "Gras",
     Anglais: "Bold",
-    Bambara: "Kalaman",
+    Bambara: "Ɲɛ Bonya",
   },
   loading: {
     Français: "Chargement...",
@@ -1019,7 +1024,7 @@ const translations = {
   first_last_name_required: {
     Français: "Les en-têtes Prénom et Nom sont obligatoires",
     Anglais: "First name and Last name headers are required",
-    Bambara: "Tɔgɔ fɔlɔ ani Jamu kunfɛlaw ka kan ka kɛ yen",
+    Bambara: "Tɔgɔ fɔlɔ ani Jamu kunfɛlaw ka kan ka kɛ wajibila",
   },
   max_10_headers: {
     Français: "Vous ne pouvez pas sélectionner plus de 10 en-têtes",
@@ -1034,12 +1039,12 @@ const translations = {
   portrait: {
     Français: "portrait",
     Anglais: "portrait",
-    Bambara: "dajɛtaama",
+    Bambara: "jɔlen",
   },
   landscape: {
     Français: "paysage",
     Anglais: "landscape",
-    Bambara: "dajanfantama",
+    Bambara: "dalen",
   },
   cannot_change_list_type_1: {
     Français: "Cette liste contient déjà des",
@@ -1096,12 +1101,12 @@ const translations = {
   title_style: {
     Français: "Style du titre",
     Anglais: "Title Style",
-    Bambara: "Kunfɛ cogoya",
+    Bambara: "Kun dilalan ka cɛɲɛ",
   },
   title_text: {
     Français: "Texte du titre",
     Anglais: "Title Text",
-    Bambara: "Kunfɛ sɛbɛnni",
+    Bambara: "Kun sɛbɛnni tɔgɔ",
   },
   font: {
     Français: "Police",
@@ -1183,15 +1188,20 @@ const translations = {
     Anglais: "Text Style",
     Bambara: "Sɛbɛnni cogoya",
   },
+  text_of_style: {
+    Français: "Style de texte",
+    Anglais: "Style of text",
+    Bambara: "Sɛbɛnni cogoya dilan kaɲɛ",
+  },
   italic: {
     Français: "Italique",
     Anglais: "Italic",
-    Bambara: "Yɛlɛmanen",
+    Bambara: "Jɛgɛnen",
   },
   underline: {
     Français: "Souligné",
     Anglais: "Underline",
-    Bambara: "Cɛsirilen",
+    Bambara: "Kalaman",
   },
   alignment: {
     Français: "Alignement",
@@ -1201,7 +1211,7 @@ const translations = {
   left: {
     Français: "Gauche",
     Anglais: "Left",
-    Bambara: "Numankɛ",
+    Bambara: "Numanyanfan",
   },
   center: {
     Français: "Centre",
@@ -1212,6 +1222,11 @@ const translations = {
     Français: "Droite",
     Anglais: "Right",
     Bambara: "Kininyanfan",
+  },
+  encadrement: {
+    Français: "Encadrement du titre",
+    Anglais: "Title framing",
+    Bambara: "Tɔgɔ lamunumunu",
   },
   title_border: {
     Français: "Bordure du titre",
@@ -1226,12 +1241,12 @@ const translations = {
   underlined: {
     Français: "Souligné",
     Anglais: "Underlined",
-    Bambara: "Cɛsirilen",
+    Bambara: "Duguma Tiri",
   },
   top_line: {
     Français: "Ligne du haut",
     Anglais: "Top Line",
-    Bambara: "Sanfɛ cɛsiri",
+    Bambara: "Sanfɛ Tiri",
   },
   shadow: {
     Français: "Ombre",
@@ -1241,17 +1256,17 @@ const translations = {
   rounded: {
     Français: "Arrondi",
     Anglais: "Rounded",
-    Bambara: "Korolen",
+    Bambara: "Korilen",
   },
   colored_background: {
     Français: "Fond coloré",
     Anglais: "Colored Background",
-    Bambara: "Dugu ɲɛ",
+    Bambara: "Kɔnɔna Kulɛri",
   },
   double_line: {
     Français: "Double ligne",
     Anglais: "Double Line",
-    Bambara: "Cɛsiri fila",
+    Bambara: "Tiri fila",
   },
   gradient: {
     Français: "Dégradé",
@@ -1301,7 +1316,7 @@ const translations = {
   color: {
     Français: "Couleur",
     Anglais: "Color",
-    Bambara: "Ɲɛ",
+    Bambara: "Kulɛri",
   },
   advanced_options: {
     Français: "Options avancées",
@@ -1321,7 +1336,7 @@ const translations = {
   letter_spacing: {
     Français: "Espacement des lettres",
     Anglais: "Letter Spacing",
-    Bambara: "Sɛbɛnni cɛ",
+    Bambara: "Furancɛ Sɛbɛnniw cɛ",
   },
   outline: {
     Français: "Contour",
@@ -1329,14 +1344,14 @@ const translations = {
     Bambara: "Lamini",
   },
   standard_headers: {
-    Français: "En-têtes standards {isEmployeeList}",
-    Anglais: "Standard Headers {isEmployeeList}",
-    Bambara: "Kunfɛ ɲɛsinnenw {isEmployeeList}",
+    Français: "En-têtes standards",
+    Anglais: "Standard Headers",
+    Bambara: "Kunfɛ ɲɛsinnenw",
   },
   select_up_to_10_headers: {
-    Français: "Sélectionnez jusqu'à {count} en-têtes",
-    Anglais: "Select up to {count} headers",
-    Bambara: "Kunfɛ {count} sugandi",
+    Français: "Sélectionnez jusqu'à 10 en-têtes",
+    Anglais: "Select up to 10 headers",
+    Bambara: "Kunfɛ 10 sugandi",
   },
   custom_headers: {
     Français: "En-têtes personnalisés",
@@ -1376,7 +1391,7 @@ const translations = {
   example_message: {
     Français: "Ex: Le Directeur",
     Anglais: "Ex: The Director",
-    Bambara: "Ex: Kalan so Kuntigi",
+    Bambara: "Mi: Kalan so Kuntigi",
   },
   your_name: {
     Français: "Votre nom",
@@ -1384,9 +1399,9 @@ const translations = {
     Bambara: "I tɔgɔ",
   },
   example_name: {
-    Français: "Ex: Amadou Diallo",
-    Anglais: "Ex: Amadou Diallo",
-    Bambara: "Ex: Amadou Diallo",
+    Français: "Ex: Mamadou Dembélé",
+    Anglais: "Ex: Mamadou Dembele",
+    Bambara: "Mi: Mamadu Danbele",
   },
   date: {
     Français: "Date",
@@ -1394,7 +1409,7 @@ const translations = {
     Bambara: "Don",
   },
   country_header: {
-    Français: "En-tête pays",
+    Français: "En-tête Pays",
     Anglais: "Country Header",
     Bambara: "Jamana kunfɛ",
   },
@@ -1404,9 +1419,9 @@ const translations = {
     Bambara: "Jamana kunfɛ jira",
   },
   cap_instead_of_academy: {
-    Français: "CAP au lieu d'académie",
-    Anglais: "CAP instead of academy",
-    Bambara: "CAP kalanso nɔ na",
+    Français: "CAP au lieu d'Académie",
+    Anglais: "CAP instead of Academy",
+    Bambara: "Ka bɔ 'CAP' la ka kɛ 'Academi' ye",
   },
 
   // Traductions pour StudentListPreview.jsx
