@@ -1,15 +1,15 @@
 import React, { useRef, useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
-import BulletinPhysique1 from "./bulletins_physique/BulletinPhysique_1.jsx";
-import BulletinPhysique2 from "./bulletins_physique/BulletinPhysique_2.jsx";
+import BulletinPhysique1 from "../bulletins_physique/BulletinPhysique_1.jsx";
+import BulletinPhysique2 from "../bulletins_physique/BulletinPhysique_2.jsx";
 
 import {
   getAppreciation,
   calculateTotalPoints,
   getCurrentSchoolYear,
   calculateMainPoints,
-} from "./bulletin_utils/BulletinMethods.js";
+} from "../bulletin_utils/BulletinMethods.js";
 
 const BulletinComponent = ({
   student,
@@ -29,7 +29,7 @@ const BulletinComponent = ({
   printRef = useRef(null),
   language = "Français",
   type = null,
-  getStudentBulletinRef = () => {},
+  getStudentBulletinRef = () => { },
 }) => {
   // Styles conditionnels basés sur le thème
   const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -172,8 +172,8 @@ const BulletinComponent = ({
 
   const isSconcycle =
     studentClasseLevel === "7" ||
-    studentClasseLevel === "8" ||
-    studentClasseLevel === "9"
+      studentClasseLevel === "8" ||
+      studentClasseLevel === "9"
       ? true
       : false;
 

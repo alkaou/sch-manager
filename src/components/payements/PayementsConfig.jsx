@@ -4,8 +4,8 @@ import { getClasseName } from '../../utils/helpers';
 import { useLanguage } from '../contexts';
 import { useFlashNotification } from "../contexts";
 import { X } from "lucide-react";
-import ActionConfirmePopup from "../ActionConfirmePopup.jsx";
-import { gradients } from '../../utils/colors.js';
+import ActionConfirmePopup from "../popups/ActionConfirmePopup.jsx";
+import { gradients } from '../../utils/colors';
 
 const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) => {
     const { language } = useLanguage();
@@ -396,9 +396,9 @@ const PayementsConfig = ({ db, theme, app_bg_color, text_color, refreshData }) =
     // Styles en fonction du thème
     const cardBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
     const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-100";
-    const inputTextColor = app_bg_color === gradients[1] || 
-                            app_bg_color === gradients[2] || 
-                            theme === "dark" ? text_color : "text-gray-700";
+    const inputTextColor = app_bg_color === gradients[1] ||
+        app_bg_color === gradients[2] ||
+        theme === "dark" ? text_color : "text-gray-700";
     const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-300";
     const buttonBgColor = theme === "dark" ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600";
     const buttonAddColor = "bg-green-600 hover:bg-green-700";

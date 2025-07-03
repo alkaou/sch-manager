@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import StudentsTable from "../components/StudentsTable.jsx";
-import AddStudent from "../components/AddStudent.jsx";
-import ManageClasses from "../components/ManageClasses.jsx";
-import PageLoading from "../components/PageLoading.jsx";
+import StudentsTable from "../components/students/StudentsTable.jsx";
+import AddStudent from "../components/students/AddStudent.jsx";
+import ManageClasses from "../components/classes/ManageClasses.jsx";
+import PageLoading from "../components/partials/PageLoading.jsx";
 import EnrollmentStats from "../components/enrollements/EnrollmentStats.jsx";
 import { updateCurrentSnapshot } from "../utils/snapshotManager.js";
 

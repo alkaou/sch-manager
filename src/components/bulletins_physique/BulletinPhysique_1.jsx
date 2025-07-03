@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getClasseName } from "../../utils/helpers";
-import CountryInfosHeader from "../CountryInfosHeader.jsx";
+import CountryInfosHeader from "../partials/CountryInfosHeader.jsx";
 import { checkMoyenneGeneralToReturnStudentMention } from "../bulletin_utils/bullettin_methods";
 
 const BulletinPhysique1 = ({

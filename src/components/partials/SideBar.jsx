@@ -7,8 +7,8 @@ import {
   LucideBookOpenText, ArrowBigLeft, Users2Icon, Receipt
 } from "lucide-react";
 
-import { useTheme, useLanguage, useFlashNotification } from "./contexts";
-import { updateDatabaseNameAndShortName } from "../utils/database_methods";
+import { useTheme, useLanguage, useFlashNotification } from "../contexts";
+import { updateDatabaseNameAndShortName } from "../../utils/database_methods";
 
 const SideBar = ({
   setIsOpenPopup,

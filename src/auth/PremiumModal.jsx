@@ -4,7 +4,7 @@ import { X, Check, Crown, AlertCircle } from 'lucide-react';
 import { useTheme } from '../components/contexts';
 import { useLanguage } from '../components/contexts';
 import { useAuth } from './AuthContext';
-import AlertPopup from '../components/AlertPopup.jsx';
+import AlertPopup from '../components/popups/AlertPopup.jsx';
 import translations from './auth_translator';
 
 const PremiumModal = ({ isOpen, onClose }) => {
@@ -14,25 +14,25 @@ const PremiumModal = ({ isOpen, onClose }) => {
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  
+
   // Translation helper function
   const t = (key, replacements = {}) => {
     if (!translations[key]) return key;
     let text = translations[key][language] || translations[key]["Français"];
-    
+
     // Handle replacements for dynamic content
     Object.entries(replacements).forEach(([key, value]) => {
       text = text.replace(`{${key}}`, value);
     });
-    
+
     return text;
   };
-  
+
   // Theme-based styles
   const bgColor = theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700';
   const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-800';
   const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
-  
+
   // Premium plans
   const plans = [
     {
@@ -74,7 +74,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
       ]
     }
   ];
-  
+
   // Handle subscription
   const handleSubscribe = () => {
     // Here you would implement your payment processing logic
@@ -83,13 +83,13 @@ const PremiumModal = ({ isOpen, onClose }) => {
     setAlertMessage(t('subscription_message', { plan: planName }));
     setIsAlertOpen(true);
   };
-  
+
   // Handle alert close
   const handleAlertClose = () => {
     setIsAlertOpen(false);
     onClose(); // Close the modal after alert is dismissed
   };
-  
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -127,7 +127,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
                   {t('unlock_all_features')}
                 </p>
               </div>
-              
+
               {/* Body */}
               <div className="p-3 sm:p-4 md:p-6">
                 {!isAuthenticated && (
@@ -139,32 +139,30 @@ const PremiumModal = ({ isOpen, onClose }) => {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Plans */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                   {plans.map((plan) => (
                     <motion.div
                       key={plan.id}
                       whileHover={{ y: -5 }}
-                      className={`${
-                        selectedPlan === plan.id
+                      className={`${selectedPlan === plan.id
                           ? 'border-blue-500 ring-2 ring-blue-500/20'
                           : `${borderColor}`
-                      } border rounded-xl overflow-hidden cursor-pointer transition-all`}
+                        } border rounded-xl overflow-hidden cursor-pointer transition-all`}
                       onClick={() => setSelectedPlan(plan.id)}
                     >
-                      <div className={`p-3 sm:p-4 md:p-6 ${
-                        selectedPlan === plan.id
+                      <div className={`p-3 sm:p-4 md:p-6 ${selectedPlan === plan.id
                           ? 'bg-blue-500 text-white'
                           : theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
-                      }`}>
+                        }`}>
                         <h3 className="text-base sm:text-lg md:text-xl font-bold">{plan.name}</h3>
                         <div className="mt-2 flex items-baseline">
                           <span className="text-xl sm:text-2xl md:text-3xl font-extrabold">{plan.price}</span>
                           <span className="ml-1 text-xs sm:text-sm opacity-80">{plan.period}</span>
                         </div>
                       </div>
-                      
+
                       <div className="p-3 sm:p-4 md:p-6">
                         <ul className="space-y-2 sm:space-y-3 text-sm sm:text-base">
                           {plan.features.map((feature, index) => (
@@ -178,7 +176,7 @@ const PremiumModal = ({ isOpen, onClose }) => {
                     </motion.div>
                   ))}
                 </div>
-                
+
                 {/* Action buttons */}
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
                   <button
@@ -190,9 +188,8 @@ const PremiumModal = ({ isOpen, onClose }) => {
                   <button
                     onClick={handleSubscribe}
                     disabled={!isAuthenticated}
-                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors flex items-center justify-center gap-2 text-sm sm:text-base ${
-                      !isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
+                    className={`px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors flex items-center justify-center gap-2 text-sm sm:text-base ${!isAuthenticated ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                   >
                     <Crown size={16} className="sm:w-5 sm:h-5" />
                     <span>{t('subscribe_now')}</span>
@@ -201,9 +198,9 @@ const PremiumModal = ({ isOpen, onClose }) => {
               </div>
             </motion.div>
           </motion.div>
-          
+
           {/* Custom Alert Popup */}
-          <AlertPopup 
+          <AlertPopup
             isOpenAlertPopup={isAlertOpen}
             setIsOpenAlertPopup={handleAlertClose}
             title={t('subscription_initiated')}

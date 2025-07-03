@@ -1,5 +1,5 @@
 import React from "react";
-import { textToUppercase } from "../utils/helpers";
+import { textToUppercase } from "../../utils/helpers";
 
 export default function CountryInfosHeader({
 	Head_language = "Français",

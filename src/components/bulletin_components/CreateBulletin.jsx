@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Trash, Check, X, Save } from 'lucide-react';
 import secureLocalStorage from "react-secure-storage";
-import { useLanguage, useFlashNotification } from "./contexts";
-import { gradients } from '../utils/colors';
-import { getCurrentSchoolYear } from '../utils/schoolYear';
+import { useLanguage, useFlashNotification } from "../contexts";
+import { gradients } from '../../utils/colors';
+import { getCurrentSchoolYear } from '../../utils/schoolYear';
 
 const CreateBulletin = ({
     selectedComposition,
@@ -337,10 +337,10 @@ const CreateBulletin = ({
 
     const authorizedSections = getAuthorizedSections();
 
-    const inputBgColor = theme === "dark" || app_bg_color === gradients[1] || 
-                app_bg_color === gradients[2] ? `${app_bg_color} ${textClass} bg-opacity-50` : 
-                "bg-gray-700 text-white bg-opacity-70"
-    
+    const inputBgColor = theme === "dark" || app_bg_color === gradients[1] ||
+        app_bg_color === gradients[2] ? `${app_bg_color} ${textClass} bg-opacity-50` :
+        "bg-gray-700 text-white bg-opacity-70"
+
 
     return (
         <div className={`${textClass}`}>

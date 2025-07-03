@@ -7,7 +7,7 @@ import {
   getClasseById,
 } from "../../utils/helpers";
 import { useLanguage, useTheme } from "../contexts";
-import CountryInfosHeader from "../CountryInfosHeader.jsx";
+import CountryInfosHeader from "../partials/CountryInfosHeader.jsx";
 import { getHeaderNameByLang } from "./utils";
 import { translate } from "./liste_rapide_translator";
 import { return_prof_trans, return_speciality_trans } from "../employes/utils";
@@ -53,8 +53,8 @@ const StudentListPreview = ({
     list_lang === "Français"
       ? "Fait, le"
       : list_lang === "Anglais"
-      ? "Done,"
-      : "Kɛra,";
+        ? "Done,"
+        : "Kɛra,";
 
   // Handle click outside to cancel editing
   useEffect(() => {
@@ -128,13 +128,13 @@ const StudentListPreview = ({
         if (item.postes?.includes("Professeurs")) {
           return item.proffesseur_config?.is_permanent
             ? `${item.proffesseur_config?.salaire_monthly?.toLocaleString()} XOF/${translate(
-                "month",
-                list_lang
-              )}`
+              "month",
+              list_lang
+            )}`
             : `${item.proffesseur_config?.salaire_hourly?.toLocaleString()} XOF/${translate(
-                "hour",
-                list_lang
-              )}`;
+              "hour",
+              list_lang
+            )}`;
         } else {
           return `${item.others_employe_config?.salaire_monthly?.toLocaleString()} XOF/${translate(
             "month",
@@ -380,15 +380,14 @@ const StudentListPreview = ({
                     pageIndex === 0
                       ? index
                       : FIRST_PAGE_COUNT +
-                        OTHER_PAGE_COUNT * (pageIndex - 1) +
-                        index;
+                      OTHER_PAGE_COUNT * (pageIndex - 1) +
+                      index;
 
                   return (
                     <tr
                       key={item.id}
-                      className={`${
-                        index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor
-                      }`}
+                      className={`${index % 2 === 0 ? tableRowBgColor : tableRowAltBgColor
+                        }`}
                     >
                       {allHeaders.map((header) => (
                         <td
@@ -396,8 +395,7 @@ const StudentListPreview = ({
                           className={`
                             border p-2 
                             ${tableBorderColor} 
-                            ${
-                              header === "Sexe" ||
+                            ${header === "Sexe" ||
                               header === "Classe" ||
                               header === "Moyenne" ||
                               header === "Date de naissance" ||
@@ -408,8 +406,8 @@ const StudentListPreview = ({
                               header === "Statut" ||
                               header === "Salaire" ||
                               (header === "Prénom" && item.sure_name !== "")
-                                ? "text-center"
-                                : ""
+                              ? "text-center"
+                              : ""
                             }
                           `}
                           onClick={() => {
@@ -423,16 +421,16 @@ const StudentListPreview = ({
                           style={{
                             cursor:
                               list.customHeaders.includes(header) ||
-                              getItemData(item, header, globalIndex) === ""
+                                getItemData(item, header, globalIndex) === ""
                                 ? "pointer"
                                 : "default",
                           }}
                         >
                           {editingCell &&
-                          editingCell.itemId === item.id &&
-                          editingCell.header === header &&
-                          header !== "Signature" &&
-                          header !== "signature" ? (
+                            editingCell.itemId === item.id &&
+                            editingCell.header === header &&
+                            header !== "Signature" &&
+                            header !== "signature" ? (
                             <div
                               className="flex items-center"
                               ref={inputRef}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { saveStudent, updateStudent } from '../utils/database_methods';
+import { saveStudent, updateStudent } from '../../utils/database_methods';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage, useFlashNotification } from './contexts';
-import { gradients } from '../utils/colors';
-import { getClasseName, getAge } from "../utils/helpers";
-import { suggestNames, suggestLastNames, suggNameComplete, suggCitiesNames } from "../utils/suggestionNames";
-import AutocompleteInput from "./AutocompleteInput.jsx";
+import { useLanguage, useFlashNotification } from '../contexts';
+import { gradients } from '../../utils/colors';
+import { getClasseName, getAge } from "../../utils/helpers";
+import { suggestNames, suggestLastNames, suggNameComplete, suggCitiesNames } from "../../utils/suggestionNames";
+import AutocompleteInput from "../partials/AutocompleteInput.jsx";
 
 const AddStudent = ({
   setIsAddStudentActive,

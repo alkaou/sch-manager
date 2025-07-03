@@ -2,12 +2,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useTheme } from "../components/contexts";
-import Navbar from "../components/NavBar.jsx";
-import SideBar from "../components/SideBar.jsx";
-import Popup from "../components/Popup.jsx";
-import FloatingMenu from "../components/MenuFloatting.jsx";
-import AppParameters from "../components/AppParameters.jsx";
-import ColorsSelector from "../components/ColorsSelector.jsx";
+import Navbar from "../components/partials/NavBar.jsx";
+import SideBar from "../components/partials/SideBar.jsx";
+import Popup from "../components/popups/Popup.jsx";
+import FloatingMenu from "../components/floattings/MenuFloatting.jsx";
+import AppParameters from "../components/settings/AppParameters.jsx";
+import ColorsSelector from "../components/settings/ColorsSelector.jsx";
 
 const AdvancedLayout = () => {
   // États et logique communs

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import secureLocalStorage from "react-secure-storage";
 import { Check } from "lucide-react";
 
-import { useLanguage, useTheme } from "./contexts";
-import { gradients } from "../utils/colors";
-import { Translator } from "../utils/Translator";
+import { useLanguage, useTheme } from "../contexts";
+import { gradients } from "../../utils/colors";
+import { Translator } from "../../utils/Translator";
 
 const ColorsSelector = ({ OpenThePopup }) => {
     const [selectedColor, setSelectedColor] = useState(gradients[0]);

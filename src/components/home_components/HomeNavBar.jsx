@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Moon, Sun, LogIn, User, Settings, Bell, ChevronDown, LogOut, HelpCircle, Crown } from 'lucide-react';
-import LanguageSelector from '../LanguageSelector.jsx';
+import LanguageSelector from '../partials/LanguageSelector.jsx';
 import { useTheme, useLanguage } from '../contexts';
 import { useAuth } from '../../auth/AuthContext';
 import LoginModal from '../../auth/LoginModal.jsx';
 import PremiumModal from '../../auth/PremiumModal.jsx';
 
 // En haut de votre fichier React
-import { LogoSVG } from "../Logo.svg.jsx";
+import { LogoSVG } from "../partials/Logo.svg.jsx";
 
 const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

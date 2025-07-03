@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaCalculator, FaCalendarAlt, FaRegLightbulb, FaPlus } from "react-icons/fa";
 import AdvancedCalculator from "./AdvancedCalculator.jsx";
 import AdvancedCalendar from "./AdvancedCalendar.jsx";
-import { useLanguage } from "./contexts.js";
+import { useLanguage } from "../contexts";
 
 const FloatingMenu = () => {
   const [menuOpen, setMenuOpen] = useState(false);

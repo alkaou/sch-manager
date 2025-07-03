@@ -6,12 +6,12 @@ import { getClasseName } from '../utils/helpers';
 import { useLanguage, useFlashNotification } from '../components/contexts';
 import { Search, Filter, Plus, Edit, Trash, Eye, FileText, CheckSquare, RefreshCcw, Unlock, Lock } from 'lucide-react';
 
-import CreateBulletin from "../components/CreateBulletin.jsx";
-import GetBulletinStudents from "../components/GetBulletinStudents.jsx";
-import BulletinNotes from "../components/BulletinNotes.jsx";
-import ShowAllBulletin from "../components/ShowAllBulletin.jsx";
-import ActionConfirmePopup from '../components/ActionConfirmePopup.jsx';
-import PageLoading from "../components/PageLoading.jsx";
+import CreateBulletin from "../components/bulletin_components/CreateBulletin.jsx";
+import GetBulletinStudents from "../components/bulletin_components/GetBulletinStudents.jsx";
+import BulletinNotes from "../components/bulletin_components/BulletinNotes.jsx";
+import ShowAllBulletin from "../components/bulletin_components/ShowAllBulletin.jsx";
+import ActionConfirmePopup from '../components/popups/ActionConfirmePopup.jsx';
+import PageLoading from "../components/partials/PageLoading.jsx";
 
 
 const BulletinsPageContent = ({

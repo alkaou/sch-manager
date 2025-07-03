@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useTheme } from "./contexts";
+import { useTheme } from "../contexts";
 
 const AutocompleteInput = ({ suggestions, value, onChange, placeholder, inputClass }) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);

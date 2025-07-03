@@ -10,19 +10,19 @@ import {
   Check,
   Globe,
 } from "lucide-react";
-import { translations } from "../utils/bulletin_translation";
-import BulletinCard from "./bulletin_components/BulletinCard.jsx";
-import BulletinSettings from "./bulletin_components/BulletinSettings.jsx";
-import BulletinFilters from "./bulletin_components/BulletinFilters.jsx";
-import BulletinPagination from "./bulletin_components/BulletinPagination.jsx";
-import { generateMultipleBulletinsPDF } from "./bulletin_utils/BulletinPDFGenerator";
+import { translations } from "../../utils/bulletin_translation";
+import BulletinCard from "./BulletinCard.jsx";
+import BulletinSettings from "./BulletinSettings.jsx";
+import BulletinFilters from "./BulletinFilters.jsx";
+import BulletinPagination from "./BulletinPagination.jsx";
+import { generateMultipleBulletinsPDF } from "../bulletin_utils/BulletinPDFGenerator";
 import {
   sortStudentsByAverage,
   sortStudentsByName,
-} from "./bulletin_utils/BulletinMethods";
-import { getClasseName } from "../utils/helpers";
-import { useLanguage } from "./contexts";
-import { gradients } from "../utils/colors";
+} from "../bulletin_utils/BulletinMethods";
+import { getClasseName } from "../../utils/helpers";
+import { useLanguage } from "../contexts";
+import { gradients } from "../../utils/colors";
 
 const ShowAllBulletin = ({
   selectedComposition,
@@ -61,8 +61,8 @@ const ShowAllBulletin = ({
   // Styles based on theme
   const opacity =
     theme === "dark" ||
-    app_bg_color === gradients[1] ||
-    app_bg_color === gradients[2]
+      app_bg_color === gradients[1] ||
+      app_bg_color === gradients[2]
       ? "bg-opacity-30"
       : "bg-opacity-50";
   const bgColor = `${app_bg_color} ${textClass}`;
@@ -251,11 +251,10 @@ const ShowAllBulletin = ({
             {live_language.title}
           </h2>
           <div
-            className={`px-3 py-1 rounded-full text-sm font-medium ${
-              theme === "dark"
+            className={`px-3 py-1 rounded-full text-sm font-medium ${theme === "dark"
                 ? "bg-blue-900 text-blue-200"
                 : "bg-blue-100 text-blue-800"
-            }`}
+              }`}
           >
             {selectedComposition?.label} - {getClasseName(className)}
           </div>
@@ -298,9 +297,8 @@ const ShowAllBulletin = ({
           <button
             onClick={handleGeneratePDF}
             disabled={generating}
-            className={`p-2 rounded-lg ${buttonPrimary} border border-2 border-white text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${
-              generating ? "opacity-70 cursor-not-allowed" : ""
-            }`}
+            className={`p-2 rounded-lg ${buttonPrimary} border border-2 border-white text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${generating ? "opacity-70 cursor-not-allowed" : ""
+              }`}
           >
             {generating ? (
               <>
@@ -378,11 +376,10 @@ const ShowAllBulletin = ({
                 className="relative"
               >
                 <div
-                  className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
-                    selectedStudents.includes(student.id)
+                  className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${selectedStudents.includes(student.id)
                       ? "bg-blue-600 text-white"
                       : `${cardBgColor} border ${borderColor} ${textClass}`
-                  }`}
+                    }`}
                   onClick={() => toggleStudentSelection(student.id)}
                 >
                   {selectedStudents.includes(student.id) && <Check size={16} />}

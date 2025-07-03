@@ -3,10 +3,10 @@ import { useOutletContext } from "react-router-dom";
 import { motion } from 'framer-motion';
 import { gradients } from '../utils/colors';
 import { getClasseName } from '../utils/helpers';
-import { useLanguage } from '../components/contexts.js';
-import ActionConfirmePopup from '../components/ActionConfirmePopup.jsx';
-import CreateCompositionComponent from "../components/CreateCompositionComponent.jsx";
-import PageLoading from "../components/PageLoading.jsx";
+import { useLanguage } from '../components/contexts';
+import ActionConfirmePopup from '../components/popups/ActionConfirmePopup.jsx';
+import CreateCompositionComponent from "../components/compositions/CreateCompositionComponent.jsx";
+import PageLoading from "../components/partials/PageLoading.jsx";
 
 const CompositionsPageContent = ({
   app_bg_color,

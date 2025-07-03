@@ -6,10 +6,10 @@ import { FaSchool, FaMapMarkerAlt, FaBookOpen } from 'react-icons/fa';
 import { HiOutlineArrowNarrowLeft, HiOutlineArrowNarrowRight } from 'react-icons/hi';
 import { X } from "lucide-react";
 
-import TextInput from './TextInput.jsx';
-import { useLanguage as useLang, useTheme, useFlashNotification } from "./contexts";
-import Error from './Error.jsx';
-import { getFormattedDateTime, getDateTime } from '../utils/helpers';
+import TextInput from '../partials/TextInput.jsx';
+import { useLanguage as useLang, useTheme, useFlashNotification } from "../contexts.js";
+import Error from '../partials/Error.jsx';
+import { getFormattedDateTime, getDateTime } from '../../utils/helpers.js';
 
 function DatabaseCreator({ setIsOpenPopup }) {
 	const [dbName, setDbName] = useState("");

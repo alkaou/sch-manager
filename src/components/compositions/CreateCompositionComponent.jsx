@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from 'framer-motion';
-import { gradients } from "../utils/colors";
+import { gradients } from "../../utils/colors";
 
 const CreateCompositionComponent = ({
   compositions,

@@ -5,10 +5,10 @@ import {
   LogOut, User, Settings, Bell, ChevronDown,
   Crown, HelpCircle, Moon, Sun, LogIn
 } from "lucide-react";
-import { useTheme } from "./contexts";
-import { useAuth } from "../auth/AuthContext";
-import LoginModal from "../auth/LoginModal.jsx";
-import PremiumModal from "../auth/PremiumModal.jsx";
+import { useTheme } from "../contexts.js";
+import { useAuth } from "../../auth/AuthContext.js";
+import LoginModal from "../../auth/LoginModal.jsx";
+import PremiumModal from "../../auth/PremiumModal.jsx";
 
 import { LogoSVG } from "./Logo.svg.jsx";
 

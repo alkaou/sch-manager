@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Edit, Trash, FileText, Clock, Calendar, Users, Briefcase } from 'lucide-react';
-import ActionConfirmePopup from '../ActionConfirmePopup.jsx';
+import ActionConfirmePopup from '../popups/ActionConfirmePopup.jsx';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { translate } from './liste_rapide_translator';

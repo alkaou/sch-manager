@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { gradients } from '../utils/colors';
-import { getClasseName } from '../utils/helpers';
-import { useLanguage } from './contexts.js';
+import { gradients } from '../../utils/colors';
+import { getClasseName } from '../../utils/helpers';
+import { useLanguage } from './../contexts.js';
 
 const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, theme }) => {
   const { live_language, language } = useLanguage();
@@ -26,10 +26,10 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
   const buttonDelete = "bg-red-600 hover:bg-red-700";
   const buttonAdd = "bg-green-600 hover:bg-green-700";
   const shinyBorderColor = theme === "dark" ? "border-blue-400" : "border-purple-400";
-  const hoverClass = app_bg_color === gradients[1] ? "hover:bg-white hover:text-gray-700" : 
-      app_bg_color === gradients[2] ? "hover:bg-gray-200 hover:text-gray-700" : 
+  const hoverClass = app_bg_color === gradients[1] ? "hover:bg-white hover:text-gray-700" :
+    app_bg_color === gradients[2] ? "hover:bg-gray-200 hover:text-gray-700" :
       theme === "dark" ? "hover:bg-gray-700 hover:text-white" : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white"
-                  
+
 
   const loadDatabase = async () => {
     try {
@@ -44,7 +44,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       console.error("Erreur lors du chargement de la base de données:", error);
     }
   };
-  
+
   // Charger la DB et initialiser classes
   useEffect(() => {
     loadDatabase();
@@ -140,7 +140,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       });
     });
     const updatedDB = { ...db, classes: updatedClasses };
-    
+
     try {
       await window.electron.saveDatabase(updatedDB);
       setClasses(updatedClasses);
@@ -156,7 +156,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
     if (!classToDelete) return;
     const updatedClasses = classes.filter(cls => cls.id !== classToDelete.id);
     const updatedDB = { ...db, classes: updatedClasses };
-    
+
     try {
       await window.electron.saveDatabase(updatedDB);
       setClasses(updatedClasses);
@@ -182,7 +182,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setGlobalError("Le niveau doit être entre 1 et 12.");
       return;
     }
-    
+
     // Vérification de la duplication sur la combinaison niveau + nom pour l'édition
     const duplicate = classes.find(
       cls => cls.id !== editingClassId &&
@@ -193,19 +193,19 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       setGlobalError("Cette classe existe déjà.");
       return;
     }
-    
+
     // Trouver la classe originale avant modification
     const originalClass = classes.find(cls => cls.id === editingClassId);
     const originalClassName = `${originalClass.level} ${originalClass.name}`.trim();
     const newClassName = `${editedClass.level} ${editedClass.name}`.trim();
-    
+
     const updatedClasses = classes.map((cls) => {
       if (cls.id === editingClassId) {
         return { ...cls, level: Number(editedClass.level), name: editedClass.name.trim() };
       }
       return cls;
     });
-    
+
     // Mettre à jour les élèves associés à cette classe
     let updatedStudents = [];
     if (db.students && originalClassName !== newClassName) {
@@ -218,13 +218,13 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
     } else {
       updatedStudents = db.students || [];
     }
-    
-    const updatedDB = { 
-      ...db, 
+
+    const updatedDB = {
+      ...db,
       classes: updatedClasses,
       students: updatedStudents
     };
-    
+
     try {
       await window.electron.saveDatabase(updatedDB);
       setClasses(updatedClasses);
@@ -252,7 +252,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ 
+      style={{
         boxShadow: theme === "dark" ? "0 0 15px rgba(66, 153, 225, 0.5)" : "0 0 15px rgba(159, 122, 234, 0.5)",
         width: "90%",
       }}
@@ -268,7 +268,7 @@ const ManageClasses = ({ setIsManageClassesActive, app_bg_color, text_color, the
             justify-between items-center text-center
             hover:bg-red-700/80
           `}
-          style={{borderRadius: "100%"}}
+          style={{ borderRadius: "100%" }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

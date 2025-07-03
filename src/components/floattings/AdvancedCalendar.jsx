@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 import { format, addMonths, subMonths, addYears, subYears, startOfMonth, endOfMonth, startOfWeek, addDays, isSameDay } from "date-fns";
-import { useTheme, useLanguage } from './contexts.js';
+import { useTheme, useLanguage } from '../contexts';
 
 const AdvancedCalendar = ({ onClose }) => {
   const [currentDate, setCurrentDate] = useState(new Date());

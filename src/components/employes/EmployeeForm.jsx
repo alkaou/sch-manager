@@ -9,7 +9,7 @@ import {
   PROFESSOR_SPECIALTIES,
   return_prof_trans,
 } from "./utils";
-import AutocompleteInput from "../AutocompleteInput.jsx";
+import AutocompleteInput from "../partials/AutocompleteInput.jsx";
 import { suggestNames, suggestLastNames } from "../../utils/suggestionNames";
 import { getClasseName } from "../../utils/helpers";
 import { translate } from "./employes_translator";
@@ -276,8 +276,8 @@ const EmployeeForm = ({
               <button
                 onClick={() => setActiveSection("general")}
                 className={`px-4 py-2 font-medium ${activeSection === "general"
-                    ? `${tabActiveBg} text-white`
-                    : `${tabInactiveBg} ${_text_color}`
+                  ? `${tabActiveBg} text-white`
+                  : `${tabInactiveBg} ${_text_color}`
                   }`}
               >
                 {translate("general_information", language)}
@@ -286,8 +286,8 @@ const EmployeeForm = ({
                 <button
                   onClick={() => setActiveSection("professor")}
                   className={`px-4 py-2 font-medium ${activeSection === "professor"
-                      ? `${tabActiveBg} text-white`
-                      : `${tabInactiveBg} ${_text_color}`
+                    ? `${tabActiveBg} text-white`
+                    : `${tabInactiveBg} ${_text_color}`
                     }`}
                 >
                   {translate("professor_configuration", language)}
@@ -297,8 +297,8 @@ const EmployeeForm = ({
                 <button
                   onClick={() => setActiveSection("other")}
                   className={`px-4 py-2 font-medium ${activeSection === "other"
-                      ? `${tabActiveBg} text-white`
-                      : `${tabInactiveBg} ${_text_color}`
+                    ? `${tabActiveBg} text-white`
+                    : `${tabInactiveBg} ${_text_color}`
                     }`}
                 >
                   {translate("other_positions_configuration", language)}
@@ -380,8 +380,8 @@ const EmployeeForm = ({
                             suggestions={suggestNames}
                             value={formData.first_name}
                             placeholder={`${language === "Bambara"
-                                ? "MI : Fatumata"
-                                : "EX : Fatoumata"
+                              ? "MI : Fatumata"
+                              : "EX : Fatoumata"
                               }`}
                             inputClass={inputClass}
                             onChange={(e) =>
@@ -416,8 +416,8 @@ const EmployeeForm = ({
                             suggestions={suggestNames}
                             value={formData.sure_name || ""}
                             placeholder={`${language === "Bambara"
-                                ? "MI : Yacuba"
-                                : "EX : Yacouba"
+                              ? "MI : Yacuba"
+                              : "EX : Yacouba"
                               }`}
                             inputClass={inputClass}
                             onChange={(e) =>
@@ -443,8 +443,8 @@ const EmployeeForm = ({
                             suggestions={suggestLastNames}
                             value={formData.last_name}
                             placeholder={`${language === "Bambara"
-                                ? "MI : Danbele"
-                                : "EX : Dembélé"
+                              ? "MI : Danbele"
+                              : "EX : Dembélé"
                               }`}
                             inputClass={inputClass}
                             onChange={(e) =>
@@ -998,8 +998,8 @@ const EmployeeForm = ({
                   onClick={onClose}
                   title={translate("cancel", language)}
                   className={`px-4 py-2 rounded-md ${theme === "dark"
-                      ? "bg-gray-700 hover:bg-gray-600"
-                      : "bg-gray-200 hover:bg-gray-300"
+                    ? "bg-gray-700 hover:bg-gray-600"
+                    : "bg-gray-200 hover:bg-gray-300"
                     } ${_text_color}`}
                 >
                   {translate("cancel", language)}
@@ -1010,8 +1010,8 @@ const EmployeeForm = ({
                   type="submit"
                   disabled={loading}
                   className={`px-4 py-2 rounded-md text-white ${loading
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : buttonPrimaryColor
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : buttonPrimaryColor
                     }`}
                 >
                   {loading ? (

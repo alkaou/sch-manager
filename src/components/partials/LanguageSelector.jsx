@@ -3,12 +3,12 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import secureLocalStorage from "react-secure-storage";
 
-import maliIcon from "../assets/images/mali.png";
-import franceIcon from "../assets/images/france.png";
-import angletterIcon from "../assets/images/angletter.png";
+import maliIcon from "../../assets/images/mali.png";
+import franceIcon from "../../assets/images/france.png";
+import angletterIcon from "../../assets/images/angletter.png";
 
-import { useLanguage, useTheme } from "./contexts";
-import { checkThemeForBgColor, gradients } from "../utils/colors";
+import { useLanguage, useTheme } from "./../contexts";
+import { checkThemeForBgColor, gradients } from "../../utils/colors";
 
 
 const LanguageSelector = ({

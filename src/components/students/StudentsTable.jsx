@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2, CheckCircle, XCircle } from "lucide-react";
-import { gradients } from "../utils/colors";
-import { useLanguage, useFlashNotification } from "./contexts";
-import { getAge, getClasseName, getBornInfos } from "../utils/helpers";
-import { deleteStudent, activateStudent, deactivateStudent } from "../utils/database_methods";
-import ActionConfirmePopup from "./ActionConfirmePopup.jsx";
+import { gradients } from "../../utils/colors";
+import { useLanguage, useFlashNotification } from "../contexts";
+import { getAge, getClasseName, getBornInfos } from "../../utils/helpers";
+import { deleteStudent, activateStudent, deactivateStudent } from "../../utils/database_methods";
+import ActionConfirmePopup from "../popups/ActionConfirmePopup.jsx";
 
 
 const StudentsTable = ({

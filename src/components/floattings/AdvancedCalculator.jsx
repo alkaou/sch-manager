@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { evaluate } from "mathjs"; // Bibliothèque pour les calculs avancés
 
-import { useTheme, useLanguage } from './contexts.js';
+import { useTheme, useLanguage } from '../contexts';
 
 const AdvancedCalculator = ({ onClose }) => {
     const [expression, setExpression] = useState("");

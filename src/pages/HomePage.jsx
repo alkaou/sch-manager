@@ -8,9 +8,9 @@ import StatisticsSection from '../components/home_components/StatisticsSection.j
 import TutorialsSection from '../components/home_components/TutorialsSection.jsx';
 import ContactSection from '../components/home_components/ContactSection.jsx';
 import FooterSection from '../components/home_components/FooterSection.jsx';
-import Popup from '../components/Popup.jsx';
-import DatabaseCreator from '../components/DatabaseCreator.jsx';
-import ColorsSelector from '../components/ColorsSelector.jsx';
+import Popup from '../components/popups/Popup.jsx';
+import DatabaseCreator from '../components/db_manager/DatabaseCreator.jsx';
+import ColorsSelector from '../components/settings/ColorsSelector.jsx';
 
 import { useTheme } from '../components/contexts';
 
@@ -29,24 +29,24 @@ const HomePage = () => {
       setData(data);
     });
   }, []);
-  
+
   // Handle popup content switching
   const OpenThePopup = () => {
     const popup_bool = isOpenPopup === true ? false : isOpenPopup === false ? true : false;
     setIsOpenPopup(popup_bool);
   };
-  
+
   return (
     <div className={`${app_bg_color} min-h-screen`}>
       {/* Navigation Bar */}
-      <HomeNavBar 
+      <HomeNavBar
         setIsOpenPopup={setIsOpenPopup}
         data_exist={data_exist}
       />
-      
+
       {/* Main Content Sections */}
       <main>
-        <HeroSection 
+        <HeroSection
           setIsOpenPopup={setIsOpenPopup}
           data={data}
           isOthersBGColors={isOthersBGColors}
@@ -67,12 +67,12 @@ const HomePage = () => {
           isOthersBGColors={isOthersBGColors}
         />
       </main>
-      
+
       {/* Footer */}
       <FooterSection
-       isOthersBGColors={isOthersBGColors}
+        isOthersBGColors={isOthersBGColors}
       />
-      
+
       {/* Popups */}
       {isOpenPopup === "DB_CREATOR" ? (
         <DatabaseCreator setIsOpenPopup={setIsOpenPopup} />

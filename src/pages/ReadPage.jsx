@@ -5,7 +5,7 @@ import PDFSidebar from "../components/read_pdf/PDFSidebar.jsx";
 import PDFViewer from "../components/read_pdf/PDFViewer.jsx";
 import PDFControls from "../components/read_pdf/PDFControls.jsx";
 import { getPDFFiles } from "../components/read_pdf/pdfUtils";
-import PageLoading from "../components/PageLoading.jsx";
+import PageLoading from "../components/partials/PageLoading.jsx";
 
 const ReadPageContent = ({
   app_bg_color,

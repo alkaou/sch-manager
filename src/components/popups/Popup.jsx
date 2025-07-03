@@ -2,8 +2,8 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
-import { BG_COLORS, gradients } from "../utils/colors";
-import { useTheme } from "./contexts";
+import { BG_COLORS, gradients } from "../../utils/colors";
+import { useTheme } from "../contexts";
 
 
 const Popup = ({ 

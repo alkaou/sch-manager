@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Save, RefreshCcw, Search, CheckSquare, Square } from 'lucide-react';
-import { useLanguage, useFlashNotification } from './contexts';
-import { gradients } from '../utils/colors';
+import { useLanguage, useFlashNotification } from '../contexts';
+import { gradients } from '../../utils/colors';
 
 const GetBulletinStudents = ({
     selectedComposition,

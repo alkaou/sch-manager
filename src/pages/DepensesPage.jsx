@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Info, PlusCircle, RefreshCw } from "lucide-react";
-import PageLoading from "../components/PageLoading.jsx";
+import PageLoading from "../components/partials/PageLoading.jsx";
 import { useLanguage, useFlashNotification } from '../components/contexts';
 import SchoolYearsList from "../components/depenses/SchoolYearsList.jsx";
 import SchoolYearForm from "../components/depenses/SchoolYearForm.jsx";
 import ExpensesList from "../components/depenses/ExpensesList.jsx";
 import ExpenseForm from "../components/depenses/ExpenseForm.jsx";
 import InfoPopup from "../components/depenses/InfoPopup.jsx";
-import AlertPopup from "../components/AlertPopup.jsx";
-import ActionConfirmePopup from "../components/ActionConfirmePopup.jsx";
+import AlertPopup from "../components/popups/AlertPopup.jsx";
+import ActionConfirmePopup from "../components/popups/ActionConfirmePopup.jsx";
 import translations from "../components/depenses/depense_translator.js";
 import { gradients } from "../utils/colors";
 

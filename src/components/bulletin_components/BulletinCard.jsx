@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import BulletinComponent from '../BulletinComponent.jsx';
+import BulletinComponent from './BulletinComponent.jsx';
 import { calculateSubjectAverageForStudent, calculateGeneralAverage } from '../bulletin_utils/BulletinMethods';
 
 const BulletinCard = ({

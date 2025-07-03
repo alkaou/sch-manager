@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaCog, FaGlobe, FaChevronRight } from 'react-icons/fa';
 
-import LanguageSelector from './LanguageSelector.jsx';
-import { useLanguage, useTheme } from './contexts.js';
+import LanguageSelector from '../partials/LanguageSelector.jsx';
+import { useLanguage, useTheme } from '../contexts';
 
 function AppParameters() {
     const [showPanel, setShowPanel] = useState(false);

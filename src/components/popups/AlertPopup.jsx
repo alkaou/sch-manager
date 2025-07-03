@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "./contexts";
+import { useTheme } from "../contexts";
 
 const AlertPopup = ({
   isOpenAlertPopup, 
