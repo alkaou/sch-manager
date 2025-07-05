@@ -136,6 +136,11 @@ const StudentsTable = ({
     await refreshData();
     setTimeout(() => {
       setIsRefreshing(false);
+      setFlashMessage({
+        message: translate("refresh_data_success", language),
+        type: "success",
+        duration: 5000,
+      });
     }, 2000);
   };
 
@@ -520,12 +525,8 @@ const StudentsTable = ({
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="All">
-                  {translate("all", language)}
-                </option>
-                <option value="actif">
-                  {translate("active", language)}
-                </option>
+                <option value="All">{translate("all", language)}</option>
+                <option value="actif">{translate("active", language)}</option>
                 <option value="inactif">
                   {translate("inactive", language)}
                 </option>
@@ -543,9 +544,7 @@ const StudentsTable = ({
                 onChange={(e) => setFilterMatricule(e.target.value)}
                 className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="All">
-                  {translate("all", language)}
-                </option>
+                <option value="All">{translate("all", language)}</option>
                 <option value="With">
                   {translate("with_matricule_option", language)}
                 </option>
@@ -690,8 +689,20 @@ const StudentsTable = ({
                       />
                     </td>
                     <td className="py-1 px-1 md:px-2 text-center">
-                      <div className="w-6 h-6 md:w-8 md:h-8 bg-white border border-gray-200 rounded-full flex items-center justify-center mx-auto">
-                        <User className="text-gray-500 w-4 h-4 md:w-5 md:h-5" />
+                      <div
+                        className={`w-6 h-6 md:w-8 md:h-8 ${
+                          student.sexe === "F" ? "bg-red-100" : "bg-green-100"
+                        } border border-gray-200 rounded-full flex items-center justify-center mx-auto`}
+                      >
+                        <p
+                          className={`w-4 h-4 md:w-5 md:h-5 ${
+                            student.sexe === "F"
+                              ? "text-red-500"
+                              : "text-blue-500"
+                          }`}
+                        >
+                          {student.last_name[0]}
+                        </p>
                       </div>
                     </td>
                     <td className="py-1 px-1 md:px-2 text-center">
@@ -716,7 +727,11 @@ const StudentsTable = ({
                       </div>
                     </td>
                     <td className="py-1 px-1 md:px-2 text-center">
-                      {student.sexe}
+                      {language !== "Bambara"
+                        ? student.sexe
+                        : student.sexe === "F"
+                        ? "M"
+                        : "C"}
                     </td>
                     <td className="py-1 px-1 md:px-2 text-center">
                       {!student.matricule || student.matricule === ""

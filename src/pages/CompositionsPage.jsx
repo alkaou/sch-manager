@@ -435,6 +435,7 @@ const CompositionsPageContent = ({
           {isCreateMode && (
             <button
               onClick={resetForm}
+              title={translate("close", language)}
               className="text-red-700 bg-red-400 p-2 rounded-full justify-center border-2 border items-center hover:text-red-800 transition-colors"
             >
               <svg

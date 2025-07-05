@@ -603,12 +603,12 @@ const translations = {
   employee_deleted: {
     Français: "Employé supprimé avec succès !",
     Anglais: "Employee deleted successfully!",
-    Bambara: "Baara kɛla jɔsira ni ɲɛtaa ye!",
+    Bambara: "Baara kɛla jɔsila ni ɲɛtaa ye!",
   },
   employees_deleted: {
     Français: "Employés supprimés avec succès !",
     Anglais: "Employees deleted successfully!",
-    Bambara: "Baara kɛlaw jɔsira ni ɲɛtaa ye!",
+    Bambara: "Baara kɛlaw jɔsila ni ɲɛtaa ye!",
   },
   employees_deactivated: {
     Français: "Employé(s) désactivé(s) avec succès !",
@@ -633,7 +633,7 @@ const translations = {
   position_deleted: {
     Français: "Poste supprimé avec succès !",
     Anglais: "Position deleted successfully!",
-    Bambara: "Baara yɔrɔ jɔsira ni ɲɛtaa ye!",
+    Bambara: "Baara yɔrɔ jɔsila ni ɲɛtaa ye!",
   },
 
   // Error messages

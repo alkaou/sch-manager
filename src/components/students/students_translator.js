@@ -439,6 +439,11 @@ const translations = {
     Anglais: "Refresh Data",
     Bambara: "Kunnawoloma kura",
   },
+  refresh_data_success: {
+    Français: "Données rafraîchies avec succès.",
+    Anglais: "Data refreshed successfully.",
+    Bambara: "Kunafoni kɛra kura ye ka ɲɛ.",
+  },
   delete_selected: {
     Français: "Supprimer les sélectionnés",
     Anglais: "Delete Selected",

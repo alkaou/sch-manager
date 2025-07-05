@@ -71,10 +71,10 @@ const CreateCompositionComponent = ({
     app_bg_color === gradients[1]
       ? "hover:bg-white hover:text-gray-700"
       : app_bg_color === gradients[2]
-        ? "hover:bg-gray-200 hover:text-gray-700"
-        : theme === "dark"
-          ? "hover:bg-gray-700 hover:text-white"
-          : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white";
+      ? "hover:bg-gray-200 hover:text-gray-700"
+      : theme === "dark"
+      ? "hover:bg-gray-700 hover:text-white"
+      : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white";
 
   return (
     <>
@@ -231,7 +231,12 @@ const CreateCompositionComponent = ({
                             className={`${hoverClass} ${_text_color}`}
                           >
                             <td className="px-2 py-1 border text-center">
-                              {composition.label}
+                              {/* {composition.label} */}
+                              {
+                                translate("composition_options", language)[
+                                  parseInt(composition.name) - 1
+                                ]["label"]
+                              }
                             </td>
                             <td className="px-2 py-1 border text-center">
                               {formatDate(composition.date)}
@@ -401,21 +406,23 @@ const CreateCompositionComponent = ({
                               checked={newComposition.classes.includes(cls.id)}
                               onChange={() => handleClassToggle(cls.id)}
                               disabled={hasLockedBulletin}
-                              className={`mr-2 h-5 w-5 ${hasLockedBulletin
-                                ? "opacity-60 cursor-not-allowed"
-                                : ""
-                                }`}
+                              className={`mr-2 h-5 w-5 ${
+                                hasLockedBulletin
+                                  ? "opacity-60 cursor-not-allowed"
+                                  : ""
+                              }`}
                             />
                             <label
                               htmlFor={`class-${cls.id}`}
-                              className={`${_text_color} ${hasLockedBulletin ? "opacity-60" : ""
-                                }`}
+                              className={`${_text_color} ${
+                                hasLockedBulletin ? "opacity-60" : ""
+                              }`}
                               title={
                                 hasLockedBulletin
                                   ? translate(
-                                    "locked_bulletin_tooltip",
-                                    language
-                                  )
+                                      "locked_bulletin_tooltip",
+                                      language
+                                    )
                                   : ""
                               }
                             >
@@ -441,9 +448,11 @@ const CreateCompositionComponent = ({
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   disabled={!db || !db.classes || db.classes.length === 0}
-                  title={editingCompositionId
-                    ? translate("update_composition", language)
-                    : translate("create_composition", language)}
+                  title={
+                    editingCompositionId
+                      ? translate("update_composition", language)
+                      : translate("create_composition", language)
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
