@@ -6,6 +6,7 @@ import { gradients } from '../../utils/colors';
 import { getClasseName, getAge } from "../../utils/helpers";
 import { suggestNames, suggestLastNames, suggNameComplete, suggCitiesNames } from "../../utils/suggestionNames";
 import AutocompleteInput from "../partials/AutocompleteInput.jsx";
+import { translate } from "./students_translator.js";
 
 const AddStudent = ({
   setIsAddStudentActive,
@@ -102,63 +103,63 @@ const AddStudent = ({
     const newErrors = students.map((student, index) => {
       let err = {};
       if (!student.first_name.trim()) {
-        err.first_name = "Le prénom est obligatoire.";
+        err.first_name = translate("first_name_required", language);
         valid = false;
         st_id = index + 1;
       }
       if (!student.last_name.trim()) {
-        err.last_name = "Le nom de famille est obligatoire.";
+        err.last_name = translate("last_name_required", language);
         valid = false;
         st_id = index + 1;
       }
       if (student.sure_name.trim() !== "") {
         const st_surename = student.sure_name.trim();
         if (st_surename.length > 30) {
-          err.sure_name = "Le surnom est ne doit pas dépasser 30 lettres.";
+          err.sure_name = translate("sure_name_too_long", language);
           valid = false;
           st_id = index + 1;
         }
       }
       if (!student.classe) {
-        err.classe = "La classe est obligatoire.";
+        err.classe = translate("class_required", language);
         valid = false;
         st_id = index + 1;
       }
       if (!student.sexe) {
-        err.sexe = "Le sexe est obligatoire.";
+        err.sexe = translate("gender_required", language);
         valid = false;
         st_id = index + 1;
       }
       if (!student.birth_date) {
-        err.birth_date = "La date de naissance est obligatoire.";
+        err.birth_date = translate("birth_date_required", language);
         valid = false;
         st_id = index + 1;
       }
       if (!student.birth_place || student.birth_place.trim() === "") {
-        err.birth_place = "Le lieu de naissance est obligatoire.";
+        err.birth_place = translate("birth_place_required", language);
         valid = false;
         st_id = index + 1;
       } else if (student.birth_place.trim().length < 2) {
-        err.birth_place = "Le lieu de naissance doit contenir au moins 2 caractères.";
+        err.birth_place = translate("birth_place_min_length", language);
         valid = false;
         st_id = index + 1;
       } else if (student.birth_place.trim().length > 25) {
-        err.birth_place = "Le lieu de naissance ne peut pas dépasser 25 caractères.";
+        err.birth_place = translate("birth_place_max_length", language);
         valid = false;
         st_id = index + 1;
       }
       if (!student.father_name.trim()) {
-        err.father_name = "Le nom du père est obligatoire.";
+        err.father_name = translate("father_name_required", language);
         valid = false;
         st_id = index + 1;
       }
       if (!student.mother_name.trim()) {
-        err.mother_name = "Le nom de la mère est obligatoire.";
+        err.mother_name = translate("mother_name_required", language);
         valid = false;
         st_id = index + 1;
       }
       if (!student.parents_contact.trim()) {
-        err.parents_contact = "Le contact des parents est obligatoire.";
+        err.parents_contact = translate("parents_contact_required", language);
         valid = false;
         st_id = index + 1;
       }
@@ -167,8 +168,8 @@ const AddStudent = ({
         const student_level = match ? parseInt(match[0], 10) : null;
         if (student_level + 3 > getAge(student.birth_date)) {
           const classeName = `${student.classe} ${student_level}`.trim();
-          err.birth_date = `L'élève est trop jeune pour la classe ${getClasseName(classeName, language)}.`;
-          err.classe = `L'élève est trop jeune pour la classe ${getClasseName(classeName, language)}.`;
+          err.birth_date = translate("student_too_young", language) + " " + getClasseName(classeName, language);
+          err.classe = translate("student_too_young", language) + " " + getClasseName(classeName, language);
           valid = false;
           st_id = index + 1;
         }
@@ -185,7 +186,7 @@ const AddStudent = ({
     e.preventDefault();
     const valid_response = await validateStudents();
     if (!valid_response.valid) {
-      const startParticuleErrorText = `Veuillez Vérifier les informations de l'élève ${valid_response.st_id}`;
+      const startParticuleErrorText = `${translate("check_student_info", language)} ${valid_response.st_id}`;
       // console.log(startParticuleErrorText);
       setParticuleError(startParticuleErrorText);
       return;
@@ -204,16 +205,16 @@ const AddStudent = ({
           birth_date: new Date(student.birth_date).getTime()
         };
         try {
-          await updateStudent(student.id, updatedData, db);
+          await updateStudent(student.id, updatedData, db, language);
           newErrors[i] = {};
         } catch (err) {
           newErrors[i] = { ...newErrors[i], [err.field]: err.message };
         }
       }
       if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
-        setSuccess("Les élèves ont été mis à jour avec succès !");
+        setSuccess(translate("students_updated_success", language));
         setFlashMessage({
-          message: "Les élèves ont été mis à jour avec succès !",
+          message: translate("students_updated_success", language),
           type: "success",
           duration: 8000
         });
@@ -227,16 +228,16 @@ const AddStudent = ({
           birth_date: new Date(student.birth_date).getTime()
         };
         try {
-          await saveStudent(studentData, db);
+          await saveStudent(studentData, db, language);
           newErrors[i] = {};
         } catch (err) {
           newErrors[i] = { ...newErrors[i], [err.field]: err.message };
         }
       }
       if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
-        setSuccess("Les élèves ont été ajoutés avec succès!");
+        setSuccess(translate("students_added_success", language));
         setFlashMessage({
-          message: "Les élèves ont été mis à jour avec succès !",
+          message: translate("students_added_success", language),
           type: "success",
           duration: 8000
         });
@@ -313,12 +314,12 @@ const AddStudent = ({
           {/* Prénom */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Prénom <span className="text-red-500">*</span>
+              {translate("first_name", language)} <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggestNames}
               value={student.first_name}
-              placeholder="Ex: Fatoumata"
+              placeholder={translate("placeholder_first_name", language)}
               inputClass={commonInputClass}
               onChange={(e) => handleInputChange(index, 'first_name', e.target.value)}
             />
@@ -340,12 +341,12 @@ const AddStudent = ({
           {/* Surnom */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Surnom
+              {translate("sure_name", language)}
             </label>
             <AutocompleteInput
               suggestions={suggestNames}
               value={student.sure_name}
-              placeholder="Ex: C"
+              placeholder={translate("placeholder_sure_name", language)}
               inputClass={commonInputClass}
               onChange={(e) => handleInputChange(index, 'sure_name', e.target.value)}
             />
@@ -367,12 +368,12 @@ const AddStudent = ({
           {/* Nom de famille */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Nom de famille <span className="text-red-500">*</span>
+              {translate("last_name", language)} <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggestLastNames}
               value={student.last_name}
-              placeholder="Ex: Dembélé"
+              placeholder={translate("placeholder_last_name", language)}
               inputClass={commonInputClass}
               onChange={(e) => handleInputChange(index, 'last_name', e.target.value)}
             />
@@ -394,14 +395,14 @@ const AddStudent = ({
           {/* Classe */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Classe <span className="text-red-500">*</span>
+              {translate("classe", language)} <span className="text-red-500">*</span>
             </label>
             <select
               value={student.classe}
               onChange={(e) => handleInputChange(index, 'classe', e.target.value)}
               className={`${commonInputClass} cursor-pointer`}
             >
-              <option value="">Sélectionnez une classe</option>
+              <option value="">{translate("select_class", language)}</option>
               {classOptions.map(option => (
                 <option key={option.id} value={option.value} style={{ fontWeight: "bold" }}>
                   {getClasseName(option.label, language)}
@@ -426,16 +427,16 @@ const AddStudent = ({
           {/* Sexe */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Sexe <span className="text-red-500">*</span>
+              {translate("gender", language)} <span className="text-red-500">*</span>
             </label>
             <select
               value={student.sexe}
               onChange={(e) => handleInputChange(index, 'sexe', e.target.value)}
               className={`${commonInputClass} cursor-pointer`}
             >
-              <option value="">Sélectionnez</option>
-              <option value="M">Masculin</option>
-              <option value="F">Féminin</option>
+              <option value="">{translate("select", language)}</option>
+              <option value="M">{translate("male", language)}</option>
+              <option value="F">{translate("female", language)}</option>
             </select>
             <AnimatePresence>
               {errors[index]?.sexe && (
@@ -455,7 +456,7 @@ const AddStudent = ({
           {/* Date de naissance */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Date de naissance <span className="text-red-500">*</span>
+              {translate("birth_date", language)} <span className="text-red-500">*</span>
             </label>
             <input
               type="date"
@@ -485,12 +486,12 @@ const AddStudent = ({
           {/* Lieu de naissance - NOUVEAU CHAMP */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Lieu de naissance <span className="text-red-500">*</span>
+              {translate("birth_place", language)} <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggCitiesNames}
               value={student.birth_place || ''}
-              placeholder="Ex: Bamako"
+              placeholder={translate("placeholder_birth_place", language)}
               inputClass={commonInputClass}
               onChange={(e) => handleInputChange(index, 'birth_place', e.target.value)}
             />
@@ -512,14 +513,14 @@ const AddStudent = ({
           {/* Matricule */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Matricule
+              {translate("matricule", language)}
             </label>
             <input
               type="text"
               value={student.matricule || ''}
               onChange={(e) => handleInputChange(index, 'matricule', e.target.value)}
               className={commonInputClass}
-              placeholder="Ex: MAT1234"
+              placeholder={translate("placeholder_matricule", language)}
             />
             <AnimatePresence>
               {errors[index]?.matricule && (
@@ -539,12 +540,12 @@ const AddStudent = ({
           {/* Nom du père */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Nom du père <span className="text-red-500">*</span>
+              {translate("father_name", language)} <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggNameComplete}
               value={student.father_name}
-              placeholder="Ex: Mamadou Dembélé"
+              placeholder={translate("placeholder_father_name", language)}
               inputClass={commonInputClass}
               onChange={(e) => handleInputChange(index, 'father_name', e.target.value)}
             />
@@ -566,12 +567,12 @@ const AddStudent = ({
           {/* Nom de la mère */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Nom de la mère <span className="text-red-500">*</span>
+              {translate("mother_name", language)} <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggNameComplete}
               value={student.mother_name}
-              placeholder="Ex: Aminata Konaté"
+              placeholder={translate("placeholder_mother_name", language)}
               inputClass={commonInputClass}
               onChange={(e) => handleInputChange(index, 'mother_name', e.target.value)}
             />
@@ -593,14 +594,14 @@ const AddStudent = ({
           {/* Contact parents */}
           <motion.div className="mb-4" variants={itemVariants}>
             <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              Contact parents <span className="text-red-500">*</span>
+              {translate("parents_contact", language)} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={student.parents_contact}
               onChange={(e) => handleInputChange(index, 'parents_contact', e.target.value)}
               className={commonInputClass}
-              placeholder="Ex: +223 76 12 34 56"
+              placeholder={translate("placeholder_parents_contact", language)}
             />
             <AnimatePresence>
               {errors[index]?.parents_contact && (
@@ -631,7 +632,7 @@ const AddStudent = ({
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-              Supprimer cet élève
+              {translate("delete_this_student", language)}
             </motion.button>
           </div>
         )}
@@ -661,7 +662,7 @@ const AddStudent = ({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {studentsForUpdate.length > 0 ? "Modifier les élèves" : "Ajouter des élèves"}
+          {studentsForUpdate.length > 0 ? translate("edit_students", language) : translate("add_students", language)}
         </motion.h2>
         <motion.button
           onClick={() => setIsAddStudentActive(false)}
@@ -719,7 +720,7 @@ const AddStudent = ({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Élève {index + 1}
+                {translate("student", language)} {index + 1}
               </motion.button>
             ))}
           </div>
@@ -756,7 +757,7 @@ const AddStudent = ({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Annuler
+            {translate("cancel", language)}
           </motion.button>
 
           <motion.button
@@ -772,14 +773,14 @@ const AddStudent = ({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Traitement en cours...
+                {translate("processing", language)}
               </>
             ) : (
               <>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                {studentsForUpdate.length > 0 ? "Mettre à jour" : "Enregistrer"}
+                {studentsForUpdate.length > 0 ? translate("update", language) : translate("save", language)}
               </>
             )}
           </motion.button>
@@ -796,7 +797,7 @@ const AddStudent = ({
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-              Ajouter un autre élève
+              {translate("add_another_student", language)}
             </motion.button>
           )}
 

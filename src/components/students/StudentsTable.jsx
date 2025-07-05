@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { User, RefreshCcw, Trash, UserPlus, PlusSquare, Edit2, CheckCircle, XCircle } from "lucide-react";
+import {
+  User,
+  RefreshCcw,
+  Trash,
+  UserPlus,
+  PlusSquare,
+  Edit2,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 import { gradients } from "../../utils/colors";
 import { useLanguage, useFlashNotification } from "../contexts";
 import { getAge, getClasseName, getBornInfos } from "../../utils/helpers";
-import { deleteStudent, activateStudent, deactivateStudent } from "../../utils/database_methods";
+import {
+  deleteStudent,
+  activateStudent,
+  deactivateStudent,
+} from "../../utils/database_methods";
 import ActionConfirmePopup from "../popups/ActionConfirmePopup.jsx";
-
+import { translate } from "../students/students_translator";
 
 const StudentsTable = ({
   students,
@@ -39,9 +52,9 @@ const StudentsTable = ({
   const [confirmMessage, setConfirmMessage] = useState("");
 
   // Calcul des classes disponibles (uniques et triées ASC)
-  const availableClasses = Array.from(new Set(students.map((s) => s.classe))).sort((a, b) =>
-    a.localeCompare(b)
-  );
+  const availableClasses = Array.from(
+    new Set(students.map((s) => s.classe))
+  ).sort((a, b) => a.localeCompare(b));
   const totalClassesAvailable = availableClasses.length;
 
   // Sélection globale
@@ -65,7 +78,9 @@ const StudentsTable = ({
   // Filtrage et tri des élèves
   let processedStudents = [...students];
   if (filterClass !== "All") {
-    processedStudents = processedStudents.filter((s) => s.classe === filterClass);
+    processedStudents = processedStudents.filter(
+      (s) => s.classe === filterClass
+    );
   }
   if (searchTerm) {
     const term = searchTerm.toLowerCase();
@@ -77,14 +92,20 @@ const StudentsTable = ({
   }
   // Filtre par status
   if (filterStatus !== "All") {
-    processedStudents = processedStudents.filter((s) => s.status === filterStatus);
+    processedStudents = processedStudents.filter(
+      (s) => s.status === filterStatus
+    );
   }
   // Filtre par matricule
   if (filterMatricule !== "All") {
     if (filterMatricule === "With") {
-      processedStudents = processedStudents.filter((s) => s.matricule && s.matricule !== "");
+      processedStudents = processedStudents.filter(
+        (s) => s.matricule && s.matricule !== ""
+      );
     } else if (filterMatricule === "Without") {
-      processedStudents = processedStudents.filter((s) => !s.matricule || s.matricule === "");
+      processedStudents = processedStudents.filter(
+        (s) => !s.matricule || s.matricule === ""
+      );
     }
   }
   if (sortCriterion === "last_name") {
@@ -92,14 +113,22 @@ const StudentsTable = ({
   } else if (sortCriterion === "classe") {
     processedStudents.sort((a, b) => a.classe.localeCompare(b.classe));
   } else if (sortCriterion === "added_at") {
-    processedStudents.sort((a, b) => new Date(a.added_at) - new Date(b.added_at));
+    processedStudents.sort(
+      (a, b) => new Date(a.added_at) - new Date(b.added_at)
+    );
   }
   const filteredStudents = processedStudents;
 
   // Définition des états pour l'affichage conditionnel des boutons d'activation/désactivation
-  const selectedStudents = filteredStudents.filter((s) => selected.includes(s.id));
-  const allActive = selectedStudents.length > 0 && selectedStudents.every((s) => s.status === "actif");
-  const allInactive = selectedStudents.length > 0 && selectedStudents.every((s) => s.status === "desactif");
+  const selectedStudents = filteredStudents.filter((s) =>
+    selected.includes(s.id)
+  );
+  const allActive =
+    selectedStudents.length > 0 &&
+    selectedStudents.every((s) => s.status === "actif");
+  const allInactive =
+    selectedStudents.length > 0 &&
+    selectedStudents.every((s) => s.status === "desactif");
 
   // Rafraîchissement des données avec animation
   const handleRefresh = async () => {
@@ -119,7 +148,6 @@ const StudentsTable = ({
     // console.log(classes);
   }, []);
 
-
   // Activation du formulaire d'ajout d'élève
   const handleAddStudent = () => {
     setStudentsForUpdate([]);
@@ -131,18 +159,18 @@ const StudentsTable = ({
     const selectedStudentsForEdit = filteredStudents
       .filter((s) => selected.includes(s.id))
       .map((s) => ({
-        id: s.id || '',
-        first_name: s.first_name || '',
-        sure_name: s.sure_name || '',
-        last_name: s.last_name || '',
-        classe: s.classe || '',
-        sexe: s.sexe || '',
-        birth_date: s.birth_date || '',
-        birth_place: s.birth_place || '',
-        matricule: s.matricule || '',
-        father_name: s.father_name || '',
-        mother_name: s.mother_name || '',
-        parents_contact: s.parents_contact || ''
+        id: s.id || "",
+        first_name: s.first_name || "",
+        sure_name: s.sure_name || "",
+        last_name: s.last_name || "",
+        classe: s.classe || "",
+        sexe: s.sexe || "",
+        birth_date: s.birth_date || "",
+        birth_place: s.birth_place || "",
+        matricule: s.matricule || "",
+        father_name: s.father_name || "",
+        mother_name: s.mother_name || "",
+        parents_contact: s.parents_contact || "",
       }));
 
     setStudentsForUpdate(selectedStudentsForEdit);
@@ -157,28 +185,28 @@ const StudentsTable = ({
 
   // Fonction pour gérer les confirmations
   const handleConfirmAction = async () => {
-    if (confirmAction === 'delete') {
+    if (confirmAction === "delete") {
       for (const id of selected) {
         try {
-          await deleteStudent(id, database, setFlashMessage);
+          await deleteStudent(id, database, setFlashMessage, language);
         } catch (err) {
-          console.error("Erreur lors de la suppression de l'étudiant:", err);
+          console.error(translate("error_deleting_student", language), err);
         }
       }
-    } else if (confirmAction === 'activate') {
+    } else if (confirmAction === "activate") {
       for (const id of selected) {
         try {
-          await activateStudent(id, database, setFlashMessage);
+          await activateStudent(id, database, setFlashMessage, language);
         } catch (err) {
-          console.error("Erreur lors de l'activation de l'étudiant:", err);
+          console.error(translate("error_activating_student", language), err);
         }
       }
-    } else if (confirmAction === 'deactivate') {
+    } else if (confirmAction === "deactivate") {
       for (const id of selected) {
         try {
-          await deactivateStudent(id, database, setFlashMessage);
+          await deactivateStudent(id, database, setFlashMessage, language);
         } catch (err) {
-          console.error("Erreur lors de la désactivation de l'étudiant:", err);
+          console.error(translate("error_deactivating_student", language), err);
         }
       }
     }
@@ -190,51 +218,69 @@ const StudentsTable = ({
 
   // Suppression des élèves sélectionnés
   const handleDeleteSelected = () => {
-    setConfirmAction('delete');
-    setConfirmTitle(live_language.confirm_delete_title || "Confirmer la suppression");
-    setConfirmMessage(live_language.confirm_delete_selected || "Êtes-vous sûr de vouloir supprimer les élèves sélectionnés ?");
+    setConfirmAction("delete");
+    setConfirmTitle(
+      live_language.confirm_delete_title || "Confirmer la suppression"
+    );
+    setConfirmMessage(
+      live_language.confirm_delete_selected ||
+        "Êtes-vous sûr de vouloir supprimer les élèves sélectionnés ?"
+    );
     setShowConfirmPopup(true);
   };
 
   // Activation des élèves sélectionnés
   const handleActivateSelected = () => {
-    setConfirmAction('activate');
-    setConfirmTitle(live_language.confirm_activate_title || "Confirmer l'activation");
-    setConfirmMessage(live_language.confirm_activate_selected || "Êtes-vous sûr de vouloir activer les élèves sélectionnés ?");
+    setConfirmAction("activate");
+    setConfirmTitle(
+      live_language.confirm_activate_title || "Confirmer l'activation"
+    );
+    setConfirmMessage(
+      live_language.confirm_activate_selected ||
+        "Êtes-vous sûr de vouloir activer les élèves sélectionnés ?"
+    );
     setShowConfirmPopup(true);
   };
 
   // Désactivation des élèves sélectionnés
   const handleDeactivateSelected = () => {
-    setConfirmAction('deactivate');
-    setConfirmTitle(live_language.confirm_deactivate_title || "Confirmer la désactivation");
-    setConfirmMessage(live_language.confirm_deactivate_selected || "Êtes-vous sûr de vouloir désactiver les élèves sélectionnés ?");
+    setConfirmAction("deactivate");
+    setConfirmTitle(
+      live_language.confirm_deactivate_title || "Confirmer la désactivation"
+    );
+    setConfirmMessage(
+      live_language.confirm_deactivate_selected ||
+        "Êtes-vous sûr de vouloir désactiver les élèves sélectionnés ?"
+    );
     setShowConfirmPopup(true);
   };
 
   // Couleurs et styles de base
-  const _head_bg_color = app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
-  const head_bg_color = _head_bg_color === gradients[2] ? "bg-gray-500" : _head_bg_color;
-  const _text_color = app_bg_color === gradients[2] ? "text-gray-500" : text_color;
+  const _head_bg_color =
+    app_bg_color === gradients[1] ? "bg-gray-300" : app_bg_color;
+  const head_bg_color =
+    _head_bg_color === gradients[2] ? "bg-gray-500" : _head_bg_color;
+  const _text_color =
+    app_bg_color === gradients[2] ? "text-gray-500" : text_color;
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const textClass = theme === "dark" ? text_color : "text-gray-600";
 
   // Enhanced styling for expert view
-  const tableBorderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
+  const tableBorderColor =
+    theme === "dark" ? "border-gray-700" : "border-gray-200";
   const tableHeaderBg = theme === "dark" ? "bg-gray-800" : head_bg_color;
-  const table_head_text_color = app_bg_color === gradients[2] ? "text-white" : text_color;
+  const table_head_text_color =
+    app_bg_color === gradients[2] ? "text-white" : text_color;
 
   const controlsPanelBg = `${app_bg_color} border border-2`;
 
   return (
-    <div
-      className="p-2 sm:p-3 md:p-4 scrollbar-custom overflow-y-hidden overflow-x-auto w-full h-full"
-    >
+    <div className="p-2 sm:p-3 md:p-4 scrollbar-custom overflow-y-hidden overflow-x-auto w-full h-full">
       {students.length <= 0 ? (
         <div
           className={`flex flex-col items-center justify-center p-4 md:p-6 space-y-4 ${app_bg_color} animate-fadeIn mt-8 md:mt-20`}
         >
-          {classes.length <= 0 ?
+          {classes.length <= 0 ? (
             <>
               <p className={`${_text_color} font-medium text-center`}>
                 {live_language.no_student_in_data_text}
@@ -243,7 +289,7 @@ const StudentsTable = ({
                 {live_language.create_classe_in_data_text}
               </p>
             </>
-            :
+          ) : (
             <>
               <p className={`${_text_color} font-medium text-center`}>
                 {live_language.no_student_in_data_text_2}
@@ -252,7 +298,7 @@ const StudentsTable = ({
                 {live_language.create_classe_in_data_text_2}
               </p>
             </>
-          }
+          )}
           <button
             className="flex items-center px-4 py-2 mt-4 text-white bg-blue-600 rounded bg-blue-700 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
             onClick={classes.length <= 0 ? handleAddClasses : handleAddStudent}
@@ -264,22 +310,41 @@ const StudentsTable = ({
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
-            {classes.length <= 0 ? live_language.create_classe_btn_text : live_language.create_students_btn_text}
+            {classes.length <= 0
+              ? live_language.create_classe_btn_text
+              : live_language.create_students_btn_text}
           </button>
         </div>
       ) : (
         <div>
           {/* Informations sommaires */}
-          <div className={`flex flex-wrap items-center justify-between mb-3 md:mb-4 p-2 md:p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
+          <div
+            className={`flex flex-wrap items-center justify-between mb-3 md:mb-4 p-2 md:p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}
+          >
             <div className="flex items-center space-x-4 md:space-x-10 flex-wrap">
-              <p className={`${_text_color} font-bold text-sm md:text-base transition-transform duration-300 transform hover:scale-105`}>
-                {live_language.students_number_text} : <span className={`${_text_color}`}>{filteredStudents.length}</span>
+              <p
+                className={`${_text_color} font-bold text-sm md:text-base transition-transform duration-300 transform hover:scale-105`}
+              >
+                {live_language.students_number_text} :{" "}
+                <span className={`${_text_color}`}>
+                  {filteredStudents.length}
+                </span>
               </p>
               <span className={`${_text_color} hidden md:inline`}>|</span>
-              <p className={`${_text_color} font-bold text-sm md:text-base transition-transform duration-300 transform hover:scale-105`}>
-                {live_language.classe_number_text} : <span className={`${_text_color}`}>{totalClassesAvailable}</span>
+              <p
+                className={`${_text_color} font-bold text-sm md:text-base transition-transform duration-300 transform hover:scale-105`}
+              >
+                {live_language.classe_number_text} :{" "}
+                <span className={`${_text_color}`}>
+                  {totalClassesAvailable}
+                </span>
               </p>
             </div>
             <div className="flex items-center flex-wrap gap-1 md:gap-2 mt-2 md:mt-0">
@@ -290,7 +355,9 @@ const StudentsTable = ({
                 title={live_language.refresh_text || "Rafraîchir"}
               >
                 {isRefreshing ? (
-                  <RefreshCcw className={`animate-spin text-white w-4 h-4 md:w-5 md:h-5`} />
+                  <RefreshCcw
+                    className={`animate-spin text-white w-4 h-4 md:w-5 md:h-5`}
+                  />
                 ) : (
                   <RefreshCcw className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 )}
@@ -301,7 +368,10 @@ const StudentsTable = ({
                 <button
                   onClick={handleDeleteSelected}
                   className="p-1 md:p-2 rounded-full border border-red-300 bg-red-500 hover:bg-red-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
-                  title={live_language.delete_selected_text || "Supprimer la sélection"}
+                  title={
+                    live_language.delete_selected_text ||
+                    "Supprimer la sélection"
+                  }
                 >
                   <Trash className="text-white w-4 h-4 md:w-5 md:h-5" />
                 </button>
@@ -312,7 +382,10 @@ const StudentsTable = ({
                 <button
                   onClick={handleDeactivateSelected}
                   className="p-1 md:p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
-                  title={live_language.deactivate_selected_text || "Désactiver la sélection"}
+                  title={
+                    live_language.deactivate_selected_text ||
+                    "Désactiver la sélection"
+                  }
                 >
                   <XCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 </button>
@@ -321,7 +394,10 @@ const StudentsTable = ({
                 <button
                   onClick={handleActivateSelected}
                   className="p-1 md:p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
-                  title={live_language.activate_selected_text || "Activer la sélection"}
+                  title={
+                    live_language.activate_selected_text ||
+                    "Activer la sélection"
+                  }
                 >
                   <CheckCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 </button>
@@ -331,16 +407,24 @@ const StudentsTable = ({
                   <button
                     onClick={handleDeactivateSelected}
                     className="p-1 md:p-2 rounded-full border border-yellow-300 bg-yellow-500 hover:bg-yellow-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
-                    title={live_language.deactivate_selected_text || "Désactiver la sélection"}
+                    title={
+                      live_language.deactivate_selected_text ||
+                      "Désactiver la sélection"
+                    }
                   >
                     <XCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                   </button>
                   <button
                     onClick={handleActivateSelected}
                     className="p-1 md:p-2 rounded-full border border-green-300 bg-green-500 hover:bg-green-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md"
-                    title={live_language.activate_selected_text || "Activer la sélection"}
+                    title={
+                      live_language.activate_selected_text ||
+                      "Activer la sélection"
+                    }
                   >
-                    <CheckCircle className={`text-white w-4 h-4 md:w-5 md:h-5`} />
+                    <CheckCircle
+                      className={`text-white w-4 h-4 md:w-5 md:h-5`}
+                    />
                   </button>
                 </>
               )}
@@ -368,7 +452,9 @@ const StudentsTable = ({
                 <button
                   onClick={handleEditStudentSelected}
                   className={`p-1 md:p-2 rounded-full border ${tableBorderColor} bg-blue-500 hover:bg-blue-600 transition-transform duration-300 transform hover:scale-110 hover:shadow-md`}
-                  title={live_language.edit_selected_text || "Modifier la sélection"}
+                  title={
+                    live_language.edit_selected_text || "Modifier la sélection"
+                  }
                 >
                   <Edit2 className={`text-white w-4 h-4 md:w-5 md:h-5`} />
                 </button>
@@ -377,9 +463,13 @@ const StudentsTable = ({
           </div>
 
           {/* Contrôles de tri, filtrage, recherche et sélection globale */}
-          <div className={`flex flex-wrap items-center justify-between gap-2 md:gap-3 mb-3 md:mb-4 p-2 md:p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}>
+          <div
+            className={`flex flex-wrap items-center justify-between gap-2 md:gap-3 mb-3 md:mb-4 p-2 md:p-3 rounded-lg shadow-sm ${controlsPanelBg} animate-fadeIn`}
+          >
             <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
-              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>
+              <label
+                className={`${_text_color} font-semibold text-xs md:text-sm`}
+              >
                 {live_language.sort_by_text || "Trier:"}
               </label>
               <select
@@ -387,14 +477,22 @@ const StudentsTable = ({
                 onChange={(e) => setSortCriterion(e.target.value)}
                 className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="default">Défaut</option>
-                <option value="last_name">Nom</option>
+                <option value="default">
+                  {translate("default_option", language)}
+                </option>
+                <option value="last_name">
+                  {translate("last_name_option", language)}
+                </option>
                 <option value="classe">{live_language.classe_text}</option>
-                <option value="added_at">{live_language.added_time_text}</option>
+                <option value="added_at">
+                  {live_language.added_time_text}
+                </option>
               </select>
             </div>
             <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
-              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>
+              <label
+                className={`${_text_color} font-semibold text-xs md:text-sm`}
+              >
                 {live_language.filter_by_class_text || "Filtrer par classe:"}
               </label>
               <select
@@ -412,32 +510,54 @@ const StudentsTable = ({
             </div>
             {/* Nouveau filtre : par status - Enhanced with better focus states */}
             <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
-              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>Status:</label>
+              <label
+                className={`${_text_color} font-semibold text-xs md:text-sm`}
+              >
+                {translate("status", language)}:
+              </label>
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="All">Tous</option>
-                <option value="actif">Les actifs</option>
-                <option value="inactif">Les inactifs</option>
+                <option value="All">
+                  {translate("all", language)}
+                </option>
+                <option value="actif">
+                  {translate("active", language)}
+                </option>
+                <option value="inactif">
+                  {translate("inactive", language)}
+                </option>
               </select>
             </div>
-            {/* Nouveau filtre : par matricule - Enhanced with better focus states */}
+            {/* Nouveau filtre : par matricule */}
             <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
-              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>Matricule:</label>
+              <label
+                className={`${_text_color} font-semibold text-xs md:text-sm`}
+              >
+                {translate("matricule", language)}:
+              </label>
               <select
                 value={filterMatricule}
                 onChange={(e) => setFilterMatricule(e.target.value)}
                 className={`px-1 md:px-2 py-1 text-xs md:text-sm ${inputBgColor} ${textClass} rounded border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="All">Tous</option>
-                <option value="With">Avec</option>
-                <option value="Without">Sans</option>
+                <option value="All">
+                  {translate("all", language)}
+                </option>
+                <option value="With">
+                  {translate("with_matricule_option", language)}
+                </option>
+                <option value="Without">
+                  {translate("without_matricule_option", language)}
+                </option>
               </select>
             </div>
             <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto mb-2 md:mb-0">
-              <label className={`${_text_color} font-semibold text-xs md:text-sm`}>
+              <label
+                className={`${_text_color} font-semibold text-xs md:text-sm`}
+              >
                 {live_language.search_text}:
               </label>
               <input
@@ -451,11 +571,16 @@ const StudentsTable = ({
             <div className="flex items-center space-x-1 md:space-x-2 w-full md:w-auto">
               <input
                 type="checkbox"
-                checked={selected.length === filteredStudents.length && filteredStudents.length > 0}
+                checked={
+                  selected.length === filteredStudents.length &&
+                  filteredStudents.length > 0
+                }
                 onChange={toggleSelectAll}
                 className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
               />
-              <span className={`${_text_color} font-semibold text-xs md:text-sm`}>
+              <span
+                className={`${_text_color} font-semibold text-xs md:text-sm`}
+              >
                 {live_language.select_all_text}
               </span>
             </div>
@@ -481,11 +606,18 @@ const StudentsTable = ({
                   padding: 0,
                 }}
               >
-                <tr className={`divide-x ${theme === "dark" ? "divide-gray-700" : "divide-gray-200"}`}>
+                <tr
+                  className={`divide-x ${
+                    theme === "dark" ? "divide-gray-700" : "divide-gray-200"
+                  }`}
+                >
                   <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     <input
                       type="checkbox"
-                      checked={selected.length === filteredStudents.length && filteredStudents.length > 0}
+                      checked={
+                        selected.length === filteredStudents.length &&
+                        filteredStudents.length > 0
+                      }
                       onChange={toggleSelectAll}
                       className="w-3 h-3 md:w-4 md:h-4 mx-auto rounded text-blue-600 focus:ring-blue-500"
                     />
@@ -509,7 +641,7 @@ const StudentsTable = ({
                     {live_language.sexe_text}
                   </th>
                   <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
-                    Nº matricule
+                    {translate("matricule", language)}
                   </th>
                   <th className="py-1 px-1 md:px-2 border-b border-gray-300 text-center">
                     {live_language.status_text}
@@ -534,16 +666,21 @@ const StudentsTable = ({
               <tbody className="divide-y divide-gray-300">
                 {filteredStudents.map((student, index) => (
                   <tr
-                    title="Double Clique"
-                    onDoubleClick={() => { }}
+                    title={student.name_complet}
+                    // onDoubleClick={() => {}}
                     key={student.id}
+                    id={index}
                     className={`${_text_color} divide-x divide-gray-300 transition-colors duration-300 cursor-pointer
                       ${
-                        app_bg_color === gradients[1] ? "hover:bg-white hover:text-gray-700" : 
-                        app_bg_color === gradients[2] ? "hover:bg-gray-200 hover:text-gray-700" : 
-                        theme === "dark" ? "hover:bg-gray-700 hover:text-white" : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white"
-                      }`
-                    }>
+                        app_bg_color === gradients[1]
+                          ? "hover:bg-white hover:text-gray-700"
+                          : app_bg_color === gradients[2]
+                          ? "hover:bg-gray-200 hover:text-gray-700"
+                          : theme === "dark"
+                          ? "hover:bg-gray-700 hover:text-white"
+                          : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white"
+                      }`}
+                  >
                     <td className="py-1 px-1 md:px-2 text-center">
                       <input
                         type="checkbox"
@@ -557,41 +694,68 @@ const StudentsTable = ({
                         <User className="text-gray-500 w-4 h-4 md:w-5 md:h-5" />
                       </div>
                     </td>
-                    <td className="py-1 px-1 md:px-2 text-center">{student.name_complet}</td>
-                    <td className="py-1 px-1 md:px-2 text-center">{getClasseName(student.classe, language)}</td>
                     <td className="py-1 px-1 md:px-2 text-center">
-                      {getBornInfos(student.birth_date, student.birth_place, language)}
+                      {student.name_complet}
+                    </td>
+                    <td className="py-1 px-1 md:px-2 text-center">
+                      {getClasseName(student.classe, language)}
+                    </td>
+                    <td className="py-1 px-1 md:px-2 text-center">
+                      {getBornInfos(
+                        student.birth_date,
+                        student.birth_place,
+                        language
+                      )}
                     </td>
                     <td className="py-1 px-1 md:px-2 text-center">
                       {getAge(student.birth_date)}
                       <div className="text-center">
-                        <b className="text-[9px] md:text-[11px]">{live_language.years_text}</b>
+                        <b className="text-[9px] md:text-[11px]">
+                          {live_language.years_text}
+                        </b>
                       </div>
                     </td>
-                    <td className="py-1 px-1 md:px-2 text-center">{student.sexe}</td>
                     <td className="py-1 px-1 md:px-2 text-center">
-                      {!student.matricule || student.matricule === "" ? "-" : student.matricule}
+                      {student.sexe}
                     </td>
                     <td className="py-1 px-1 md:px-2 text-center">
-                      {
-                        language === "Français" ? student.status :
-                          language === "Anglais" && student.status === "actif" ? "active" :
-                            language === "Anglais" && student.status === "inactif" ? "inactive" :
-                              language === "Bambara" && student.status === "actif" ? "Bɛɲin" : "Tɛɲin"
-                      }
-                      <div className="text-center mx-auto" style={{
-                        width: "10px",
-                        height: "10px",
-                        borderRadius: "10px",
-                        borderWidth: "2px",
-                        borderColor: "white",
-                        backgroundColor: student.status === "actif" ? "green" : "gray",
-                        marginTop: "2px",
-                      }}></div>
+                      {!student.matricule || student.matricule === ""
+                        ? "-"
+                        : student.matricule}
                     </td>
-                    <td className="py-1 px-1 md:px-2 text-center">{student.father_name || "-"}</td>
-                    <td className="py-1 px-1 md:px-2 text-center">{student.mother_name || "-"}</td>
-                    <td className="py-1 px-1 md:px-2 text-center">{student.parents_contact || "-"}</td>
+                    <td className="py-1 px-1 md:px-2 text-center">
+                      {language === "Français"
+                        ? student.status
+                        : language === "Anglais" && student.status === "actif"
+                        ? "active"
+                        : language === "Anglais" && student.status === "inactif"
+                        ? "inactive"
+                        : language === "Bambara" && student.status === "actif"
+                        ? "Bɛɲin"
+                        : "Tɛɲin"}
+                      <div
+                        className="text-center mx-auto"
+                        style={{
+                          width: "10px",
+                          height: "10px",
+                          borderRadius: "10px",
+                          borderWidth: "2px",
+                          borderColor: "white",
+                          backgroundColor:
+                            student.status === "actif" ? "green" : "gray",
+                          marginTop: "2px",
+                        }}
+                      ></div>
+                    </td>
+                    <td className="py-1 px-1 md:px-2 text-center">
+                      {student.father_name || "-"}
+                    </td>
+                    <td className="py-1 px-1 md:px-2 text-center">
+                      {student.mother_name || "-"}
+                    </td>
+                    <td className="py-1 px-1 md:px-2 text-center">
+                      {student.parents_contact || "-"}
+                    </td>
                     <td className="py-1 px-1 md:px-2 text-center">
                       {new Date(student.added_at).toLocaleDateString()}
                     </td>
@@ -618,10 +782,11 @@ const StudentsTable = ({
             }}
           >
             <p>
-              {language === "Français" ? `${selected.length} élève(s) sélectionné(s)` :
-                language === "Anglais" ? `${selected.length} student(s) selected` :
-                  `Kalanden sugandilen : ${selected.length}`
-              }
+              {language === "Français"
+                ? `${selected.length} élève(s) sélectionné(s)`
+                : language === "Anglais"
+                ? `${selected.length} student(s) selected`
+                : `Kalanden sugandilen : ${selected.length}`}
             </p>
           </div>
         </div>
@@ -634,7 +799,7 @@ const StudentsTable = ({
         handleConfirmeAction={handleConfirmAction}
         title={confirmTitle}
         message={confirmMessage}
-        actionType={confirmAction === 'delete' ? "danger" : "primary"}
+        actionType={confirmAction === "delete" ? "danger" : "primary"}
       />
     </div>
   );

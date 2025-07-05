@@ -3,9 +3,10 @@ import {
   handleStudentEnrollment,
   handleStudentUpdate,
   handleStudentDeletion,
-} from "./enrollmentManager.js";
-import { updateCurrentSnapshot } from "./snapshotManager.js";
-import { translate } from "../components/employes/employes_translator.js";
+} from "./enrollmentManager";
+import { updateCurrentSnapshot } from "./snapshotManager";
+import { translate } from "../components/employes/employes_translator";
+import { translate as translateStudents } from "../components/students/students_translator";
 
 // Fonction pour générer un identifiant unique
 const generateUniqueId = () => {
@@ -132,7 +133,7 @@ const updateDatabaseNameAndShortName = (
     });
 };
 
-const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
+const validateAndCleanStudentData = (studentData, requireAllFields = true, language) => {
   const validNameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿ-'\-\s]+$/;
   const requiredFields = [
     "first_name",
@@ -150,9 +151,9 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
   if (requireAllFields) {
     for (let field of requiredFields) {
       if (!studentData[field]) {
-        const error = new Error(`Le champ ${field} est obligatoire.`);
+        const error = new Error(`${translateStudents("field_required", language)}`);
         error.field = field;
-        error.step = "Vérification des champs obligatoires";
+        error.step = translateStudents("validation_required_fields", language);
         throw error;
       }
     }
@@ -163,18 +164,18 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
     const val = studentData.first_name.trim();
     if (!validNameRegex.test(val)) {
       const error = new Error(
-        "Les noms doivent contenir uniquement des lettres, espaces ou tirets."
+        translateStudents("name_format_error", language)
       );
       error.field = "first_name";
-      error.step = "Validation du format du prénom";
+      error.step = translateStudents("validation_first_name_format", language);
       throw error;
     }
     if (!check_names_length(val)) {
       const error = new Error(
-        "Le prénom doit contenir entre 2 et 20 caractères."
+        translateStudents("first_name_length_error", language)
       );
       error.field = "first_name";
-      error.step = "Validation de la longueur du prénom";
+      error.step = translateStudents("validation_first_name_length", language);
       throw error;
     }
     cleanedData.first_name = val;
@@ -185,18 +186,18 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
     const val = studentData.last_name.trim();
     if (!validNameRegex.test(val)) {
       const error = new Error(
-        "Les noms doivent contenir uniquement des lettres, espaces ou tirets."
+        translateStudents("name_format_error", language)
       );
       error.field = "last_name";
-      error.step = "Validation du format du nom de famille";
+      error.step = translateStudents("validation_last_name_format", language);
       throw error;
     }
     if (!check_names_length(val)) {
       const error = new Error(
-        "Le nom de famille doit contenir entre 2 et 20 caractères."
+        translateStudents("last_name_length_error", language)
       );
       error.field = "last_name";
-      error.step = "Validation de la longueur du nom de famille";
+      error.step = translateStudents("validation_last_name_length", language);
       throw error;
     }
     cleanedData.last_name = val;
@@ -207,18 +208,18 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
     const val = studentData.birth_place.trim();
     if (!validNameRegex.test(val)) {
       const error = new Error(
-        "Le lieu de naissance doit contenir uniquement des lettres, espaces ou tirets."
+        translateStudents("birth_place_format_error", language)
       );
       error.field = "birth_place";
-      error.step = "Validation du format du lieu de naissance";
+      error.step = translateStudents("validation_birth_place_format", language);
       throw error;
     }
     if (val.length < 2 || val.length > 25) {
       const error = new Error(
-        "Le lieu de naissance doit contenir entre 2 et 25 caractères."
+        translateStudents("birth_place_length_error", language)
       );
       error.field = "birth_place";
-      error.step = "Validation de la longueur du lieu de naissance";
+      error.step = translateStudents("validation_birth_place_length", language);
       throw error;
     }
     cleanedData.birth_place = val;
@@ -228,9 +229,9 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
   if (studentData.sure_name) {
     const val = studentData.sure_name.trim();
     if (val.length > 20) {
-      const error = new Error("Le surnom ne doit pas dépasser 20 caractères.");
+      const error = new Error(translateStudents("sure_name_length_error", language));
       error.field = "sure_name";
-      error.step = "Validation de la longueur du surnom";
+      error.step = translateStudents("validation_sure_name_length", language);
       throw error;
     }
     cleanedData.sure_name = val;
@@ -244,18 +245,18 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
     const val = studentData.father_name.trim();
     if (!validNameRegex.test(val)) {
       const error = new Error(
-        "Les noms doivent contenir uniquement des lettres, espaces ou tirets."
+        translateStudents("name_format_error", language)
       );
       error.field = "father_name";
-      error.step = "Validation du format du nom du père";
+      error.step = translateStudents("validation_father_name_format", language);
       throw error;
     }
     if (!check_names_length(val)) {
       const error = new Error(
-        "Le nom du père doit contenir entre 2 et 20 caractères."
+        translateStudents("father_name_length_error", language)
       );
       error.field = "father_name";
-      error.step = "Validation de la longueur du nom du père";
+      error.step = translateStudents("validation_father_name_length", language);
       throw error;
     }
     cleanedData.father_name = val;
@@ -266,18 +267,18 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
     const val = studentData.mother_name.trim();
     if (!validNameRegex.test(val)) {
       const error = new Error(
-        "Les noms doivent contenir uniquement des lettres, espaces ou tirets."
+        translateStudents("name_format_error", language)
       );
       error.field = "mother_name";
-      error.step = "Validation du format du nom de la mère";
+      error.step = translateStudents("validation_mother_name_format", language);
       throw error;
     }
     if (!check_names_length(val)) {
       const error = new Error(
-        "Le nom de la mère doit contenir entre 2 et 20 caractères."
+        translateStudents("mother_name_length_error", language)
       );
       error.field = "mother_name";
-      error.step = "Validation de la longueur du nom de la mère";
+      error.step = translateStudents("validation_mother_name_length", language);
       throw error;
     }
     cleanedData.mother_name = val;
@@ -287,17 +288,17 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
   if (studentData.parents_contact) {
     const val = studentData.parents_contact.toString().trim();
     if (isNaN(val)) {
-      const error = new Error("Le contact des parents doit être un nombre.");
+      const error = new Error(translateStudents("parents_contact_number_error", language));
       error.field = "parents_contact";
-      error.step = "Validation du contact";
+      error.step = translateStudents("validation_contact", language);
       throw error;
     }
     if (!check_names_length(val)) {
       const error = new Error(
-        "Le contact des parents doit contenir entre 2 et 20 caractères."
+        translateStudents("parents_contact_length_error", language)
       );
       error.field = "parents_contact";
-      error.step = "Validation de la longueur du contact";
+      error.step = translateStudents("validation_contact_length", language);
       throw error;
     }
     cleanedData.parents_contact = val;
@@ -311,9 +312,9 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
   // Valider et nettoyer sexe
   if (studentData.sexe) {
     if (!["M", "F"].includes(studentData.sexe)) {
-      const error = new Error("Le sexe doit être 'M' ou 'F'.");
+      const error = new Error(translateStudents("invalid_gender", language));
       error.field = "sexe";
-      error.step = "Validation du sexe";
+      error.step = translateStudents("validation_gender", language);
       throw error;
     }
     cleanedData.sexe = studentData.sexe;
@@ -325,9 +326,9 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
       typeof studentData.birth_date !== "number" ||
       studentData.birth_date > Date.now()
     ) {
-      const error = new Error("La date de naissance est invalide.");
+      const error = new Error(translateStudents("invalid_birth_date", language));
       error.field = "birth_date";
-      error.step = "Validation de la date de naissance";
+      error.step = translateStudents("validation_birth_date", language);
       throw error;
     }
     cleanedData.birth_date = studentData.birth_date;
@@ -340,18 +341,18 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
       const validMatriculeRegex = /^[A-Za-z0-9]+$/;
       if (!validMatriculeRegex.test(matricule)) {
         const error = new Error(
-          "Le matricule doit contenir uniquement des chiffres et des lettres."
+          translateStudents("matricule_format_error", language)
         );
         error.field = "matricule";
-        error.step = "Validation du matricule (format)";
+        error.step = translateStudents("validation_matricule_format", language);
         throw error;
       }
       if (matricule.length < 6 || matricule.length > 10) {
         const error = new Error(
-          "Le matricule doit contenir entre 6 et 10 caractères."
+          translateStudents("matricule_length_error", language)
         );
         error.field = "matricule";
-        error.step = "Validation de la longueur du matricule";
+        error.step = translateStudents("validation_matricule_length", language);
         throw error;
       }
       cleanedData.matricule = matricule;
@@ -362,10 +363,10 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true) => {
 };
 
 // Méthode pour ajouter un nouvel étudiant (mise à jour)
-const saveStudent = async (studentData, db) => {
+const saveStudent = async (studentData, db, language) => {
   try {
     // Validation et nettoyage
-    const cleanedData = validateAndCleanStudentData(studentData, true);
+    const cleanedData = validateAndCleanStudentData(studentData, true, language);
 
     // Vérification de doublon sur les autres champs
     if (db.students) {
@@ -392,9 +393,9 @@ const saveStudent = async (studentData, db) => {
         (student) => student.matricule === cleanedData.matricule
       );
       if (duplicateMatricule) {
-        const error = new Error("Le matricule est déjà utilisé.");
+        const error = new Error(translateStudents("matricule_already_used", language));
         error.field = "matricule";
-        error.step = "Le matricule est déjà utilisé.";
+        error.step = translateStudents("matricule_already_used", language);
         throw error;
       }
     }
@@ -438,17 +439,17 @@ const saveStudent = async (studentData, db) => {
 };
 
 // Méthode pour modifier un étudiant existant (mise à jour)
-const updateStudent = async (studentId, updatedData, db) => {
+const updateStudent = async (studentId, updatedData, db, language) => {
   try {
     if (!db.students || db.students.length === 0) {
-      throw new Error("Aucun étudiant n'est enregistré.");
+      throw new Error(translateStudents("no_student_registered", language));
     }
 
     const studentIndex = db.students.findIndex(
       (student) => student.id === studentId
     );
     if (studentIndex === -1) {
-      throw new Error("Étudiant non trouvé.");
+      throw new Error(translateStudents("student_not_found", language));
     }
 
     const oldStudent = { ...db.students[studentIndex] };
@@ -465,9 +466,9 @@ const updateStudent = async (studentId, updatedData, db) => {
         (s) => s.matricule === cleanedData.matricule
       );
       if (duplicateMatricule) {
-        const error = new Error("Le matricule est déjà utilisé.");
+        const error = new Error(translateStudents("matricule_already_used", language));
         error.field = "matricule";
-        error.step = "Le matricule est déjà utilisé.";
+        error.step = translateStudents("matricule_already_used", language);
         throw error;
       }
     }
@@ -503,23 +504,23 @@ const updateStudent = async (studentId, updatedData, db) => {
 
     return updatedStudent;
   } catch (err) {
-    console.error("Erreur lors de la mise à jour de l'étudiant :", err);
+    console.error(translateStudents("error_updating_student", language), err);
     throw err;
   }
 };
 
 // Méthode pour supprimer un étudiant (mise à jour)
-const deleteStudent = async (studentId, db, setFlashMessage) => {
+const deleteStudent = async (studentId, db, setFlashMessage, language) => {
   try {
     if (!db.students || db.students.length === 0) {
-      throw new Error("Aucun étudiant n'est enregistré.");
+      throw new Error(translateStudents("no_student_registered", language));
     }
 
     const studentIndex = db.students.findIndex(
       (student) => student.id === studentId
     );
     if (studentIndex === -1) {
-      throw new Error("Étudiant non trouvé.");
+      throw new Error(translateStudents("student_not_found", language));
     }
 
     const studentToDelete = db.students[studentIndex];
@@ -538,7 +539,7 @@ const deleteStudent = async (studentId, db, setFlashMessage) => {
 
     if (setFlashMessage) {
       setFlashMessage({
-        message: "La suppression a été passée avec succès.",
+        message: translateStudents("deletion_success", language),
         type: "success",
         duration: 5000,
       });
@@ -546,23 +547,23 @@ const deleteStudent = async (studentId, db, setFlashMessage) => {
 
     return true;
   } catch (err) {
-    console.error("Erreur lors de la suppression de l'étudiant :", err);
+    console.error(translateStudents("error_deleting_student", language), err);
     throw err;
   }
 };
 
 // Méthode pour activer un étudiant (passer son status à "actif")
-const activateStudent = async (studentId, db, setFlashMessage) => {
+const activateStudent = async (studentId, db, setFlashMessage, language) => {
   try {
     if (!db.students || db.students.length === 0) {
-      throw new Error("Aucun étudiant n'est enregistré.");
+      throw new Error(translateStudents("no_student_registered", language));
     }
 
     const studentIndex = db.students.findIndex(
       (student) => student.id === studentId
     );
     if (studentIndex === -1) {
-      throw new Error("Étudiant non trouvé.");
+      throw new Error(translateStudents("student_not_found", language));
     }
 
     // Récupérer l'ancien état pour l'enrollment
@@ -586,7 +587,7 @@ const activateStudent = async (studentId, db, setFlashMessage) => {
 
     if (setFlashMessage) {
       setFlashMessage({
-        message: "Étudiant activé avec succès.",
+        message: translateStudents("activation_success", language),
         type: "success",
         duration: 5000,
       });
@@ -594,23 +595,23 @@ const activateStudent = async (studentId, db, setFlashMessage) => {
 
     return true;
   } catch (err) {
-    console.error("Erreur lors de l'activation de l'étudiant:", err);
+    console.error(translateStudents("error_activating_student", language), err);
     throw err;
   }
 };
 
 // Méthode pour désactiver un étudiant (passer son status à "inactif")
-const deactivateStudent = async (studentId, db, setFlashMessage) => {
+const deactivateStudent = async (studentId, db, setFlashMessage, language) => {
   try {
     if (!db.students || db.students.length === 0) {
-      throw new Error("Aucun étudiant n'est enregistré.");
+      throw new Error(translateStudents("no_student_registered", language));
     }
 
     const studentIndex = db.students.findIndex(
       (student) => student.id === studentId
     );
     if (studentIndex === -1) {
-      throw new Error("Étudiant non trouvé.");
+      throw new Error(translateStudents("student_not_found", language));
     }
 
     // Récupérer l'ancien état pour l'enrollment
@@ -634,7 +635,7 @@ const deactivateStudent = async (studentId, db, setFlashMessage) => {
 
     if (setFlashMessage) {
       setFlashMessage({
-        message: "Étudiant désactivé avec succès.",
+        message: translateStudents("deactivation_success", language),
         type: "success",
         duration: 5000,
       });
@@ -642,7 +643,7 @@ const deactivateStudent = async (studentId, db, setFlashMessage) => {
 
     return true;
   } catch (err) {
-    console.error("Erreur lors de la désactivation de l'étudiant:", err);
+    console.error(translateStudents("error_deactivating_student", language), err);
     throw err;
   }
 };
