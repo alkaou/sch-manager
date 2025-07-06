@@ -3,7 +3,7 @@ const translations = {
   compositions_management: {
     Français: "Gestion des Compositions",
     Anglais: "Compositions Management",
-    Bambara: "ɲɔngɔndanw Ɲɛnabɔli",
+    Bambara: "Ɲɔngɔndanw Ɲɛnabɔli",
   },
   error_select_composition_number: {
     Français: "Veuillez sélectionner un numéro de composition.",
@@ -23,22 +23,22 @@ const translations = {
   error_composition_already_exists: {
     Français: "La composition {name} existe déjà pour cette année.",
     Anglais: "Composition {name} already exists for this year.",
-    Bambara: "ɲɔngɔndan {name} bɛ yen ka ban san in kɔnɔ.",
+    Bambara: "Ɲɔngɔndan {name} bɛ yen ka ban san in kɔnɔ.",
   },
   success_composition_updated: {
     Français: "La composition a été mise à jour avec succès!",
     Anglais: "The composition has been successfully updated!",
-    Bambara: "ɲɔngɔndan kɔnɔkow ladilanin don ni nɔɔrɔ ye!",
+    Bambara: "Ɲɔngɔndan kɔnɔkow ladilanin don ni nɔɔrɔ ye!",
   },
   success_composition_created: {
     Français: "La composition a été créée avec succès!",
     Anglais: "The composition was successfully created!",
-    Bambara: "ɲɔngɔndan kura dabɔra ni nɔɔrɔ ye!",
+    Bambara: "Ɲɔngɔndan kura dabɔra ni nɔɔrɔ ye!",
   },
   error_saving_composition: {
     Français: "Erreur lors de la sauvegarde de la composition.",
     Anglais: "Error saving the composition.",
-    Bambara: "ɲɔngɔndan marali la, fili bɛ yen.",
+    Bambara: "Ɲɔngɔndan marali la, fili bɛ yen.",
   },
   error_delete_locked_composition: {
     Français:
@@ -51,12 +51,12 @@ const translations = {
   success_composition_deleted: {
     Français: "La composition a été supprimée avec succès!",
     Anglais: "The composition has been successfully deleted!",
-    Bambara: "ɲɔngɔndan jɔsira ni nɔɔrɔ ye!",
+    Bambara: "Ɲɔngɔndan jɔsira ni nɔɔrɔ ye!",
   },
   error_deleting_composition: {
     Français: "Erreur lors de la suppression de la composition.",
     Anglais: "Error deleting the composition.",
-    Bambara: "ɲɔngɔndan jɔsili la, fili bɛ yen.",
+    Bambara: "Ɲɔngɔndan jɔsili la, fili bɛ yen.",
   },
   confirm_delete_title: {
     Français: "Confirmer la suppression",
@@ -76,7 +76,7 @@ const translations = {
   list_of_compositions: {
     Français: "Liste des Compositions",
     Anglais: "List of Compositions",
-    Bambara: "ɲɔngɔndanw ka jɛnsɛn",
+    Bambara: "Ɲɔngɔndanw ka jɛnsɛn",
   },
   sort_by: {
     Français: "Trier par :",
@@ -116,17 +116,17 @@ const translations = {
   new_composition: {
     Français: "Nouvelle Composition",
     Anglais: "New Composition",
-    Bambara: "ɲɔngɔndan kura",
+    Bambara: "Ɲɔngɔndan kura",
   },
   no_composition_recorded: {
     Français: "Aucune composition enregistrée",
     Anglais: "No composition recorded",
-    Bambara: "ɲɔngɔndan si ma sɛbɛn",
+    Bambara: "Ɲɔngɔndan si ma sɛbɛn",
   },
   click_new_composition_to_start: {
     Français: 'Cliquez sur "Nouvelle Composition" pour commencer',
     Anglais: 'Click on "New Composition" to start',
-    Bambara: 'Digi "ɲɔngɔndan kura" kan ka daminɛ',
+    Bambara: 'Digi "Ɲɔngɔndan kura" kan ka daminɛ',
   },
   name: {
     Français: "Nom",
@@ -166,17 +166,17 @@ const translations = {
   edit_composition: {
     Français: "Modifier la composition",
     Anglais: "Edit composition",
-    Bambara: "ɲɔngɔndan yɛlɛma",
+    Bambara: "Ɲɔngɔndan yɛlɛma",
   },
   composition_number: {
     Français: "Numéro de composition",
     Anglais: "Composition number",
-    Bambara: "ɲɔngɔndan nimoro",
+    Bambara: "Ɲɔngɔndan nimoro",
   },
   composition_date: {
     Français: "Date de la composition",
     Anglais: "Composition date",
-    Bambara: "ɲɔngɔndan don",
+    Bambara: "Ɲɔngɔndan don",
   },
   concerned_classes: {
     Français: "Classes concernées",
@@ -196,12 +196,12 @@ const translations = {
   update_composition: {
     Français: "Mettre à jour la composition",
     Anglais: "Update composition",
-    Bambara: "ɲɔngɔndan kɔnɔkow ladilan",
+    Bambara: "Ɲɔngɔndan kɔnɔkow ladilan",
   },
   create_composition: {
     Français: "Créer la composition",
     Anglais: "Create composition",
-    Bambara: "ɲɔngɔndan dabɔ",
+    Bambara: "Ɲɔngɔndan dabɔ",
   },
   close: {
     Français: "Fermer",
@@ -256,25 +256,25 @@ const translations = {
       { value: "21", helper: "Bac", label: "Mock BAC" },
     ],
     Bambara: [
-      { value: "1", helper: "comp", label: "San ɲɔngɔndan Fɔlɔ" },
-      { value: "2", helper: "comp", label: "San ɲɔngɔndan 2 nan" },
-      { value: "3", helper: "comp", label: "San ɲɔngɔndan 3 nan" },
-      { value: "4", helper: "comp", label: "San ɲɔngɔndan 4 nan" },
-      { value: "5", helper: "comp", label: "San ɲɔngɔndan 5 nan" },
-      { value: "6", helper: "comp", label: "San ɲɔngɔndan 6 nan" },
-      { value: "7", helper: "comp", label: "San ɲɔngɔndan 7 nan" },
-      { value: "8", helper: "comp", label: "San ɲɔngɔndan 8 nan" },
-      { value: "9", helper: "comp", label: "San ɲɔngɔndan 9 nan" },
-      { value: "10", helper: "Trim", label: "Kalo Saba ɲɔngɔndan Fɔlɔ" },
-      { value: "11", helper: "Trim", label: "Kalo Saba ɲɔngɔndan 2 nan" },
-      { value: "12", helper: "Trim", label: "Kalo Saba ɲɔngɔndan 3 nan" },
-      { value: "13", helper: "Seme", label: "Kalo Wɔɔrɔ ɲɔngɔndan Fɔlɔ" },
-      { value: "14", helper: "Seme", label: "Kalo Wɔɔrɔ ɲɔngɔndan 2 nan" },
-      { value: "15", helper: "Seme", label: "Kalo Wɔɔrɔ ɲɔngɔndan 3 nan" },
-      { value: "16", helper: "Seme", label: "Kalo Wɔɔrɔ ɲɔngɔndan 4 nan" },
-      { value: "17", helper: "Seme", label: "Kalo Wɔɔrɔ ɲɔngɔndan 5 nan" },
-      { value: "18", helper: "Seme", label: "Kalo Wɔɔrɔ ɲɔngɔndan 6 nan" },
-      { value: "19", helper: "Trim", label: "Kalo Saba ɲɔngɔndan fitini" },
+      { value: "1", helper: "comp", label: "San Ɲɔngɔndan Fɔlɔ" },
+      { value: "2", helper: "comp", label: "San Ɲɔngɔndan 2 nan" },
+      { value: "3", helper: "comp", label: "San Ɲɔngɔndan 3 nan" },
+      { value: "4", helper: "comp", label: "San Ɲɔngɔndan 4 nan" },
+      { value: "5", helper: "comp", label: "San Ɲɔngɔndan 5 nan" },
+      { value: "6", helper: "comp", label: "San Ɲɔngɔndan 6 nan" },
+      { value: "7", helper: "comp", label: "San Ɲɔngɔndan 7 nan" },
+      { value: "8", helper: "comp", label: "San Ɲɔngɔndan 8 nan" },
+      { value: "9", helper: "comp", label: "San Ɲɔngɔndan 9 nan" },
+      { value: "10", helper: "Trim", label: "Kalo Saba Ɲɔngɔndan Fɔlɔ" },
+      { value: "11", helper: "Trim", label: "Kalo Saba Ɲɔngɔndan 2 nan" },
+      { value: "12", helper: "Trim", label: "Kalo Saba Ɲɔngɔndan 3 nan" },
+      { value: "13", helper: "Seme", label: "Kalo Wɔɔrɔ Ɲɔngɔndan Fɔlɔ" },
+      { value: "14", helper: "Seme", label: "Kalo Wɔɔrɔ Ɲɔngɔndan 2 nan" },
+      { value: "15", helper: "Seme", label: "Kalo Wɔɔrɔ Ɲɔngɔndan 3 nan" },
+      { value: "16", helper: "Seme", label: "Kalo Wɔɔrɔ Ɲɔngɔndan 4 nan" },
+      { value: "17", helper: "Seme", label: "Kalo Wɔɔrɔ Ɲɔngɔndan 5 nan" },
+      { value: "18", helper: "Seme", label: "Kalo Wɔɔrɔ Ɲɔngɔndan 6 nan" },
+      { value: "19", helper: "Trim", label: "Kalo Saba Ɲɔngɔndan fitini" },
       { value: "20", helper: "Def", label: "DEF labɛnni" },
       { value: "21", helper: "Bac", label: "BAC labɛnni" },
     ],

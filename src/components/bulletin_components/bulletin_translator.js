@@ -2,7 +2,321 @@ const translations = {
   success_bulletin_success: {
     Français: "Bulletin supprimé avec succès !",
     Anglais: "Bulletin deleted successfully !",
-    Bambara: "ɲɔngɔndan sɛbɛn jɔsila ni ɲɛtaa ye !",
+    Bambara: "Ɲɔngɔndan sɛbɛn jɔsila ni ɲɛtaa ye !",
+  },
+  error_deleting_bulletin: {
+    Français: "Erreur lors de la suppression du bulletin.",
+    Anglais: "Error deleting bulletin.",
+    Bambara: "Ɲɔngɔndan sɛbɛn jɔsili kɛra ni fili ye.",
+  },
+  bulletins_management: {
+    Français: "Gestion des Bulletins.",
+    Anglais: "Bulletin Management.",
+    Bambara: "Ɲɔngɔndan Sɛbɛnw Labɛn Yɔrɔ.",
+  },
+  confirm_delete_bulletin_title: {
+    Français: "Confirmer la suppression du bulletin",
+    Anglais: "Confirm bulletin deletion",
+    Bambara: "Ɲɔngɔndan sɛbɛn jɔsili yamaruya",
+  },
+  confirm_delete_bulletin_message: {
+    Français: "Êtes-vous sûr de vouloir supprimer ce bulletin ?",
+    Anglais: "Are you sure you want to delete this bulletin?",
+    Bambara: "I dalen don i bɛ nin ɲɔngɔndan sɛbɛn in jɔsi wa?",
+  },
+  confirm_close_bulletin_title: {
+    Français: "Confirmer la fermeture du bulletin",
+    Anglais: "Confirm bulletin closure",
+    Bambara: "Ɲɔngɔndan sɛbɛn datugu dafa",
+  },
+  confirm_close_bulletin_message: {
+    Français:
+      "Êtes-vous sûr de vouloir fermer ce bulletin ?\nVous ne pourrez plus désormais modifier quoi que ce soit sur ce bulletin !",
+    Anglais:
+      "Are you sure you want to close this bulletin?\nYou will no longer be able to modify anything on this bulletin!",
+    Bambara:
+      "I dalen don i bɛ nin ɲɔngɔndan sɛbɛn in datugu wa?\nI tɛna se ka fɛn si yɛlɛma nin ɲɔngɔndan sɛbɛn in na tugun!",
+  },
+  bulletin_closed_success: {
+    Français: "Bulletin fermé avec succès !",
+    Anglais: "Bulletin closed successfully!",
+    Bambara: "Ɲɔngɔndan sɛbɛn datugula ni ɲɛtaa ye!",
+  },
+  error_closing_bulletin: {
+    Français: "Erreur lors de la fermeture du bulletin.",
+    Anglais: "Error closing bulletin.",
+    Bambara: "Ɲɔngɔndan sɛbɛn datuguli kɛra ni fili ye.",
+  },
+  bulletin_management: {
+    Français: "Gestion des Bulletins",
+    Anglais: "Bulletin Management",
+    Bambara: "Ɲɔngɔndan sɛbɛnw ladonni",
+  },
+  refresh_data: {
+    Français: "Rafraîchir les données",
+    Anglais: "Refresh data",
+    Bambara: "kunnafoniw kura",
+  },
+  search_composition: {
+    Français: "Rechercher une composition...",
+    Anglais: "Search for a composition...",
+    Bambara: "Ɲɔngɔndan dɔ ɲini...",
+  },
+  all_years: {
+    Français: "Toutes les années",
+    Anglais: "All years",
+    Bambara: "san bɛɛ",
+  },
+  all_types: {
+    Français: "Tous les types",
+    Anglais: "All types",
+    Bambara: "Suguya bɛɛ",
+  },
+  composition_type: {
+    Français: "Composition",
+    Anglais: "Composition",
+    Bambara: "Ɲɔngɔndan",
+  },
+  trimester_type: {
+    Français: "Trimestre",
+    Anglais: "Trimester",
+    Bambara: "Kalo Saba Ɲɔngɔndan",
+  },
+  semester_type: {
+    Français: "Semestre",
+    Anglais: "Semester",
+    Bambara: "Kalo Wɔɔrɔ Ɲɔngɔndan",
+  },
+  def_blanc_type: {
+    Français: "DEF Blanc",
+    Anglais: "Mock DEF",
+    Bambara: "DEF labɛnni",
+  },
+  bac_blanc_type: {
+    Français: "BAC Blanc",
+    Anglais: "Mock BAC",
+    Bambara: "BAC labɛnni",
+  },
+  no_composition_found: {
+    Français: "Aucune composition trouvée",
+    Anglais: "No composition found",
+    Bambara: "Ɲɔngɔndan si ma sɔrɔ",
+  },
+  create_compositions_message: {
+    Français: 'Veuillez créer des compositions dans la section "Compositions"',
+    Anglais: 'Please create compositions in the "Compositions" section',
+    Bambara: 'aw ye ɲɔngɔndanw dilan "Ɲɔngɔndanw" yɔrɔ la',
+  },
+  bulletin_closed: {
+    Français: "Bulletin fermé!",
+    Anglais: "Bulletin closed!",
+    Bambara: "Ɲɔngɔndan sɛbɛn datugula!",
+  },
+  view_bulletins: {
+    Français: "Voir les bulletins",
+    Anglais: "View bulletins",
+    Bambara: "Ɲɔngɔndan sɛbɛnw lajɛ",
+  },
+  close_editing: {
+    Français: "Fermer l'édition",
+    Anglais: "Close editing",
+    Bambara: "yɛlɛmali datugu",
+  },
+  enter_grades: {
+    Français: "Saisir les notes",
+    Anglais: "Enter grades",
+    Bambara: "hakɛw sɛbɛn",
+  },
+  reconfigure_bulletin: {
+    Français: "Reconfigurer le bulletin",
+    Anglais: "Reconfigure bulletin",
+    Bambara: "Ɲɔngɔndan sɛbɛn labɛn kokura",
+  },
+  delete_bulletin: {
+    Français: "Supprimer le bulletin",
+    Anglais: "Delete bulletin",
+    Bambara: "Ɲɔngɔndan sɛbɛn jɔsi",
+  },
+  create_bulletin: {
+    Français: "Créer un bulletin",
+    Anglais: "Create bulletin",
+    Bambara: "Ɲɔngɔndan sɛbɛn dilan",
+  },
+  students: {
+    Français: "Élèves",
+    Anglais: "Students",
+    Bambara: "kalandenw",
+  },
+  composed: {
+    Français: "Composés",
+    Anglais: "Composed",
+    Bambara: "Ɲɔngɔndan kɛlaw",
+  },
+  add_students: {
+    Français: "Ajouter des élèves",
+    Anglais: "Add students",
+    Bambara: "kalandenw fara",
+  },
+  bulletin_not_configured: {
+    Français: "Bulletin non configuré",
+    Anglais: "Bulletin not configured",
+    Bambara: "Ɲɔngɔndan sɛbɛn ma labɛn",
+  },
+  bulletin_configuration: {
+    Français: "Configuration du bulletin",
+    Anglais: "Bulletin configuration",
+    Bambara: "Ɲɔngɔndan sɛbɛn labɛnni",
+  },
+  student_selection: {
+    Français: "Sélection des élèves",
+    Anglais: "Student selection",
+    Bambara: "Kalandenw sugandili",
+  },
+  grade_entry: {
+    Français: "Saisie des notes",
+    Anglais: "Grade entry",
+    Bambara: "Hakɛw sɛbɛnni",
+  },
+  bulletin_visualization: {
+    Français: "Visualisation des bulletins",
+    Anglais: "Bulletin visualization",
+    Bambara: "Ɲɔngɔndan sɛbɛnw lajɛli",
+  },
+  premier_cycle: {
+    Français: "Premier Cycle",
+    Anglais: "First Cycle",
+    Bambara: "Duma Kalanso Fɔlɔ",
+  },
+  second_cycle: {
+    Français: "Second Cycle",
+    Anglais: "Second Cycle",
+    Bambara: "Duma Kalanso Filanan",
+  },
+  lycee: {
+    Français: "Lycée",
+    Anglais: "High School",
+    Bambara: "Sanfɛ Kalanso",
+  },
+  professionnel: {
+    Français: "Professionnel",
+    Anglais: "Professional",
+    Bambara: "Baara Laɲini Kalanso",
+  },
+  personnalise: {
+    Français: "Personnalisé",
+    Anglais: "Custom",
+    Bambara: "I yɛrɛ ka faralenw",
+  },
+  conduite: {
+    Français: "Conduite",
+    Anglais: "Conduct",
+    Bambara: "Laɲini",
+  },
+  subject_name_length_error: {
+    Français: "Le nom de la matière doit contenir entre 2 et 30 caractères.",
+    Anglais: "Subject name must be between 2 and 30 characters.",
+    Bambara: "Kalanw tɔgɔ ka kan ka kɛ sɛbɛn 2 ni 30 cɛla.",
+  },
+  subject_exists_error: {
+    Français: "Cette matière existe déjà dans la liste.",
+    Anglais: "This subject already exists in the list.",
+    Bambara: "Kalan nin bɛ yɔrɔ la ka kɔn.",
+  },
+  duplicate_subjects_error: {
+    Français: "Le bulletin ne peut pas contenir de matières dupliquées.",
+    Anglais: "The bulletin cannot contain duplicate subjects.",
+    Bambara: "Ɲɔngɔndan sɛbɛn tɛ se ka kalanw kɛɲɛnɛn kɛ.",
+  },
+  select_at_least_one_subject_error: {
+    Français:
+      "Veuillez sélectionner au moins une matière en plus de 'Conduite'.",
+    Anglais: "Please select at least one subject in addition to 'Conduct'.",
+    Bambara: "Aw ye kalan kelen dɔn dɔn ka tɛmɛ 'Laɲini' kan.",
+  },
+  bulletin_saved_success: {
+    Français: "Bulletin sauvegardé avec succès !",
+    Anglais: "Bulletin saved successfully!",
+    Bambara: "Ɲɔngɔndan sɛbɛn ladonnan ni ɲɛtaa ye!",
+  },
+  error_saving_bulletin: {
+    Français: "Une erreur est survenue lors de la sauvegarde du bulletin.",
+    Anglais: "An error occurred while saving the bulletin.",
+    Bambara: "Fili dɔ kɛra ɲɔngɔndan sɛbɛn ladonni na.",
+  },
+  bulletin_configuration_for: {
+    Français: "Configuration du bulletin pour :",
+    Anglais: "Bulletin configuration for:",
+    Bambara: "Ɲɔngɔndan sɛbɛn ladonni ka kɛ:",
+  },
+  composition_label: {
+    Français: "Composition :",
+    Anglais: "Composition:",
+    Bambara: "Ɲɔngɔndan:",
+  },
+  class_label: {
+    Français: "Classe :",
+    Anglais: "Class:",
+    Bambara: "Kalasi:",
+  },
+  selected_subjects: {
+    Français: "Matières sélectionnées :",
+    Anglais: "Selected subjects:",
+    Bambara: "Kalanw sugandilenw:",
+  },
+  no_subject_selected_besides_conduite: {
+    Français: "Aucune matière sélectionnée en plus de 'Conduite'",
+    Anglais: "No subject selected besides 'Conduct'",
+    Bambara: "Kalan si ma sugandi ka tɛmɛ 'Laɲini' kan.",
+  },
+  coefficient_label: {
+    Français: "Coef.",
+    Anglais: "Coef.",
+    Bambara: "Coef.",
+  },
+  subject_selection: {
+    Français: "Sélection des matières :",
+    Anglais: "Subject selection:",
+    Bambara: "Kalanw sugandili:",
+  },
+  select_all: {
+    Français: "Tout sélectionner",
+    Anglais: "Select all",
+    Bambara: "Bɛɛ sugandi",
+  },
+  confirm: {
+    Français: "Confirmer",
+    Anglais: "Confirm",
+    Bambara: "A Lawaleya",
+  },
+  cancel: {
+    Français: "Annuler",
+    Anglais: "Cancel",
+    Bambara: "Segin Kɔ",
+  },
+  delete: {
+    Français: "Supprimer",
+    Anglais: "Delete",
+    Bambara: "Jɔsi",
+  },
+  add_custom_subject_title: {
+    Français: "Ajouter une matière personnalisée",
+    Anglais: "Add custom subject",
+    Bambara: "Kalan kura dɔ fara",
+  },
+  subject_name_placeholder: {
+    Français: "Nom de la matière",
+    Anglais: "Subject name",
+    Bambara: "Kalan tɔgɔ",
+  },
+  add: {
+    Français: "Ajouter",
+    Anglais: "Add",
+    Bambara: "Fara",
+  },
+  save_bulletin: {
+    Français: "Sauvegarder le bulletin",
+    Anglais: "Save bulletin",
+    Bambara: "Ɲɔngɔndan sɛbɛn ladon",
   },
 };
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { gradients } from "../utils/colors";
-import { getClasseName } from "../utils/helpers";
+import { getClasseName, formatDate } from "../utils/helpers";
 import { useLanguage, useFlashNotification } from "../components/contexts";
 import {
   Search,
@@ -24,9 +24,8 @@ import BulletinNotes from "../components/bulletin_components/BulletinNotes.jsx";
 import ShowAllBulletin from "../components/bulletin_components/ShowAllBulletin.jsx";
 import ActionConfirmePopup from "../components/popups/ActionConfirmePopup.jsx";
 import PageLoading from "../components/partials/PageLoading.jsx";
-import translations, {
-  translate,
-} from "../components/bulletin_components/bulletin_translator.js";
+import { translate } from "../components/bulletin_components/bulletin_translator";
+import { translate as Compositiontranslate } from "../components/compositions/compositions_translator";
 
 const BulletinsPageContent = ({
   app_bg_color,
@@ -130,15 +129,6 @@ const BulletinsPageContent = ({
     }
   };
 
-  // Formatage de la date pour l'affichage
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(
-      language === "Français" ? "fr-FR" : "en-US",
-      options
-    );
-  };
-
   // Obtenir les années uniques pour le filtre
   const getUniqueYears = () => {
     const years = compositions.map((comp) => new Date(comp.date).getFullYear());
@@ -158,7 +148,9 @@ const BulletinsPageContent = ({
       const searchMatch =
         searchTerm === "" ||
         comp.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        formatDate(comp.date).toLowerCase().includes(searchTerm.toLowerCase());
+        formatDate(comp.date)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase(), language);
 
       // Filtre par année
       const yearMatch =
@@ -225,8 +217,10 @@ const BulletinsPageContent = ({
 
   // Gérer la suppression d'un bulletin
   const handleDeleteBulletin = async (compositionId = "", classId = "") => {
-    setConfirmPopupTitle("Confirmer la suppression du bulletin");
-    setConfirmPopupMessage("Êtes-vous sûr de vouloir supprimer ce bulletin ?");
+    setConfirmPopupTitle(translate("confirm_delete_bulletin_title", language));
+    setConfirmPopupMessage(
+      translate("confirm_delete_bulletin_message", language)
+    );
     if (showConfirmPopup === false) {
       set_the_compositionId(compositionId);
       set_the_classId(classId);
@@ -261,7 +255,7 @@ const BulletinsPageContent = ({
       // console.error("Erreur lors de la suppression du bulletin:", error);
       // alert("Erreur lors de la suppression du bulletin.");
       setFlashMessage({
-        message: "Erreur lors de la suppression du bulletin.",
+        message: translate("error_deleting_bulletin", language),
         type: "error",
         duration: 5000,
       });
@@ -274,9 +268,9 @@ const BulletinsPageContent = ({
 
   // Gérer la fermeture d'un bulletin
   const handleLokedBulletin = async (compositionId = "", classId = "") => {
-    setConfirmPopupTitle("Confirmer la fermeture du bulletin");
+    setConfirmPopupTitle(translate("confirm_close_bulletin_title", language));
     setConfirmPopupMessage(
-      "Êtes-vous sûr de vouloir fermer ce bulletin ?\nVous ne pourrez plus désormais modifier quoi que ce soit sur ce bulletin !"
+      translate("confirm_close_bulletin_message", language)
     );
     if (showConfirmPopup === false) {
       set_the_compositionId(compositionId);
@@ -303,7 +297,7 @@ const BulletinsPageContent = ({
       setBulletins(updatedBulletins);
       refreshData();
       setFlashMessage({
-        message: "Bulletin fermé avec succès !",
+        message: translate("bulletin_closed_success", language),
         type: "success",
         duration: 5000,
       });
@@ -315,7 +309,7 @@ const BulletinsPageContent = ({
       // console.error("Erreur lors de la suppression du bulletin:", error);
       // alert("Erreur lors de la suppression du bulletin.");
       setFlashMessage({
-        message: "Erreur lors de la fermeture du bulletin.",
+        message: translate("error_closing_bulletin", language),
         type: "error",
         duration: 5000,
       });
@@ -355,15 +349,15 @@ const BulletinsPageContent = ({
         >
           <div className="flex justify-between items-center mb-6">
             <h2 className={`text-2xl font-bold ${textClass}`}>
-              Gestion des Bulletins
+              {translate("bulletins_management", language)}
             </h2>
             <button
               onClick={refreshData}
-              className={`p-2 rounded-full border ${tableBorderColor} hover:bg-blue-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md`}
-              title="Rafraîchir les données"
+              className={`p-2 rounded-full border ${tableBorderColor} bg-blue-600 hover:bg-blue-500 transition-all duration-300 transform hover:scale-105 hover:shadow-md`}
+              title={translate("refresh_data", language)}
             >
               <RefreshCcw
-                className={`hover:text-white ${textClass} ${
+                className={`text-white ${textClass} ${
                   isRefreshing ? "animate-spin" : ""
                 }`}
                 size={20}
@@ -373,27 +367,27 @@ const BulletinsPageContent = ({
 
           {/* Filtres et recherche */}
           <div
-            className={`flex flex-wrap items-center justify-between gap-3 mb-6 p-3 rounded-lg shadow-sm border border-2 border-gray-300`}
+            className={`flex flex-wrap items-center justify-between gap-2 mb-4 p-2 rounded-lg shadow-sm border border-2 border-gray-300`}
           >
             <div className="flex items-center space-x-2">
-              <Search size={20} className={textClass} />
+              <Search size={18} className={textClass} />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Rechercher une composition..."
-                className={`px-3 py-2 rounded ${search_inputBgColor} ${text_color} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                placeholder={translate("search_composition", language)}
+                className={`px-2 py-1 rounded ${search_inputBgColor} ${text_color} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter size={20} className={textClass} />
+              <Filter size={18} className={textClass} />
               <select
                 value={filterYear}
                 onChange={(e) => setFilterYear(e.target.value)}
-                className={`px-3 py-2 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-2 py-1 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="all">Toutes les années</option>
+                <option value="all">{translate("all_years", language)}</option>
                 {getUniqueYears().map((year) => (
                   <option key={year} value={year.toString()}>
                     {year}
@@ -403,25 +397,25 @@ const BulletinsPageContent = ({
             </div>
 
             <div className="flex items-center space-x-2">
-              <Filter size={20} className={textClass} />
+              <Filter size={18} className={textClass} />
               <select
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value)}
-                className={`px-3 py-2 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-2 py-1 rounded ${inputBgColor} ${textClass} border ${tableBorderColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="all">Tous les types</option>
+                <option value="all">{translate("all_types", language)}</option>
                 {getUniqueTypes().map((type) => (
                   <option key={type} value={type}>
                     {type === "comp"
-                      ? "Composition"
+                      ? translate("composition_type", language)
                       : type === "Trim"
-                      ? "Trimestre"
+                      ? translate("trimester_type", language)
                       : type === "Seme"
-                      ? "Semestre"
+                      ? translate("semester_type", language)
                       : type === "Def"
-                      ? "DEF Blanc"
+                      ? translate("def_blanc_type", language)
                       : type === "Bac"
-                      ? "BAC Blanc"
+                      ? translate("bac_blanc_type", language)
                       : type}
                   </option>
                 ))}
@@ -448,9 +442,11 @@ const BulletinsPageContent = ({
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <p className="text-lg font-medium">Aucune composition trouvée</p>
+              <p className="text-lg font-medium">
+                {translate("no_composition_found", language)}
+              </p>
               <p className="mt-2">
-                Veuillez créer des compositions dans la section "Compositions"
+                {translate("create_compositions_message", language)}
               </p>
             </div>
           ) : (
@@ -468,9 +464,16 @@ const BulletinsPageContent = ({
                     className={`${tableHeaderBg} ${textClass} p-4 flex justify-between items-center`}
                   >
                     <div>
-                      <h3 className="text-xl font-bold">{composition.label}</h3>
+                      <h3 className="text-xl font-bold">
+                        {/* {composition.label} */}
+                        {
+                          Compositiontranslate("composition_options", language)[
+                            parseInt(composition.name) - 1
+                          ]["label"]
+                        }
+                      </h3>
                       <p className="text-sm opacity-80">
-                        {formatDate(composition.date)}
+                        {formatDate(composition.date, language)}
                       </p>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -490,15 +493,15 @@ const BulletinsPageContent = ({
                         }`}
                       >
                         {composition.helper === "comp"
-                          ? "Composition"
+                          ? translate("composition_type", language)
                           : composition.helper === "Trim"
-                          ? "Trimestre"
+                          ? translate("trimester_type", language)
                           : composition.helper === "Seme"
-                          ? "Semestre"
+                          ? translate("semester_type", language)
                           : composition.helper === "Def"
-                          ? "DEF Blanc"
+                          ? translate("def_blanc_type", language)
                           : composition.helper === "Bac"
-                          ? "BAC Blanc"
+                          ? translate("bac_blanc_type", language)
                           : type}
                       </span>
                     </div>
@@ -556,7 +559,7 @@ const BulletinsPageContent = ({
                                       }}
                                       className={`text-white bg-blue-300 italic flex`}
                                     >
-                                      Bulletin fermé!
+                                      {translate("bulletin_closed", language)}
                                       <Lock
                                         className="mt-1 ml-1 text-white"
                                         size={15}
@@ -573,7 +576,10 @@ const BulletinsPageContent = ({
                                       className={`p-1.5 rounded ${buttonView} text-white`}
                                       whileHover={{ scale: 1.1 }}
                                       whileTap={{ scale: 0.95 }}
-                                      title="Voir les bulletins"
+                                      title={translate(
+                                        "view_bulletins",
+                                        language
+                                      )}
                                     >
                                       <Eye size={16} />
                                     </motion.button>
@@ -593,7 +599,10 @@ const BulletinsPageContent = ({
                                             className={`p-1.5 rounded ${buttonAdd} text-white`}
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
-                                            title="Fermer l'édition"
+                                            title={translate(
+                                              "close_editing",
+                                              language
+                                            )}
                                           >
                                             <Unlock size={16} />
                                           </motion.button>
@@ -610,7 +619,10 @@ const BulletinsPageContent = ({
                                           className={`p-1.5 rounded ${buttonPrimary} text-white`}
                                           whileHover={{ scale: 1.1 }}
                                           whileTap={{ scale: 0.95 }}
-                                          title="Saisir les notes"
+                                          title={translate(
+                                            "enter_grades",
+                                            language
+                                          )}
                                         >
                                           <FileText size={16} />
                                         </motion.button>
@@ -626,7 +638,10 @@ const BulletinsPageContent = ({
                                           className={`p-1.5 rounded ${buttonView} text-white`}
                                           whileHover={{ scale: 1.1 }}
                                           whileTap={{ scale: 0.95 }}
-                                          title="Voir les bulletins"
+                                          title={translate(
+                                            "view_bulletins",
+                                            language
+                                          )}
                                         >
                                           <Eye size={16} />
                                         </motion.button>
@@ -642,7 +657,10 @@ const BulletinsPageContent = ({
                                           className={`p-1.5 rounded ${buttonEdit} text-white`}
                                           whileHover={{ scale: 1.1 }}
                                           whileTap={{ scale: 0.95 }}
-                                          title="Reconfigurer le bulletin"
+                                          title={translate(
+                                            "reconfigure_bulletin",
+                                            language
+                                          )}
                                         >
                                           <Edit size={16} />
                                         </motion.button>
@@ -657,7 +675,10 @@ const BulletinsPageContent = ({
                                           className={`p-1.5 rounded ${buttonDelete} text-white`}
                                           whileHover={{ scale: 1.1 }}
                                           whileTap={{ scale: 0.95 }}
-                                          title="Supprimer le bulletin"
+                                          title={translate(
+                                            "delete_bulletin",
+                                            language
+                                          )}
                                         >
                                           <Trash size={16} />
                                         </motion.button>
@@ -674,7 +695,10 @@ const BulletinsPageContent = ({
                                         className={`p-1.5 rounded ${buttonAdd} text-white`}
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.95 }}
-                                        title="Créer un bulletin"
+                                        title={translate(
+                                          "create_bulletin",
+                                          language
+                                        )}
                                       >
                                         <Plus size={16} />
                                       </motion.button>
@@ -686,20 +710,24 @@ const BulletinsPageContent = ({
 
                             <div className="flex justify-between items-center text-sm">
                               <div className={textClass}>
-                                <span>Élèves: {totalStudents}</span>
+                                <b>
+                                  {translate("students", language)} :{" "}
+                                  {totalStudents}
+                                </b>
                               </div>
                               <div className="flex items-center">
                                 {bulletinExistsForClass ? (
                                   <div className="flex items-center">
                                     {composedStudents >= totalStudents ? (
-                                      <span className={`mr-2 ${textClass}`}>
-                                        Composés: {composedStudents}
-                                      </span>
+                                      <b className={`mr-2 ${textClass}`}>
+                                        {translate("composed", language)} :{" "}
+                                        {composedStudents}
+                                      </b>
                                     ) : (
-                                      <span className={`mr-2 ${textClass}`}>
-                                        Composés: {composedStudents}/
-                                        {totalStudents}
-                                      </span>
+                                      <b className={`mr-2 ${textClass}`}>
+                                        {translate("composed", language)}:{" "}
+                                        {composedStudents}/{totalStudents}
+                                      </b>
                                     )}
                                     {!bullettinIsLocked &&
                                       composedStudents < totalStudents && (
@@ -714,7 +742,10 @@ const BulletinsPageContent = ({
                                           className={`p-1.5 rounded ${buttonPrimary} text-white`}
                                           whileHover={{ scale: 1.1 }}
                                           whileTap={{ scale: 0.95 }}
-                                          title="Ajouter des élèves"
+                                          title={translate(
+                                            "add_students",
+                                            language
+                                          )}
                                         >
                                           <CheckSquare size={16} />
                                         </motion.button>
@@ -722,7 +753,10 @@ const BulletinsPageContent = ({
                                   </div>
                                 ) : (
                                   <span className={`text-yellow-500 italic`}>
-                                    Bulletin non configuré
+                                    {translate(
+                                      "bulletin_not_configured",
+                                      language
+                                    )}
                                   </span>
                                 )}
                               </div>
@@ -738,7 +772,7 @@ const BulletinsPageContent = ({
           )}
         </motion.div>
 
-        {/* Composants modaux pour la gestion des bulletins */}
+        {/* Modal components for bulletin management */}
         <AnimatePresence>
           {activeComponent && selectedComposition && selectedClass && (
             <motion.div
@@ -756,12 +790,13 @@ const BulletinsPageContent = ({
                 <div className="flex justify-between items-center mb-4">
                   <h3 className={`text-xl font-bold ${textClass}`}>
                     {activeComponent === "CreateBulletin" &&
-                      "Configuration du bulletin"}
+                      translate("bulletin_configuration", language)}
                     {activeComponent === "GetBulletinStudents" &&
-                      "Sélection des élèves"}
-                    {activeComponent === "BulletinNotes" && "Saisie des notes"}
+                      translate("student_selection", language)}
+                    {activeComponent === "BulletinNotes" &&
+                      translate("grade_entry", language)}
                     {activeComponent === "ShowAllBulletin" &&
-                      "Visualisation des bulletins"}
+                      translate("bulletin_visualization", language)}
                   </h3>
                   <button
                     onClick={handleCloseComponent}
@@ -784,7 +819,7 @@ const BulletinsPageContent = ({
                   </button>
                 </div>
 
-                {/* Contenu du composant actif */}
+                {/* Active component content */}
                 <div className="mt-4">
                   {activeComponent === "CreateBulletin" && (
                     <CreateBulletin
@@ -819,7 +854,7 @@ const BulletinsPageContent = ({
 
                   {activeComponent === "BulletinNotes" && (
                     <div>
-                      {/* Placeholder pour BulletinNotes */}
+                      {/* BulletinNotes placeholder */}
                       <BulletinNotes
                         selectedComposition={selectedComposition}
                         selectedClass={selectedClass}
@@ -837,7 +872,7 @@ const BulletinsPageContent = ({
                     </div>
                   )}
 
-                  {/* Placeholder pour ShowAllBulletin => Afficher les bulletins de tous les élèves */}
+                  {/* ShowAllBulletin placeholder => Display all student bulletins */}
                   <AnimatePresence>
                     {activeComponent === "ShowAllBulletin" && (
                       <ShowAllBulletin
@@ -860,7 +895,7 @@ const BulletinsPageContent = ({
           )}
         </AnimatePresence>
 
-        {/* Popup de confirmation de suppression */}
+        {/* Deletion confirmation popup */}
         <ActionConfirmePopup
           isOpenConfirmPopup={showConfirmPopup}
           setIsOpenConfirmPopup={() => {

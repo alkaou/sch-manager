@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import { motion } from "framer-motion";
 import { gradients } from "../utils/colors";
-import { getClasseName } from "../utils/helpers";
+import { getClasseName, formatDate } from "../utils/helpers";
 import { useLanguage } from "../components/contexts";
 import ActionConfirmePopup from "../components/popups/ActionConfirmePopup.jsx";
 import CreateCompositionComponent from "../components/compositions/CreateCompositionComponent.jsx";
@@ -316,47 +316,6 @@ const CompositionsPageContent = ({
     setIsCreateMode(false);
   };
 
-  // Formatage de la date pour l'affichage
-  // Tableau des mois en bambara
-  const bambara_month_array = [
-    { Janvier: "Zanwuyekalo" },
-    { Février: "Feburuyekalo" },
-    { Mars: "Marsikalo" },
-    { Avril: "Awirilikalo" },
-    { Mai: "Mɛkalo" },
-    { Juin: "Zuwenkalo" },
-    { Juillet: "Zuyekalo" },
-    { Août: "Utikalo" },
-    { Septembre: "Sɛtanburukalo" },
-    { Octobre: "Ɔkutɔburukalo" },
-    { Novembre: "Nowanburukalo" },
-    { Décembre: "Desanburukalo" },
-  ];
-
-  // On transforme le tableau en simple tableau de chaînes, indexé 0→Janvier, …, 11→Décembre
-  const bambaraMonths = bambara_month_array.map((obj) => Object.values(obj)[0]);
-
-  const formatDate = (dateString, language) => {
-    const date = new Date(dateString);
-    // Pour Français ou Anglais on utilise toLocaleDateString
-    if (language === "Français" || language === "Anglais") {
-      const locale = language === "Français" ? "fr-FR" : "en-US";
-      return date.toLocaleDateString(locale, {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    }
-
-    // Sinon on reconstruit la date à la main avec le mois en bambara
-    const day = date.getDate(); // jour du mois, 1–31
-    const year = date.getFullYear(); // année sur 4 chiffres
-    const monthIndex = date.getMonth(); // 0–11
-    const monthName = bambaraMonths[monthIndex];
-
-    // Ex. "zanwuyekalo tile 4 2025"
-    return `${monthName} tile ${day} san ${year}`;
-  };
 
   // Obtenir le nom des classes pour l'affichage
   const getClassesNames = (classIds) => {
