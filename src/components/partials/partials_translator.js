@@ -14,12 +14,12 @@ const translations = {
   compositions_texte: {
     Français: "Compostions",
     Anglais: "Compositions",
-    Bambara: "ɲɔngɔndan labɛn yɔrɔ",
+    Bambara: "Ɲɔngɔndan labɛn yɔrɔ",
   },
   bulletins_texte: {
     Français: "Bulletins",
     Anglais: "Report Cards",
-    Bambara: "ɲɔngɔndanw kunnafoniw",
+    Bambara: "Ɲɔngɔndanw kunnafoniw",
   },
   listes_texte: {
     Français: "Listes",

@@ -699,6 +699,16 @@ const translations = {
     Anglais: "Inactive",
     Bambara: "A ye baara jɔ",
   },
+  active_1: {
+    Français: "Actif",
+    Anglais: "Active",
+    Bambara: "Minnu bɛ baara la",
+  },
+  inactive_1: {
+    Français: "Inactif",
+    Anglais: "Inactive",
+    Bambara: "Minnu ye baara jɔ",
+  },
   undefined: {
     Français: "Indéfinie",
     Anglais: "Undefined",

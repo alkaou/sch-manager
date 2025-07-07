@@ -28,18 +28,18 @@ const BulletinPagination = ({
 
   return (
     <div
-      className={`flex justify-center items-center py-4 border-t ${borderColor}`}
+      className={`flex justify-center items-center py-1.5 border-t ${borderColor}`}
     >
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1">
         {/* Previous button */}
         <button
           onClick={() => currentPage > 1 && paginate(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${
+          className={`p-1 rounded-lg ${buttonSecondary} ${textClass} ${
             currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={14} />
         </button>
 
         {/* First page */}
@@ -47,7 +47,7 @@ const BulletinPagination = ({
           <>
             <button
               onClick={() => paginate(1)}
-              className={`w-10 h-10 rounded-lg ${
+              className={`w-6 h-6 text-xs rounded-lg ${
                 currentPage === 1
                   ? buttonPrimary + " text-white"
                   : buttonSecondary + " " + textClass
@@ -55,7 +55,9 @@ const BulletinPagination = ({
             >
               1
             </button>
-            {startPage > 2 && <span className={`${textClass}`}>...</span>}
+            {startPage > 2 && (
+              <span className={`${textClass} text-xs`}>...</span>
+            )}
           </>
         )}
 
@@ -64,7 +66,7 @@ const BulletinPagination = ({
           <button
             key={number}
             onClick={() => paginate(number)}
-            className={`w-10 h-10 rounded-lg ${
+            className={`w-6 h-6 text-xs rounded-lg ${
               currentPage === number
                 ? buttonPrimary + " text-white"
                 : buttonSecondary + " " + textClass
@@ -78,11 +80,11 @@ const BulletinPagination = ({
         {endPage < totalPages && (
           <>
             {endPage < totalPages - 1 && (
-              <span className={`${textClass}`}>...</span>
+              <span className={`${textClass} text-xs`}>...</span>
             )}
             <button
               onClick={() => paginate(totalPages)}
-              className={`w-10 h-10 rounded-lg ${
+              className={`w-6 h-6 text-xs rounded-lg ${
                 currentPage === totalPages
                   ? buttonPrimary + " text-white"
                   : buttonSecondary + " " + textClass
@@ -97,11 +99,11 @@ const BulletinPagination = ({
         <button
           onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${
+          className={`p-1 rounded-lg ${buttonSecondary} ${textClass} ${
             currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          <ChevronRight size={18} />
+          <ChevronRight size={14} />
         </button>
       </div>
     </div>

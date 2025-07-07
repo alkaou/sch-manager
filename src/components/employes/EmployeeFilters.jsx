@@ -97,8 +97,8 @@ const EmployeeFilters = ({ filters, setFilters, positionName }) => {
               }}
             >
               <option value="All">{translate("all_statuses", language)}</option>
-              <option value="actif">{translate("active", language)}</option>
-              <option value="inactif">{translate("inactive", language)}</option>
+              <option value="actif">{translate("active_1", language)}</option>
+              <option value="inactif">{translate("inactive_1", language)}</option>
             </select>
           </div>
 
@@ -183,8 +183,8 @@ const EmployeeFilters = ({ filters, setFilters, positionName }) => {
               <span>
                 {translate("status", language)}:{" "}
                 {filters.status === "actif"
-                  ? translate("active", language)
-                  : translate("inactive", language)}
+                  ? translate("active_1", language)
+                  : translate("inactive_1", language)}
               </span>
               <button
                 onClick={() => handleFilterChange("status", "All")}

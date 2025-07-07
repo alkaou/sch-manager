@@ -14,13 +14,19 @@ export const translations = {
     generatePDF: "Générer PDF",
     generating: "Génération en cours...",
     selectAll: "Tout sélectionner",
+    unSelectAll: "Tout désélectionner",
     filters: "Filtres",
     studentsFound: "élèves trouvés",
     selected: "sélectionné(s)",
     loading: "Chargement...",
     type1: "Type 1",
     type2: "Type 2",
-    close: "Fermer"
+    close: "Fermer",
+    noMatiereFound:
+      "Aucune matière trouvée, en d'autre terme vous n'avez pas fini de configuration les bulletins.",
+    noStudentFound: "Aucun élève trouvé",
+    addMatiereMsg: "Veuillez ajouter des matières",
+    modifySearchCriter: "Veuillez modifier vos critères de recherche",
   },
   Anglais: {
     title: "All Report Cards",
@@ -36,13 +42,19 @@ export const translations = {
     generatePDF: "Generate PDF",
     generating: "Generating...",
     selectAll: "Select all",
+    unSelectAll: "Unselect all",
     filters: "Filters",
     studentsFound: "students found",
     selected: "selected",
     loading: "Loading...",
     type1: "Type 1",
     type2: "Type 2",
-    close: "Close"
+    close: "Close",
+    noMatiereFound:
+      "No subjects found, in other words you haven't finished configuring the report cards.",
+    noStudentFound: "No student found",
+    addMatiereMsg: "Please add subjects",
+    modifySearchCriter: "Please modify your search criteria",
   },
   Bambara: {
     title: "Kalan Sɛbɛnw Bɛɛ",
@@ -57,13 +69,19 @@ export const translations = {
     average: "Hakɛ caman",
     generatePDF: "PDF dilan",
     generating: "Dilanni bɛ kɛ...",
-    selectAll: "Bɛɛ sugandi",
+    selectAll: "A Bɛɛ Sugandi",
+    unSelectAll: "A Bɛɛ Sugandilen Bɔ",
     filters: "Woloma fɛɛrɛw",
     studentsFound: "kalandenw sɔrɔla",
     selected: "sugandilen",
     loading: "Dɔnni bɛ kɛ...",
     type1: "Suguya 1",
     type2: "Suguya 2",
-    close: "Datugu"
-  }
+    close: "Datugu",
+    noMatiereFound:
+      "Kalan fɛn si ma sɔrɔ, o kɔrɔ ye ko aw ma kila kalan sɛbɛnw labɛnni na.",
+    noStudentFound: "Kalanden si ma sɔrɔ",
+    addMatiereMsg: "I kan ka kalan fɛnw dɔw sugandi k'u ladon kalan sɛbɛnw la",
+    modifySearchCriter: "I kan ka i ka ɲinini fɛɛrɛw yɛlɛma",
+  },
 };

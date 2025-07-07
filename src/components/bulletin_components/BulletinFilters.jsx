@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Filter, CheckSquare, SortAsc, SortDesc } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Filter, CheckSquare, SortAsc, SortDesc } from "lucide-react";
 
 const BulletinFilters = ({
   textClass,
@@ -11,7 +11,7 @@ const BulletinFilters = ({
   selectedStudents,
   filteredStudents,
   selectAllStudents,
-  t
+  t,
 }) => {
   // Animation variants
   const panelVariants = {
@@ -19,63 +19,70 @@ const BulletinFilters = ({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.3 }
+      transition: { duration: 0.3 },
     },
     exit: {
       opacity: 0,
       y: -20,
-      transition: { duration: 0.2 }
-    }
+      transition: { duration: 0.2 },
+    },
   };
 
   return (
     <motion.div
-      className={`${cardBgColor} border-b ${borderColor} shadow-lg p-6`}
+      className={`${cardBgColor} border-b ${borderColor} shadow-lg p-4`}
       initial="hidden"
       animate="visible"
       exit="exit"
       variants={panelVariants}
     >
-      <div className="flex justify-between items-center mb-4">
-        <h3 className={`text-lg font-bold ${textClass} flex items-center gap-2`}>
-          <Filter size={18} />
+      <div className="flex justify-between items-center mb-3">
+        <h3
+          className={`text-base font-bold ${textClass} flex items-center gap-2`}
+        >
+          <Filter size={16} />
           {t.filters}
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Sort options */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>{t.sortBy}</label>
+          <label className={`block mb-1.5 font-medium text-sm ${textClass}`}>
+            {t.sortBy}
+          </label>
           <div className="grid grid-cols-3 gap-2">
             <button
-              onClick={() => setSortOption('rank')}
-              className={`p-2 rounded border ${borderColor} ${sortOption === 'rank'
-                  ? 'bg-blue-600 text-white'
+              onClick={() => setSortOption("rank")}
+              className={`py-1.5 px-2 rounded border ${borderColor} ${
+                sortOption === "rank"
+                  ? "bg-blue-600 text-white"
                   : `${cardBgColor} ${textClass}`
-                } flex items-center justify-center gap-1`}
+              } flex items-center justify-center gap-1 text-sm`}
             >
-              <SortDesc size={16} />
+              <SortDesc size={14} />
               {t.rank}
             </button>
             <button
-              onClick={() => setSortOption('name')}
-              className={`p-2 rounded border ${borderColor} ${sortOption === 'name'
-                  ? 'bg-blue-600 text-white'
+              onClick={() => setSortOption("name")}
+              className={`py-1.5 px-2 rounded border ${borderColor} ${
+                sortOption === "name"
+                  ? "bg-blue-600 text-white"
                   : `${cardBgColor} ${textClass}`
-                } flex items-center justify-center gap-1`}
+              } flex items-center justify-center gap-1 text-sm`}
             >
-              <SortAsc size={16} />
+              <SortAsc size={14} />
               {t.name}
             </button>
             <button
-              onClick={() => setSortOption('average')}
-              className={`p-2 rounded border ${borderColor} ${sortOption === 'average'
-                  ? 'bg-blue-600 text-white'
+              onClick={() => setSortOption("average")}
+              className={`py-1.5 px-2 rounded border ${borderColor} ${
+                sortOption === "average"
+                  ? "bg-blue-600 text-white"
                   : `${cardBgColor} ${textClass}`
-                } flex items-center justify-center gap-1`}
+              } flex items-center justify-center gap-1 text-sm`}
             >
-              <SortDesc size={16} />
+              <SortDesc size={14} />
               {t.average}
             </button>
           </div>
@@ -83,17 +90,22 @@ const BulletinFilters = ({
 
         {/* Selection */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>{t.selectAll}</label>
+          <label className={`block mb-1.5 font-medium text-sm ${textClass}`}>
+            {t.selectAll}
+          </label>
           <button
             onClick={selectAllStudents}
-            className={`w-full p-2 rounded border ${borderColor} ${selectedStudents.length === filteredStudents.length && filteredStudents.length > 0
-                ? 'bg-blue-600 text-white'
+            className={`w-full py-1.5 px-2 rounded border ${borderColor} ${
+              selectedStudents.length === filteredStudents.length &&
+              filteredStudents.length > 0
+                ? "bg-blue-600 text-white"
                 : `${cardBgColor} ${textClass}`
-              } flex items-center justify-center gap-2`}
+            } flex items-center justify-center gap-2 text-sm`}
           >
-            <CheckSquare size={18} />
-            {selectedStudents.length === filteredStudents.length && filteredStudents.length > 0
-              ? 'Tout désélectionner'
+            <CheckSquare size={16} />
+            {selectedStudents.length === filteredStudents.length &&
+            filteredStudents.length > 0
+              ? t.unSelectAll
               : t.selectAll}
           </button>
         </div>

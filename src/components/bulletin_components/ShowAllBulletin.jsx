@@ -248,22 +248,23 @@ const ShowAllBulletin = ({
     >
       {/* Header */}
       <motion.div
-        className={`sticky top-0 z-10 ${bgColor} shadow-md px-6 py-4 flex flex-wrap justify-between items-center gap-4 border-b ${borderColor}`}
+        className={`sticky top-0 z-10 ${bgColor} shadow-md px-4 py-2 flex flex-wrap justify-between items-center gap-3 border-b ${borderColor}`}
         variants={itemVariants}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={handleCloseComponent}
-            className={`p-2 rounded-full ${buttonDanger} text-white transition-all duration-300 hover:scale-105`}
+            className={`p-1.5 rounded-full ${buttonDanger} text-white transition-all duration-300 hover:scale-105`}
             aria-label="Close"
+            title={Compositiontranslate("close", language)}
           >
-            <X size={20} />
+            <X size={18} />
           </button>
-          <h2 className={`text-2xl font-bold ${textClass}`}>
+          <h2 className={`text-xl font-bold ${textClass}`}>
             {live_language.title}
           </h2>
           <div
-            className={`px-3 py-1 rounded-full text-sm font-medium ${
+            className={`px-2 py-0.5 rounded-full text-xs font-medium ${
               theme === "dark"
                 ? "bg-blue-900 text-blue-200"
                 : "bg-blue-100 text-blue-800"
@@ -279,36 +280,36 @@ const ShowAllBulletin = ({
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Search */}
           <div
-            className={`flex items-center bg-gray-700 px-3 py-2 rounded-lg border ${opacity} border-radius-10 ${borderColor}`}
+            className={`flex items-center bg-gray-700 px-2 py-1.5 rounded-lg border ${opacity} border-radius-10 ${borderColor}`}
           >
-            <Search size={18} className={textClass} />
+            <Search size={16} className={textClass} />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder={live_language.search}
-              className={`ml-2 bg-transparent outline-none ${textClass} w-40 md:w-60`}
+              className={`ml-2 bg-transparent outline-none ${textClass} w-36 md:w-52 text-sm`}
             />
           </div>
 
           {/* Filters button */}
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`p-2 rounded-lg ${buttonSecondary} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
+            className={`p-1.5 rounded-lg ${buttonSecondary} flex items-center gap-1.5 transition-all duration-300 hover:scale-105 text-sm`}
           >
-            <Filter size={18} />
+            <Filter size={16} />
             <span className="hidden sm:inline">{live_language.filters}</span>
           </button>
 
           {/* Settings button */}
           <button
             onClick={() => setShowSettings(!showSettings)}
-            className={`p-2 rounded-lg ${buttonSecondary} flex items-center gap-2 transition-all duration-300 hover:scale-105`}
+            className={`p-1.5 rounded-lg ${buttonSecondary} flex items-center gap-1.5 transition-all duration-300 hover:scale-105 text-sm`}
           >
-            <Settings size={18} />
+            <Settings size={16} />
             <span className="hidden sm:inline">{live_language.settings}</span>
           </button>
 
@@ -316,18 +317,18 @@ const ShowAllBulletin = ({
           <button
             onClick={handleGeneratePDF}
             disabled={generating}
-            className={`p-2 rounded-lg ${buttonPrimary} border border-2 border-white text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${
+            className={`p-1.5 rounded-lg ${buttonPrimary} border border-2 border-white text-white flex items-center gap-1.5 transition-all duration-300 hover:scale-105 text-sm ${
               generating ? "opacity-70 cursor-not-allowed" : ""
             }`}
           >
             {generating ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-white"></div>
                 <span>{live_language.generating}</span>
               </>
             ) : (
               <>
-                <Download size={18} />
+                <Download size={16} />
                 <span>{live_language.generatePDF}</span>
               </>
             )}
@@ -386,13 +387,13 @@ const ShowAllBulletin = ({
             <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold mb-2">
               {subjects.length === 0
-                ? "Aucune matière trouvée, en d'autre terme vous n'avez pas fini de configuration les bulletins."
-                : "Aucun élève trouvé"}
+                ? live_language.noMatiereFound
+                : live_language.noStudentFound}
             </h3>
             <p>
               {subjects.length === 0
-                ? "Veuillez ajouter des matières"
-                : "Veuillez modifier vos critères de recherche"}
+                ? live_language.addMatiereMsg
+                : live_language.modifySearchCriter}
             </p>
           </div>
         ) : (
@@ -450,9 +451,9 @@ const ShowAllBulletin = ({
 
       {/* Status bar */}
       <div
-        className={`${bgColor} border-t ${borderColor} px-6 py-3 flex justify-between items-center`}
+        className={`${bgColor} border-t ${borderColor} px-6 py-2 flex justify-between items-center`}
       >
-        <div className={textClass}>
+        <div className={`${textClass} text-sm`}>
           <span className="font-medium">{filteredStudents.length}</span>{" "}
           {live_language.studentsFound}
           {selectedStudents.length > 0 && (
@@ -463,8 +464,8 @@ const ShowAllBulletin = ({
           )}
         </div>
         <div className="flex items-center gap-4">
-          <div className={`flex items-center gap-2 ${textClass}`}>
-            <Globe size={16} />
+          <div className={`flex items-center gap-2 ${textClass} text-xs`}>
+            <Globe size={14} />
             <span>
               {bulletinLanguage === "Bambara"
                 ? "Bamanakan"
@@ -473,8 +474,8 @@ const ShowAllBulletin = ({
                 : "English"}
             </span>
           </div>
-          <div className={`flex items-center gap-2 ${textClass}`}>
-            <Printer size={16} />
+          <div className={`flex items-center gap-2 ${textClass} text-xs`}>
+            <Printer size={14} />
             <span>
               {bulletinsPerPage === 1
                 ? language === "Bambara"

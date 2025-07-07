@@ -14,19 +14,19 @@ export const checkMoyenneGeneralToReturnStudentMention = (
         ? "Très Bon Travail, courage !"
         : language === "Anglais"
         ? "Very Good Work, keep going !"
-        : "Baara Ɲuman, i jija halibi !"
+        : "I Baara Ɲuman kɛ, i jija halibi !"
       : moyenneGeneral >= 14
       ? language === "Français"
         ? "Bon Travail et courage !"
         : language === "Anglais"
         ? "Good Work, be courageous !"
-        : "Baara Ka Ɲi, i ka cɛsiri hali sisan !"
+        : "Baara Ka Ɲi, i ka cɛsiri i hali sisan !"
       : moyenneGeneral >= 12
       ? language === "Français"
         ? "Déjà pas mal, courage, Tu peux mieux faire que ça !"
         : language === "Anglais"
         ? "Not Bad, Keep Working Hard !"
-        : "A man kɛnɛ, i ka kan ka dɔ fara a kan !"
+        : "I ka Baara ma Ɲɛ Kosɛbɛ, i ka kan ka dɔ fara a kan !"
       : moyenneGeneral >= 10
       ? language === "Français"
         ? "Travail Passable, Il faut doubler d'efforts !"

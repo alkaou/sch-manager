@@ -441,7 +441,7 @@ const translations = {
   remove: {
     Français: "Retirer",
     Anglais: "Remove",
-    Bambara: "Bisa",
+    Bambara: "A Labɔ Ɲɔngɔndan la",
   },
   student: {
     Français: "Élève",
@@ -652,6 +652,26 @@ const translations = {
     Français: "Prévisualisation du bulletin",
     Anglais: "Report card preview",
     Bambara: "Sɛbɛn Filɛ ka Jateminɛ",
+  },
+  notes_saved_success: {
+    Français: "Les notes ont été enregistrées avec succès !",
+    Anglais: "Grades have been saved successfully!",
+    Bambara: "Hakɛw ladonna ni ɲɛtaa ye!",
+  },
+  error_saving_notes: {
+    Français: "Une erreur est survenue lors de la sauvegarde des notes.",
+    Anglais: "An error occurred while saving the notes.",
+    Bambara: "Fili dɔ kɛra hakɛw ladonni na.",
+  },
+  student_removed_success: {
+    Français: "L'élève a été retiré du bulletin avec succès !",
+    Anglais: "The student has been successfully removed from the bulletin!",
+    Bambara: "Kalanden bɔra ɲɔngɔndan sɛbɛn na ni ɲɛtaa ye!",
+  },
+  error_removing_student: {
+    Français: "Une erreur est survenue lors de la suppression de l'élève.",
+    Anglais: "An error occurred while removing the student.",
+    Bambara: "Fili dɔ kɛra kalanden bɔli la.",
   },
 };
 

@@ -35,29 +35,29 @@ const BulletinSettings = ({
 
   return (
     <motion.div
-      className={`${cardBgColor} border-b ${borderColor} shadow-lg p-6`}
+      className={`${cardBgColor} border-b ${borderColor} shadow-lg p-4`}
       initial="hidden"
       animate="visible"
       exit="exit"
       variants={panelVariants}
     >
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-3">
         <h3
-          className={`text-lg font-bold ${textClass} flex items-center gap-2`}
+          className={`text-base font-semibold ${textClass} flex items-center gap-2`}
         >
-          <Sliders size={18} />
+          <Sliders size={16} />
           {t.settings}
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Bulletins per page */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>
+          <label className={`block mb-1.5 font-medium text-sm ${textClass}`}>
             {t.bulletinsPerPage}
           </label>
           <div className="flex items-center">
-            <span className={`${textClass} mr-2`}>1</span>
+            <span className={`${textClass} mr-2 text-sm`}>1</span>
             <input
               type="range"
               min="1"
@@ -65,11 +65,11 @@ const BulletinSettings = ({
               step="1"
               value={bulletinsPerPage}
               onChange={(e) => setBulletinsPerPage(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+              className="w-full h-1.5 bg-gray-300 rounded-lg appearance-none cursor-pointer"
             />
-            <span className={`${textClass} ml-2`}>2</span>
+            <span className={`${textClass} ml-2 text-sm`}>2</span>
           </div>
-          <div className={`text-center mt-2 ${textClass}`}>
+          <div className={`text-center mt-1.5 text-sm ${textClass}`}>
             {bulletinsPerPage === 1
               ? language === "Bambara"
                 ? "Jɔlen (Sɛbɛn 1/paji)"
@@ -84,14 +84,14 @@ const BulletinSettings = ({
 
         {/* Bulletin language */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>
+          <label className={`block mb-1.5 font-medium text-sm ${textClass}`}>
             {t.bulletinLanguage}
           </label>
           <select
             value={bulletinLanguage}
             onChange={(e) => setBulletinLanguage(e.target.value)}
             className={`
-              w-full p-2 rounded border ${borderColor} 
+              w-full py-1.5 px-2 rounded border ${borderColor} text-sm
               ${
                 theme === "dark"
                   ? `${cardBgColor} ${textClass}`
@@ -107,13 +107,13 @@ const BulletinSettings = ({
 
         {/* Bulletin type */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>
+          <label className={`block mb-1.5 font-medium text-sm ${textClass}`}>
             {t.bulletinType}
           </label>
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => setBulletinType("type1")}
-              className={`p-2 rounded border ${borderColor} ${
+              className={`py-1.5 px-2 rounded border text-sm ${borderColor} ${
                 bulletinType === "type1"
                   ? "bg-blue-600 text-white"
                   : `${cardBgColor} ${textClass}`
@@ -123,7 +123,7 @@ const BulletinSettings = ({
             </button>
             <button
               onClick={() => setBulletinType("type2")}
-              className={`p-2 rounded border ${borderColor} ${
+              className={`py-1.5 px-2 rounded border text-sm ${borderColor} ${
                 bulletinType === "type2"
                   ? "bg-blue-600 text-white"
                   : `${cardBgColor} ${textClass}`

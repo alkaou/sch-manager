@@ -389,14 +389,14 @@ const BulletinNotes = ({
       setHasChanges(false);
 
       setFlashMessage({
-        message: "Les notes ont été enregistrées avec succès !",
+        message: translate("notes_saved_success", language),
         type: "success",
         duration: 3000,
       });
     } catch (error) {
       console.error("Erreur lors de la sauvegarde des notes:", error);
       setFlashMessage({
-        message: "Une erreur est survenue lors de la sauvegarde des notes.",
+        message: translate("error_saving_notes", language),
         type: "error",
         duration: 5000,
       });
@@ -421,14 +421,14 @@ const BulletinNotes = ({
       setShowRemoveConfirm(null);
 
       setFlashMessage({
-        message: "L'élève a été retiré du bulletin avec succès !",
+        message: translate("student_removed_success", language),
         type: "success",
         duration: 3000,
       });
     } catch (error) {
       console.error("Erreur lors de la suppression de l'élève:", error);
       setFlashMessage({
-        message: "Une erreur est survenue lors de la suppression de l'élève.",
+        message: translate("error_removing_student", language),
         type: "error",
         duration: 5000,
       });
@@ -970,7 +970,7 @@ const BulletinNotes = ({
                         {showRemoveConfirm === student.id ? (
                           <div className="flex items-center gap-2">
                             <button
-                              title="Retirer"
+                              title={translate("remove", language)}
                               onClick={() =>
                                 removeStudentFromBulletin(student.id)
                               }
@@ -980,7 +980,7 @@ const BulletinNotes = ({
                             </button>
                             <button
                               onClick={() => setShowRemoveConfirm(null)}
-                              title="Annuler"
+                              title={translate("cancel", language)}
                               className="p-1 rounded-full bg-gray-500 hover:bg-gray-600 text-white transition-colors duration-300"
                             >
                               <X size={18} />
@@ -989,7 +989,7 @@ const BulletinNotes = ({
                         ) : (
                           <button
                             onClick={() => setShowRemoveConfirm(student.id)}
-                            title="Retirer"
+                            title={translate("remove", language)}
                             className="p-1 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-300"
                           >
                             <UserMinus size={18} />
