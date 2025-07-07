@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getClasseName } from "../../utils/helpers";
 import CountryInfosHeader from "../partials/CountryInfosHeader.jsx";
 import { checkMoyenneGeneralToReturnStudentMention } from "../bulletin_utils/bullettin_methods";
+import { translate as Compositiontranslate } from "../compositions/compositions_translator";
 
 const BulletinPhysique1 = ({
   student,
@@ -84,10 +85,14 @@ const BulletinPhysique1 = ({
             {language === "Français"
               ? "BULLETIN DE NOTES"
               : language === "Anglais"
-              ? "REPORT CARD"
-              : "KALANSƐBƐN"}
+                ? "REPORT CARD"
+                : "KALANSƐBƐN"}
           </div>
-          <div className="font-bold">{composition.label}</div>
+          <div className="font-bold">
+            {Compositiontranslate("composition_options", language)[
+              parseInt(composition.name) - 1
+            ]["label"]}
+          </div>
         </div>
 
         <div className="flex justify-between p-2 border-t-2 border-black">
@@ -96,8 +101,8 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "De: "
                 : language === "Anglais"
-                ? "Name: "
-                : "Tɔgɔ: "}
+                  ? "Name: "
+                  : "Tɔgɔ: "}
             </span>
             {student.first_name} {student.sure_name} {student.last_name}
           </div>
@@ -106,16 +111,16 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "Matricule: "
                 : language === "Anglais"
-                ? "ID Number: "
-                : "Kalanden Nimɔrɔ: "}
+                  ? "ID Number: "
+                  : "Kalanden Nimɔrɔ: "}
             </span>
             {student.matricule && student.matricule !== ""
               ? student.matricule
               : language === "Français"
-              ? "Invalide"
-              : language === "Anglais"
-              ? "Invalid"
-              : "Fosin-ten"}
+                ? "Invalide"
+                : language === "Anglais"
+                  ? "Invalid"
+                  : "Fosin-ten"}
           </div>
         </div>
 
@@ -125,18 +130,18 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "CLASSE: "
                 : language === "Anglais"
-                ? "CLASS: "
-                : "KALANSO: "}
+                  ? "CLASS: "
+                  : "KALANSO: "}
             </span>
-            {getClasseName(className)}
+            {getClasseName(className, language)}
           </div>
           <div>
             <span className="font-bold">
               {language === "Français"
                 ? "ANNÉE SCOLAIRE: "
                 : language === "Anglais"
-                ? "SCHOOL YEAR: "
-                : "KALAN SAN: "}
+                  ? "SCHOOL YEAR: "
+                  : "KALAN SAN: "}
             </span>
             {getCurrentSchoolYear()}
           </div>
@@ -150,50 +155,50 @@ const BulletinPhysique1 = ({
                 {language === "Français"
                   ? "MATIÈRES"
                   : language === "Anglais"
-                  ? "SUBJECTS"
-                  : "KUNNAFONIW"}
+                    ? "SUBJECTS"
+                    : "KUNNAFONIW"}
               </th>
               <th className="border-r border-black p-2 text-center">
                 {language === "Français"
                   ? "MOY. CL"
                   : language === "Anglais"
-                  ? "CLASS AVG"
-                  : "K. HAKƐ"}
+                    ? "CLASS AVG"
+                    : "K. HAKƐ"}
               </th>
               <th className="border-r border-black p-2 text-center">
                 {language === "Français"
                   ? "N. COMP"
                   : language === "Anglais"
-                  ? "EXAM MARK"
-                  : "C. HAKƐ"}
+                    ? "EXAM MARK"
+                    : "C. HAKƐ"}
               </th>
               <th className="border-r border-black p-2 text-center">
                 {language === "Français"
                   ? "MOY.G"
                   : language === "Anglais"
-                  ? "GEN.AVG"
-                  : "HAKƐ BƐƐ"}
+                    ? "GEN.AVG"
+                    : "HAKƐ BƐƐ"}
               </th>
               <th className="border-r border-black p-2 text-center">
                 {language === "Français"
                   ? "COEF"
                   : language === "Anglais"
-                  ? "COEF"
-                  : "BONYA"}
+                    ? "COEF"
+                    : "BONYA"}
               </th>
               <th className="border-r border-black p-2 text-center">
                 {language === "Français"
                   ? "MOY. COEF"
                   : language === "Anglais"
-                  ? "WEIGHTED AVG"
-                  : "HAKƐ & BONYA"}
+                    ? "WEIGHTED AVG"
+                    : "HAKƐ & BONYA"}
               </th>
               <th className="p-2 text-center">
                 {language === "Français"
                   ? "OBSERVATIONS"
                   : language === "Anglais"
-                  ? "REMARKS"
-                  : "KƆLƆSILI"}
+                    ? "REMARKS"
+                    : "KƆLƆSILI"}
               </th>
             </tr>
           </thead>
@@ -221,9 +226,8 @@ const BulletinPhysique1 = ({
               return (
                 <tr
                   key={subject.name}
-                  className={`border-b border-black ${
-                    index % 2 === 0 ? "bg-ray-100" : "bg-gray-200"
-                  }`}
+                  className={`border-b border-black ${index % 2 === 0 ? "bg-ray-100" : "bg-gray-200"
+                    }`}
                 >
                   <td className="border-r border-black p-2 text-left">
                     <p className="text-black">{subject.name}</p>
@@ -258,8 +262,8 @@ const BulletinPhysique1 = ({
                 {language === "Français"
                   ? "TOTAL PARTIEL"
                   : language === "Anglais"
-                  ? "PARTIAL TOTAL"
-                  : "HAKƐ DƆƆNIN"}
+                    ? "PARTIAL TOTAL"
+                    : "HAKƐ DƆƆNIN"}
               </td>
               <td className="border-r border-black p-2 text-center">
                 {mainCoefficients}
@@ -274,15 +278,15 @@ const BulletinPhysique1 = ({
                       ? "ADMISE"
                       : "ADMIS"
                     : language === "Anglais"
-                    ? "ALLOWED"
-                    : "A TƐMƐNA"
+                      ? "ALLOWED"
+                      : "A TƐMƐNA"
                   : language === "Français"
-                  ? student.sexe === "F"
-                    ? "ÉCHOUÉE"
-                    : "ÉCHOUÉ"
-                  : language === "Anglais"
-                  ? "FAILED"
-                  : "A MA SE KA TƐMƐ"}
+                    ? student.sexe === "F"
+                      ? "ÉCHOUÉE"
+                      : "ÉCHOUÉ"
+                    : language === "Anglais"
+                      ? "FAILED"
+                      : "A MA SE KA TƐMƐ"}
               </td>
             </tr>
 
@@ -292,8 +296,8 @@ const BulletinPhysique1 = ({
                 {language === "Français"
                   ? "MOYENNE DANS LES MATIÈRES AU DEF"
                   : language === "Anglais"
-                  ? "AVERAGE IN DEF SUBJECTS"
-                  : "DEF KALAN KUNNAFONIW HAKƐ"}
+                    ? "AVERAGE IN DEF SUBJECTS"
+                    : "DEF KALAN KUNNAFONIW HAKƐ"}
               </td>
               <td className="p-2"></td>
             </tr>
@@ -303,8 +307,8 @@ const BulletinPhysique1 = ({
                 {language === "Français"
                   ? "MOYENNE"
                   : language === "Anglais"
-                  ? "AVERAGE"
-                  : "HAKƐ"}
+                    ? "AVERAGE"
+                    : "HAKƐ"}
               </td>
               <td colSpan="3" className="border-r border-black p-2 text-center">
                 {calculateGeneralAverage(students, student.id, mainSubjects)}
@@ -340,9 +344,8 @@ const BulletinPhysique1 = ({
               return (
                 <tr
                   key={subject.name}
-                  className={`border-b border-black ${
-                    index % 2 === 0 ? "bg-ray-100" : "bg-gray-200"
-                  }`}
+                  className={`border-b border-black ${index % 2 === 0 ? "bg-ray-100" : "bg-gray-200"
+                    }`}
                 >
                   <td className="border-r border-black p-2 text-left">
                     {subject.name}
@@ -377,8 +380,8 @@ const BulletinPhysique1 = ({
                 {language === "Français"
                   ? "TOTAL GÉNÉRAL"
                   : language === "Anglais"
-                  ? "GRAND TOTAL"
-                  : "HAKƐ BƐƐ LAJƐLEN"}
+                    ? "GRAND TOTAL"
+                    : "HAKƐ BƐƐ LAJƐLEN"}
               </td>
               <td className="border-r border-black p-2 text-center">
                 {totalCoefficients}
@@ -398,8 +401,8 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "MOY. GÉNÉRALE :"
                 : language === "Anglais"
-                ? "GENERAL AVERAGE:"
-                : "HAKƐ BƐƐ LAJƐLEN:"}
+                  ? "GENERAL AVERAGE:"
+                  : "HAKƐ BƐƐ LAJƐLEN:"}
             </div>
             <div className="text-xl font-bold">
               {calculateGeneralAverage(students, student.id, subjects)}
@@ -410,8 +413,8 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "RANG :"
                 : language === "Anglais"
-                ? "RANK:"
-                : "JƆYƆRƆ:"}
+                  ? "RANK:"
+                  : "JƆYƆRƆ:"}
             </div>
             <div className="text-xl font-bold">{studentRank}</div>
           </div>
@@ -420,16 +423,16 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "EFFECTIFS :"
                 : language === "Anglais"
-                ? "CLASS SIZE:"
-                : "KALANDENW HAKƐ:"}
+                  ? "CLASS SIZE:"
+                  : "KALANDENW HAKƐ:"}
             </div>
             <div className="text-xl font-bold">
               {students.length}
               {language === "Français"
                 ? " élèves"
                 : language === "Anglais"
-                ? " students"
-                : " kalandenw"}
+                  ? " students"
+                  : " kalandenw"}
             </div>
           </div>
         </div>
@@ -441,13 +444,13 @@ const BulletinPhysique1 = ({
                 ? language === "Français"
                   ? "MOY. DE LA PREMIERE :"
                   : language === "Anglais"
-                  ? "TOP STUDENT AVERAGE:"
-                  : "KALANDENFƆLƆ KA HAKƐ:"
+                    ? "TOP STUDENT AVERAGE:"
+                    : "KALANDENFƆLƆ KA HAKƐ:"
                 : language === "Français"
-                ? "MOY. DU PREMIER :"
-                : language === "Anglais"
-                ? "TOP STUDENT AVERAGE:"
-                : "KALANDENFƆLƆ KA HAKƐ:"}
+                  ? "MOY. DU PREMIER :"
+                  : language === "Anglais"
+                    ? "TOP STUDENT AVERAGE:"
+                    : "KALANDENFƆLƆ KA HAKƐ:"}
             </div>
             <div className="text-xl font-bold">{topAverage}</div>
           </div>
@@ -456,13 +459,19 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "CONTACT :"
                 : language === "Anglais"
-                ? "CONTACT:"
-                : "NƐKƐJURUSIRA:"}
+                  ? "CONTACT:"
+                  : "NƐKƐJURUSIRA:"}
             </div>
             <div className="text-xl font-bold">{student.parents_contact}</div>
           </div>
           <div className="p-2">
-            <div className="font-bold mb-2">Mention :</div>
+            <div className="font-bold mb-2">
+              {language === "Français"
+                ? "MENTION :"
+                : language === "Anglais"
+                  ? "MENTION :"
+                  : "BAARA COGOYA :"}
+            </div>
             <div className="text-xl font-bold">
               {getAppreciation(
                 parseFloat(
@@ -480,8 +489,8 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "APPRÉCIATION DU DIRECTEUR"
                 : language === "Anglais"
-                ? "PRINCIPAL'S REMARKS"
-                : "KALANSO KUNTIGI KA KƆLƆSILI"}
+                  ? "PRINCIPAL'S REMARKS"
+                  : "KALANSO KUNTIGI KA KƆLƆSILI"}
             </div>
             <div className="h-20 flex items-center justify-center">
               {checkMoyenneGeneralToReturnStudentMention(
@@ -495,8 +504,8 @@ const BulletinPhysique1 = ({
               {language === "Français"
                 ? "VISA DES PARENTS"
                 : language === "Anglais"
-                ? "PARENT'S SIGNATURE"
-                : "SOMƆGƆW KA SEERE"}
+                  ? "PARENT'S SIGNATURE"
+                  : "SOMƆGƆW KA SEERE"}
             </div>
             <div className="h-20"></div>
           </div>

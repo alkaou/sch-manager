@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getClasseName } from "../../utils/helpers";
 import CountryInfosHeader from "../partials/CountryInfosHeader.jsx";
 import { checkMoyenneGeneralToReturnStudentMention } from "../bulletin_utils/bullettin_methods";
+import { translate as Compositiontranslate } from "../compositions/compositions_translator";
+
 
 const BulletinPhysique2 = ({
   student,
@@ -87,7 +89,12 @@ const BulletinPhysique2 = ({
                 ? "REPORT CARD"
                 : "KALANSƐBƐN"}
           </div>
-          <div className="font-bold">{composition.label}</div>
+          <div className="font-bold">
+            {/* {composition.label} */}
+            {Compositiontranslate("composition_options", language)[
+              parseInt(composition.name) - 1
+            ]["label"]}
+          </div>
         </div>
 
         <div className="flex justify-between p-2 border-t-2 border-black">
@@ -128,7 +135,7 @@ const BulletinPhysique2 = ({
                   ? "CLASS: "
                   : "KALANSO: "}
             </span>
-            {getClasseName(className)}
+            {getClasseName(className, language)}
           </div>
           <div>
             <span className="font-bold">
@@ -342,7 +349,13 @@ const BulletinPhysique2 = ({
             <div className="text-xl font-bold">{student.parents_contact}</div>
           </div>
           <div className="p-2">
-            <div className="font-bold mb-2">Mention :</div>
+            <div className="font-bold mb-2">
+              {language === "Français"
+                ? "MENTION :"
+                : language === "Anglais"
+                  ? "MENTION :"
+                  : "BAARA COGOYA :"}
+            </div>
             <div className="text-xl font-bold">
               {getAppreciation(
                 parseFloat(

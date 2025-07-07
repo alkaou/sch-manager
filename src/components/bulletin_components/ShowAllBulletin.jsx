@@ -92,9 +92,12 @@ const ShowAllBulletin = ({
         bulletin.classId === selectedClass
     );
 
-    if (existingBulletin) {
-      // setBulletin(existingBulletin);
+    if (existingBulletin && existingBulletin.subjects && existingBulletin.subjects.length > 0) {
       setSubjects(existingBulletin.subjects);
+    }
+
+    if (existingBulletin && existingBulletin.students && existingBulletin.students.length > 0) {
+      // setBulletin(existingBulletin);
       setStudents(existingBulletin.students);
     }
 
@@ -252,8 +255,8 @@ const ShowAllBulletin = ({
           </h2>
           <div
             className={`px-3 py-1 rounded-full text-sm font-medium ${theme === "dark"
-                ? "bg-blue-900 text-blue-200"
-                : "bg-blue-100 text-blue-800"
+              ? "bg-blue-900 text-blue-200"
+              : "bg-blue-100 text-blue-800"
               }`}
           >
             {selectedComposition?.label} - {getClasseName(className)}
@@ -364,8 +367,12 @@ const ShowAllBulletin = ({
         ) : filteredStudents.length === 0 ? (
           <div className={`text-center ${textClass} p-10`}>
             <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold mb-2">Aucun élève trouvé</h3>
-            <p>Veuillez modifier vos critères de recherche</p>
+            <h3 className="text-xl font-semibold mb-2">
+              {subjects.length === 0 ? "Aucune matière trouvée, en d'autre terme vous n'avez pas fini de configuration les bulletins." : "Aucun élève trouvé"}
+            </h3>
+            <p>
+              {subjects.length === 0 ? "Veuillez ajouter des matières" : "Veuillez modifier vos critères de recherche"}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
@@ -377,8 +384,8 @@ const ShowAllBulletin = ({
               >
                 <div
                   className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${selectedStudents.includes(student.id)
-                      ? "bg-blue-600 text-white"
-                      : `${cardBgColor} border ${borderColor} ${textClass}`
+                    ? "bg-blue-600 text-white"
+                    : `${cardBgColor} border ${borderColor} ${textClass}`
                     }`}
                   onClick={() => toggleStudentSelection(student.id)}
                 >

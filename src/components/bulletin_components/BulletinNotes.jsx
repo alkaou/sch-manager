@@ -53,7 +53,6 @@ const BulletinNotes = ({
   const [sortType, setSortType] = useState("coef"); // 'default', 'alpha', 'coef', 'manual'
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showBulletinPreview, setShowBulletinPreview] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 }); // La position du cursor
   const [positionHeadCursor, setPositionHeadCursor] = useState({ x: 0, y: 0 }); // La position du cursor
 
   // Références pour les menus déroulants
@@ -103,7 +102,7 @@ const BulletinNotes = ({
         bulletin.classId === selectedClass
     );
 
-    if (existingBulletin) {
+    if (existingBulletin && existingBulletin.subjects && existingBulletin.subjects.length > 0) {
       setBulletin(existingBulletin);
 
       // S'assurer que "Conduite" a toujours un coefficient de 1
@@ -490,14 +489,6 @@ const BulletinNotes = ({
     setSelectedStudent(null);
   };
 
-  // Calculer et mettre à jours toujours la position du cursor
-  const handleMouseMove = (event) => {
-    const offsetY = 5;
-    setPosition({
-      x: event.clientX,
-      y: event.clientY + offsetY,
-    });
-  };
 
   // Calculer et mettre à jours toujours la position du cursor
   const handleHeadMouseMove = (event) => {
@@ -511,9 +502,8 @@ const BulletinNotes = ({
 
   // Obtenir le nom de la classe
   const className = db?.classes?.find((cls) => cls.id === selectedClass)
-    ? `${db.classes.find((cls) => cls.id === selectedClass).level} ${
-        db.classes.find((cls) => cls.id === selectedClass).name
-      }`
+    ? `${db.classes.find((cls) => cls.id === selectedClass).level} ${db.classes.find((cls) => cls.id === selectedClass).name
+    }`
     : "";
 
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -546,11 +536,11 @@ const BulletinNotes = ({
         <div className="sticky top-0 z-10 bg-opacity-95 p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h3 className="text-xl font-semibold mb-2">
-              Saisie des notes pour le bulletin :
+              {translate("notes_entry_title", language)}
             </h3>
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
               <div>
-                <span className="font-medium">Composition :</span>{" "}
+                <span className="font-medium">{translate("composition_label", language)}</span>{" "}
                 {selectedComposition.label}
               </div>
 
@@ -558,11 +548,10 @@ const BulletinNotes = ({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleZoomOut}
-                    className={`p-2 rounded-full ${
-                      theme === "dark"
-                        ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    } transition-colors`}
+                    className={`p-2 rounded-full ${theme === "dark"
+                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      } transition-colors`}
                     aria-label="Zoom out"
                   >
                     <FaSearchMinus />
@@ -574,11 +563,10 @@ const BulletinNotes = ({
 
                   <button
                     onClick={handleZoomIn}
-                    className={`p-2 rounded-full ${
-                      theme === "dark"
-                        ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    } transition-colors`}
+                    className={`p-2 rounded-full ${theme === "dark"
+                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      } transition-colors`}
                     aria-label="Zoom in"
                   >
                     <FaSearchPlus />
@@ -587,11 +575,11 @@ const BulletinNotes = ({
               </div>
 
               <div>
-                <span className="font-medium">Classe :</span>{" "}
+                <span className="font-medium">{translate("class_label", language)}</span>{" "}
                 {getClasseName(className, language)}
               </div>
               <div>
-                <span className="font-medium">Total coefficients :</span>{" "}
+                <span className="font-medium">{translate("total_coefficients_label", language)}</span>{" "}
                 {calculateTotalCoefficients()}
               </div>
             </div>
@@ -605,10 +593,10 @@ const BulletinNotes = ({
                 onChange={(e) => setSortType(e.target.value)}
                 className={`px-3 py-2 rounded border ${tableBorderColor} ${dropdownBgColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="default">Tri par défaut</option>
-                <option value="alpha">Tri alphabétique</option>
-                <option value="coef">Tri par coefficient</option>
-                <option value="manual">Tri manuel</option>
+                <option value="default">{translate("sort_default", language)}</option>
+                <option value="alpha">{translate("sort_alpha", language)}</option>
+                <option value="coef">{translate("sort_coef", language)}</option>
+                <option value="manual">{translate("sort_manual", language)}</option>
               </select>
             </div>
 
@@ -618,18 +606,17 @@ const BulletinNotes = ({
               whileTap={{ scale: 0.95 }}
               onClick={() => saveChangesToDatabase()}
               disabled={saving || !hasChanges}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
-                hasChanges
-                  ? "bg-green-600 hover:bg-green-700 text-white"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
-              } transition-colors duration-300`}
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${hasChanges
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                } transition-colors duration-300`}
             >
               {saving ? (
                 <RefreshCcw className="animate-spin" size={18} />
               ) : (
                 <Save size={18} />
               )}
-              <span>Enregistrer</span>
+              <span>{saving ? translate("saving", language) : translate("save_changes", language)}</span>
             </motion.button>
 
             {/* Bouton de fermeture */}
@@ -682,7 +669,7 @@ const BulletinNotes = ({
                     className={`px-4 py-3 text-left border ${tableBorderColor} ${tableBorderWidth}`}
                     rowSpan={2}
                   >
-                    Élève
+                    {translate("student", language)}
                   </th>
                   {subjects.map((subject) => (
                     <th
@@ -713,7 +700,7 @@ const BulletinNotes = ({
                         <span>{subject.name}</span>
                       </div>
                       <div className="flex items-center justify-center mt-1">
-                        <span className="text-xs">Coef: </span>
+                        <span className="text-xs">{translate("coefficient_short", language)}: </span>
                         {subject.name === "Conduite" ? (
                           <span className="ml-1 text-xs font-medium">1</span>
                         ) : (
@@ -726,8 +713,8 @@ const BulletinNotes = ({
                               activeCoef === null
                                 ? handleHeadMouseMove
                                 : activeCoef === subject.name
-                                ? handleHeadMouseMove
-                                : () => {}
+                                  ? handleHeadMouseMove
+                                  : () => { }
                             }
                             className="ml-1 text-xs font-medium underline hover:text-blue-500"
                           >
@@ -755,11 +742,10 @@ const BulletinNotes = ({
                                       updateCoefficient(subject.name, coef);
                                       setActiveCoef(null);
                                     }}
-                                    className={`px-2 py-1 text-center rounded ${
-                                      coef === subject.coefficient
-                                        ? cellActiveBgColor
-                                        : hoverNumber
-                                    }`}
+                                    className={`px-2 py-1 text-center rounded ${coef === subject.coefficient
+                                      ? cellActiveBgColor
+                                      : hoverNumber
+                                      }`}
                                   >
                                     {coef}
                                   </button>
@@ -775,19 +761,19 @@ const BulletinNotes = ({
                     className={`px-4 py-3 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                     rowSpan={2}
                   >
-                    Générale
+                    {translate("general_average", language)}
                   </th>
                   <th
                     className={`px-4 py-3 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                     rowSpan={2}
                   >
-                    Visualiseur
+                    {translate("viewer", language)}
                   </th>
                   <th
                     className={`px-4 py-3 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                     rowSpan={2}
                   >
-                    Action
+                    {translate("action", language)}
                   </th>
                 </tr>
                 <tr className={`${tableSubHeaderBg}`}>
@@ -796,17 +782,17 @@ const BulletinNotes = ({
                       <th
                         className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}
                       >
-                        Classe
+                        {translate("class_short", language)}
                       </th>
                       <th
                         className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}
                       >
-                        Compo
+                        {translate("composition_short", language)}
                       </th>
                       <th
                         className={`px-2 py-1 text-center text-xs border ${tableBorderColor} ${tableBorderWidth}`}
                       >
-                        Moy
+                        {translate("average_short", language)}
                       </th>
                     </React.Fragment>
                   ))}
@@ -819,7 +805,7 @@ const BulletinNotes = ({
                       colSpan={subjects.length * 3 + 4}
                       className={`px-4 py-4 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                     >
-                      Chargement des données...
+                      {translate("loading_data", language)}
                     </td>
                   </tr>
                 ) : students.length === 0 ? (
@@ -828,7 +814,7 @@ const BulletinNotes = ({
                       colSpan={subjects.length * 3 + 4}
                       className={`px-4 py-4 text-center border ${tableBorderColor} ${tableBorderWidth}`}
                     >
-                      Aucun élève trouvé pour cette classe.
+                      {translate("no_student_found", language)}
                     </td>
                   </tr>
                 ) : (
@@ -850,12 +836,11 @@ const BulletinNotes = ({
                         <React.Fragment key={`${student.id}-${subject.name}`}>
                           {/* Note de classe */}
                           <td
-                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
-                              activeCell ===
+                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell ===
                               `${student.id}-${subject.name}-classe`
-                                ? cellActiveBgColor
-                                : ""
-                            } ${noteCellHoverEffect}`}
+                              ? cellActiveBgColor
+                              : ""
+                              } ${noteCellHoverEffect}`}
                           >
                             <div
                               className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-blue-400"
@@ -871,20 +856,19 @@ const BulletinNotes = ({
                             >
                               {student.notes[subject.name]?.classe !== null
                                 ? formatNote(
-                                    student.notes[subject.name]?.classe
-                                  )
+                                  student.notes[subject.name]?.classe
+                                )
                                 : "-"}
                             </div>
                           </td>
 
                           {/* Note de composition */}
                           <td
-                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
-                              activeCell ===
+                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell ===
                               `${student.id}-${subject.name}-composition`
-                                ? cellActiveBgColor
-                                : ""
-                            } ${noteCellHoverEffect}`}
+                              ? cellActiveBgColor
+                              : ""
+                              } ${noteCellHoverEffect}`}
                           >
                             <div
                               className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-orange-400"
@@ -900,8 +884,8 @@ const BulletinNotes = ({
                             >
                               {student.notes[subject.name]?.composition !== null
                                 ? formatNote(
-                                    student.notes[subject.name]?.composition
-                                  )
+                                  student.notes[subject.name]?.composition
+                                )
                                 : "-"}
                             </div>
                           </td>
@@ -1010,7 +994,7 @@ const BulletinNotes = ({
             >
               <div className="flex justify-between items-center mb-4 sm:mt-7">
                 <h3 className="text-xl font-semibold">
-                  Prévisualisation du bulletin
+                  {translate("preview_bulletin", language)}
                 </h3>
                 <button
                   onClick={handleCloseBulletinPreview}
