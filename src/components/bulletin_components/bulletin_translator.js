@@ -168,9 +168,9 @@ const translations = {
     Bambara: "Ɲɔngɔndan sɛbɛn labɛnni",
   },
   student_selection: {
-    Français: "Sélection des élèves",
-    Anglais: "Student selection",
-    Bambara: "Kalandenw sugandili",
+    Français: "Sélection des Elèves",
+    Anglais: "Student Selection",
+    Bambara: "Kalandenw Sugandili Ɲɔngɔndan Kama",
   },
   grade_entry: {
     Français: "Saisie des notes",
@@ -296,6 +296,11 @@ const translations = {
   delete: {
     Français: "Supprimer",
     Anglais: "Delete",
+    Bambara: "A Jɔsi",
+  },
+  delete_1: {
+    Français: "Effacer",
+    Anglais: "Delete",
     Bambara: "Jɔsi",
   },
   add_custom_subject_title: {
@@ -317,6 +322,96 @@ const translations = {
     Français: "Sauvegarder le bulletin",
     Anglais: "Save bulletin",
     Bambara: "Ɲɔngɔndan sɛbɛn ladon",
+  },
+  students_saved_successfully: {
+    Français: "Les élèves ont été enregistrés avec succès dans le bulletin !",
+    Anglais: "Students have been successfully saved to the bulletin!",
+    Bambara: "Kalandenw ladonna ni ɲɛtaa ye ɲɔngɔndan sɛbɛn na!",
+  },
+  select_before_students: {
+    Français: "Selectionner d'abord vos élèves qui sont composés.",
+    Anglais: "First select your students who have taken the exam.",
+    Bambara: "I ka kalandenw sugandi fɔlɔ, minnu ye ɲɔngɔndan kɛ.",
+  },
+  error_saving_students: {
+    Français: "Une erreur est survenue lors de la sauvegarde des élèves.",
+    Anglais: "An error occurred while saving the students.",
+    Bambara: "Fili dɔ kɛra kalandenw ladonni na.",
+  },
+  student_selection_for_bulletin: {
+    Français: "Sélection des élèves pour le bulletin :",
+    Anglais: "Student selection for the bulletin:",
+    Bambara: "Kalandenw Sugandili Ɲɔngɔndan Kama:",
+  },
+  search_student_placeholder: {
+    Français: "Rechercher un élève...",
+    Anglais: "Search for a student...",
+    Bambara: "Kalanden dɔ ɲini...",
+  },
+  all: {
+    Français: "Tous",
+    Anglais: "All",
+    Bambara: "Bɛɛ",
+  },
+  first_name: {
+    Français: "Prénom",
+    Anglais: "First Name",
+    Bambara: "Tɔgɔ",
+  },
+  last_name: {
+    Français: "Nom",
+    Anglais: "Last Name",
+    Bambara: "Jamɔ",
+  },
+  matricule: {
+    Français: "Matricule",
+    Anglais: "Registration number",
+    Bambara: "Matirikule",
+  },
+  loading_students: {
+    Français: "Chargement des élèves...",
+    Anglais: "Loading students...",
+    Bambara: "Kalandenw ka caaman...",
+  },
+  no_student_found_for_class: {
+    Français: "Aucun élève trouvé pour cette classe.",
+    Anglais: "No student found for this class.",
+    Bambara: "Kalanden si ma sɔrɔ nin kalasi in na.",
+  },
+  total_students: {
+    Français: "Total des élèves:",
+    Anglais: "Total students:",
+    Bambara: "Kalandenw bɛɛ:",
+  },
+  selected_students_label: {
+    Français: "Élèves sélectionnés:",
+    Anglais: "Selected students:",
+    Bambara: "Kalandenw sugandilenw:",
+  },
+  all_students_selected: {
+    Français: "Tous les élèves sont sélectionnés",
+    Anglais: "All students are selected",
+    Bambara: "Kalandenw bɛɛ sugandilen don",
+  },
+  students_selected_of: {
+    Français: "élève(s) sélectionné(s) sur",
+    Anglais: "student(s) selected out of",
+    Bambara: "kalanden(w) sugandilenw",
+  },
+  no_student_selected: {
+    Français: "Aucun élève sélectionné",
+    Anglais: "No student selected",
+    Bambara: "Kalanden si ma sugandi",
+  },
+  saving: {
+    Français: "Enregistrement...",
+    Anglais: "Saving...",
+    Bambara: "A ladonni...",
+  },
+  save_students: {
+    Français: "Enregistrer les élèves",
+    Anglais: "Save students",
+    Bambara: "Kalandenw ladon",
   },
 };
 

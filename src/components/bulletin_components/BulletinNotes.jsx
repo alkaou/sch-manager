@@ -11,14 +11,16 @@ import {
   ArrowDown,
 } from "lucide-react";
 import { FaSearchPlus, FaSearchMinus } from "react-icons/fa";
-import { useLanguage, useFlashNotification } from "../contexts.js";
+import { useLanguage, useFlashNotification } from "../contexts";
 import BulletinComponent from "./BulletinComponent.jsx";
 import {
   calculateSubjectAverage,
   calculateSubjectAverageForStudent,
   formatNote,
   calculateGeneralAverage,
-} from "../bulletin_utils/BulletinMethods.js";
+} from "../bulletin_utils/BulletinMethods";
+import NoteWriter from "./NoteWriter.jsx";
+import { translate } from "./bulletin_translator";
 
 const BulletinNotes = ({
   selectedComposition,
@@ -33,7 +35,7 @@ const BulletinNotes = ({
   school_short_name,
   school_zone_name,
 }) => {
-  const { live_language, language } = useLanguage();
+  const { language } = useLanguage();
   const { setFlashMessage } = useFlashNotification();
 
   const [bulletin, setBulletin] = useState(null);
@@ -42,6 +44,9 @@ const BulletinNotes = ({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [activeCell, setActiveCell] = useState(null);
+  const [Compo_or_Class, setCompo_or_Class] = useState("composition");
+  const [theStudentSelect, setTheStudentSelect] = useState(null);
+  const [theSubjectSelect, setTheSubjectSelect] = useState(null);
   const [activeCoef, setActiveCoef] = useState(null);
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(null);
   const [hasChanges, setHasChanges] = useState(false);
@@ -506,8 +511,9 @@ const BulletinNotes = ({
 
   // Obtenir le nom de la classe
   const className = db?.classes?.find((cls) => cls.id === selectedClass)
-    ? `${db.classes.find((cls) => cls.id === selectedClass).level} ${db.classes.find((cls) => cls.id === selectedClass).name
-    }`
+    ? `${db.classes.find((cls) => cls.id === selectedClass).level} ${
+        db.classes.find((cls) => cls.id === selectedClass).name
+      }`
     : "";
 
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -552,10 +558,11 @@ const BulletinNotes = ({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleZoomOut}
-                    className={`p-2 rounded-full ${theme === "dark"
+                    className={`p-2 rounded-full ${
+                      theme === "dark"
                         ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      } transition-colors`}
+                    } transition-colors`}
                     aria-label="Zoom out"
                   >
                     <FaSearchMinus />
@@ -567,10 +574,11 @@ const BulletinNotes = ({
 
                   <button
                     onClick={handleZoomIn}
-                    className={`p-2 rounded-full ${theme === "dark"
+                    className={`p-2 rounded-full ${
+                      theme === "dark"
                         ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      } transition-colors`}
+                    } transition-colors`}
                     aria-label="Zoom in"
                   >
                     <FaSearchPlus />
@@ -610,10 +618,11 @@ const BulletinNotes = ({
               whileTap={{ scale: 0.95 }}
               onClick={() => saveChangesToDatabase()}
               disabled={saving || !hasChanges}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${hasChanges
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${
+                hasChanges
                   ? "bg-green-600 hover:bg-green-700 text-white"
                   : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                } transition-colors duration-300`}
+              } transition-colors duration-300`}
             >
               {saving ? (
                 <RefreshCcw className="animate-spin" size={18} />
@@ -637,6 +646,26 @@ const BulletinNotes = ({
 
         {/* Conteneur scrollable pour le tableau */}
         <div className="overflow-y-auto overflow-x-auto max-h-[calc(100vh-25%)] scrollbar-custom">
+          {activeCell && theStudentSelect && theSubjectSelect ? (
+            <NoteWriter
+              dropdownRef={dropdownRef}
+              dropdownBgColor={dropdownBgColor}
+              tableBorderColor={tableBorderColor}
+              hoverNumber={hoverNumber}
+              setActiveCell={setActiveCell}
+              activeCell={activeCell}
+              student={theStudentSelect}
+              subject={theSubjectSelect}
+              updateNote={updateNote}
+              Compo_or_Class={Compo_or_Class}
+              handleWholeNumberSelect={handleWholeNumberSelect}
+              handleDecimalSelect={handleDecimalSelect}
+              wholeNumberOptions={wholeNumberOptions}
+              decimalOptions={decimalOptions}
+              translate={translate}
+              language={language}
+            />
+          ) : null}
           <div
             style={{
               transform: `scale(${zoomLevel})`,
@@ -697,8 +726,8 @@ const BulletinNotes = ({
                               activeCoef === null
                                 ? handleHeadMouseMove
                                 : activeCoef === subject.name
-                                  ? handleHeadMouseMove
-                                  : () => { }
+                                ? handleHeadMouseMove
+                                : () => {}
                             }
                             className="ml-1 text-xs font-medium underline hover:text-blue-500"
                           >
@@ -726,10 +755,11 @@ const BulletinNotes = ({
                                       updateCoefficient(subject.name, coef);
                                       setActiveCoef(null);
                                     }}
-                                    className={`px-2 py-1 text-center rounded ${coef === subject.coefficient
+                                    className={`px-2 py-1 text-center rounded ${
+                                      coef === subject.coefficient
                                         ? cellActiveBgColor
                                         : hoverNumber
-                                      }`}
+                                    }`}
                                   >
                                     {coef}
                                   </button>
@@ -820,220 +850,60 @@ const BulletinNotes = ({
                         <React.Fragment key={`${student.id}-${subject.name}`}>
                           {/* Note de classe */}
                           <td
-                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell ===
-                                `${student.id}-${subject.name}-classe`
+                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
+                              activeCell ===
+                              `${student.id}-${subject.name}-classe`
                                 ? cellActiveBgColor
                                 : ""
-                              } ${noteCellHoverEffect}`}
+                            } ${noteCellHoverEffect}`}
                           >
                             <div
                               className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-blue-400"
                               title={`${student.first_name} ${student.sure_name} ${student.last_name}`}
-                              onClick={(event) => {
+                              onClick={() => {
                                 setActiveCell(
                                   `${student.id}-${subject.name}-classe`
                                 );
-                                if (
-                                  activeCell !==
-                                  `${student.id}-${subject.name}-classe`
-                                ) {
-                                  handleMouseMove(event);
-                                }
+                                setCompo_or_Class("classe");
+                                setTheStudentSelect(student);
+                                setTheSubjectSelect(subject);
                               }}
                             >
                               {student.notes[subject.name]?.classe !== null
                                 ? formatNote(
-                                  student.notes[subject.name]?.classe
-                                )
+                                    student.notes[subject.name]?.classe
+                                  )
                                 : "-"}
                             </div>
-                            {/* Menu déroulant pour la note de classe */}
-                            {activeCell ===
-                              `${student.id}-${subject.name}-classe` && (
-                                <div
-                                  ref={dropdownRef}
-                                  className={`absolute z-20 mt-1 py-1 rounded-md shadow-lg ${dropdownBgColor} border-4 border-indigo-500 ${tableBorderColor}`}
-                                  style={{
-                                    minWidth: "300px",
-                                    top: "41%",
-                                    left: `45%`,
-                                    // transform: "translate(-50%, 0)",
-                                  }}
-                                >
-                                  <div className="p-2">
-                                    <div className="mb-2">
-                                      <button
-                                        onClick={() => {
-                                          updateNote(
-                                            student.id,
-                                            subject.name,
-                                            "classe",
-                                            null
-                                          );
-                                          setActiveCell(null);
-                                        }}
-                                        className={`w-full px-2 py-1 text-center rounded bg-blue-300 ${hoverNumber}`}
-                                      >
-                                        Effacer
-                                      </button>
-                                    </div>
-                                    <div className="mb-2">
-                                      <p className="`w-full px-2 py-1 text-center">
-                                        {`${student.first_name} ${student.sure_name} ${student.last_name} - M.Class - ${subject.name}`}
-                                      </p>
-                                    </div>
-                                    <div className="grid grid-cols-5 gap-1 mb-2">
-                                      {wholeNumberOptions.map((num) => (
-                                        <button
-                                          key={num}
-                                          onClick={() =>
-                                            handleWholeNumberSelect(
-                                              student.id,
-                                              subject.name,
-                                              "classe",
-                                              num
-                                            )
-                                          }
-                                          className={`px-2 py-1 text-center rounded ${hoverNumber}`}
-                                        >
-                                          {num}
-                                        </button>
-                                      ))}
-                                    </div>
-                                    {student?.notes[subject.name]?.["classe"] ===
-                                      20 ? null : (
-                                      <div className="grid grid-cols-4 gap-1">
-                                        {decimalOptions.map((decimal) => (
-                                          <button
-                                            key={decimal}
-                                            onClick={() => {
-                                              // console.log(student?.notes[subject.name]?.["classe"]);
-                                              handleDecimalSelect(
-                                                student.id,
-                                                subject.name,
-                                                "classe",
-                                                decimal
-                                              );
-                                            }}
-                                            className={`px-2 py-1 text-center rounded ${hoverNumber}`}
-                                          >
-                                            0.{decimal}
-                                          </button>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
                           </td>
 
                           {/* Note de composition */}
                           <td
-                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell ===
-                                `${student.id}-${subject.name}-composition`
+                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
+                              activeCell ===
+                              `${student.id}-${subject.name}-composition`
                                 ? cellActiveBgColor
                                 : ""
-                              } ${noteCellHoverEffect}`}
+                            } ${noteCellHoverEffect}`}
                           >
                             <div
                               className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-orange-400"
                               title={`${student.first_name} ${student.sure_name} ${student.last_name}`}
-                              onClick={(event) => {
+                              onClick={() => {
                                 setActiveCell(
                                   `${student.id}-${subject.name}-composition`
                                 );
-                                if (
-                                  activeCell !==
-                                  `${student.id}-${subject.name}-composition`
-                                ) {
-                                  handleMouseMove(event);
-                                }
+                                setCompo_or_Class("composition");
+                                setTheStudentSelect(student);
+                                setTheSubjectSelect(subject);
                               }}
                             >
                               {student.notes[subject.name]?.composition !== null
                                 ? formatNote(
-                                  student.notes[subject.name]?.composition
-                                )
+                                    student.notes[subject.name]?.composition
+                                  )
                                 : "-"}
                             </div>
-                            {/* Menu déroulant pour la note de composition */}
-                            {activeCell ===
-                              `${student.id}-${subject.name}-composition` && (
-                                <div
-                                  ref={dropdownRef}
-                                  className={`absolute z-20 mt-1 py-1 rounded-md shadow-lg ${dropdownBgColor} border-4 border-indigo-500 ${tableBorderColor}`}
-                                  style={{
-                                    minWidth: "300px",
-                                    top: "41%",
-                                    left: `45%`,
-                                    // transform: "translate(-50%, 0)",
-                                  }}
-                                >
-                                  <div className="p-2">
-                                    <div className="mb-2">
-                                      <button
-                                        onClick={() => {
-                                          updateNote(
-                                            student.id,
-                                            subject.name,
-                                            "composition",
-                                            null
-                                          );
-                                          setActiveCell(null);
-                                        }}
-                                        className={`w-full px-2 py-1 text-center rounded bg-blue-300 ${hoverNumber}`}
-                                      >
-                                        Effacer
-                                      </button>
-                                    </div>
-                                    <div className="mb-2">
-                                      <p className="`w-full px-2 py-1 text-center">
-                                        {`${student.first_name} ${student.sure_name} ${student.last_name} - M.Comp - ${subject.name}`}
-                                      </p>
-                                    </div>
-                                    <div className="grid grid-cols-5 gap-1 mb-2">
-                                      {wholeNumberOptions.map((num) => (
-                                        <button
-                                          key={num}
-                                          onClick={() =>
-                                            handleWholeNumberSelect(
-                                              student.id,
-                                              subject.name,
-                                              "composition",
-                                              num
-                                            )
-                                          }
-                                          className={`px-2 py-1 text-center rounded ${hoverNumber}`}
-                                        >
-                                          {num}
-                                        </button>
-                                      ))}
-                                    </div>
-                                    {student?.notes[subject.name]?.[
-                                      "composition"
-                                    ] === 20 ? null : (
-                                      <div className="grid grid-cols-4 gap-1">
-                                        {decimalOptions.map((decimal) => (
-                                          <button
-                                            key={decimal}
-                                            onClick={() =>
-                                              handleDecimalSelect(
-                                                student.id,
-                                                subject.name,
-                                                "composition",
-                                                decimal
-                                              )
-                                            }
-                                            className={`px-2 py-1 text-center rounded ${hoverNumber}`}
-                                          >
-                                            0.{decimal}
-                                          </button>
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              )}
                           </td>
 
                           {/* Moyenne */}

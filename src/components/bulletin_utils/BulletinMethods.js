@@ -3,7 +3,7 @@ export const formatNote = (note) => {
   if (note === null || note === undefined) return "-";
 
   // Convertir en nombre si c'est une chaîne
-  const numericNote = typeof note === 'string' ? parseFloat(note) : note;
+  const numericNote = typeof note === "string" ? parseFloat(note) : note;
 
   // Vérifier si c'est un nombre valide
   if (isNaN(numericNote)) return "-";
@@ -20,13 +20,17 @@ export const calculateSubjectAverage = (classeNote, compoNote) => {
   if (classeNote === null && compoNote === null) return "-";
 
   // Calculer la moyenne (classe compte pour 1/3, composition pour 2/3)
-  const average = (classeNote + (compoNote * 2)) / 3;
+  const average = (classeNote + compoNote * 2) / 3;
   return formatNote(average);
 };
 
 // Calculer la moyenne d'un élève pour une matière
-export const calculateSubjectAverageForStudent = (students, studentId, subjectName) => {
-  const student = students.find(s => s.id === studentId);
+export const calculateSubjectAverageForStudent = (
+  students,
+  studentId,
+  subjectName
+) => {
+  const student = students.find((s) => s.id === studentId);
   if (!student || !student.notes[subjectName]) return "-";
 
   const classeNote = student.notes[subjectName].classe;
@@ -37,7 +41,7 @@ export const calculateSubjectAverageForStudent = (students, studentId, subjectNa
 
 // Calculer la moyenne générale d'un élève
 export const calculateGeneralAverage = (students, studentId, subjects = []) => {
-  const student = students.find(s => s.id === studentId);
+  const student = students.find((s) => s.id === studentId);
   if (!student) return "-";
 
   let totalPoints = 0;
@@ -45,8 +49,12 @@ export const calculateGeneralAverage = (students, studentId, subjects = []) => {
 
   // console.log(subjects);
 
-  subjects.forEach(subject => {
-    const subjectAvg = calculateSubjectAverageForStudent(students, studentId, subject.name);
+  subjects.forEach((subject) => {
+    const subjectAvg = calculateSubjectAverageForStudent(
+      students,
+      studentId,
+      subject.name
+    );
     if (subjectAvg !== "-") {
       totalPoints += parseFloat(subjectAvg) * subject.coefficient;
       totalCoefficients += subject.coefficient;
@@ -61,8 +69,12 @@ export const calculateGeneralAverage = (students, studentId, subjects = []) => {
 // Calculer le total des points (moyenne * coefficient)
 export const calculateTotalPoints = (students, student, subjects = []) => {
   let total = 0;
-  subjects.forEach(subject => {
-    const avg = calculateSubjectAverageForStudent(students, student.id, subject.name);
+  subjects.forEach((subject) => {
+    const avg = calculateSubjectAverageForStudent(
+      students,
+      student.id,
+      subject.name
+    );
     if (avg !== "-") {
       total += parseFloat(avg) * subject.coefficient;
     }
@@ -73,8 +85,12 @@ export const calculateTotalPoints = (students, student, subjects = []) => {
 // Calculer le total des points pour les matières principales
 export const calculateMainPoints = (mainSubjects = [], students, student) => {
   let total = 0;
-  mainSubjects.forEach(subject => {
-    const avg = calculateSubjectAverageForStudent(students, student.id, subject.name);
+  mainSubjects.forEach((subject) => {
+    const avg = calculateSubjectAverageForStudent(
+      students,
+      student.id,
+      subject.name
+    );
     if (avg !== "-") {
       total += parseFloat(avg) * subject.coefficient;
     }
@@ -83,44 +99,58 @@ export const calculateMainPoints = (mainSubjects = [], students, student) => {
 };
 
 // Fonction pour déterminer l'appréciation basée sur la note
-export const getAppreciation = (note, lang="Français") => {
+export const getAppreciation = (note, lang = "Français") => {
   if (note === "-") return "-";
   const numNote = parseFloat(note);
-  
+
   if (numNote >= 18) {
-    return lang === "Français" ? "Excellent" : 
-           lang === "Anglais" ? "Excellent" : 
-           "A Ɲɛnan Kojugun";
+    return lang === "Français"
+      ? "Excellent"
+      : lang === "Anglais"
+      ? "Excellent"
+      : "A Ɲɛnan Kojugun";
   }
   if (numNote >= 16) {
-    return lang === "Français" ? "Très-Bien" : 
-           lang === "Anglais" ? "Very Good" : 
-           "A Ɲɛnan Kosɛbɛ";
+    return lang === "Français"
+      ? "Très-Bien"
+      : lang === "Anglais"
+      ? "Very Good"
+      : "A Ɲɛnan Kosɛbɛ";
   }
   if (numNote >= 14) {
-    return lang === "Français" ? "Bien" : 
-           lang === "Anglais" ? "Good" : 
-           "A Ɲɛnan";
+    return lang === "Français"
+      ? "Bien"
+      : lang === "Anglais"
+      ? "Good"
+      : "A Ɲɛnan";
   }
   if (numNote >= 12) {
-    return lang === "Français" ? "Assez-Bien" : 
-           lang === "Anglais" ? "Fairly Good" : 
-           "A Ka Ɲi";
+    return lang === "Français"
+      ? "Assez-Bien"
+      : lang === "Anglais"
+      ? "Fairly Good"
+      : "A Ka Ɲi";
   }
   if (numNote >= 10) {
-    return lang === "Français" ? "Passable" : 
-           lang === "Anglais" ? "Satisfactory" : 
-           "A Bɛ Tɛmɛ";
+    return lang === "Français"
+      ? "Passable"
+      : lang === "Anglais"
+      ? "Satisfactory"
+      : "A Bɛ Tɛmɛ";
   }
   if (numNote >= 5) {
-    return lang === "Français" ? "Insuffisant" : 
-           lang === "Anglais" ? "Insufficient" : 
-           "A Ma Ɲi";
+    return lang === "Français"
+      ? "Insuffisant"
+      : lang === "Anglais"
+      ? "Insufficient"
+      : "A Ma Ɲi";
   }
-  
-  return lang === "Français" ? "Très-Faible" : 
-         lang === "Anglais" ? "Very Poor" : 
-         "A Ka Dɔgɔ Kosɛbɛ";
+
+  return lang === "Français"
+    ? "Très-Faible"
+    : lang === "Anglais"
+    ? "Very Poor"
+    : "A Ka Dɔgɔ Kosɛbɛ";
 };
 
 // Obtenir l'année scolaire actuelle
@@ -131,7 +161,8 @@ export const getCurrentSchoolYear = () => {
 
   // Si nous sommes entre septembre et décembre, l'année scolaire est année-année+1
   // Sinon, c'est année-1-année
-  if (month >= 8) { // Septembre à décembre
+  if (month >= 8) {
+    // Septembre à décembre
     return `${year}-${year + 1}`;
   } else {
     return `${year - 1}-${year}`;

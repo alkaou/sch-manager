@@ -46,7 +46,7 @@ const translations = {
     Anglais:
       "This composition cannot be deleted because all its report cards are locked.",
     Bambara:
-      "Nin ɲɔngɔndan tɛ se ka tunu, sabu a ka kalan-sɛbɛnw bɛɛ konkoronnen don.",
+      "Nin ɲɔngɔndan tɛ se ka jɔsi, sabu a ka kalan-sɛbɛnw bɛɛ konkoronnen don.",
   },
   success_composition_deleted: {
     Français: "La composition a été supprimée avec succès!",
@@ -116,12 +116,12 @@ const translations = {
   new_composition: {
     Français: "Nouvelle Composition",
     Anglais: "New Composition",
-    Bambara: "Ɲɔngɔndan kura",
+    Bambara: "Ɲɔngɔndan Kura",
   },
   no_composition_recorded: {
     Français: "Aucune composition enregistrée",
     Anglais: "No composition recorded",
-    Bambara: "Ɲɔngɔndan si ma sɛbɛn",
+    Bambara: "Ɲɔngɔndan si ma maralen tɛ",
   },
   click_new_composition_to_start: {
     Français: 'Cliquez sur "Nouvelle Composition" pour commencer',
@@ -161,7 +161,7 @@ const translations = {
   delete: {
     Français: "Supprimer",
     Anglais: "Delete",
-    Bambara: "A tunu",
+    Bambara: "A jɔsi",
   },
   edit_composition: {
     Français: "Modifier la composition",

@@ -104,7 +104,7 @@ const FeaturesSection = ({ isOthersBGColors }) => {
   ];
 
   return (
-    <section id="features" className="py-12 sm:py-16 md:py-20 relative overflow-hidden">
+    <section id="features" className="py-12 sm:py-10 md:py-5 relative overflow-hidden">
       {/* Background decorations */}
       <div className="absolute inset-0 -z-10 opacity-5">
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
