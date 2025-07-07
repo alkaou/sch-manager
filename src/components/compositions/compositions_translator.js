@@ -143,6 +143,11 @@ const translations = {
     Anglais: "Classes",
     Bambara: "Kilasiw",
   },
+  classe: {
+    Français: "Classe",
+    Anglais: "Classe",
+    Bambara: "Kilasi",
+  },
   actions: {
     Français: "Actions",
     Anglais: "Actions",

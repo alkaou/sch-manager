@@ -48,7 +48,17 @@ export default function NoteWriter({
               {`${student.first_name} ${student.sure_name} ${
                 student.last_name
               } - ${
-                Compo_or_Class === "composition" ? "M.Comp" : "M.Class"
+                Compo_or_Class === "composition"
+                  ? language === "Bambara"
+                    ? "Danni ka.H"
+                    : language === "Français"
+                    ? "M.Comp"
+                    : "Avg.Comp"
+                  : language === "Bambara"
+                  ? "Kilasi ka.H"
+                  : language === "Français"
+                  ? "M.Class"
+                  : "Avg.Class"
               } - ${subject.name}`}
             </p>
           </div>

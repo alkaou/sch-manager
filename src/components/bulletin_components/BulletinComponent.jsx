@@ -3,6 +3,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas-pro";
 import BulletinPhysique1 from "../bulletins_physique/BulletinPhysique_1.jsx";
 import BulletinPhysique2 from "../bulletins_physique/BulletinPhysique_2.jsx";
+import { translate } from "./bulletin_translator";
 
 import {
   getAppreciation,
@@ -29,7 +30,7 @@ const BulletinComponent = ({
   printRef = useRef(null),
   language = "Français",
   type = null,
-  getStudentBulletinRef = () => { },
+  getStudentBulletinRef = () => {},
 }) => {
   // Styles conditionnels basés sur le thème
   const tableBgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
@@ -172,8 +173,8 @@ const BulletinComponent = ({
 
   const isSconcycle =
     studentClasseLevel === "7" ||
-      studentClasseLevel === "8" ||
-      studentClasseLevel === "9"
+    studentClasseLevel === "8" ||
+    studentClasseLevel === "9"
       ? true
       : false;
 
@@ -253,7 +254,7 @@ const BulletinComponent = ({
             onClick={handleGeneratePdf}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
           >
-            Générer PDF
+            {translate("generate_pdf", language)}
           </button>
 
           {/* Bouton pour générer le PDF */}
@@ -261,7 +262,7 @@ const BulletinComponent = ({
             onClick={handleCloseBulletinPreview}
             className="mt-4 ml-10 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
           >
-            Fermer
+            {translate("close", language)}
           </button>
         </>
       ) : null}

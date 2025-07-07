@@ -21,6 +21,7 @@ import {
 } from "../bulletin_utils/BulletinMethods";
 import NoteWriter from "./NoteWriter.jsx";
 import { translate } from "./bulletin_translator";
+import { translate as Compositiontranslate } from "../compositions/compositions_translator";
 
 const BulletinNotes = ({
   selectedComposition,
@@ -102,7 +103,11 @@ const BulletinNotes = ({
         bulletin.classId === selectedClass
     );
 
-    if (existingBulletin && existingBulletin.subjects && existingBulletin.subjects.length > 0) {
+    if (
+      existingBulletin &&
+      existingBulletin.subjects &&
+      existingBulletin.subjects.length > 0
+    ) {
       setBulletin(existingBulletin);
 
       // S'assurer que "Conduite" a toujours un coefficient de 1
@@ -489,7 +494,6 @@ const BulletinNotes = ({
     setSelectedStudent(null);
   };
 
-
   // Calculer et mettre à jours toujours la position du cursor
   const handleHeadMouseMove = (event) => {
     const offsetX = 0;
@@ -502,8 +506,9 @@ const BulletinNotes = ({
 
   // Obtenir le nom de la classe
   const className = db?.classes?.find((cls) => cls.id === selectedClass)
-    ? `${db.classes.find((cls) => cls.id === selectedClass).level} ${db.classes.find((cls) => cls.id === selectedClass).name
-    }`
+    ? `${db.classes.find((cls) => cls.id === selectedClass).level} ${
+        db.classes.find((cls) => cls.id === selectedClass).name
+      }`
     : "";
 
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -533,53 +538,66 @@ const BulletinNotes = ({
         transition={{ duration: 0.3 }}
       >
         {/* En-tête global */}
-        <div className="sticky top-0 z-10 bg-opacity-95 p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="sticky top-0 z-10 bg-opacity-95 p-3 rounded-lg shadow-md mb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h3 className="text-xl font-semibold mb-2">
+            <h3 className="text-lg font-semibold mb-2">
               {translate("notes_entry_title", language)}
             </h3>
             <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
               <div>
-                <span className="font-medium">{translate("composition_label", language)}</span>{" "}
-                {selectedComposition.label}
+                <span className="font-medium text-sm">
+                  {translate("composition_label", language)}
+                </span>{" "}
+                {/* {selectedComposition.label} */}
+                {
+                  Compositiontranslate("composition_options", language)[
+                    parseInt(selectedComposition.name) - 1
+                  ]["label"]
+                }
               </div>
 
               <div>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleZoomOut}
-                    className={`p-2 rounded-full ${theme === "dark"
-                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      } transition-colors`}
+                    className={`p-1.5 rounded-full ${
+                      theme === "dark"
+                        ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    } transition-colors`}
                     aria-label="Zoom out"
                   >
-                    <FaSearchMinus />
+                    <FaSearchMinus size={14} />
                   </button>
 
-                  <span className={`${textClass}`}>
+                  <span className={`${textClass} text-sm`}>
                     {Math.round(zoomLevel * 100)}%
                   </span>
 
                   <button
                     onClick={handleZoomIn}
-                    className={`p-2 rounded-full ${theme === "dark"
-                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                      } transition-colors`}
+                    className={`p-1.5 rounded-full ${
+                      theme === "dark"
+                        ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    } transition-colors`}
                     aria-label="Zoom in"
                   >
-                    <FaSearchPlus />
+                    <FaSearchPlus size={14} />
                   </button>
                 </div>
               </div>
 
               <div>
-                <span className="font-medium">{translate("class_label", language)}</span>{" "}
+                <span className="font-medium text-sm">
+                  {translate("class_label", language)}
+                </span>{" "}
                 {getClasseName(className, language)}
               </div>
               <div>
-                <span className="font-medium">{translate("total_coefficients_label", language)}</span>{" "}
+                <span className="font-medium text-sm">
+                  {translate("total_coefficients_label", language)}
+                </span>{" "}
                 {calculateTotalCoefficients()}
               </div>
             </div>
@@ -591,12 +609,18 @@ const BulletinNotes = ({
               <select
                 value={sortType}
                 onChange={(e) => setSortType(e.target.value)}
-                className={`px-3 py-2 rounded border ${tableBorderColor} ${dropdownBgColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`px-2 py-1.5 text-sm rounded border ${tableBorderColor} ${dropdownBgColor} focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               >
-                <option value="default">{translate("sort_default", language)}</option>
-                <option value="alpha">{translate("sort_alpha", language)}</option>
+                <option value="default">
+                  {translate("sort_default", language)}
+                </option>
+                <option value="alpha">
+                  {translate("sort_alpha", language)}
+                </option>
                 <option value="coef">{translate("sort_coef", language)}</option>
-                <option value="manual">{translate("sort_manual", language)}</option>
+                <option value="manual">
+                  {translate("sort_manual", language)}
+                </option>
               </select>
             </div>
 
@@ -606,17 +630,22 @@ const BulletinNotes = ({
               whileTap={{ scale: 0.95 }}
               onClick={() => saveChangesToDatabase()}
               disabled={saving || !hasChanges}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 ${hasChanges
-                ? "bg-green-600 hover:bg-green-700 text-white"
-                : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                } transition-colors duration-300`}
+              className={`px-3 py-1.5 text-sm rounded-lg flex items-center gap-2 ${
+                hasChanges
+                  ? "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+              } transition-colors duration-300`}
             >
               {saving ? (
-                <RefreshCcw className="animate-spin" size={18} />
+                <RefreshCcw className="animate-spin" size={16} />
               ) : (
-                <Save size={18} />
+                <Save size={16} />
               )}
-              <span>{saving ? translate("saving", language) : translate("save_changes", language)}</span>
+              <span>
+                {saving
+                  ? translate("saving", language)
+                  : translate("save_changes", language)}
+              </span>
             </motion.button>
 
             {/* Bouton de fermeture */}
@@ -624,15 +653,15 @@ const BulletinNotes = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleCloseComponent}
-              className="p-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-300"
+              className="p-1.5 rounded-full bg-red-500 hover:bg-red-600 text-white transition-colors duration-300"
             >
-              <X size={20} />
+              <X size={18} />
             </motion.button>
           </div>
         </div>
 
         {/* Conteneur scrollable pour le tableau */}
-        <div className="overflow-y-auto overflow-x-auto max-h-[calc(100vh-25%)] scrollbar-custom">
+        <div className="overflow-y-auto overflow-x-auto max-h-[calc(100vh-24%)] scrollbar-custom">
           {activeCell && theStudentSelect && theSubjectSelect ? (
             <NoteWriter
               dropdownRef={dropdownRef}
@@ -700,7 +729,9 @@ const BulletinNotes = ({
                         <span>{subject.name}</span>
                       </div>
                       <div className="flex items-center justify-center mt-1">
-                        <span className="text-xs">{translate("coefficient_short", language)}: </span>
+                        <span className="text-xs">
+                          {translate("coefficient_short", language)}:{" "}
+                        </span>
                         {subject.name === "Conduite" ? (
                           <span className="ml-1 text-xs font-medium">1</span>
                         ) : (
@@ -713,8 +744,8 @@ const BulletinNotes = ({
                               activeCoef === null
                                 ? handleHeadMouseMove
                                 : activeCoef === subject.name
-                                  ? handleHeadMouseMove
-                                  : () => { }
+                                ? handleHeadMouseMove
+                                : () => {}
                             }
                             className="ml-1 text-xs font-medium underline hover:text-blue-500"
                           >
@@ -742,10 +773,11 @@ const BulletinNotes = ({
                                       updateCoefficient(subject.name, coef);
                                       setActiveCoef(null);
                                     }}
-                                    className={`px-2 py-1 text-center rounded ${coef === subject.coefficient
-                                      ? cellActiveBgColor
-                                      : hoverNumber
-                                      }`}
+                                    className={`px-2 py-1 text-center rounded ${
+                                      coef === subject.coefficient
+                                        ? cellActiveBgColor
+                                        : hoverNumber
+                                    }`}
                                   >
                                     {coef}
                                   </button>
@@ -836,11 +868,12 @@ const BulletinNotes = ({
                         <React.Fragment key={`${student.id}-${subject.name}`}>
                           {/* Note de classe */}
                           <td
-                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell ===
+                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
+                              activeCell ===
                               `${student.id}-${subject.name}-classe`
-                              ? cellActiveBgColor
-                              : ""
-                              } ${noteCellHoverEffect}`}
+                                ? cellActiveBgColor
+                                : ""
+                            } ${noteCellHoverEffect}`}
                           >
                             <div
                               className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-blue-400"
@@ -856,19 +889,20 @@ const BulletinNotes = ({
                             >
                               {student.notes[subject.name]?.classe !== null
                                 ? formatNote(
-                                  student.notes[subject.name]?.classe
-                                )
+                                    student.notes[subject.name]?.classe
+                                  )
                                 : "-"}
                             </div>
                           </td>
 
                           {/* Note de composition */}
                           <td
-                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${activeCell ===
+                            className={`text-center border ${tableBorderColor} ${tableBorderWidth} ${
+                              activeCell ===
                               `${student.id}-${subject.name}-composition`
-                              ? cellActiveBgColor
-                              : ""
-                              } ${noteCellHoverEffect}`}
+                                ? cellActiveBgColor
+                                : ""
+                            } ${noteCellHoverEffect}`}
                           >
                             <div
                               className="w-full h-14 cursor-pointer text-white flex items-center justify-center bg-orange-400"
@@ -884,8 +918,8 @@ const BulletinNotes = ({
                             >
                               {student.notes[subject.name]?.composition !== null
                                 ? formatNote(
-                                  student.notes[subject.name]?.composition
-                                )
+                                    student.notes[subject.name]?.composition
+                                  )
                                 : "-"}
                             </div>
                           </td>

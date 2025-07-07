@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const BulletinPagination = ({
   currentPage,
@@ -9,7 +9,7 @@ const BulletinPagination = ({
   textClass,
   borderColor,
   buttonSecondary,
-  buttonPrimary
+  buttonPrimary,
 }) => {
   // Generate page numbers
   const pageNumbers = [];
@@ -27,14 +27,17 @@ const BulletinPagination = ({
   }
 
   return (
-    <div className={`flex justify-center items-center py-4 border-t ${borderColor}`}>
+    <div
+      className={`flex justify-center items-center py-4 border-t ${borderColor}`}
+    >
       <div className="flex items-center space-x-2">
         {/* Previous button */}
         <button
           onClick={() => currentPage > 1 && paginate(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${
+            currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           <ChevronLeft size={18} />
         </button>
@@ -44,24 +47,28 @@ const BulletinPagination = ({
           <>
             <button
               onClick={() => paginate(1)}
-              className={`w-10 h-10 rounded-lg ${currentPage === 1 ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
-                }`}
+              className={`w-10 h-10 rounded-lg ${
+                currentPage === 1
+                  ? buttonPrimary + " text-white"
+                  : buttonSecondary + " " + textClass
+              }`}
             >
               1
             </button>
-            {startPage > 2 && (
-              <span className={`${textClass}`}>...</span>
-            )}
+            {startPage > 2 && <span className={`${textClass}`}>...</span>}
           </>
         )}
 
         {/* Page numbers */}
-        {pageNumbers.map(number => (
+        {pageNumbers.map((number) => (
           <button
             key={number}
             onClick={() => paginate(number)}
-            className={`w-10 h-10 rounded-lg ${currentPage === number ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
-              }`}
+            className={`w-10 h-10 rounded-lg ${
+              currentPage === number
+                ? buttonPrimary + " text-white"
+                : buttonSecondary + " " + textClass
+            }`}
           >
             {number}
           </button>
@@ -75,8 +82,11 @@ const BulletinPagination = ({
             )}
             <button
               onClick={() => paginate(totalPages)}
-              className={`w-10 h-10 rounded-lg ${currentPage === totalPages ? buttonPrimary + ' text-white' : buttonSecondary + ' ' + textClass
-                }`}
+              className={`w-10 h-10 rounded-lg ${
+                currentPage === totalPages
+                  ? buttonPrimary + " text-white"
+                  : buttonSecondary + " " + textClass
+              }`}
             >
               {totalPages}
             </button>
@@ -87,8 +97,9 @@ const BulletinPagination = ({
         <button
           onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+          className={`p-2 rounded-lg ${buttonSecondary} ${textClass} ${
+            currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
           <ChevronRight size={18} />
         </button>

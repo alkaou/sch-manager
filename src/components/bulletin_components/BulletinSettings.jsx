@@ -1,6 +1,7 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Sliders } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Sliders } from "lucide-react";
+import { useLanguage } from "../contexts";
 
 const BulletinSettings = ({
   theme,
@@ -13,7 +14,7 @@ const BulletinSettings = ({
   setBulletinLanguage,
   bulletinType,
   setBulletinType,
-  t
+  t,
 }) => {
   // Animation variants
   const panelVariants = {
@@ -21,14 +22,16 @@ const BulletinSettings = ({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.3 }
+      transition: { duration: 0.3 },
     },
     exit: {
       opacity: 0,
       y: -20,
-      transition: { duration: 0.2 }
-    }
+      transition: { duration: 0.2 },
+    },
   };
+
+  const { language } = useLanguage();
 
   return (
     <motion.div
@@ -39,7 +42,9 @@ const BulletinSettings = ({
       variants={panelVariants}
     >
       <div className="flex justify-between items-center mb-4">
-        <h3 className={`text-lg font-bold ${textClass} flex items-center gap-2`}>
+        <h3
+          className={`text-lg font-bold ${textClass} flex items-center gap-2`}
+        >
           <Sliders size={18} />
           {t.settings}
         </h3>
@@ -48,7 +53,9 @@ const BulletinSettings = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Bulletins per page */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>{t.bulletinsPerPage}</label>
+          <label className={`block mb-2 font-medium ${textClass}`}>
+            {t.bulletinsPerPage}
+          </label>
           <div className="flex items-center">
             <span className={`${textClass} mr-2`}>1</span>
             <input
@@ -63,46 +70,64 @@ const BulletinSettings = ({
             <span className={`${textClass} ml-2`}>2</span>
           </div>
           <div className={`text-center mt-2 ${textClass}`}>
-            {bulletinsPerPage === 1 ? 'Portrait (1 bulletin/page)' : 'Paysage (2 bulletins/page)'}
+            {bulletinsPerPage === 1
+              ? language === "Bambara"
+                ? "Jɔlen (Sɛbɛn 1/paji)"
+                : "Portrait (1 bulletin/page)"
+              : language === "Bambara"
+              ? "Dalen (Sɛbɛn 2/paji)"
+              : language === "Français"
+              ? "Paysage (2 bulletins/page)"
+              : "Landscape (2 bulletins/page)"}
           </div>
         </div>
 
         {/* Bulletin language */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>{t.bulletinLanguage}</label>
+          <label className={`block mb-2 font-medium ${textClass}`}>
+            {t.bulletinLanguage}
+          </label>
           <select
             value={bulletinLanguage}
             onChange={(e) => setBulletinLanguage(e.target.value)}
             className={`
               w-full p-2 rounded border ${borderColor} 
-              ${theme === "dark" ? `${cardBgColor} ${textClass}` : "bg-gray-200 text-gray-700"} 
+              ${
+                theme === "dark"
+                  ? `${cardBgColor} ${textClass}`
+                  : "bg-gray-200 text-gray-700"
+              } 
             `}
           >
             <option value="Français">Français</option>
+            <option value="Bambara">Bamanakan</option>
             <option value="Anglais">English</option>
-            <option value="Bambara">Bambara</option>
           </select>
         </div>
 
         {/* Bulletin type */}
         <div>
-          <label className={`block mb-2 font-medium ${textClass}`}>{t.bulletinType}</label>
+          <label className={`block mb-2 font-medium ${textClass}`}>
+            {t.bulletinType}
+          </label>
           <div className="grid grid-cols-2 gap-2">
             <button
-              onClick={() => setBulletinType('type1')}
-              className={`p-2 rounded border ${borderColor} ${bulletinType === 'type1'
-                ? 'bg-blue-600 text-white'
-                : `${cardBgColor} ${textClass}`
-                }`}
+              onClick={() => setBulletinType("type1")}
+              className={`p-2 rounded border ${borderColor} ${
+                bulletinType === "type1"
+                  ? "bg-blue-600 text-white"
+                  : `${cardBgColor} ${textClass}`
+              }`}
             >
               {t.type1}
             </button>
             <button
-              onClick={() => setBulletinType('type2')}
-              className={`p-2 rounded border ${borderColor} ${bulletinType === 'type2'
-                ? 'bg-blue-600 text-white'
-                : `${cardBgColor} ${textClass}`
-                }`}
+              onClick={() => setBulletinType("type2")}
+              className={`p-2 rounded border ${borderColor} ${
+                bulletinType === "type2"
+                  ? "bg-blue-600 text-white"
+                  : `${cardBgColor} ${textClass}`
+              }`}
             >
               {t.type2}
             </button>

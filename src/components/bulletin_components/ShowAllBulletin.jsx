@@ -23,6 +23,7 @@ import {
 import { getClasseName } from "../../utils/helpers";
 import { useLanguage } from "../contexts";
 import { gradients } from "../../utils/colors";
+import { translate as Compositiontranslate } from "../compositions/compositions_translator";
 
 const ShowAllBulletin = ({
   selectedComposition,
@@ -61,8 +62,8 @@ const ShowAllBulletin = ({
   // Styles based on theme
   const opacity =
     theme === "dark" ||
-      app_bg_color === gradients[1] ||
-      app_bg_color === gradients[2]
+    app_bg_color === gradients[1] ||
+    app_bg_color === gradients[2]
       ? "bg-opacity-30"
       : "bg-opacity-50";
   const bgColor = `${app_bg_color} ${textClass}`;
@@ -92,11 +93,19 @@ const ShowAllBulletin = ({
         bulletin.classId === selectedClass
     );
 
-    if (existingBulletin && existingBulletin.subjects && existingBulletin.subjects.length > 0) {
+    if (
+      existingBulletin &&
+      existingBulletin.subjects &&
+      existingBulletin.subjects.length > 0
+    ) {
       setSubjects(existingBulletin.subjects);
     }
 
-    if (existingBulletin && existingBulletin.students && existingBulletin.students.length > 0) {
+    if (
+      existingBulletin &&
+      existingBulletin.students &&
+      existingBulletin.students.length > 0
+    ) {
       // setBulletin(existingBulletin);
       setStudents(existingBulletin.students);
     }
@@ -254,12 +263,19 @@ const ShowAllBulletin = ({
             {live_language.title}
           </h2>
           <div
-            className={`px-3 py-1 rounded-full text-sm font-medium ${theme === "dark"
-              ? "bg-blue-900 text-blue-200"
-              : "bg-blue-100 text-blue-800"
-              }`}
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              theme === "dark"
+                ? "bg-blue-900 text-blue-200"
+                : "bg-blue-100 text-blue-800"
+            }`}
           >
-            {selectedComposition?.label} - {getClasseName(className)}
+            {
+              Compositiontranslate("composition_options", language)[
+                parseInt(selectedComposition?.name) - 1
+              ]["label"]
+            }{" "}
+            - {Compositiontranslate("classe", language)} :{" "}
+            {getClasseName(className, language)}
           </div>
         </div>
 
@@ -300,8 +316,9 @@ const ShowAllBulletin = ({
           <button
             onClick={handleGeneratePDF}
             disabled={generating}
-            className={`p-2 rounded-lg ${buttonPrimary} border border-2 border-white text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${generating ? "opacity-70 cursor-not-allowed" : ""
-              }`}
+            className={`p-2 rounded-lg ${buttonPrimary} border border-2 border-white text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 ${
+              generating ? "opacity-70 cursor-not-allowed" : ""
+            }`}
           >
             {generating ? (
               <>
@@ -368,10 +385,14 @@ const ShowAllBulletin = ({
           <div className={`text-center ${textClass} p-10`}>
             <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold mb-2">
-              {subjects.length === 0 ? "Aucune matière trouvée, en d'autre terme vous n'avez pas fini de configuration les bulletins." : "Aucun élève trouvé"}
+              {subjects.length === 0
+                ? "Aucune matière trouvée, en d'autre terme vous n'avez pas fini de configuration les bulletins."
+                : "Aucun élève trouvé"}
             </h3>
             <p>
-              {subjects.length === 0 ? "Veuillez ajouter des matières" : "Veuillez modifier vos critères de recherche"}
+              {subjects.length === 0
+                ? "Veuillez ajouter des matières"
+                : "Veuillez modifier vos critères de recherche"}
             </p>
           </div>
         ) : (
@@ -383,10 +404,11 @@ const ShowAllBulletin = ({
                 className="relative"
               >
                 <div
-                  className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${selectedStudents.includes(student.id)
-                    ? "bg-blue-600 text-white"
-                    : `${cardBgColor} border ${borderColor} ${textClass}`
-                    }`}
+                  className={`absolute -top-3 -left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center cursor-pointer ${
+                    selectedStudents.includes(student.id)
+                      ? "bg-blue-600 text-white"
+                      : `${cardBgColor} border ${borderColor} ${textClass}`
+                  }`}
                   onClick={() => toggleStudentSelection(student.id)}
                 >
                   {selectedStudents.includes(student.id) && <Check size={16} />}
@@ -443,12 +465,26 @@ const ShowAllBulletin = ({
         <div className="flex items-center gap-4">
           <div className={`flex items-center gap-2 ${textClass}`}>
             <Globe size={16} />
-            <span>{bulletinLanguage}</span>
+            <span>
+              {bulletinLanguage === "Bambara"
+                ? "Bamanakan"
+                : bulletinLanguage === "Français"
+                ? "Français"
+                : "English"}
+            </span>
           </div>
           <div className={`flex items-center gap-2 ${textClass}`}>
             <Printer size={16} />
             <span>
-              {bulletinsPerPage === 1 ? "1 bulletin/page" : "2 bulletins/page"}
+              {bulletinsPerPage === 1
+                ? language === "Bambara"
+                  ? "Jɔlen (Sɛbɛn 1/paji)"
+                  : "Portrait (1 bulletin/page)"
+                : language === "Bambara"
+                ? "Dalen (Sɛbɛn 2/paji)"
+                : language === "Français"
+                ? "Paysage (2 bulletins/page)"
+                : "Landscape (2 bulletins/page)"}
             </span>
           </div>
         </div>

@@ -186,14 +186,14 @@ const BulletinPhysique2 = ({
                   ? "COEF"
                   : language === "Anglais"
                     ? "COEF"
-                    : "BONYA"}
+                    : "FANGA"}
               </th>
               <th className="border-r border-black p-2 text-center">
                 {language === "Français"
                   ? "MOY. COEF"
                   : language === "Anglais"
                     ? "WEIGHTED AVG"
-                    : "HAKƐ & BONYA"}
+                    : "HAKƐ & FANGA"}
               </th>
               <th className="p-2 text-center">
                 {language === "Français"

@@ -122,6 +122,11 @@ const translations = {
     Anglais: "Close editing",
     Bambara: "yɛlɛmali datugu",
   },
+  close: {
+    Français: "Fermer",
+    Anglais: "Close",
+    Bambara: "A datugu",
+  },
   enter_grades: {
     Français: "Saisir les notes",
     Anglais: "Enter grades",
@@ -256,7 +261,7 @@ const translations = {
   class_label: {
     Français: "Classe :",
     Anglais: "Class:",
-    Bambara: "Kalasi:",
+    Bambara: "Kilasi:",
   },
   selected_subjects: {
     Français: "Matières sélectionnées :",
@@ -271,7 +276,7 @@ const translations = {
   coefficient_label: {
     Français: "Coef.",
     Anglais: "Coef.",
-    Bambara: "Coef.",
+    Bambara: "Fanga.",
   },
   subject_selection: {
     Français: "Sélection des matières :",
@@ -376,7 +381,7 @@ const translations = {
   no_student_found_for_class: {
     Français: "Aucun élève trouvé pour cette classe.",
     Anglais: "No student found for this class.",
-    Bambara: "Kalanden si ma sɔrɔ nin kalasi in na.",
+    Bambara: "Kalanden si ma sɔrɔ nin kilasi in na.",
   },
   total_students: {
     Français: "Total des élèves:",
@@ -471,17 +476,17 @@ const translations = {
   coefficient_short: {
     Français: "Coef.",
     Anglais: "Coef.",
-    Bambara: "Coef.",
+    Bambara: "Fanga.",
   },
   class_average_short: {
     Français: "Moy. Cl.",
     Anglais: "Cl. Avg.",
-    Bambara: "Kalasi Moy.",
+    Bambara: "Kilasi. Hak.",
   },
   student_average_short: {
     Français: "Moy. El.",
     Anglais: "St. Avg.",
-    Bambara: "Kalanden Moy.",
+    Bambara: "Kalandew. Hak.",
   },
   grade: {
     Français: "Note",
@@ -501,17 +506,17 @@ const translations = {
   general_average: {
     Français: "Moyenne générale",
     Anglais: "General average",
-    Bambara: "Moyenne générale",
+    Bambara: "Hakɛ Bɛɛ Lajɛlen",
   },
   total_coefficients: {
     Français: "Total coefficients",
     Anglais: "Total coefficients",
-    Bambara: "Total coefficients",
+    Bambara: "Fanga Bɛɛ Lajɛlen",
   },
   class_average: {
     Français: "Moyenne de la classe",
     Anglais: "Class average",
-    Bambara: "Kalasi Moyenne",
+    Bambara: "Kilasi Moyenne",
   },
   student_average: {
     Français: "Moyenne de l'élève",
@@ -521,12 +526,12 @@ const translations = {
   rank: {
     Français: "Rang",
     Anglais: "Rank",
-    Bambara: "Rang",
+    Bambara: "Jɔyɔrɔ",
   },
   council_decision: {
     Français: "Décision du conseil",
     Anglais: "Council decision",
-    Bambara: "Kɔnsɛy ka fɔli",
+    Bambara: "Cikan ka fɔli",
   },
   congratulations: {
     Français: "Félicitations",
@@ -546,102 +551,107 @@ const translations = {
   warning: {
     Français: "Avertissement",
     Anglais: "Warning",
-    Bambara: "Avertissement",
+    Bambara: "Janton",
   },
   blame: {
     Français: "Blâme",
     Anglais: "Blame",
-    Bambara: "Blâme",
+    Bambara: "Bilamu",
   },
   exclusion: {
     Français: "Exclusion",
     Anglais: "Exclusion",
-    Bambara: "Exclusion",
+    Bambara: "A Labɔɲin",
   },
   viewer: {
     Français: "Visualiseur",
     Anglais: "Viewer",
-    Bambara: "Lajɛbagaw",
+    Bambara: "Sɛbɛn Filɛla",
   },
   not_ranked: {
     Français: "Non classé",
     Anglais: "Not ranked",
-    Bambara: "Non classé",
+    Bambara: "Min ma labɛn",
   },
   action: {
     Français: "Action",
     Anglais: "Action",
-    Bambara: "Kɛwali",
+    Bambara: "Kɛwale",
   },
   class_short: {
     Français: "Classe",
     Anglais: "Class",
-    Bambara: "Kalasi",
+    Bambara: "Kilasi",
   },
   composition_short: {
     Français: "Compo",
     Anglais: "Compo",
-    Bambara: "Compo",
+    Bambara: "Danni",
   },
   average_short: {
     Français: "Moy",
     Anglais: "Avg",
-    Bambara: "Moy",
+    Bambara: "Hakɛ",
   },
   loading_data: {
     Français: "Chargement des données...",
     Anglais: "Loading data...",
-    Bambara: "Données bɛ don...",
+    Bambara: "Kunnafoniw bɛ labɛn na...",
   },
   no_student_found: {
     Français: "Aucun élève trouvé pour cette classe.",
     Anglais: "No student found for this class.",
-    Bambara: "Kalasi inni kalanden si ma sɔrɔ.",
+    Bambara: "Kilasi in kalanden si ma sɔrɔ.",
   },
   notes_entry_title: {
     Français: "Saisie des notes pour le bulletin :",
     Anglais: "Grade entry for the report card :",
-    Bambara: "Ɲɔngɔndan sɛbɛnni :",
+    Bambara: "Ɲɔngɔndan ka Hakɛw sɛbɛnni :",
   },
   composition_label: {
     Français: "Composition :",
     Anglais: "Composition :",
     Bambara: "Ɲɔngɔndan :",
   },
+  generate_pdf: {
+    Français: "Générer PDF :",
+    Anglais: "Generate PDF :",
+    Bambara: "A PDF Labɔ",
+  },
   class_label: {
     Français: "Classe :",
     Anglais: "Class :",
-    Bambara: "Kalasi :",
+    Bambara: "Kilasi :",
   },
   total_coefficients_label: {
     Français: "Total coefficients :",
     Anglais: "Total coefficients :",
-    Bambara: "Coefficient yɛrɛyɛrɛ :",
+    Bambara: "Fanga Bɛɛ Lajɛlen :",
   },
   sort_default: {
     Français: "Tri par défaut",
     Anglais: "Default sort",
-    Bambara: "Tri par défaut",
+    Bambara: "Labɛn to a yɛrɛ ma",
   },
   sort_alpha: {
     Français: "Tri alphabétique",
     Anglais: "Alphabetical sort",
-    Bambara: "Tri alphabétique",
+    Bambara: "Labɛn kɛ ni Siginidew ye",
   },
   sort_coef: {
     Français: "Tri par coefficient",
     Anglais: "Sort by coefficient",
-    Bambara: "Coefficient fanga",
+    Bambara: "Labɛn kɛ ni Fanga ye",
   },
   sort_manual: {
     Français: "Tri manuel",
     Anglais: "Manual sort",
-    Bambara: "Tri manuel",
+    Bambara: "Labɛn i sako la",
   },
   preview_bulletin: {
     Français: "Prévisualisation du bulletin",
     Anglais: "Report card preview",
-    Bambara: "Bulletin yiyara",
+    Bambara: "Sɛbɛn Filɛ ka Jateminɛ",
   },
 };
 
