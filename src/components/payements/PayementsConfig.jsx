@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getClasseName } from "../../utils/helpers";
 import { useLanguage } from "../contexts";
+import { translate } from "./payement_translator.js";
 import { useFlashNotification } from "../contexts";
 import { X } from "lucide-react";
 import ActionConfirmePopup from "../popups/ActionConfirmePopup.jsx";
@@ -136,8 +137,7 @@ const PayementsConfig = ({
     // 1. Vérifier que la date de fin n'est pas antérieure à la date de début
     if (startDate && endDate && endDate < startDate) {
       setFlashMessage({
-        message:
-          "La date de fin ne peut pas être antérieure à la date de début.",
+        message: translate("end_date_before_start_date_error", language),
         type: "error",
         duration: 5000,
       });
@@ -147,9 +147,9 @@ const PayementsConfig = ({
     // 2. Vérifier que la date de début est dans la plage autorisée
     if (startDate && (startDate < startMin || startDate > startMax)) {
       setFlashMessage({
-        message: `La date de début doit être comprise entre ${
-          startMin.toISOString().split("T")[0]
-        } et ${startMax.toISOString().split("T")[0]}.`,
+        message: translate("start_date_range_error", language)
+          .replace("{startMin}", startMin.toISOString().split("T")[0])
+          .replace("{startMax}", startMax.toISOString().split("T")[0]),
         type: "error",
         duration: 5000,
       });
@@ -159,9 +159,9 @@ const PayementsConfig = ({
     // 3. Vérifier que la date de fin est dans la plage autorisée
     if (endDate && (endDate < endMin || endDate > endMax)) {
       setFlashMessage({
-        message: `La date de fin doit être comprise entre ${
-          endMin.toISOString().split("T")[0]
-        } et ${endMax.toISOString().split("T")[0]}.`,
+        message: translate("end_date_range_error", language)
+          .replace("{endMin}", endMin.toISOString().split("T")[0])
+          .replace("{endMax}", endMax.toISOString().split("T")[0]),
         type: "error",
         duration: 5000,
       });
@@ -219,7 +219,7 @@ const PayementsConfig = ({
   const handleSaveSystem = async () => {
     if (!newSystem.name.trim()) {
       setFlashMessage({
-        message: "Veuillez donner un nom au système de paiement",
+        message: translate("system_name_required", language),
         type: "error",
         duration: 5000,
       });
@@ -228,7 +228,7 @@ const PayementsConfig = ({
 
     if (newSystem.classes.length === 0) {
       setFlashMessage({
-        message: "Veuillez sélectionner au moins une classe",
+        message: translate("select_at_least_one_class", language),
         type: "error",
         duration: 5000,
       });
@@ -310,8 +310,8 @@ const PayementsConfig = ({
 
       setFlashMessage({
         message: editingSystemId
-          ? "Système de paiement mis à jour avec succès!"
-          : "Nouveau système de paiement créé avec succès!",
+          ? translate("payment_system_updated_success", language)
+          : translate("new_payment_system_created_success", language),
         type: "success",
         duration: 5000,
       });
@@ -338,7 +338,7 @@ const PayementsConfig = ({
       loadData();
     } catch (err) {
       setFlashMessage({
-        message: "Erreur lors de la sauvegarde du système de paiement.",
+        message: translate("save_payment_system_error", language),
         type: "error",
         duration: 5000,
       });
@@ -401,7 +401,7 @@ const PayementsConfig = ({
       updateAvailableClasses(db.classes, updatedSystems);
 
       setFlashMessage({
-        message: "Système de paiement supprimé avec succès!",
+        message: translate("payment_system_deleted_success", language),
         type: "success",
         duration: 5000,
       });
@@ -410,7 +410,7 @@ const PayementsConfig = ({
       loadData();
     } catch (err) {
       setFlashMessage({
-        message: "Erreur lors de la suppression du système de paiement.",
+        message: translate("delete_payment_system_error", language),
         type: "error",
         duration: 5000,
       });
@@ -440,7 +440,6 @@ const PayementsConfig = ({
     theme === "dark"
       ? "bg-blue-600 hover:bg-blue-700"
       : "bg-blue-500 hover:bg-blue-600";
-  const buttonAddColor = "bg-green-600 hover:bg-green-700";
   const dividerColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
   const pastSystemBgColor = theme === "dark" ? "bg-gray-900" : "bg-gray-200";
 
@@ -462,7 +461,7 @@ const PayementsConfig = ({
     >
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <h2 className={`text-xl sm:text-2xl font-bold ${text_color}`}>
-          Configuration des Paiements
+          {translate("payment_configuration", language)}
         </h2>
       </div>
 
@@ -472,7 +471,7 @@ const PayementsConfig = ({
           <h3
             className={`text-lg sm:text-xl font-semibold ${text_color} mb-3 sm:mb-4`}
           >
-            Systèmes de paiement
+            {translate("payment_systems", language)}
           </h3>
 
           {activeSystems.length === 0 ? (
@@ -494,11 +493,10 @@ const PayementsConfig = ({
                 />
               </svg>
               <p className="text-base sm:text-lg font-medium mb-1 sm:mb-2">
-                Aucun système de paiement
+                {translate("no_payment_system", language)}
               </p>
               <p className="text-xs sm:text-sm opacity-80 mb-3 sm:mb-4">
-                Créez votre premier système de paiement pour commencer à gérer
-                les frais scolaires.
+                {translate("create_first_payment_system", language)}
               </p>
             </div>
           ) : (
@@ -564,7 +562,7 @@ const PayementsConfig = ({
                         <p
                           className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                         >
-                          Période
+                          {translate("period", language)}
                         </p>
                         <p
                           className={`${inputTextColor} text-xs sm:text-sm font-medium`}
@@ -577,12 +575,13 @@ const PayementsConfig = ({
                         <p
                           className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                         >
-                          Frais mensuels
+                          {translate("monthly_fee", language)}
                         </p>
                         <p
                           className={`${inputTextColor} text-xs sm:text-sm font-medium`}
                         >
-                          {system.monthlyFee.toLocaleString()} FCFA
+                          {system.monthlyFee.toLocaleString()}{" "}
+                          {translate("currency_unit", language)}
                         </p>
                       </div>
                     </div>
@@ -591,7 +590,7 @@ const PayementsConfig = ({
                       <p
                         className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                       >
-                        Classes concernées
+                        {translate("classes", language)}
                       </p>
                       <div className="flex flex-wrap gap-1 sm:gap-2">
                         {/* Trier par level avant le map */}
@@ -626,25 +625,26 @@ const PayementsConfig = ({
                       <h4
                         className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}
                       >
-                        Récapitulatif
+                        {translate("summary", language)}
                       </h4>
                       <div className="flex justify-between">
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          Mensuel:
+                          {translate("monthly", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
                         >
-                          {system.monthlyFee.toLocaleString()} FCFA
+                          {system.monthlyFee.toLocaleString()}{" "}
+                          {translate("currency_unit", language)}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          Annuel:
+                          {translate("annual", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -657,14 +657,14 @@ const PayementsConfig = ({
                               system.endDate
                             )
                           ).toLocaleString()}{" "}
-                          FCFA
+                          {translate("currency_unit", language)}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          Inscription:
+                          {translate("registration_fee", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -672,7 +672,7 @@ const PayementsConfig = ({
                           {system.registrationFee
                             ? system.registrationFee.toLocaleString()
                             : "0"}{" "}
-                          FCFA
+                          {translate("currency_unit", language)}
                         </span>
                       </div>
                       {system.otherFees && system.otherFees.length > 0 && (
@@ -680,7 +680,7 @@ const PayementsConfig = ({
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm`}
                           >
-                            Supplémentaires:
+                            {translate("additional_fees", language)}:
                           </span>
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -688,7 +688,7 @@ const PayementsConfig = ({
                             {system.otherFees
                               .reduce((sum, fee) => sum + fee.amount, 0)
                               .toLocaleString()}{" "}
-                            FCFA
+                            {translate("currency_unit", language)}
                           </span>
                         </div>
                       )}
@@ -707,7 +707,7 @@ const PayementsConfig = ({
                 <span
                   className={`px-2 sm:px-3 ${inputTextColor} text-xs sm:text-sm font-medium`}
                 >
-                  Années scolaires terminées
+                  {translate("past_school_years", language)}
                 </span>
                 <div className={`flex-grow border-t ${dividerColor}`}></div>
               </div>
@@ -734,7 +734,7 @@ const PayementsConfig = ({
                         <p
                           className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                         >
-                          Classes concernées
+                          {translate("classes", language)}
                         </p>
                         <div className="flex flex-wrap gap-1 sm:gap-2">
                           {system.classes.map((classId) => {
@@ -762,25 +762,26 @@ const PayementsConfig = ({
                         <h4
                           className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}
                         >
-                          Récapitulatif
+                          {translate("summary", language)}
                         </h4>
                         <div className="flex justify-between">
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm`}
                           >
-                            Mensuel:
+                            {translate("monthly", language)}:
                           </span>
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm font-bold`}
                           >
-                            {system.monthlyFee.toLocaleString()} FCFA
+                            {system.monthlyFee.toLocaleString()}{" "}
+                            {translate("currency_unit", language)}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm`}
                           >
-                            Annuel:
+                            {translate("annual", language)}:
                           </span>
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -793,7 +794,7 @@ const PayementsConfig = ({
                                 system.endDate
                               )
                             ).toLocaleString()}{" "}
-                            FCFA
+                            {translate("currency_unit", language)}
                           </span>
                         </div>
                       </div>
@@ -857,15 +858,14 @@ const PayementsConfig = ({
                   </svg>
                 </span>
                 <span className="font-medium">
-                  Créer un nouveau système de paiement
+                  {translate("create_new_payment_system", language)}
                 </span>
               </motion.button>
 
               <p
                 className={`mt-3 sm:mt-4 text-center ${text_color} opacity-70 max-w-md text-xs sm:text-sm`}
               >
-                Créez un nouveau système de paiement pour définir les frais
-                scolaires et les associer à des classes.
+                {translate("create_payment_system_description", language)}
               </p>
             </motion.div>
           ) : (
@@ -880,8 +880,8 @@ const PayementsConfig = ({
                 <div className="p-3 sm:p-4 flex justify-between bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                   <h3 className="text-base sm:text-lg md:text-xl font-bold">
                     {editingSystemId
-                      ? "Modifier le système de paiement"
-                      : "Nouveau système de paiement"}
+                      ? translate("edit_payment_system", language)
+                      : translate("new_payment_system", language)}
                   </h3>
                   <button
                     onClick={() => {
@@ -901,7 +901,9 @@ const PayementsConfig = ({
                     <label
                       className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}
                     >
-                      Nom du système de paiement
+                      {editingSystemId
+                        ? translate("edit_payment_system", language)
+                        : translate("new_payment_system", language)}
                     </label>
                     <input
                       type="text"
@@ -909,7 +911,10 @@ const PayementsConfig = ({
                       onChange={(e) =>
                         handleSystemChange("name", e.target.value)
                       }
-                      placeholder="Ex: Tarif standard 2024-2025"
+                      placeholder={translate(
+                        "system_name_placeholder",
+                        language
+                      )}
                       className={`w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
                     />
                   </div>
@@ -920,7 +925,7 @@ const PayementsConfig = ({
                       <label
                         className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}
                       >
-                        Début de l'année scolaire
+                        {translate("start_school_year", language)}
                       </label>
                       <input
                         type="date"
@@ -937,7 +942,7 @@ const PayementsConfig = ({
                       <label
                         className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}
                       >
-                        Fin de l'année scolaire
+                        {translate("end_school_year", language)}
                       </label>
                       <input
                         type="date"
@@ -958,7 +963,7 @@ const PayementsConfig = ({
                       <label
                         className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}
                       >
-                        Frais mensuels (FCFA)
+                        {translate("monthly_fees", language)}
                       </label>
                       <input
                         type="number"
@@ -974,7 +979,7 @@ const PayementsConfig = ({
                       <label
                         className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}
                       >
-                        Frais d'inscription (FCFA)
+                        {translate("registration_fees", language)}
                       </label>
                       <input
                         type="number"
@@ -993,7 +998,7 @@ const PayementsConfig = ({
                     <label
                       className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-1 sm:mb-2`}
                     >
-                      Classes concernées
+                      {translate("classes_concerned", language)}
                     </label>
 
                     {availableClasses.length === 0 &&
@@ -1002,8 +1007,7 @@ const PayementsConfig = ({
                         className={`p-3 sm:p-4 rounded ${inputBgColor} border ${borderColor} text-center`}
                       >
                         <p className={`${inputTextColor} text-xs sm:text-sm`}>
-                          Toutes les classes sont déjà assignées à un système de
-                          paiement.
+                          {translate("all_classes_assigned_message", language)}
                         </p>
                       </div>
                     ) : (
@@ -1087,7 +1091,7 @@ const PayementsConfig = ({
                     <h4
                       className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-2 sm:mb-3`}
                     >
-                      Récapitulatif des frais
+                      {translate("fee_summary", language)}
                     </h4>
 
                     <div className="space-y-1.5 sm:space-y-2">
@@ -1095,19 +1099,20 @@ const PayementsConfig = ({
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          Mensuel:
+                          {translate("monthly", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
                         >
-                          {Number(newSystem.monthlyFee).toLocaleString()} FCFA
+                          {Number(newSystem.monthlyFee).toLocaleString()}{" "}
+                          {translate("currency_unit", language)}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          Annuel:
+                          {translate("yearly", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -1120,20 +1125,20 @@ const PayementsConfig = ({
                               newSystem.endDate
                             )
                           ).toLocaleString()}{" "}
-                          FCFA
+                          {translate("currency_unit", language)}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          Inscription:
+                          {translate("registration", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
                         >
                           {Number(newSystem.registrationFee).toLocaleString()}{" "}
-                          FCFA
+                          {translate("currency_unit", language)}
                         </span>
                       </div>
 
@@ -1142,7 +1147,7 @@ const PayementsConfig = ({
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm`}
                           >
-                            Supplémentaires:
+                            {translate("additional_fees", language)}:
                           </span>
                           <span
                             className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -1150,7 +1155,7 @@ const PayementsConfig = ({
                             {newSystem.otherFees
                               .reduce((sum, fee) => sum + Number(fee.amount), 0)
                               .toLocaleString()}{" "}
-                            FCFA
+                            {translate("currency_unit", language)}
                           </span>
                         </div>
                       )}
@@ -1171,7 +1176,7 @@ const PayementsConfig = ({
                       whileTap={{ scale: 0.98 }}
                       disabled={isLoading}
                     >
-                      Annuler
+                      {translate("cancel", language)}
                     </motion.button>
 
                     <motion.button
@@ -1204,7 +1209,7 @@ const PayementsConfig = ({
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                           </svg>
-                          <span>En cours...</span>
+                          <span>{translate("in_progress", language)}</span>
                         </>
                       ) : (
                         <>
@@ -1222,7 +1227,7 @@ const PayementsConfig = ({
                               d="M5 13l4 4L19 7"
                             />
                           </svg>
-                          <span>Enregistrer</span>
+                          <span>{translate("save", language)}</span>
                         </>
                       )}
                     </motion.button>
@@ -1239,8 +1244,8 @@ const PayementsConfig = ({
         isOpenConfirmPopup={showConfirmPopup}
         setIsOpenConfirmPopup={() => setShowConfirmPopup(false)}
         handleConfirmeAction={handleConfirmDelete}
-        title="Confirmer la suppression"
-        message="Êtes-vous sûr de vouloir supprimer ce système de paiement ?"
+        title={translate("confirm_deletion", language)}
+        message={translate("confirm_delete_payment_system_message", language)}
         actionType="danger"
       />
     </motion.div>

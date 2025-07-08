@@ -16,7 +16,7 @@ import {
   ArrowRight,
   Filter,
 } from "lucide-react";
-import { translate } from "./payement_translator_1.js";
+import { translate } from "./payement_translator.js";
 
 const PayementsMonthlyClass = ({ db, theme, text_color }) => {
   const { language } = useLanguage();
