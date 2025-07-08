@@ -174,7 +174,7 @@ const getCurrentMonthScolar = () => {
 
 // Formatage de la date pour l'affichage
 // Tableau des mois en bambara
-const bambara_month_array = [
+const fr_months_to_bambara = [
   { Janvier: "Zanwuyekalo" },
   { Février: "Feburuyekalo" },
   { Mars: "Marsikalo" },
@@ -188,11 +188,32 @@ const bambara_month_array = [
   { Novembre: "Nowanburukalo" },
   { Décembre: "Desanburukalo" },
 ];
+const en_months_to_bambara = [
+  { January: "Zanwuyekalo" },
+  { February: "Feburuyekalo" },
+  { March: "Marsikalo" },
+  { April: "Awirilikalo" },
+  { May: "Mɛkalo" },
+  { June: "Zuwenkalo" },
+  { July: "Zuyekalo" },
+  { August: "Utikalo" },
+  { September: "Sɛtanburukalo" },
+  { October: "Ɔkutɔburukalo" },
+  { November: "Nowanburukalo" },
+  { December: "Desanburukalo" },
+];
 
 // On transforme le tableau en simple tableau de chaînes, indexé 0→Janvier, …, 11→Décembre
-const bambaraMonths = bambara_month_array.map((obj) => Object.values(obj)[0]);
+export const FrTobambaraMonths = fr_months_to_bambara.map(
+  (obj) => Object.values(obj)[0]
+);
 
-const formatDate = (dateString, language="Français") => {
+export const getBambaraMonth = (month) => {
+  const found = en_months_to_bambara.find((obj) => obj.hasOwnProperty(month));
+  return found ? found[month] : undefined;
+}
+
+const formatDate = (dateString, language = "Français") => {
   const date = new Date(dateString);
   // Pour Français ou Anglais on utilise toLocaleDateString
   if (language === "Français" || language === "Anglais") {
@@ -208,11 +229,54 @@ const formatDate = (dateString, language="Français") => {
   const day = date.getDate(); // jour du mois, 1–31
   const year = date.getFullYear(); // année sur 4 chiffres
   const monthIndex = date.getMonth(); // 0–11
-  const monthName = bambaraMonths[monthIndex];
+  const monthName = FrTobambaraMonths[monthIndex];
 
   // Ex. "zanwuyekalo tile 4 2025"
   return `${monthName} tile ${day} san ${year}`;
 };
+
+export const fr_months = [
+  "Janvier",
+  "Février",
+  "Mars",
+  "Avril",
+  "Mai",
+  "Juin",
+  "Juillet",
+  "Août",
+  "Septembre",
+  "Octobre",
+  "Novembre",
+  "Décembre",
+];
+export const bm_months = [
+  "Zanwuyekalo",
+  "Feburuyekalo",
+  "Marsikalo",
+  "Awirilikalo",
+  "Mɛkalo",
+  "Zuwenkalo",
+  "Zuyekalo",
+  "Utikalo",
+  "Sɛtanburukalo",
+  "Ɔkutɔburukalo",
+  "Nowanburukalo",
+  "Desanburukalo",
+];
+export const en_months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export {
   getFormattedDateTime,

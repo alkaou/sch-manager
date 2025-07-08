@@ -239,7 +239,7 @@ const CreateCompositionComponent = ({
                               }
                             </td>
                             <td className="px-2 py-1 border text-center">
-                              {formatDate(composition.date)}
+                              {formatDate(composition.date, language)}
                             </td>
                             <td className="px-2 py-1 border text-center">
                               {getClassesNames(composition.classes)}
@@ -426,7 +426,10 @@ const CreateCompositionComponent = ({
                                   : ""
                               }
                             >
-                              {getClasseName(`${cls.level} ${cls.name}`)}
+                              {getClasseName(
+                                `${cls.level} ${cls.name}`,
+                                language
+                              )}
                               {hasLockedBulletin && " 🔒"}
                             </label>
                           </div>
