@@ -1,14 +1,10 @@
 // Translator for Payements management system
 const translations = {
-  student: {
-    Français: "Élève",
-    Anglais: "Student",
-    Bambara: "Kalanden",
-  },
-  students: {
-    Français: "Élèves",
-    Anglais: "Students",
-    Bambara: "Kalandenw",
+  // General
+  payment_configuration: {
+    Français: "Configuration des Paiements",
+    Anglais: "Payments Configuration",
+    Bambara: "Kalosarakow ka Labɛnni",
   },
 };
 
