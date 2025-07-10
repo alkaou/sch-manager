@@ -942,7 +942,7 @@ const translations = {
   error_loading_data: {
     Français: "Erreur lors du chargement des données",
     Anglais: "Error loading data",
-    Bambara: "Kunnafoniw ladonni la filɛli kɛra",
+    Bambara: "Kunnafoniw ladonni la fili kɛra",
   },
   list_saved_successfully: {
     Français: "Liste sauvegardée avec succès",

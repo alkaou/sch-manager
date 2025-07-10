@@ -1,21 +1,32 @@
-import React from 'react';
-import { useOutletContext } from 'react-router-dom';
-import StatisticsLayout from '../components/statistiques/StatisticsLayout.jsx';
+import React from "react";
+import { useOutletContext } from "react-router-dom";
+import StatisticsLayout from "../components/statistiques/StatisticsLayout.jsx";
 
 const StatistiquesPage = () => {
-  const { theme, app_bg_color, text_color } = useOutletContext();
+  const {
+    theme,
+    app_bg_color,
+    text_color,
+    database,
+    loadingData,
+    refreshData,
+  } = useOutletContext();
 
   return (
     <div
-      style={{ marginLeft: "7%" }}
-      className={`h-screen ${app_bg_color} ${text_color} pt-20 pr-4`}
+      style={{ marginLeft: "4%", height: "88vh", marginTop: "6%" }}
+      className={`h-screen overflow-hidden ${app_bg_color} ${text_color}`}
     >
-      <div className="h-[calc(100vh-100px)]">
-        <StatisticsLayout theme={theme} />
+      <div className="h-full">
+        <StatisticsLayout
+          theme={theme}
+          database={database}
+          loadingData={loadingData}
+          refreshData={refreshData}
+        />
       </div>
     </div>
   );
 };
-
 
 export default StatistiquesPage;

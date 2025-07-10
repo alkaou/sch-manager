@@ -19,7 +19,7 @@ const translations = {
   notifications: {
     Français: "Notifications",
     Anglais: "Notifications",
-    Bambara: "Kunnafoniw",
+    Bambara: "Kunafoniw",
   },
   mark_all_as_read: {
     Français: "Tout marquer comme lu",
@@ -29,12 +29,12 @@ const translations = {
   no_notifications: {
     Français: "Aucune notification",
     Anglais: "No notifications",
-    Bambara: "Kunnafoni si tɛ yen",
+    Bambara: "Kunafoni si tɛ yen",
   },
   view_all_notifications: {
     Français: "Voir toutes les notifications",
     Anglais: "View all notifications",
-    Bambara: "Kunnafoniw bɛɛ lajɛ",
+    Bambara: "Kunafoniw bɛɛ lajɛ",
   },
   user_menu: {
     Français: "Menu utilisateur",
@@ -79,7 +79,7 @@ const translations = {
   system_update: {
     Français: "Mise à jour système disponible",
     Anglais: "System update available",
-    Bambara: "Sistɛmu kɔnɔ kunnafoni kura bɛ yen",
+    Bambara: "Sistɛmu kɔnɔ kunafoni kura bɛ yen",
   },
   time_ago_5min: {
     Français: "Il y a 5 minutes",
@@ -115,7 +115,7 @@ const translations = {
   bulletins_texte: {
     Français: "Bulletins",
     Anglais: "Report Cards",
-    Bambara: "Ɲɔngɔndanw kunnafoniw",
+    Bambara: "Ɲɔngɔndanw Sɛbɛnw",
   },
   listes_texte: {
     Français: "Listes",
@@ -133,14 +133,14 @@ const translations = {
     Bambara: "Wari bɔtaw",
   },
   analytics_texte: {
-    Français: "Analytics",
+    Français: "Statistiques",
     Anglais: "Analytics",
-    Bambara: "Jabiw",
+    Bambara: "Jateminɛw",
   },
   database_texte: {
     Français: "Database",
     Anglais: "Database",
-    Bambara: "Kunnafoni marayɔrɔ",
+    Bambara: "Kunafoni marayɔrɔ",
   },
   read_texte: {
     Français: "Read",
@@ -217,12 +217,12 @@ const translations = {
   description: {
     Français: "Description",
     Anglais: "Description",
-    Bambara: "Kunnafoni",
+    Bambara: "Kunafoni",
   },
   description_max_length: {
     Français: "La description ne doit pas dépasser 1000 caractères",
     Anglais: "Description must not exceed 1000 characters",
-    Bambara: "Kunnafoni man kan ka tɛmɛ sɛbɛnni 1000 kan",
+    Bambara: "Kunafoni man kan ka tɛmɛ sɛbɛnni 1000 kan",
   },
   professors_position_rename_error: {
     Français: "Le poste 'Professeurs' ne peut pas être renommé",
@@ -257,7 +257,7 @@ const translations = {
   update: {
     Français: "Mettre à jour",
     Anglais: "Update",
-    Bambara: "A kɔnɔ kunnafoni kura",
+    Bambara: "A kɔnɔ kunafoni kura",
   },
   add: {
     Français: "Ajouter",

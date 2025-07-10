@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage, useFlashNotification } from '../components/contexts';
+import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage, useFlashNotification } from "../components/contexts";
 import StudentListMenu from "../components/liste_rapide/StudentListMenu.jsx";
 import StudentListEditor from "../components/liste_rapide/StudentListEditor.jsx";
 import StudentListNamePopup from "../components/liste_rapide/StudentListNamePopup.jsx";
+import { translate } from "../components/liste_rapide/liste_rapide_translator";
 
-const ListesPagePageContent = ({
-  app_bg_color,
-  text_color,
-  theme,
-}) => {
-  const { live_language } = useLanguage();
+const ListesPagePageContent = ({ app_bg_color, text_color, theme }) => {
+  const { language } = useLanguage();
   const { setFlashMessage } = useFlashNotification();
 
   const [db, setDb] = useState(null);
@@ -34,7 +31,7 @@ const ListesPagePageContent = ({
       } catch (error) {
         console.error("Error fetching data:", error);
         setFlashMessage({
-          message: "Erreur lors du chargement des données",
+          message: translate("error_loading_data", language),
           type: "error",
           duration: 5000,
         });
@@ -58,7 +55,7 @@ const ListesPagePageContent = ({
   };
 
   // Handle saving a list name from popup
-  const handleSaveListName = (name, listType = 'students') => {
+  const handleSaveListName = (name, listType = "students") => {
     const newList = {
       id: Date.now().toString(),
       listType: listType, // 'students' or 'employees'
@@ -79,7 +76,7 @@ const ListesPagePageContent = ({
           fontFamily: "Arial",
           fontStyle: "normal",
           textDecoration: "none",
-        }
+        },
       },
       orientation: "portrait",
       langue: "Français",
@@ -87,12 +84,12 @@ const ListesPagePageContent = ({
         show: false,
         text: "Le Directeur",
         name: "",
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split("T")[0],
       },
       countryInfosHeader: {
         show: true,
         isCAP: true,
-      }
+      },
     };
 
     setCurrentList(newList);
@@ -108,7 +105,7 @@ const ListesPagePageContent = ({
         // Update the last modified date
         const updatedList = {
           ...currentList,
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
         };
 
         await window.electron.saveStudentList(updatedList);
@@ -118,14 +115,14 @@ const ListesPagePageContent = ({
         setStudentLists(lists);
 
         setFlashMessage({
-          message: "Liste sauvegardée avec succès",
+          message: translate("list_saved_successfully", language),
           type: "success",
           duration: 3000,
         });
       } catch (error) {
         console.error("Error saving list:", error);
         setFlashMessage({
-          message: "Erreur lors de la sauvegarde de la liste",
+          message: translate("error_saving_list", language),
           type: "error",
           duration: 5000,
         });
@@ -149,14 +146,14 @@ const ListesPagePageContent = ({
       setStudentLists(lists);
 
       setFlashMessage({
-        message: "Liste supprimée avec succès",
+        message: translate("list_deleted", language),
         type: "success",
         duration: 3000,
       });
     } catch (error) {
       console.error("Error deleting list:", error);
       setFlashMessage({
-        message: "Erreur lors de la suppression de la liste",
+        message: translate("error_deleting_list", language),
         type: "error",
         duration: 5000,
       });
@@ -200,7 +197,7 @@ const ListesPagePageContent = ({
                 padding: "20px",
                 border: "2px solid lightblue",
                 marginLeft: "42%",
-                marginTop: "20%"
+                marginTop: "20%",
               }}
             >
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-700"></div>

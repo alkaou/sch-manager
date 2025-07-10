@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useOutletContext } from "react-router-dom";
 import StudentsTable from "../components/students/StudentsTable.jsx";
 import AddStudent from "../components/students/AddStudent.jsx";
 import ManageClasses from "../components/classes/ManageClasses.jsx";
 import PageLoading from "../components/partials/PageLoading.jsx";
-import EnrollmentStats from "../components/enrollements/EnrollmentStats.jsx";
-import { updateCurrentSnapshot } from "../utils/snapshotManager.js";
 
 const StartedPageContent = ({
   isAddStudentActive,
@@ -26,24 +24,6 @@ const StartedPageContent = ({
   text_color,
   theme,
 }) => {
-  // États pour l'affichage des statistiques d'effectifs
-  const [showEnrollmentStats, setShowEnrollmentStats] = useState(false);
-
-  // Générer un snapshot au démarrage de l'application
-  useEffect(() => {
-    const initializeSnapshot = async () => {
-      if (database && !loadingData) {
-        try {
-          await updateCurrentSnapshot(database);
-        } catch (error) {
-          console.error("Erreur lors de la génération du snapshot initial:", error);
-        }
-      }
-    };
-
-    initializeSnapshot();
-  }, [database, loadingData]);
-
   // Styles spécifiques au contenu - using percentage-based dimensions for better responsiveness
   const style_1 = {
     width: "100%",
@@ -58,10 +38,8 @@ const StartedPageContent = ({
   };
 
   if (loadingData) {
-    return (
-      <PageLoading />
-    );
-  };
+    return <PageLoading />;
+  }
 
   // Rendu conditionnel selon l'action sélectionnée dans le sidebar
   if (isAddStudentActive) {
@@ -101,21 +79,6 @@ const StartedPageContent = ({
             text_color={text_color}
             theme={theme}
             database={database}
-          />
-        </div>
-      </div>
-    );
-  } else if (showEnrollmentStats) {
-    return (
-      <div className="w-full px-2 md:px-4 mt-4" style={style_1}>
-        <div className="w-full" style={style_2}>
-          <EnrollmentStats
-            setShowEnrollmentStats={setShowEnrollmentStats}
-            app_bg_color={app_bg_color}
-            text_color={text_color}
-            theme={theme}
-            database={database}
-            refreshData={refreshData}
           />
         </div>
       </div>

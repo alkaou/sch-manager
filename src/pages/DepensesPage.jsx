@@ -11,7 +11,7 @@ import ExpenseForm from "../components/depenses/ExpenseForm.jsx";
 import InfoPopup from "../components/depenses/InfoPopup.jsx";
 import AlertPopup from "../components/popups/AlertPopup.jsx";
 import ActionConfirmePopup from "../components/popups/ActionConfirmePopup.jsx";
-import translations from "../components/depenses/depense_translator.js";
+import translations from "../components/depenses/depense_translator";
 import { gradients } from "../utils/colors";
 
 const DepensesPageContent = ({
