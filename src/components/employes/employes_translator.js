@@ -535,9 +535,9 @@ const translations = {
 
   // Confirmation messages
   confirm_delete: {
-    Français: "Confirmer la suppression",
+    Français: "Confirmer la Suppression",
     Anglais: "Confirm Deletion",
-    Bambara: "Jɔsili yamaruya",
+    Bambara: "Jɔsili Yamaruya",
   },
   confirm_delete_employee_msg: {
     Français: "Voulez-vous supprimer définitivement cet employé ?",

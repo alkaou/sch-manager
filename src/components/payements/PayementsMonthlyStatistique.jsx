@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts";
+import { translate } from "./payement_translator";
 import {
   getClasseName,
   getClasseById,
@@ -105,7 +106,7 @@ const PayementsMonthlyStatistique = ({
             key: schoolYearKey,
             startYear,
             endYear,
-            label: `Année scolaire ${startYear}-${endYear}`,
+            label: `${translate("school_year", language)} ${startYear}-${endYear}`,
             systems: [],
           });
         }
@@ -182,12 +183,12 @@ const PayementsMonthlyStatistique = ({
         }));
 
         setAvailableClasses([
-          { id: "all", name: "Toutes les classes" },
+          { id: "all", name: translate("all_classes", language) },
           ...classes,
         ]);
       } else {
         // Si aucun système n'est sélectionné ou s'il n'a pas de classes, afficher une liste vide
-        setAvailableClasses([{ id: "all", name: "Toutes les classes" }]);
+        setAvailableClasses([{ id: "all", name: translate("all_classes", language) }]);
       }
     }
   }, [db, selectedPaymentSystem]);
@@ -433,7 +434,7 @@ const PayementsMonthlyStatistique = ({
       labels: monthlyData.map((data) => data.month),
       datasets: [
         {
-          label: "Montant attendu",
+          label: translate("monthly_expected_amount", language),
           data: monthlyData.map((data) => data.expectedAmount),
           borderColor: "rgba(53, 162, 235, 1)",
           backgroundColor: "rgba(53, 162, 235, 0.5)",
@@ -442,7 +443,7 @@ const PayementsMonthlyStatistique = ({
           borderWidth: 2,
         },
         {
-          label: "Montant reçu",
+          label: translate("monthly_received_amount", language),
           data: monthlyData.map((data) => data.receivedAmount),
           borderColor: "rgb(4, 241, 83)",
           backgroundColor: "rgba(8, 245, 87, 0.5)",
@@ -535,7 +536,7 @@ const PayementsMonthlyStatistique = ({
         : 0;
 
     return {
-      labels: ["Payé", "Non payé"],
+      labels: [translate("paid", language), translate("not_paid", language)],
       datasets: [
         {
           data: [avgPaymentPercentage, 100 - avgPaymentPercentage],
@@ -618,7 +619,7 @@ const PayementsMonthlyStatistique = ({
     >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 className={`text-2xl font-bold ${text_color}`}>
-          Statistiques Mensuelles des Paiements
+          {translate("monthly_payment_statistics", language)}
         </h2>
 
         <div className="flex flex-wrap gap-3">
@@ -674,8 +675,8 @@ const PayementsMonthlyStatistique = ({
               onChange={(e) => setChartType(e.target.value)}
               className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
-              <option value="line">Graphique linéaire</option>
-              <option value="bar">Graphique à barres</option>
+              <option value="line">{translate("linear_chart", language)}</option>
+              <option value="bar">{translate("bar_chart", language)}</option>
             </select>
           </div>
         </div>
@@ -706,11 +707,10 @@ const PayementsMonthlyStatistique = ({
                 />
               </svg>
               <h3 className="text-xl font-bold mb-2">
-                Aucune donnée disponible
+                {translate("no_data_available", language)}
               </h3>
               <p className="text-gray-500">
-                Aucune donnée de paiement n'est disponible pour les critères
-                sélectionnés.
+                {translate("no_payment_data_message", language)}
               </p>
             </div>
           ) : (
@@ -726,7 +726,7 @@ const PayementsMonthlyStatistique = ({
                 variants={itemVariants}
               >
                 <h3 className={`text-lg font-bold ${textColorClass} mb-4`}>
-                  Évolution des paiements mensuels
+                  {translate("monthly_payment_evolution", language)}
                 </h3>
                 <div className="h-80">
                   {chartType === "line" ? (
@@ -747,7 +747,7 @@ const PayementsMonthlyStatistique = ({
                   variants={itemVariants}
                 >
                   <h3 className={`text-lg font-bold ${textColorClass} mb-4`}>
-                    Taux moyen de recouvrement
+                    {translate("average_collection_rate", language)}
                   </h3>
                   <div className="h-60">
                     <Doughnut
@@ -762,7 +762,7 @@ const PayementsMonthlyStatistique = ({
                   variants={itemVariants}
                 >
                   <h3 className={`text-lg font-bold ${textColorClass} mb-4`}>
-                    Résumé financier
+                    {translate("financial_summary", language)}
                   </h3>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
@@ -771,7 +771,7 @@ const PayementsMonthlyStatistique = ({
                           <DollarSign className="h-5 w-5 text-blue-500" />
                         </div>
                         <span className={`${textColorClass}`}>
-                          Total attendu:
+                          {translate("total_expected", language)}
                         </span>
                       </div>
                       <span className="font-bold text-blue-500">
@@ -788,7 +788,7 @@ const PayementsMonthlyStatistique = ({
                         <div className="p-2 rounded-full bg-green-100 mr-3">
                           <TrendingUp className="h-5 w-5 text-green-500" />
                         </div>
-                        <span className={`${textColorClass}`}>Total reçu:</span>
+                        <span className={`${textColorClass}`}>{translate("total_received", language)}</span>
                       </div>
                       <span className="font-bold text-green-500">
                         {formatCurrency(
@@ -804,7 +804,7 @@ const PayementsMonthlyStatistique = ({
                         <div className="p-2 rounded-full bg-purple-100 mr-3">
                           <PieChart className="h-5 w-5 text-purple-500" />
                         </div>
-                        <span className={`${textColorClass}`}>Taux moyen:</span>
+                        <span className={`${textColorClass}`}>{translate("average_rate", language)}</span>
                       </div>
                       <span className="font-bold text-purple-500">
                         {Math.round(
@@ -826,7 +826,7 @@ const PayementsMonthlyStatistique = ({
                 variants={itemVariants}
               >
                 <h3 className={`text-lg font-bold ${textColorClass} mb-4`}>
-                  Détails mensuels
+                  {translate("monthly_details", language)}
                 </h3>
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
@@ -835,32 +835,32 @@ const PayementsMonthlyStatistique = ({
                         <th
                           className={`px-6 py-3 text-left text-xs font-medium ${textColorClass} uppercase tracking-wider`}
                         >
-                          Mois
+                          {translate("month", language)}
                         </th>
                         <th
                           className={`px-6 py-3 text-left text-xs font-medium ${textColorClass} uppercase tracking-wider`}
                         >
-                          Élèves
+                          {translate("students", language)}
                         </th>
                         <th
                           className={`px-6 py-3 text-left text-xs font-medium ${textColorClass} uppercase tracking-wider`}
                         >
-                          Payés
+                          {translate("paid_students", language)}
                         </th>
                         <th
                           className={`px-6 py-3 text-left text-xs font-medium ${textColorClass} uppercase tracking-wider`}
                         >
-                          Attendu
+                          {translate("expected", language)}
                         </th>
                         <th
                           className={`px-6 py-3 text-left text-xs font-medium ${textColorClass} uppercase tracking-wider`}
                         >
-                          Reçu
+                          {translate("received", language)}
                         </th>
                         <th
                           className={`px-6 py-3 text-left text-xs font-medium ${textColorClass} uppercase tracking-wider`}
                         >
-                          Taux
+                          {translate("rate", language)}
                         </th>
                       </tr>
                     </thead>

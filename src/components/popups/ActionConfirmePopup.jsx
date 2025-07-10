@@ -1,21 +1,33 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { useTheme } from "../contexts";
-
+import { useTheme, useLanguage } from "../contexts";
 
 const ActionConfirmePopup = ({
-  isOpenConfirmPopup, setIsOpenConfirmPopup, handleConfirmeAction, title,
-  message, actionType = "danger", element_info, text_color
+  isOpenConfirmPopup,
+  setIsOpenConfirmPopup,
+  handleConfirmeAction,
+  title,
+  message,
+  actionType = "danger",
+  element_info,
+  text_color,
 }) => {
-
   const { theme, app_bg_color } = useTheme();
+  const { language } = useLanguage();
 
   const popup_bg_color = theme === "dark" ? "bg-gray-800" : app_bg_color;
-  const textClass = text_color ? text_color : theme === "dark" ? "text-white" : "text-gray-600";
-  const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-  const confirmeButtonColor = actionType === "danger" ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700";
-
+  const textClass = text_color
+    ? text_color
+    : theme === "dark"
+    ? "text-white"
+    : "text-gray-600";
+  const inputBorderColor =
+    theme === "dark" ? "border-gray-600" : "border-gray-300";
+  const confirmeButtonColor =
+    actionType === "danger"
+      ? "bg-red-600 hover:bg-red-700"
+      : "bg-blue-600 hover:bg-blue-700";
 
   return (
     <AnimatePresence>
@@ -32,9 +44,12 @@ const ActionConfirmePopup = ({
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
           >
-            <h3 className="text-xl font-semibold mb-4 text-center">{title ? title : "Passer un titre de confirmation !"}</h3>
+            <h3 className="text-xl font-semibold mb-4 text-center">
+              {title ? title : "Passer un titre de confirmation !"}
+            </h3>
             <p className="mb-6 text-center">
-              {message ? message : "Passer un message de confirmation !"} {element_info ? element_info : ""}
+              {message ? message : "Passer un message de confirmation !"}{" "}
+              {element_info ? element_info : ""}
             </p>
             <div className="flex justify-around">
               <motion.button
@@ -44,7 +59,11 @@ const ActionConfirmePopup = ({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Confirmer
+                {language === "Français"
+                  ? "Confirmer"
+                  : language === "Anglais"
+                  ? "Confirm"
+                  : "A Waleya"}
               </motion.button>
               <motion.button
                 type="button"
@@ -53,7 +72,11 @@ const ActionConfirmePopup = ({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Annuler
+                {language === "Français"
+                  ? "Annuler"
+                  : language === "Anglais"
+                  ? "Cancel"
+                  : "Segin kɔ"}
               </motion.button>
             </div>
           </motion.div>

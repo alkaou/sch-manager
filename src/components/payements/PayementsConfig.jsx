@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getClasseName } from "../../utils/helpers";
 import { useLanguage } from "../contexts";
-import { translate } from "./payement_translator.js";
+import { translate } from "./payement_translator";
 import { useFlashNotification } from "../contexts";
 import { X } from "lucide-react";
 import ActionConfirmePopup from "../popups/ActionConfirmePopup.jsx";
@@ -459,13 +459,13 @@ const PayementsConfig = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="flex justify-between items-center mb-4 sm:mb-6">
+      <div className="flex justify-between -mt-4 items-center mb-4 sm:mb-6">
         <h2 className={`text-xl sm:text-2xl font-bold ${text_color}`}>
           {translate("payment_configuration", language)}
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-6 xl:gap-8">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 pt-10 lg:gap-6 xl:gap-8">
         {/* Partie gauche: Liste des systèmes de paiement */}
         <div>
           <h3
@@ -518,6 +518,7 @@ const PayementsConfig = ({
                           handleEditSystem(system);
                           loadData();
                         }}
+                        title={translate("editing", language)}
                         className="p-1 sm:p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
                       >
                         <svg
@@ -537,6 +538,7 @@ const PayementsConfig = ({
                       </button>
                       <button
                         onClick={() => handleDeleteSystem(system.id)}
+                        title={translate("deleting", language)}
                         className="p-1 sm:p-1.5 rounded-full bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors"
                       >
                         <svg
@@ -707,7 +709,7 @@ const PayementsConfig = ({
                 <span
                   className={`px-2 sm:px-3 ${inputTextColor} text-xs sm:text-sm font-medium`}
                 >
-                  {translate("past_school_years", language)}
+                  {translate("schools_years_expired", language)}
                 </span>
                 <div className={`flex-grow border-t ${dividerColor}`}></div>
               </div>
@@ -794,6 +796,21 @@ const PayementsConfig = ({
                                 system.endDate
                               )
                             ).toLocaleString()}{" "}
+                            {translate("currency_unit", language)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span
+                            className={`${inputTextColor} text-xs sm:text-sm`}
+                          >
+                            {translate("registration_fee", language)}:
+                          </span>
+                          <span
+                            className={`${inputTextColor} text-xs sm:text-sm font-bold`}
+                          >
+                            {system.registrationFee
+                              ? system.registrationFee.toLocaleString()
+                              : "0"}{" "}
                             {translate("currency_unit", language)}
                           </span>
                         </div>
@@ -925,7 +942,7 @@ const PayementsConfig = ({
                       <label
                         className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}
                       >
-                        {translate("start_school_year", language)}
+                        {translate("start_date", language)}
                       </label>
                       <input
                         type="date"
@@ -942,7 +959,7 @@ const PayementsConfig = ({
                       <label
                         className={`block text-xs sm:text-sm font-medium ${inputTextColor} mb-0.5 sm:mb-1`}
                       >
-                        {translate("end_school_year", language)}
+                        {translate("end_date", language)}
                       </label>
                       <input
                         type="date"
@@ -1091,7 +1108,7 @@ const PayementsConfig = ({
                     <h4
                       className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-2 sm:mb-3`}
                     >
-                      {translate("fee_summary", language)}
+                      {translate("financial_summary", language)}
                     </h4>
 
                     <div className="space-y-1.5 sm:space-y-2">
@@ -1099,7 +1116,7 @@ const PayementsConfig = ({
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          {translate("monthly", language)}:
+                          {translate("monthly_budget", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -1112,7 +1129,7 @@ const PayementsConfig = ({
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          {translate("yearly", language)}:
+                          {translate("yearly_budget", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}
@@ -1132,7 +1149,7 @@ const PayementsConfig = ({
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm`}
                         >
-                          {translate("registration", language)}:
+                          {translate("registration_fee", language)}:
                         </span>
                         <span
                           className={`${inputTextColor} text-xs sm:text-sm font-bold`}

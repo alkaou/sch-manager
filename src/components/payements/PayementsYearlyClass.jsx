@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getClasseName, getClasseById } from "../../utils/helpers";
 import { useLanguage } from "../contexts";
+import { translate } from "./payement_translator";
 import {
   Calendar,
   X,
@@ -54,7 +55,10 @@ const PayementsYearlyClass = ({
             key: schoolYearKey,
             startYear,
             endYear,
-            label: `Année scolaire ${startYear}-${endYear}`,
+            label: `${translate(
+              "school_year",
+              language
+            )} ${startYear}-${endYear}`,
             systems: [],
           });
         }
@@ -349,7 +353,7 @@ const PayementsYearlyClass = ({
         <h2
           className={`text-lg sm:text-xl md:text-2xl font-bold ${text_color}`}
         >
-          Budget Annuel par Classe
+          {translate("yearly_class_budget", language)}
         </h2>
 
         <div className="flex items-center">
@@ -368,7 +372,9 @@ const PayementsYearlyClass = ({
                 </option>
               ))
             ) : (
-              <option value="">Aucune année scolaire disponible</option>
+              <option value="">
+                {translate("no_school_year_available", language)}
+              </option>
             )}
           </select>
         </div>
@@ -403,7 +409,7 @@ const PayementsYearlyClass = ({
                   <h3
                     className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}
                   >
-                    Budget Total Prévu
+                    {translate("total_budget_expected", language)}
                   </h3>
                   <p className="text-base sm:text-xl md:text-2xl font-bold text-blue-500">
                     {formatCurrency(totalExpected)}
@@ -414,7 +420,10 @@ const PayementsYearlyClass = ({
                 <p
                   className={`text-2xs sm:text-xs ${textColorClass} opacity-60`}
                 >
-                  Budget annuel prévu pour toutes les classes
+                  {translate(
+                    "budget_annuel_prevu_pour_toutes_les_classes",
+                    language
+                  )}
                 </p>
               </div>
             </motion.div>
@@ -435,7 +444,7 @@ const PayementsYearlyClass = ({
                   <h3
                     className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}
                   >
-                    Montant Total Reçu
+                    {translate("total_amount_received", language)}
                   </h3>
                   <p className="text-base sm:text-xl md:text-2xl font-bold text-green-500">
                     {formatCurrency(totalReceived)}
@@ -446,7 +455,7 @@ const PayementsYearlyClass = ({
                 <p
                   className={`text-2xs sm:text-xs ${textColorClass} opacity-60`}
                 >
-                  Montant total reçu jusqu'à présent
+                  {translate("montant_total_recu_jusqua_present", language)}
                 </p>
               </div>
             </motion.div>
@@ -467,7 +476,7 @@ const PayementsYearlyClass = ({
                   <h3
                     className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}
                   >
-                    Montant en Attente
+                    {translate("montant_en_attente", language)}
                   </h3>
                   <p className="text-base sm:text-xl md:text-2xl font-bold text-red-500">
                     {formatCurrency(totalExpected - totalReceived)}
@@ -478,7 +487,7 @@ const PayementsYearlyClass = ({
                 <p
                   className={`text-2xs sm:text-xs ${textColorClass} opacity-60`}
                 >
-                  Montant en attente jusqu'à présent
+                  {translate("montant_en_attente_jusqua_present", language)}
                 </p>
               </div>
             </motion.div>
@@ -499,7 +508,7 @@ const PayementsYearlyClass = ({
                   <h3
                     className={`text-xs sm:text-sm font-medium ${textColorClass} opacity-70`}
                   >
-                    Taux de Recouvrement
+                    {translate("recovery_rate", language)}
                   </h3>
                   <p className="text-base sm:text-xl md:text-2xl font-bold text-purple-500">
                     {totalExpected > 0
@@ -543,11 +552,10 @@ const PayementsYearlyClass = ({
                 />
               </svg>
               <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 sm:mb-2">
-                Aucune donnée disponible
+                {translate("no_data_available", language)}
               </h3>
               <p className="text-xs sm:text-sm text-gray-500">
-                Aucune classe n'a été configurée pour les paiements ou aucun
-                élève n'est inscrit.
+                {translate("no_class_configured", language)}
               </p>
             </div>
           ) : (
@@ -572,17 +580,18 @@ const PayementsYearlyClass = ({
                     className={`p-3 sm:p-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white`}
                   >
                     <div className="flex justify-between items-center">
-                      <h3 className="text-sm sm:text-base md:text-xl font-bold">
-                        {data.className}
+                      <h3 className="text-sm sm:text-base font-semibold">
+                        {translate("total_expected_for", language)}{" "}
+                        {currentYear}
                       </h3>
                       <span className="bg-white bg-opacity-30 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-2xs sm:text-xs">
-                        Niveau {data.level}
+                        {translate("niveau", language)} {data.level}
                       </span>
                     </div>
                     <div className="flex items-center mt-1 sm:mt-2">
                       <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                       <span className="text-xs sm:text-sm">
-                        {data.studentCount} élèves
+                        {data.studentCount} {translate("students", language)}
                       </span>
                     </div>
                   </div>
@@ -593,7 +602,7 @@ const PayementsYearlyClass = ({
                         <span
                           className={`${textColorClass} text-xs sm:text-sm`}
                         >
-                          Progression des paiements
+                          {translate("taux_de_paiement", language)}
                         </span>
                         <span
                           className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -618,7 +627,8 @@ const PayementsYearlyClass = ({
                         <h4
                           className={`text-2xs sm:text-xs font-bold ${textColorClass} mb-0.5 sm:mb-1`}
                         >
-                          Frais mensuels ({data.monthCount} mois)
+                          {translate("monthly_fee", language)} (
+                          {data.monthCount} {translate("months", language)})
                         </h4>
                         <p
                           className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -630,7 +640,7 @@ const PayementsYearlyClass = ({
                         <h4
                           className={`text-2xs sm:text-xs font-bold ${textColorClass} mb-0.5 sm:mb-1`}
                         >
-                          Frais d'inscription
+                          {translate("registration_fees", language)}
                         </h4>
                         <p
                           className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -641,7 +651,8 @@ const PayementsYearlyClass = ({
                           <p
                             className={`text-2xs sm:text-xs ${textColorClass} opacity-70`}
                           >
-                            ({data.newStudentCount} nouveaux élèves)
+                            ({data.newStudentCount}{" "}
+                            {translate("new_students", language)})
                           </p>
                         )}
                       </div>
@@ -652,7 +663,7 @@ const PayementsYearlyClass = ({
                         <span
                           className={`${textColorClass} text-xs sm:text-sm`}
                         >
-                          Montant prévu:
+                          {translate("amount_expected", language)}:
                         </span>
                         <span
                           className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -664,7 +675,7 @@ const PayementsYearlyClass = ({
                         <span
                           className={`${textColorClass} text-xs sm:text-sm`}
                         >
-                          Montant reçu:
+                          {translate("amount_received", language)}
                         </span>
                         <span className="text-xs sm:text-sm font-bold text-green-600">
                           {data.receivedAmount.toLocaleString()} FCFA
@@ -674,7 +685,7 @@ const PayementsYearlyClass = ({
                         <span
                           className={`${textColorClass} text-xs sm:text-sm`}
                         >
-                          Reste à payer:
+                          {translate("amount_pending", language)}:
                         </span>
                         <span
                           className={`text-xs sm:text-sm font-bold ${
@@ -694,7 +705,7 @@ const PayementsYearlyClass = ({
                       className="w-full py-1.5 sm:py-2 text-xs sm:text-sm text-white font-medium rounded hover:bg-white hover:bg-opacity-20 transition-colors flex items-center justify-center"
                       onClick={() => handleClassClick(data)}
                     >
-                      <span>Voir les détails</span>
+                      <span>{translate("view_details", language)}</span>
                       <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2" />
                     </button>
                   </div>
@@ -727,13 +738,18 @@ const PayementsYearlyClass = ({
                     >
                       <X className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6" />
                     </button>
-                    <h2 className="text-base sm:text-xl md:text-2xl font-bold">
+                    <h2
+                      className={`text-lg sm:text-xl md:text-2xl font-bold text-white mb-3 sm:mb-4 md:mb-6`}
+                    >
+                      {translate("payment_details_for", language)}
+                      {" : "}
                       {selectedClass.className}
                     </h2>
                     <div className="flex items-center mt-1 sm:mt-2">
                       <Users className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5 mr-1 sm:mr-2" />
                       <span className="text-xs sm:text-sm">
-                        {selectedClass.studentCount} élèves
+                        {selectedClass.studentCount}{" "}
+                        {translate("students", language)}
                       </span>
                     </div>
                   </div>
@@ -746,14 +762,14 @@ const PayementsYearlyClass = ({
                         <h3
                           className={`text-sm sm:text-base md:text-lg font-bold ${textColorClass} mb-2 sm:mb-3`}
                         >
-                          Détails des frais
+                          {translate("details_de_paiement", language)}
                         </h3>
                         <div className="space-y-2 sm:space-y-3">
                           <div className="flex justify-between">
                             <span
                               className={`${textColorClass} text-xs sm:text-sm`}
                             >
-                              Frais mensuel:
+                              {translate("monthly_fee", language)}:
                             </span>
                             <span
                               className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -765,7 +781,7 @@ const PayementsYearlyClass = ({
                             <span
                               className={`${textColorClass} text-xs sm:text-sm`}
                             >
-                              Nombre de mois:
+                              {translate("number_of_months", language)}:
                             </span>
                             <span
                               className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -777,7 +793,7 @@ const PayementsYearlyClass = ({
                             <span
                               className={`${textColorClass} text-xs sm:text-sm`}
                             >
-                              Frais d'inscription:
+                              {translate("registration_fee", language)}:
                             </span>
                             <span
                               className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -790,7 +806,7 @@ const PayementsYearlyClass = ({
                             <span
                               className={`${textColorClass} text-xs sm:text-sm`}
                             >
-                              Nouveaux élèves:
+                              {translate("new_students", language)}:
                             </span>
                             <span
                               className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -807,14 +823,14 @@ const PayementsYearlyClass = ({
                         <h3
                           className={`text-sm sm:text-base md:text-lg font-bold ${textColorClass} mb-2 sm:mb-3`}
                         >
-                          Résumé financier
+                          {translate("summary", language)}
                         </h3>
                         <div className="space-y-2 sm:space-y-3">
                           <div className="flex justify-between">
                             <span
                               className={`${textColorClass} text-xs sm:text-sm`}
                             >
-                              Budget mensuel total:
+                              {translate("yearly_summary_money", language)}
                             </span>
                             <span
                               className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -826,7 +842,7 @@ const PayementsYearlyClass = ({
                             <span
                               className={`${textColorClass} text-xs sm:text-sm`}
                             >
-                              Budget inscription total:
+                              {translate("total_registration_budget", language)}
                             </span>
                             <span
                               className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -839,7 +855,7 @@ const PayementsYearlyClass = ({
                             <span
                               className={`${textColorClass} text-xs sm:text-sm`}
                             >
-                              Budget total prévu:
+                              {translate("total_budget_expected", language)}
                             </span>
                             <span
                               className={`${textColorClass} text-xs sm:text-sm font-bold`}
@@ -858,24 +874,24 @@ const PayementsYearlyClass = ({
                       <h3
                         className={`text-sm sm:text-base md:text-lg font-bold ${textColorClass} mb-2 sm:mb-3`}
                       >
-                        Progression des paiements
+                        {translate("payment_progression", language)}
                       </h3>
-                      <div className="mb-3 sm:mb-4">
-                        <div className="flex justify-between mb-1 sm:mb-2">
+                      <div className="space-y-2 sm:space-y-3">
+                        <div className="flex justify-between">
                           <span
                             className={`${textColorClass} text-xs sm:text-sm`}
                           >
-                            Montant reçu:
+                            {translate("amount_received_details", language)} :
                           </span>
                           <span className="text-xs sm:text-sm font-bold text-green-600">
                             {selectedClass.receivedAmount.toLocaleString()} FCFA
                           </span>
                         </div>
-                        <div className="flex justify-between mb-1 sm:mb-2">
+                        <div className="flex justify-between">
                           <span
                             className={`${textColorClass} text-xs sm:text-sm`}
                           >
-                            Reste à payer:
+                            {translate("remaining_to_pay_details", language)} :
                           </span>
                           <span
                             className={`text-xs sm:text-sm font-bold ${
@@ -888,11 +904,11 @@ const PayementsYearlyClass = ({
                             FCFA
                           </span>
                         </div>
-                        <div className="flex justify-between mb-1 sm:mb-2">
+                        <div className="flex justify-between">
                           <span
                             className={`${textColorClass} text-xs sm:text-sm`}
                           >
-                            Taux de recouvrement:
+                            {translate("recovery_rate_details", language)} :
                           </span>
                           <span
                             className={`text-xs sm:text-sm font-bold ${
@@ -926,7 +942,7 @@ const PayementsYearlyClass = ({
                         className="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 text-xs sm:text-sm bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:opacity-90 transition-opacity"
                         onClick={() => setShowDetails(false)}
                       >
-                        Fermer
+                        {translate("close", language)}
                       </button>
                     </div>
                   </div>

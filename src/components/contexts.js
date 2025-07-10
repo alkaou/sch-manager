@@ -12,12 +12,12 @@ const useProtections = () => useContext(ProtectionsContext);
 const useFlashNotification = () => useContext(FlashNotificationContext);
 
 export {
-    ThemeContext,
-    LanguageContext,
-    ProtectionsContext,
-    FlashNotificationContext,
-    useTheme,
-    useLanguage,
-    useProtections,
-    useFlashNotification
+  ThemeContext,
+  LanguageContext,
+  ProtectionsContext,
+  FlashNotificationContext,
+  useTheme,
+  useLanguage,
+  useProtections,
+  useFlashNotification,
 };

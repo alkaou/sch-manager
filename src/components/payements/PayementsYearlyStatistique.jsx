@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../contexts";
+import { translate } from "./payement_translator_1.js";
 import { getClasseName, getClasseById } from "../../utils/helpers";
 import {
   Chart as ChartJS,
@@ -48,7 +49,7 @@ ChartJS.register(
 const PayementsYearlyStatistique = ({
   db,
   theme,
-  app_bg_color,
+  // app_bg_color,
   text_color,
 }) => {
   const { language } = useLanguage();
@@ -642,7 +643,7 @@ const PayementsYearlyStatistique = ({
       labels: topClasses.map((cls) => cls.className),
       datasets: [
         {
-          label: "Taux de paiement (%)",
+          label: translate("payment_rate_percentage", language),
           data: topClasses.map((cls) => cls.paymentPercentage),
           backgroundColor: "rgba(54, 162, 235, 0.2)",
           borderColor: "rgba(54, 162, 235, 1)",
@@ -714,19 +715,19 @@ const PayementsYearlyStatistique = ({
   const getComparisonMetricLabel = () => {
     switch (comparisonMetric) {
       case "totalRevenue":
-        return "Revenu Total";
+        return translate("total_revenue", language);
       case "expectedRevenue":
-        return "Revenu Attendu";
+        return translate("expected_revenue", language);
       case "paymentPercentage":
-        return "Taux de Paiement (%)";
+        return translate("payment_rate_percentage", language);
       case "registrationFees":
-        return "Frais d'Inscription";
+        return translate("registration_fees", language);
       case "monthlyFees":
-        return "Frais Mensuels";
+        return translate("monthly_fees", language);
       case "yearlyFees":
-        return "Frais Annuels";
+        return translate("yearly_fees", language);
       default:
-        return "Revenu Total";
+        return translate("total_revenue", language);
     }
   };
 
@@ -763,7 +764,7 @@ const PayementsYearlyStatistique = ({
     >
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <h2 className={`text-2xl font-bold ${text_color}`}>
-          Statistiques Annuelles des Paiements
+          {translate("yearly_payment_statistics", language)}
         </h2>
 
         <div className="flex flex-wrap gap-3">
@@ -771,7 +772,7 @@ const PayementsYearlyStatistique = ({
             <div className="flex items-center mb-2">
               <Calendar className={`h-5 w-5 mr-2 ${text_color}`} />
               <span className={`text-sm font-medium ${text_color}`}>
-                Années scolaires
+                {translate("school_years", language)}
               </span>
             </div>
             <div className="flex flex-wrap gap-2 max-w-md">
@@ -799,7 +800,7 @@ const PayementsYearlyStatistique = ({
                     }
                   `}
                 >
-                  {year.label.replace("Année scolaire ", "")}
+                  {year.label.replace(translate("school_year", language) + " ", "")}
                   {selectedYears.includes(year.key) && (
                     <span className="ml-1.5 inline-flex items-center justify-center">
                       ✓
@@ -810,12 +811,12 @@ const PayementsYearlyStatistique = ({
             </div>
             {selectedYears.length === 0 && (
               <p className={`text-xs mt-1 text-red-500`}>
-                Veuillez sélectionner au moins une année
+                {translate("select_at_least_one_year", language)}
               </p>
             )}
             {selectedYears.length === 4 && (
               <p className={`text-xs mt-1 text-amber-500`}>
-                Maximum 4 années sélectionnables
+                {translate("maximum_years_selectable", language)}
               </p>
             )}
           </div>
@@ -827,12 +828,12 @@ const PayementsYearlyStatistique = ({
               onChange={(e) => setComparisonMetric(e.target.value)}
               className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
-              <option value="totalRevenue">Revenu Total</option>
-              <option value="expectedRevenue">Revenu Attendu</option>
-              <option value="paymentPercentage">Taux de Paiement (%)</option>
-              <option value="registrationFees">Frais d'Inscription</option>
-              <option value="monthlyFees">Frais Mensuels</option>
-              <option value="yearlyFees">Frais Annuels</option>
+              <option value="totalRevenue">{translate("total_revenue", language)}</option>
+                <option value="expectedRevenue">{translate("expected_revenue", language)}</option>
+                <option value="paymentPercentage">{translate("payment_rate_percentage", language)}</option>
+                <option value="registrationFees">{translate("registration_fees", language)}</option>
+                <option value="monthlyFees">{translate("monthly_fees", language)}</option>
+                <option value="yearlyFees">{translate("yearly_fees", language)}</option>
             </select>
           </div>
 
@@ -843,9 +844,9 @@ const PayementsYearlyStatistique = ({
               onChange={(e) => setChartType(e.target.value)}
               className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
-              <option value="bar">Graphique à barres</option>
-              <option value="line">Graphique linéaire</option>
-              <option value="polarArea">Graphique polaire</option>
+              <option value="bar">{translate("bar_chart", language)}</option>
+                <option value="line">{translate("line_chart", language)}</option>
+                <option value="polar">{translate("polar_chart", language)}</option>
             </select>
           </div>
         </div>
@@ -857,28 +858,27 @@ const PayementsYearlyStatistique = ({
         </div>
       ) : yearlyData.length === 0 ? (
         <div
-          className={`${cardBgColor} rounded-lg shadow-lg p-8 text-center ${textColorClass}`}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-16 w-16 mx-auto mb-4 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+            className={`${cardBgColor} rounded-lg shadow-lg p-8 text-center ${textColorClass}`}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-          <h3 className="text-xl font-bold mb-2">Aucune donnée disponible</h3>
-          <p className="text-gray-500">
-            Veuillez sélectionner au moins une année scolaire pour afficher les
-            statistiques.
-          </p>
-        </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-16 w-16 mx-auto mb-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+            <h3 className="text-xl font-bold mb-2">{translate("no_data_available", language)}</h3>
+            <p className="text-gray-500">
+              {translate("select_school_year", language)}
+            </p>
+          </div>
       ) : (
         <motion.div
           variants={containerVariants}
@@ -904,7 +904,7 @@ const PayementsYearlyStatistique = ({
                     <h3
                       className={`text-sm font-medium ${textColorClass} opacity-70`}
                     >
-                      Revenu Total
+                      {translate("total_revenue", language)}
                     </h3>
                   </div>
                 </div>
@@ -915,7 +915,7 @@ const PayementsYearlyStatistique = ({
                     </p>
                   </div>
                   <p className={`text-xs ${textColorClass} opacity-60`}>
-                    Année scolaire {yearlyData[0]?.label}
+                    {translate("school_year", language)} {yearlyData[0]?.label}
                   </p>
                 </div>
               </div>
@@ -932,7 +932,7 @@ const PayementsYearlyStatistique = ({
                     <h3
                       className={`text-sm font-medium ${textColorClass} opacity-70`}
                     >
-                      Revenu Attendu
+                      {translate("expected_revenue", language)}
                     </h3>
                   </div>
                 </div>
@@ -943,7 +943,7 @@ const PayementsYearlyStatistique = ({
                     </p>
                   </div>
                   <p className={`text-xs ${textColorClass} opacity-60`}>
-                    Objectif financier pour {yearlyData[0]?.label}
+                    {translate("financial_goal_for", language)} {yearlyData[0]?.label}
                   </p>
                 </div>
               </div>
@@ -960,7 +960,7 @@ const PayementsYearlyStatistique = ({
                     <h3
                       className={`text-sm font-medium ${textColorClass} opacity-70`}
                     >
-                      Taux de Paiement
+                      {translate("payment_rate", language)}
                     </h3>
                     <p className="text-2xl font-bold text-purple-500 break-words">
                       {yearlyData[0]?.paymentPercentage || 0}%
@@ -969,7 +969,7 @@ const PayementsYearlyStatistique = ({
                 </div>
                 <div className="mt-2">
                   <p className={`text-xs ${textColorClass} opacity-60`}>
-                    Pourcentage des revenus perçus
+                    {translate("percentage_received", language)}
                   </p>
                 </div>
               </div>
@@ -998,7 +998,7 @@ const PayementsYearlyStatistique = ({
                     <h3
                       className={`text-sm font-medium ${textColorClass} opacity-70`}
                     >
-                      Croissance Annuelle
+                      {translate("annual_growth", language)}
                     </h3>
                     <p
                       className={`text-2xl font-bold ${
@@ -1014,13 +1014,13 @@ const PayementsYearlyStatistique = ({
                 </div>
                 <div className="mt-2">
                   <p className={`text-xs ${textColorClass} opacity-60`}>
-                    {selectedYears.length > 1
-                      ? `Par rapport à ${
+                  {selectedYears.length > 1
+                      ? `${translate("compared_to", language)} ${
                           availableYears.find((y) => y.key === selectedYears[1])
                             ?.label
                         }`
-                      : "Sélectionnez une année précédente pour comparer"}
-                  </p>
+                      : translate("select_previous_year", language)}
+                </p>
                 </div>
               </div>
             </motion.div>
@@ -1034,7 +1034,7 @@ const PayementsYearlyStatistique = ({
             {/* Comparison Chart */}
             <div className={`${cardBgColor} rounded-lg shadow-lg p-6`}>
               <h3 className={`text-lg font-semibold mb-4 ${textColorClass}`}>
-                Comparaison des {getComparisonMetricLabel()} par Année Scolaire
+                {translate("comparison_by_school_year", language).replace("{metric}", getComparisonMetricLabel())}
               </h3>
               <div className="h-80">
                 {chartType === "bar" && (
@@ -1064,7 +1064,7 @@ const PayementsYearlyStatistique = ({
             {/* Monthly Trend Chart */}
             <div className={`${cardBgColor} rounded-lg shadow-lg p-6`}>
               <h3 className={`text-lg font-semibold mb-4 ${textColorClass}`}>
-                Évolution Mensuelle du Taux de Paiement
+                {translate("monthly_payment_rate_evolution", language)}
               </h3>
               <div className="h-80">
                 <Line
@@ -1085,7 +1085,7 @@ const PayementsYearlyStatistique = ({
               <h3 className={`text-lg font-semibold mb-4 ${textColorClass}`}>
                 <span className="flex items-center">
                   <TrendingUp className="h-5 w-5 mr-2 text-green-500" />
-                  Classes les Plus Performantes
+                  {translate("top_performing_classes", language)}
                 </span>
               </h3>
               <div className="space-y-4">
@@ -1100,7 +1100,7 @@ const PayementsYearlyStatistique = ({
                           {cls.className}
                         </h4>
                         <p className="text-xs text-gray-500">
-                          {cls.studentCount} élèves
+                          {cls.studentCount} {translate("students", language)}
                         </p>
                       </div>
                       <div className="text-right">
@@ -1128,7 +1128,7 @@ const PayementsYearlyStatistique = ({
               <h3 className={`text-lg font-semibold mb-4 ${textColorClass}`}>
                 <span className="flex items-center">
                   <Layers className="h-5 w-5 mr-2 text-blue-500" />
-                  Performance des Classes
+                  {translate("class_performance", language)}
                 </span>
               </h3>
               <div className="h-64">
@@ -1144,7 +1144,7 @@ const PayementsYearlyStatistique = ({
               <h3 className={`text-lg font-semibold mb-4 ${textColorClass}`}>
                 <span className="flex items-center">
                   <ArrowDownRight className="h-5 w-5 mr-2 text-red-500" />
-                  Classes à Améliorer
+                  {translate("classes_to_improve", language)}
                 </span>
               </h3>
               <div className="space-y-4">
@@ -1159,7 +1159,7 @@ const PayementsYearlyStatistique = ({
                           {cls.className}
                         </h4>
                         <p className="text-xs text-gray-500">
-                          {cls.studentCount} élèves
+                          {cls.studentCount} {translate("students", language)}
                         </p>
                       </div>
                       <div className="text-right">

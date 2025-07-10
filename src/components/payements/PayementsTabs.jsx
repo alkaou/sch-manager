@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { TrendingUp } from "lucide-react";
 import { gradients } from "../../utils/colors";
+import { translate } from "./payement_translator";
+import { useLanguage } from "../contexts";
 
 const PayementsTabs = ({
   activeTab,
@@ -11,10 +13,12 @@ const PayementsTabs = ({
   text_color,
   setSelectedClass,
 }) => {
+  const { language } = useLanguage();
+
   const tabs = [
     {
       id: 0,
-      title: "Configuration",
+      title: translate("configuration", language),
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +44,7 @@ const PayementsTabs = ({
     },
     {
       id: 1,
-      title: "Budget Mensuel",
+      title: translate("monthly_budget", language),
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +64,7 @@ const PayementsTabs = ({
     },
     {
       id: 2,
-      title: "Budget Annuel",
+      title: translate("annual_budget", language),
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -80,12 +84,12 @@ const PayementsTabs = ({
     },
     {
       id: 3,
-      title: "Statistique Mensuelle",
+      title: translate("monthly_stats", language),
       icon: <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4" />,
     },
     {
       id: 4,
-      title: "Statistique Annuelle",
+      title: translate("annual_stats", language),
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -150,8 +154,9 @@ const PayementsTabs = ({
               {tab.icon}
               <span className="hidden xs:inline">{tab.title}</span>
               <span className="xs:hidden">
-                {tab.title.split(" ")[0].substring(0, 6)}
-                {tab.title.includes(" ") ? "." : ""}
+                {/* {tab.title.split(" ")[0].substring(0, 15)}
+                {tab.title.includes(" ") ? "." : ""} */}
+                {tab.title}
               </span>
 
               {/* Indicateur d'onglet actif */}

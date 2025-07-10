@@ -4,9 +4,11 @@ import {
   getClasseName,
   areArraysEqual,
   getCurrentMonthScolar,
+  getBambaraMonth,
 } from "../../utils/helpers";
 import { useLanguage } from "../contexts";
 import { useFlashNotification } from "../contexts";
+import { translate } from "./payement_translator";
 import {
   Search,
   CheckCircle,
@@ -62,7 +64,7 @@ const PayementsStudentList = ({
 
       if (!system) {
         setFlashMessage({
-          message: "Aucun système de paiement trouvé pour cette classe",
+          message: translate("no_payment_system_found", language),
           type: "error",
           duration: 5000,
         });
@@ -86,7 +88,8 @@ const PayementsStudentList = ({
       while (currentMonth <= endDate) {
         monthsArray.push({
           number: monthsArray.length + 1,
-          name: currentMonth.toLocaleString("fr-FR", { month: "long" }),
+          fr_name: currentMonth.toLocaleString("fr-FR", { month: "long" }),
+          en_name: currentMonth.toLocaleString("en-US", { month: "long" }),
           year: currentMonth.getFullYear(),
         });
         currentMonth.setMonth(currentMonth.getMonth() + 1);
@@ -167,7 +170,7 @@ const PayementsStudentList = ({
     } catch (error) {
       console.error("Error loading payment data:", error);
       setFlashMessage({
-        message: "Erreur lors du chargement des données de paiement",
+        message: translate("error_occurred", language),
         type: "error",
         duration: 5000,
       });
@@ -224,15 +227,15 @@ const PayementsStudentList = ({
       // Show feedback
       setFlashMessage({
         message: updatedRegistrationFees[studentId]
-          ? "Frais d'inscription activé pour cet élève"
-          : "Frais d'inscription désactivé pour cet élève",
+          ? translate("registration_fee_enabled", language)
+          : translate("registration_fee_disabled", language),
         type: "info",
         duration: 3000,
       });
     } catch (error) {
       console.error("Error toggling registration fee:", error);
       setFlashMessage({
-        message: "Erreur lors de la modification des frais d'inscription",
+        message: translate("error_occurred", language),
         type: "error",
         duration: 5000,
       });
@@ -271,14 +274,14 @@ const PayementsStudentList = ({
       updatePaymentLists(updatedStudents, selectedMonth);
 
       setFlashMessage({
-        message: `Paiement validé pour ${student.name_complet}`,
+        message: translate("payment_validated", language),
         type: "success",
         duration: 3000,
       });
     } catch (error) {
       console.error("Error validating payment:", error);
       setFlashMessage({
-        message: "Erreur lors de la validation du paiement",
+        message: translate("error_occurred", language),
         type: "error",
         duration: 5000,
       });
@@ -317,14 +320,14 @@ const PayementsStudentList = ({
       updatePaymentLists(updatedStudents, selectedMonth);
 
       setFlashMessage({
-        message: `Paiement invalidé pour ${student.name_complet}`,
+        message: translate("payment_invalidated", language),
         type: "info",
         duration: 3000,
       });
     } catch (error) {
       console.error("Error invalidating payment:", error);
       setFlashMessage({
-        message: "Erreur lors de l'invalidation du paiement",
+        message: translate("error_occurred", language),
         type: "error",
         duration: 5000,
       });
@@ -494,7 +497,7 @@ const PayementsStudentList = ({
                 <h2
                   className={`text-lg sm:text-xl md:text-2xl font-bold ${inputTextColor}`}
                 >
-                  Classe:{" "}
+                  {translate("class_label", language)}:{" "}
                   {getClasseName(
                     `${selectedClass.level} ${selectedClass.name}`,
                     language
@@ -503,13 +506,13 @@ const PayementsStudentList = ({
                 <p
                   className={`${inputTextColor} opacity-80 text-sm sm:text-base`}
                 >
-                  Système de paiement: {paymentSystem?.name}
+                  {translate("payment_system", language)}: {paymentSystem?.name}
                 </p>
                 <div className="flex items-center flex-wrap mt-1">
                   <p
                     className={`${inputTextColor} opacity-80 mr-2 text-xs sm:text-sm`}
                   >
-                    Période:{" "}
+                    {translate("period", language)}:{" "}
                     {new Date(paymentSystem?.startDate).toLocaleDateString()} -{" "}
                     {new Date(paymentSystem?.endDate).toLocaleDateString()}
                   </p>
@@ -517,7 +520,7 @@ const PayementsStudentList = ({
                     <span
                       className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium ${expiredBadgeBgColor} ${expiredBadgeTextColor} mt-1 sm:mt-0`}
                     >
-                      Année Scolaire Expirée
+                      {translate("school_year_expired", language)}
                     </span>
                   )}
                 </div>
@@ -526,7 +529,7 @@ const PayementsStudentList = ({
                 <button
                   onClick={handleRefresh}
                   className={`p-1.5 sm:p-2 rounded-full border ${borderColor} hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300`}
-                  title="Rafraîchir"
+                  title={translate("refresh", language)}
                 >
                   <RefreshCcw
                     className={`${inputTextColor} ${
@@ -547,7 +550,7 @@ const PayementsStudentList = ({
                 <p
                   className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                 >
-                  Frais mensuels
+                  {translate("monthly_fees", language)}
                 </p>
                 <p
                   className={`${inputTextColor} text-base sm:text-lg md:text-xl font-bold`}
@@ -564,7 +567,7 @@ const PayementsStudentList = ({
                   <p
                     className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                   >
-                    Frais d'inscription (nouveaux élèves)
+                    {translate("registration_fees", language)}
                   </p>
                   <p
                     className={`${inputTextColor} text-base sm:text-lg md:text-xl font-bold`}
@@ -582,7 +585,7 @@ const PayementsStudentList = ({
                 <p
                   className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                 >
-                  Total élèves
+                  {translate("total_students", language)}
                 </p>
                 <p
                   className={`${inputTextColor} text-base sm:text-lg md:text-xl font-bold`}
@@ -598,7 +601,7 @@ const PayementsStudentList = ({
                 <p
                   className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                 >
-                  Paiements validés
+                  {translate("validated_payments", language)}
                 </p>
                 <p
                   className={`text-green-500 text-base sm:text-lg md:text-xl font-bold`}
@@ -625,7 +628,12 @@ const PayementsStudentList = ({
                           }`
                     }`}
                   >
-                    {month.name} {month.year}
+                    {language === "Français"
+                      ? month.fr_name
+                      : language === "Anglais"
+                      ? month.en_name
+                      : getBambaraMonth(month.en_name)}{" "}
+                    {month.year}
                   </button>
                 ))}
               </div>
@@ -637,7 +645,7 @@ const PayementsStudentList = ({
                 </div>
                 <input
                   type="text"
-                  placeholder="Rechercher un élève..."
+                  placeholder={translate("search_students", language)}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={`w-full pl-7 sm:pl-10 pr-3 sm:pr-4 py-1.5 sm:py-2 rounded-lg text-sm ${inputBgColor} ${inputTextColor} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
@@ -654,7 +662,8 @@ const PayementsStudentList = ({
               <h3
                 className={`text-base sm:text-lg md:text-xl font-semibold ${inputTextColor}`}
               >
-                Paiements en attente ({filteredPendingPayments.length})
+                {translate("pending_payments", language)} (
+                {filteredPendingPayments.length})
               </h3>
               <div className="flex items-center space-x-1 sm:space-x-2">
                 <button
@@ -665,7 +674,7 @@ const PayementsStudentList = ({
                       : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                   }`}
                 >
-                  Nom
+                  {translate("name", language)}
                   {sortBy === "name" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp size={14} className="ml-1" />
@@ -681,7 +690,7 @@ const PayementsStudentList = ({
                       : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                   }`}
                 >
-                  Statut
+                  {translate("status", language)}
                   {sortBy === "status" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp size={14} className="ml-1" />
@@ -698,7 +707,7 @@ const PayementsStudentList = ({
                 <p
                   className={`${inputTextColor} font-medium text-sm sm:text-base`}
                 >
-                  Tous les paiements sont validés pour ce mois!
+                  {translate("all_payments_validated", language)}
                 </p>
               </div>
             ) : (
@@ -710,31 +719,31 @@ const PayementsStudentList = ({
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Élève
+                        {translate("student", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Matricule
+                        {translate("matricule", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Statut
+                        {translate("status", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Montant
+                        {translate("amount", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Actions
+                        {translate("actions", language)}
                       </th>
                     </tr>
                   </thead>
@@ -775,7 +784,9 @@ const PayementsStudentList = ({
                                     {student.name_complet}
                                   </div>
                                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                                    {student.sexe === "M" ? "Garçon" : "Fille"}
+                                    {student.sexe === "M"
+                                      ? translate("boy", language)
+                                      : translate("girl", language)}
                                   </div>
                                 </div>
                               </div>
@@ -784,7 +795,8 @@ const PayementsStudentList = ({
                               <div
                                 className={`text-xs sm:text-sm ${inputTextColor}`}
                               >
-                                {student.matricule || "Non défini"}
+                                {student.matricule ||
+                                  translate("not_defined", language)}
                               </div>
                             </td>
                             <td className="px-3 sm:px-4 md:px-5 py-2 sm:py-3 md:py-4 whitespace-nowrap">
@@ -798,8 +810,10 @@ const PayementsStudentList = ({
                               >
                                 {student.month_payed &&
                                 student.month_payed.length > 0
-                                  ? `${student.month_payed.length}/${student.schoolar_month_number} mois payés`
-                                  : "Aucun mois payé"}
+                                  ? `${student.month_payed.length}/${
+                                      student.schoolar_month_number
+                                    } ${translate("months_paid", language)}`
+                                  : translate("pending", language)}
                               </span>
                             </td>
                             <td className="px-3 sm:px-4 md:px-5 py-2 sm:py-3 md:py-4 whitespace-nowrap">
@@ -820,7 +834,10 @@ const PayementsStudentList = ({
                                         </span>
                                       ) : (
                                         <span className="text-gray-500">
-                                          Inscription N/A
+                                          {translate(
+                                            "registration_fee_not_applicable",
+                                            language
+                                          )}
                                         </span>
                                       )}
                                     </div>
@@ -847,8 +864,14 @@ const PayementsStudentList = ({
                                     } focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-offset-1 sm:focus:ring-offset-2 focus:ring-indigo-500 mr-1 sm:mr-2`}
                                     title={
                                       studentsWithRegistrationFee[student.id]
-                                        ? "Désactiver les frais d'inscription"
-                                        : "Activer les frais d'inscription"
+                                        ? translate(
+                                            "disable_registration_fee",
+                                            language
+                                          )
+                                        : translate(
+                                            "enable_registration_fee",
+                                            language
+                                          )
                                     }
                                   >
                                     {studentsWithRegistrationFee[student.id] ? (
@@ -858,7 +881,10 @@ const PayementsStudentList = ({
                                           className="mr-0.5 sm:mr-1"
                                         />{" "}
                                         <span className="hidden sm:inline">
-                                          Inscription
+                                          {translate(
+                                            "registration_fee",
+                                            language
+                                          )}
                                         </span>
                                       </>
                                     ) : (
@@ -868,7 +894,10 @@ const PayementsStudentList = ({
                                           className="mr-0.5 sm:mr-1"
                                         />{" "}
                                         <span className="hidden sm:inline">
-                                          Inscription
+                                          {translate(
+                                            "registration_fee",
+                                            language
+                                          )}
                                         </span>
                                       </>
                                     )}
@@ -891,7 +920,7 @@ const PayementsStudentList = ({
                                   className="mr-0.5 sm:mr-1"
                                 />{" "}
                                 <span className="hidden sm:inline">
-                                  Valider
+                                  {translate("validate", language)}
                                 </span>
                               </button>
                             </td>
@@ -917,13 +946,13 @@ const PayementsStudentList = ({
                                       <h4
                                         className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}
                                       >
-                                        Informations de l'élève
+                                        {translate("student_info", language)}
                                       </h4>
                                       <p
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Nom complet:
+                                          {translate("name", language)}:
                                         </span>{" "}
                                         {student.name_complet}
                                       </p>
@@ -931,7 +960,7 @@ const PayementsStudentList = ({
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Classe:
+                                          {translate("class", language)}:
                                         </span>{" "}
                                         {student.classe}
                                       </p>
@@ -939,19 +968,20 @@ const PayementsStudentList = ({
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Matricule:
+                                          {translate("matricule", language)}:
                                         </span>{" "}
-                                        {student.matricule || "Non défini"}
+                                        {student.matricule ||
+                                          translate("not_defined", language)}
                                       </p>
                                       <p
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Sexe:
+                                          {translate("sex", language)}:
                                         </span>{" "}
                                         {student.sexe === "M"
-                                          ? "Masculin"
-                                          : "Féminin"}
+                                          ? translate("male", language)
+                                          : translate("female", language)}
                                       </p>
                                       {selectedMonth === 1 &&
                                         paymentSystem.registrationFee > 0 && (
@@ -959,13 +989,23 @@ const PayementsStudentList = ({
                                             className={`text-xs sm:text-sm ${inputTextColor} mt-1 sm:mt-2`}
                                           >
                                             <span className="font-medium">
-                                              Frais d'inscription:
+                                              {translate(
+                                                "registration_fee",
+                                                language
+                                              )}
+                                              :
                                             </span>{" "}
                                             {studentsWithRegistrationFee[
                                               student.id
                                             ]
-                                              ? "Applicable"
-                                              : "Non applicable"}
+                                              ? translate(
+                                                  "applicable",
+                                                  language
+                                                )
+                                              : translate(
+                                                  "not_applicable",
+                                                  language
+                                                )}
                                           </p>
                                         )}
                                     </div>
@@ -973,7 +1013,7 @@ const PayementsStudentList = ({
                                       <h4
                                         className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}
                                       >
-                                        Statut des paiements
+                                        {translate("payment_status", language)}
                                       </h4>
                                       <div className="flex flex-wrap gap-1 sm:gap-2">
                                         {months.map((month, index) => (
@@ -1015,7 +1055,8 @@ const PayementsStudentList = ({
               <h3
                 className={`text-base sm:text-lg md:text-xl font-semibold ${inputTextColor}`}
               >
-                Paiements validés ({filteredValidatedPayments.length})
+                {translate("validated_payments", language)} (
+                {filteredValidatedPayments.length})
               </h3>
               <div className="flex items-center space-x-1 sm:space-x-2">
                 <button
@@ -1026,7 +1067,7 @@ const PayementsStudentList = ({
                       : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                   }`}
                 >
-                  Nom
+                  {translate("name", language)}
                   {sortBy === "name" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp size={14} className="ml-1" />
@@ -1042,7 +1083,7 @@ const PayementsStudentList = ({
                       : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                   }`}
                 >
-                  Statut
+                  {translate("status", language)}
                   {sortBy === "status" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp size={14} className="ml-1" />
@@ -1059,7 +1100,7 @@ const PayementsStudentList = ({
                 <p
                   className={`${inputTextColor} font-medium text-sm sm:text-base`}
                 >
-                  Aucun paiement validé pour ce mois
+                  {translate("no_validated_payments", language)}
                 </p>
               </div>
             ) : (
@@ -1071,31 +1112,31 @@ const PayementsStudentList = ({
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Élève
+                        {translate("student", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Matricule
+                        {translate("matricule", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Statut
+                        {translate("status", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Montant
+                        {translate("amount", language)}
                       </th>
                       <th
                         scope="col"
                         className={`px-3 sm:px-4 md:px-6 py-2 sm:py-3 text-left text-xs font-medium ${inputTextColor} uppercase tracking-wider`}
                       >
-                        Actions
+                        {translate("actions", language)}
                       </th>
                     </tr>
                   </thead>
@@ -1136,7 +1177,9 @@ const PayementsStudentList = ({
                                     {student.name_complet}
                                   </div>
                                   <div className="text-xs text-gray-500 dark:text-gray-400">
-                                    {student.sexe === "M" ? "Garçon" : "Fille"}
+                                    {student.sexe === "M"
+                                      ? translate("boy", language)
+                                      : translate("girl", language)}
                                   </div>
                                 </div>
                               </div>
@@ -1145,7 +1188,8 @@ const PayementsStudentList = ({
                               <div
                                 className={`text-xs sm:text-sm ${inputTextColor}`}
                               >
-                                {student.matricule || "Non défini"}
+                                {student.matricule ||
+                                  translate("not_defined", language)}
                               </div>
                             </td>
                             <td className="px-3 sm:px-4 md:px-5 py-2 sm:py-3 md:py-4 whitespace-nowrap">
@@ -1153,7 +1197,8 @@ const PayementsStudentList = ({
                                 className={`px-1.5 sm:px-2 py-0.5 sm:py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200`}
                               >
                                 {student.month_payed.length}/
-                                {student.schoolar_month_number} mois payés
+                                {student.schoolar_month_number}{" "}
+                                {translate("months_paid", language)}
                               </span>
                             </td>
                             <td className="px-3 sm:px-4 md:px-5 py-2 sm:py-3 md:py-4 whitespace-nowrap">
@@ -1174,7 +1219,10 @@ const PayementsStudentList = ({
                                         </span>
                                       ) : (
                                         <span className="text-gray-500">
-                                          Inscription N/A
+                                          {translate(
+                                            "registration_fee_not_applicable",
+                                            language
+                                          )}
                                         </span>
                                       )}
                                     </div>
@@ -1201,8 +1249,14 @@ const PayementsStudentList = ({
                                     } focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-offset-1 sm:focus:ring-offset-2 focus:ring-indigo-500 mr-1 sm:mr-2`}
                                     title={
                                       studentsWithRegistrationFee[student.id]
-                                        ? "Désactiver les frais d'inscription"
-                                        : "Activer les frais d'inscription"
+                                        ? translate(
+                                            "disable_registration_fee",
+                                            language
+                                          )
+                                        : translate(
+                                            "enable_registration_fee",
+                                            language
+                                          )
                                     }
                                   >
                                     {studentsWithRegistrationFee[student.id] ? (
@@ -1212,7 +1266,10 @@ const PayementsStudentList = ({
                                           className="mr-0.5 sm:mr-1"
                                         />{" "}
                                         <span className="hidden sm:inline">
-                                          Inscription
+                                          {translate(
+                                            "registration_fee",
+                                            language
+                                          )}
                                         </span>
                                       </>
                                     ) : (
@@ -1222,7 +1279,10 @@ const PayementsStudentList = ({
                                           className="mr-0.5 sm:mr-1"
                                         />{" "}
                                         <span className="hidden sm:inline">
-                                          Inscription
+                                          {translate(
+                                            "registration_fee",
+                                            language
+                                          )}
                                         </span>
                                       </>
                                     )}
@@ -1242,7 +1302,7 @@ const PayementsStudentList = ({
                               >
                                 <XCircle size={14} className="mr-0.5 sm:mr-1" />{" "}
                                 <span className="hidden sm:inline">
-                                  Invalider
+                                  {translate("invalidate", language)}
                                 </span>
                               </button>
                             </td>
@@ -1268,13 +1328,16 @@ const PayementsStudentList = ({
                                       <h4
                                         className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}
                                       >
-                                        Informations de l'élève
+                                        {translate(
+                                          "student_information",
+                                          language
+                                        )}
                                       </h4>
                                       <p
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Nom complet:
+                                          {translate("full_name", language)}:
                                         </span>{" "}
                                         {student.name_complet}
                                       </p>
@@ -1282,7 +1345,7 @@ const PayementsStudentList = ({
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Classe:
+                                          {translate("class", language)}:
                                         </span>{" "}
                                         {student.classe}
                                       </p>
@@ -1290,19 +1353,20 @@ const PayementsStudentList = ({
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Matricule:
+                                          {translate("matricule", language)}:
                                         </span>{" "}
-                                        {student.matricule || "Non défini"}
+                                        {student.matricule ||
+                                          translate("not_defined", language)}
                                       </p>
                                       <p
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          Sexe:
+                                          {translate("gender", language)}:
                                         </span>{" "}
                                         {student.sexe === "M"
-                                          ? "Masculin"
-                                          : "Féminin"}
+                                          ? translate("male", language)
+                                          : translate("female", language)}
                                       </p>
                                       {selectedMonth === 1 &&
                                         paymentSystem.registrationFee > 0 && (
@@ -1310,13 +1374,23 @@ const PayementsStudentList = ({
                                             className={`text-xs sm:text-sm ${inputTextColor} mt-1 sm:mt-2`}
                                           >
                                             <span className="font-medium">
-                                              Frais d'inscription:
+                                              {translate(
+                                                "registration_fee",
+                                                language
+                                              )}
+                                              :
                                             </span>{" "}
                                             {studentsWithRegistrationFee[
                                               student.id
                                             ]
-                                              ? "Applicable"
-                                              : "Non applicable"}
+                                              ? translate(
+                                                  "applicable",
+                                                  language
+                                                )
+                                              : translate(
+                                                  "not_applicable",
+                                                  language
+                                                )}
                                           </p>
                                         )}
                                     </div>
@@ -1324,7 +1398,7 @@ const PayementsStudentList = ({
                                       <h4
                                         className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}
                                       >
-                                        Statut des paiements
+                                        {translate("payment_status", language)}
                                       </h4>
                                       <div className="flex flex-wrap gap-1 sm:gap-2">
                                         {months.map((month, index) => (
@@ -1365,7 +1439,7 @@ const PayementsStudentList = ({
             <h3
               className={`text-base sm:text-lg md:text-xl font-semibold ${inputTextColor} mb-3 sm:mb-4`}
             >
-              Résumé des paiements
+              {translate("payment_summary", language)}
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
               <div
@@ -1376,7 +1450,7 @@ const PayementsStudentList = ({
                 <p
                   className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                 >
-                  Total attendu (mois courant)
+                  {translate("total_expected_current_month", language)}
                 </p>
                 <p
                   className={`${inputTextColor} text-base sm:text-lg md:text-xl font-bold`}
@@ -1395,7 +1469,7 @@ const PayementsStudentList = ({
                 <p
                   className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                 >
-                  Total perçu (mois courant)
+                  {translate("total_collected", language)}
                 </p>
                 <p
                   className={`text-green-500 text-base sm:text-lg md:text-xl font-bold`}
@@ -1414,7 +1488,7 @@ const PayementsStudentList = ({
                 <p
                   className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                 >
-                  Reste à percevoir (mois courant)
+                  {translate("remaining_to_collect", language)}
                 </p>
                 <p
                   className={`text-red-500 text-base sm:text-lg md:text-xl font-bold`}
@@ -1436,7 +1510,7 @@ const PayementsStudentList = ({
                     <p
                       className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                     >
-                      Total frais d'inscription attendu
+                      {translate("total_registration_fees_expected", language)}
                     </p>
                     <p
                       className={`${inputTextColor} text-base sm:text-lg md:text-xl font-bold`}
@@ -1452,7 +1526,7 @@ const PayementsStudentList = ({
                     <p
                       className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                     >
-                      Total frais d'inscription perçu
+                      {translate("total_registration_fees_collected", language)}
                     </p>
                     <p
                       className={`text-green-500 text-base sm:text-lg md:text-xl font-bold`}
@@ -1469,7 +1543,7 @@ const PayementsStudentList = ({
                     <p
                       className={`text-xs sm:text-sm opacity-70 mb-0.5 sm:mb-1 ${inputTextColor}`}
                     >
-                      Reste frais d'inscription à percevoir
+                      {translate("remaining_registration_fees", language)}
                     </p>
                     <p
                       className={`text-red-500 text-base sm:text-lg md:text-xl font-bold`}
@@ -1495,13 +1569,12 @@ const PayementsStudentList = ({
                   <h3
                     className={`text-base sm:text-lg font-semibold ${expiredBadgeTextColor}`}
                   >
-                    Année Scolaire Expirée
+                    {translate("school_year_expired", language)}
                   </h3>
                   <p
                     className={`${expiredBadgeTextColor} opacity-80 text-xs sm:text-sm`}
                   >
-                    Cette année scolaire est terminée. Les modifications ne sont
-                    plus possibles.
+                    {translate("school_year_ended", language)}
                   </p>
                 </div>
               </div>

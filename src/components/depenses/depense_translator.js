@@ -693,7 +693,7 @@ const translations = {
   "guide_intro_content": {
     "Français": "Le système de gestion des dépenses est conçu pour vous aider à suivre efficacement toutes les dépenses de votre établissement scolaire. Organisé par années scolaires, il vous permet de maintenir une comptabilité précise et de générer des rapports détaillés sur vos finances.",
     "Anglais": "The expense management system is designed to help you effectively track all expenses of your school. Organized by school years, it allows you to maintain accurate accounting and generate detailed reports on your finances.",
-    "Bambara": "Musaka mara cogo in dabɔlen don walasa ka i dɛmɛ ka i ka lakɔli musaka bɛɛ tugun kosɛbɛ. A sigilen don kalansen sanw kɔnɔ, min b'a to i ka wari jate tilennen mara ani ka bayɛlɛmali dakɔrɔlen böra i ka wari kow kan."
+    "Bambara": "Musaka mara cogo in dabɔlen don walasa ka i dɛmɛ ka i ka lakɔli musaka bɛɛ tugun kosɛbɛ. A sigilen don kalansen sanw kɔnɔ, min b'a to i ka wari jate tilennen mara ani ka bayɛlɛmali dakɔrɔlen baara i ka wari kow kan."
   },
   "system_structure": {
     "Français": "Structure du système",

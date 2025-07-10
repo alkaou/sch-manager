@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getClasseName, delay } from "../../utils/helpers";
 import { useLanguage } from "../contexts";
+import { translate } from "./payement_translator";
 import { gradients } from "../../utils/colors";
 
 const PayementsSidebar = ({
@@ -171,7 +172,7 @@ const PayementsSidebar = ({
                 d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            Systèmes de paiement
+            {translate("payment_systems_title", language)}
           </h2>
 
           {hasPaymentSystems && (
@@ -196,7 +197,7 @@ const PayementsSidebar = ({
                 </div>
                 <input
                   type="text"
-                  placeholder="Rechercher un système..."
+                  placeholder={translate("search_system_placeholder", language)}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={`w-full pl-7 sm:pl-9 md:pl-10 pr-2 sm:pr-3 md:pr-4 py-1.5 sm:py-2 md:py-2.5 rounded-lg text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200`}
@@ -208,7 +209,7 @@ const PayementsSidebar = ({
                 <label
                   className={`block ${_text_color} mb-1 sm:mb-1.5 text-xs sm:text-sm font-medium`}
                 >
-                  Trier par:
+                  {translate("sort_by_label", language)}
                 </label>
                 <div className="relative">
                   <select
@@ -216,10 +217,18 @@ const PayementsSidebar = ({
                     onChange={(e) => setSortMethod(e.target.value)}
                     className={`w-full pl-2 sm:pl-3 md:pl-4 pr-7 sm:pr-8 md:pr-10 py-1.5 sm:py-2 md:py-2.5 rounded-lg appearance-none text-xs sm:text-sm ${inputBgColor} ${inputTextColor} border ${inputBorderColor} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200`}
                   >
-                    <option value="date-desc">Date (récent → ancien)</option>
-                    <option value="name-asc">Nom (A-Z)</option>
-                    <option value="name-desc">Nom (Z-A)</option>
-                    <option value="date-asc">Date (ancien → récent)</option>
+                    <option value="date-desc">
+                      {translate("sort_date_desc", language)}
+                    </option>
+                    <option value="name-asc">
+                      {translate("sort_name_asc", language)}
+                    </option>
+                    <option value="name-desc">
+                      {translate("sort_name_desc", language)}
+                    </option>
+                    <option value="date-asc">
+                      {translate("sort_date_asc", language)}
+                    </option>
                   </select>
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:pr-3 pointer-events-none">
                     <svg
@@ -272,13 +281,12 @@ const PayementsSidebar = ({
               <p
                 className={`${_text_color} font-semibold text-sm sm:text-base md:text-lg mb-1 sm:mb-2`}
               >
-                Aucun système de paiement configuré
+                {translate("no_payment_system_configured", language)}
               </p>
               <p
                 className={`${_text_color} opacity-80 mb-4 sm:mb-6 text-xs sm:text-sm max-w-xs`}
               >
-                Veuillez configurer votre système de paiement pour voir les
-                classes.
+                {translate("configure_payment_system_message", language)}
               </p>
               <motion.button
                 whileHover={{ scale: 1.03 }}
@@ -286,7 +294,7 @@ const PayementsSidebar = ({
                 onClick={() => setActiveTab(0)}
                 className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-lg ${buttonBgColor} text-white text-xs sm:text-sm font-medium shadow-md`}
               >
-                Configurer les paiements
+                {translate("configure_payments_button", language)}
               </motion.button>
             </div>
           ) : filteredPaymentSystems.length === 0 ? (
@@ -316,14 +324,14 @@ const PayementsSidebar = ({
               <p
                 className={`${_text_color} font-semibold text-sm sm:text-base md:text-lg mb-1 sm:mb-2`}
               >
-                Aucun système trouvé
+                {translate("no_system_found", language)}
               </p>
               <p
                 className={`${_text_color} opacity-80 mb-4 sm:mb-6 text-xs sm:text-sm max-w-xs`}
               >
                 {searchTerm
-                  ? "Aucun système ne correspond à votre recherche."
-                  : "Veuillez ajouter des systèmes de paiement."}
+                  ? translate("no_system_match_search", language)
+                  : translate("add_payment_systems_message", language)}
               </p>
               {!searchTerm && (
                 <motion.button
@@ -332,7 +340,7 @@ const PayementsSidebar = ({
                   onClick={() => setActiveTab(0)}
                   className={`px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 rounded-lg ${buttonBgColor} text-white text-xs sm:text-sm font-medium shadow-md`}
                 >
-                  Configurer les paiements
+                  {translate("configure_payments_button", language)}
                 </motion.button>
               )}
             </div>
@@ -385,7 +393,7 @@ const PayementsSidebar = ({
                         <span
                           className={`px-1.5 sm:px-2 rounded-full text-2xs sm:text-xs font-medium ${expiredBadgeBgColor} ${expiredBadgeTextColor}`}
                         >
-                          Année Expirée
+                          {translate("year_expired_badge", language)}
                         </span>
                       )}
 
@@ -459,7 +467,8 @@ const PayementsSidebar = ({
                             text-white
                           `}
                             >
-                              {systemClasses.length} classes
+                              {systemClasses.length}{" "}
+                              {translate("classes_count", language)}
                             </div>
                           </div>
 
@@ -546,7 +555,10 @@ const PayementsSidebar = ({
                                   />
                                 </svg>
                                 <p className="text-xs sm:text-sm font-medium">
-                                  Aucune classe associée à ce système.
+                                  {translate(
+                                    "no_class_associated_with_system",
+                                    language
+                                  )}
                                 </p>
                               </div>
                             ) : (
@@ -650,7 +662,11 @@ const PayementsSidebar = ({
                                               )}
                                             </span>
                                             <span className="block text-2xs sm:text-xs opacity-80">
-                                              Niveau {cls.level}
+                                              {translate(
+                                                "level_label",
+                                                language
+                                              )}{" "}
+                                              {cls.level}
                                             </span>
                                           </div>
                                         </div>
@@ -667,7 +683,10 @@ const PayementsSidebar = ({
                                             {studentCount}
                                           </span>
                                           <span className="text-2xs sm:text-xs ml-0.5 sm:ml-1">
-                                            élèves
+                                            {translate(
+                                              "students_label",
+                                              language
+                                            )}
                                           </span>
                                         </div>
                                       </button>
@@ -714,7 +733,7 @@ const PayementsSidebar = ({
                     d="M10 19l-7-7m0 0l7-7m-7 7h18"
                   />
                 </svg>
-                Retour aux onglets
+                {translate("back_to_tabs", language)}
               </div>
             </motion.button>
           </div>
