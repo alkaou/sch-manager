@@ -1,5 +1,101 @@
 // Translator for partials components
 const translations = {
+  // NavBar translations
+  school_manager: {
+    Français: "SchoolManager",
+    Anglais: "SchoolManager",
+    Bambara: "SchoolManager",
+  },
+  toggle_theme: {
+    Français: "Changer de thème",
+    Anglais: "Toggle theme",
+    Bambara: "Tɛmu yɛlɛma",
+  },
+  premium: {
+    Français: "Premium",
+    Anglais: "Premium",
+    Bambara: "Premium",
+  },
+  notifications: {
+    Français: "Notifications",
+    Anglais: "Notifications",
+    Bambara: "Kunnafoniw",
+  },
+  mark_all_as_read: {
+    Français: "Tout marquer comme lu",
+    Anglais: "Mark all as read",
+    Bambara: "Bɛɛ kɛ kalannen ye",
+  },
+  no_notifications: {
+    Français: "Aucune notification",
+    Anglais: "No notifications",
+    Bambara: "Kunnafoni si tɛ yen",
+  },
+  view_all_notifications: {
+    Français: "Voir toutes les notifications",
+    Anglais: "View all notifications",
+    Bambara: "Kunnafoniw bɛɛ lajɛ",
+  },
+  user_menu: {
+    Français: "Menu utilisateur",
+    Anglais: "User menu",
+    Bambara: "Baarakɛla ka menu",
+  },
+  user: {
+    Français: "Utilisateur",
+    Anglais: "User",
+    Bambara: "Baarakɛla",
+  },
+  profile: {
+    Français: "Profil",
+    Anglais: "Profile",
+    Bambara: "Profil",
+  },
+  help: {
+    Français: "Aide",
+    Anglais: "Help",
+    Bambara: "Dɛmɛ",
+  },
+  logout: {
+    Français: "Déconnexion",
+    Anglais: "Logout",
+    Bambara: "Ka bɔ",
+  },
+  login: {
+    Français: "Connexion",
+    Anglais: "Login",
+    Bambara: "Ka don",
+  },
+  new_student_registration: {
+    Français: "Nouvel élève inscrit",
+    Anglais: "New student registration",
+    Bambara: "Kalanden kura tɔgɔsɛbɛnni",
+  },
+  report_generated: {
+    Français: "Rapport généré avec succès",
+    Anglais: "Report generated successfully",
+    Bambara: "Sɛbɛn dilan ka ɲɛ",
+  },
+  system_update: {
+    Français: "Mise à jour système disponible",
+    Anglais: "System update available",
+    Bambara: "Sistɛmu kɔnɔ kunnafoni kura bɛ yen",
+  },
+  time_ago_5min: {
+    Français: "Il y a 5 minutes",
+    Anglais: "5 min ago",
+    Bambara: "Miniti 5 tɛmɛnen",
+  },
+  time_ago_1hour: {
+    Français: "Il y a 1 heure",
+    Anglais: "1 hour ago",
+    Bambara: "Lɛrɛ 1 tɛmɛnen",
+  },
+  time_ago_yesterday: {
+    Français: "Hier",
+    Anglais: "Yesterday",
+    Bambara: "Kunu",
+  },
   // SideBar navigation items
   dashboard_texte: {
     Français: "Dashboard",

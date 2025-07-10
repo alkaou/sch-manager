@@ -9,7 +9,7 @@ const HelpersPageContent = ({
   text_color,
   theme,
 }) => {
-  const { live_language, language } = useLanguage();
+  const { language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedSections, setExpandedSections] = useState({
     gettingStarted: true,

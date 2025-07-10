@@ -5,10 +5,11 @@ import {
   LogOut, User, Settings, Bell, ChevronDown,
   Crown, HelpCircle, Moon, Sun, LogIn
 } from "lucide-react";
-import { useTheme } from "../contexts.js";
+import { useTheme, useLanguage } from "../contexts.js";
 import { useAuth } from "../../auth/AuthContext.js";
 import LoginModal from "../../auth/LoginModal.jsx";
 import PremiumModal from "../../auth/PremiumModal.jsx";
+import { translate } from "./partials_translator.js";
 
 import { LogoSVG } from "./Logo.svg.jsx";
 
@@ -23,14 +24,15 @@ const Navbar = ({
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, currentUser, logout } = useAuth();
+  const { language } = useLanguage();
 
   const navigate = useNavigate();
 
   // Mock notifications for demo
   const [notifications, setNotifications] = useState([
-    { id: 1, message: "New student registration", time: "5 min ago", read: false },
-    { id: 2, message: "Report generated successfully", time: "1 hour ago", read: false },
-    { id: 3, message: "System update available", time: "Yesterday", read: true }
+    { id: 1, message: translate("new_student_registration", language), time: translate("time_ago_5min", language), read: false },
+    { id: 2, message: translate("report_generated", language), time: translate("time_ago_1hour", language), read: false },
+    { id: 3, message: translate("system_update", language), time: translate("time_ago_yesterday", language), read: true }
   ]);
 
   // Close dropdowns when clicking outside
@@ -119,7 +121,7 @@ const Navbar = ({
                   fontVariationSettings: '"wght" 800'
                 }}
               >
-                SchoolManager
+                {translate("school_manager", language)}
               </span>
             </div>
           </div>
@@ -132,7 +134,7 @@ const Navbar = ({
               whileTap={{ scale: 0.95 }}
               onClick={toggleTheme}
               className={`p-1 rounded-full ${hoverBg} transition-colors`}
-              aria-label="Toggle theme"
+              aria-label={translate("toggle_theme", language)}
             >
               {theme === 'dark' ? 
                 <Sun className="text-white w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5" /> : 
@@ -148,7 +150,7 @@ const Navbar = ({
               className="flex items-center px-1 py-0.5 sm:px-1.5 sm:py-0.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full text-[10px] sm:text-xs font-medium shadow-sm"
             >
               <Crown size={10} className="mr-0.5 sm:mr-1 w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4" />
-              <span className="hidden sm:inline p-1">Premium</span>
+              <span className="hidden sm:inline p-1">{translate("premium", language)}</span>
             </motion.button>
 
             {/* Notifications */}
@@ -158,7 +160,7 @@ const Navbar = ({
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 className={`p-1 rounded-full ${hoverBg} transition-colors relative`}
-                aria-label="Notifications"
+                aria-label={translate("notifications", language)}
               >
                 <Bell className={theme === "dark" ? "text-white w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5" : "text-gray-600 w-5 h-5 sm:w-5 sm:h-5 md:w-5 md:h-5"} />
                 {unreadCount > 0 && (
@@ -178,13 +180,13 @@ const Navbar = ({
                     className={`absolute right-0 mt-2 w-64 sm:w-72 md:w-80 ${dropdownBg} ${borderColor} border rounded-lg shadow-lg overflow-hidden z-50`}
                   >
                     <div className="p-1.5 sm:p-2 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                      <h3 className="font-medium text-[10px] sm:text-xs">Notifications</h3>
+                      <h3 className="font-medium text-[10px] sm:text-xs">{translate("notifications", language)}</h3>
                       {unreadCount > 0 && (
                         <button
                           onClick={markAllAsRead}
                           className="text-[10px] sm:text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                         >
-                          Mark all as read
+                          {translate("mark_all_as_read", language)}
                         </button>
                       )}
                     </div>
@@ -207,14 +209,14 @@ const Navbar = ({
                         ))
                       ) : (
                         <div className="p-3 text-center text-gray-500 dark:text-gray-400 text-[10px] sm:text-xs">
-                          No notifications
+                          {translate("no_notifications", language)}
                         </div>
                       )}
                     </div>
 
                     <div className="p-1.5 border-t border-gray-200 dark:border-gray-700 text-center">
                       <button className="text-[10px] sm:text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                        View all notifications
+                        {translate("view_all_notifications", language)}
                       </button>
                     </div>
                   </motion.div>
@@ -230,7 +232,7 @@ const Navbar = ({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center space-x-0.5 sm:space-x-1"
-                  aria-label="User menu"
+                  aria-label={translate("user_menu", language)}
                 >
                   <div className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 rounded-full overflow-hidden border-[1.5px] border-blue-500">
                     {currentUser?.photoURL ? (
@@ -247,7 +249,7 @@ const Navbar = ({
                   </div>
                   <div className="hidden md:flex items-center">
                     <span className={`text-[10px] sm:text-xs font-medium ${textColor}`}>
-                      {currentUser?.displayName || "User"}
+                      {currentUser?.displayName || translate("user", language)}
                     </span>
                     <ChevronDown size={10} className="ml-0.5" />
                   </div>
@@ -279,7 +281,7 @@ const Navbar = ({
                           </div>
                           <div>
                             <p className={`text-[10px] sm:text-xs font-medium ${textColor}`}>
-                              {currentUser?.displayName || "User"}
+                              {currentUser?.displayName || translate("user", language)}
                             </p>
                             <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                               {currentUser?.email || ""}
@@ -297,7 +299,7 @@ const Navbar = ({
                           className={`flex items-center w-full px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs ${textColor} ${hoverBg}`}
                         >
                           <User size={10} className="mr-1.5" />
-                          Profile
+                          {translate("profile", language)}
                         </button>
                         <button
                           onClick={() => {
@@ -308,21 +310,21 @@ const Navbar = ({
                           className={`flex items-center w-full px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs ${textColor} ${hoverBg}`}
                         >
                           <Settings size={10} className="mr-1.5" />
-                          Settings
+                          {translate("settings_texte", language)}
                         </button>
                         <button
                           onClick={handleHelpClick}
                           className={`flex items-center w-full px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs ${textColor} ${hoverBg}`}
                         >
                           <HelpCircle size={10} className="mr-1.5" />
-                          Help
+                          {translate("help", language)}
                         </button>
                         <button
                           onClick={handleLogout}
                           className={`flex items-center w-full px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs text-red-600 ${hoverBg}`}
                         >
                           <LogOut size={10} className="mr-1.5" />
-                          Logout
+                          {translate("logout", language)}
                         </button>
                       </div>
                     </motion.div>
@@ -338,7 +340,7 @@ const Navbar = ({
               >
                 <span className="flex items-center p-1">
                   <LogIn size={10} className="mr-0.5 sm:mr-1" />
-                  Login
+                  {translate("login", language)}
                 </span>
               </motion.button>
             )}
