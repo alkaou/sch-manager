@@ -2,24 +2,35 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import {
   Users,
-  Briefcase,
-  Landmark,
-  School,
-  ClipboardCheck,
+  Receipt,
+  DollarSign,
   BarChart3
 } from 'lucide-react';
 import { useLanguage } from '../contexts';
 import { translate } from './statistique_translator';
 
-const StatisticsSidebar = ({ activeStat, setActiveStat, theme }) => {
+const StatisticsSidebar = ({ activeStat, setActiveStat, theme, app_bg_color, text_color }) => {
   const { language } = useLanguage();
 
   const sidebarItems = [
-    { key: 'students_stats', icon: <Users size={24} /> },
-    { key: 'staff_stats', icon: <Briefcase size={24} /> },
-    { key: 'finance_stats', icon: <Landmark size={24} /> },
-    { key: 'classes_stats', icon: <School size={24} /> },
-    { key: 'exams_stats', icon: <ClipboardCheck size={24} /> },
+    {
+      id: 'students_stats',
+      label: translate('students_stats', language),
+      description: translate('students_stats_description', language),
+      icon: <Users />
+    },
+    {
+      id: 'expense_stats',
+      label: translate('expense_stats', language),
+      description: translate('expense_stats_description', language),
+      icon: <Receipt />
+    },
+    {
+      id: 'finance_stats_and_expense',
+      label: translate('finance_stats_and_expense', language),
+      description: translate('finance_stats_and_expense_description', language),
+      icon: <DollarSign />
+    },
   ];
 
   const sidebarVariants = {
@@ -38,20 +49,12 @@ const StatisticsSidebar = ({ activeStat, setActiveStat, theme }) => {
     tap: { scale: 0.95 },
   };
 
-  const getBackgroundColor = () => {
-    return theme === 'dark' ? 'bg-gray-800' : 'bg-white';
-  };
-
-  const getTextColor = () => {
-    return theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
-  };
-
   const getActiveItemColor = () => {
     return theme === 'dark' ? 'bg-blue-500 text-white' : 'bg-blue-500 text-white';
   };
-  
+
   const getInactiveItemColor = () => {
-    return theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200';
+    return theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200 hover:text-gray-700';
   };
 
   return (
@@ -59,7 +62,7 @@ const StatisticsSidebar = ({ activeStat, setActiveStat, theme }) => {
       variants={sidebarVariants}
       initial="hidden"
       animate="visible"
-      className={`h-full ${getBackgroundColor()} ${getTextColor()} p-4 rounded-lg shadow-lg flex flex-col`}
+      className={`h-full ${app_bg_color} ${text_color} p-4 rounded-lg shadow-lg flex flex-col`}
       style={{ border: theme === 'dark' ? '1px solid #4A5568' : '1px solid #E2E8F0' }}
     >
       <div className="flex items-center mb-8">
@@ -72,15 +75,15 @@ const StatisticsSidebar = ({ activeStat, setActiveStat, theme }) => {
       >
         {sidebarItems.map((item) => (
           <motion.li
-            key={item.key}
+            key={item.id}
             variants={itemVariants}
             whileHover="hover"
             whileTap="tap"
-            onClick={() => setActiveStat(item.key)}
-            className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors duration-300 ${activeStat === item.key ? getActiveItemColor() : getInactiveItemColor()}`}
+            onClick={() => setActiveStat(item.id)}
+            className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors duration-300 ${activeStat === item.id ? getActiveItemColor() : getInactiveItemColor()}`}
           >
             {item.icon}
-            <span className="ml-4 font-medium">{translate(item.key, language)}</span>
+            <span className="ml-4 font-medium">{item.label}</span>
           </motion.li>
         ))}
       </motion.ul>

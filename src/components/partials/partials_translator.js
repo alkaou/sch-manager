@@ -128,7 +128,7 @@ const translations = {
     Bambara: "Wari kow",
   },
   depenses_texte: {
-    Français: "Depenses",
+    Français: "Dépenses",
     Anglais: "Expenses",
     Bambara: "Wari bɔtaw",
   },
