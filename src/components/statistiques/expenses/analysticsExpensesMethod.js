@@ -39,7 +39,7 @@ export const getMonthlyExpensesForYear = (expenses, schoolYear) => {
     .map(([monthKey, total]) => {
       const monthNumber = parseInt(monthKey, 10);
       // Créer une date avec l'année scolaire pour l'affichage correct
-      const displayDate = new Date(schoolYearYear, monthNumber - 1, 1);
+      // const displayDate = new Date(schoolYearYear, monthNumber - 1, 1);
       
       return {
         month: `${schoolYearYear}-${monthKey}`, // Format YYYY-MM pour compatibilité
@@ -48,8 +48,8 @@ export const getMonthlyExpensesForYear = (expenses, schoolYear) => {
         year: schoolYearYear,
         monthNumber
       };
-    })
-    .sort((a, b) => a.monthNumber - b.monthNumber);
+    });
+    // .sort((a, b) => a.monthNumber - b.monthNumber);
 };
 
 /**

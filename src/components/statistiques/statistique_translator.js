@@ -42,13 +42,13 @@ const translations = {
   no_expense_data_title: {
     Français: "Aucune Donnée de Dépense",
     Anglais: "No Expense Data",
-    Bambara: "Musaka Jatebɔ si Wɛrɛ Tɛ",
+    Bambara: "Musaka fosin ma kɛ fɔlɔ",
   },
   no_expense_data_message: {
     Français:
       "Veuillez commencer par ajouter des dépenses pour voir les statistiques ici.",
     Anglais: "Please start by adding expenses to see statistics here.",
-    Bambara: "Yala ka musakaw bila fɔlɔ walasa ka statistikaw ye yan.",
+    Bambara: "I ka kan ka musakaw dɔw sɛbɛndiya fɔlɔ walasa k'u jateminɛ kɛ yan.",
   },
   monthly_view: {
     Français: "Vue Mensuelle",
@@ -164,6 +164,48 @@ const translations = {
     Français: "Les dépenses totales de chaque année scolaire.",
     Anglais: "The total expenses of each school year.",
     Bambara: "San kelen kelen bɛɛ lajɛlen n'i ka musakaw wari hakɛ.",
+  },
+
+  // Les Categories des dépenses
+  category_supplies: {
+    Français: "Fournitures",
+    Anglais: "Supplies", 
+    Bambara: "Kalankɛ fɛnw",
+  },
+  category_equipment: {
+    Français: "Équipement",
+    Anglais: "Equipment",
+    Bambara: "Kalankɛ minanw",
+  },
+  category_salary: {
+    Français: "Salaires", 
+    Anglais: "Salary",
+    Bambara: "Baarakɛlaw Saraw",
+  },
+  category_rent: {
+    Français: "Loyer",
+    Anglais: "Rent", 
+    Bambara: "So sara",
+  },
+  category_utilities: {
+    Français: "Services",
+    Anglais: "Utilities",
+    Bambara: "Nafafɛnw",
+  },
+  category_maintenance: {
+    Français: "Maintenance",
+    Anglais: "Maintenance",
+    Bambara: "Labaarali",
+  },
+  category_events: {
+    Français: "Événements",
+    Anglais: "Events",
+    Bambara: "Kunkanw",
+  },
+  category_other: {
+    Français: "Autres",
+    Anglais: "Other",
+    Bambara: "Fɛn wɛrɛw",
   },
 };
 
