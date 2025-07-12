@@ -85,6 +85,20 @@ const PayementsMonthlyStatistique = ({
       ? bm_months
       : en_months;
 
+  const handleOnlySchoolYearSystem = (value) => {
+    const year_1 = value.substr(0, 4);
+    const year_2 = value.substr(5, 8);
+    if (db.paymentSystems && db.paymentSystems.length > 0) {
+      const findSystems = db.paymentSystems.filter(
+        (sys) =>
+          sys.startDate.substr(0, 4) === year_1 &&
+          sys.endDate.substr(0, 4) === year_2
+      );
+      // console.log(findSystems);
+      setAvailablePaymentSystems(findSystems);
+    }
+  };
+
   useEffect(() => {
     if (!db || !db.paymentSystems) {
       setIsLoading(false);
@@ -106,7 +120,10 @@ const PayementsMonthlyStatistique = ({
             key: schoolYearKey,
             startYear,
             endYear,
-            label: `${translate("school_year", language)} ${startYear}-${endYear}`,
+            label: `${translate(
+              "school_year",
+              language
+            )} ${startYear}-${endYear}`,
             systems: [],
           });
         }
@@ -144,11 +161,21 @@ const PayementsMonthlyStatistique = ({
         id: system.id,
         name: system.name,
       }));
-      setAvailablePaymentSystems(paymentSystems);
+      // setAvailablePaymentSystems(paymentSystems);
+
+      // console.log(paymentSystems);
 
       // Définir le système de paiement par défaut (le plus récent)
       if (db.paymentSystems.length > 0) {
         setSelectedPaymentSystem(db.paymentSystems[0].id);
+        const year_1 = db.paymentSystems[0].startDate;
+        const year_2 = db.paymentSystems[0].endDate;
+        const SysAvailableValue = `${year_1.substr(0, 4)}-${year_2.substr(
+          0,
+          4
+        )}`;
+        // console.log(SysAvailableValue);
+        handleOnlySchoolYearSystem(SysAvailableValue);
       }
     }
   }, [db]);
@@ -188,7 +215,9 @@ const PayementsMonthlyStatistique = ({
         ]);
       } else {
         // Si aucun système n'est sélectionné ou s'il n'a pas de classes, afficher une liste vide
-        setAvailableClasses([{ id: "all", name: translate("all_classes", language) }]);
+        setAvailableClasses([
+          { id: "all", name: translate("all_classes", language) },
+        ]);
       }
     }
   }, [db, selectedPaymentSystem]);
@@ -281,6 +310,14 @@ const PayementsMonthlyStatistique = ({
       // Si le système sélectionné n'est pas dans l'année scolaire, prendre le premier disponible
       if (selectedYearSystems.length > 0) {
         setSelectedPaymentSystem(selectedYearSystems[0].id);
+        const year_1 = selectedYearSystems[0].startDate;
+        const year_2 = selectedYearSystems[0].endDate;
+        const SysAvailableValue = `${year_1.substr(0, 4)}-${year_2.substr(
+          0,
+          4
+        )}`;
+        // console.log(SysAvailableValue);
+        handleOnlySchoolYearSystem(SysAvailableValue);
       }
       setMonthlyData([]);
       setIsLoading(false);
@@ -627,7 +664,10 @@ const PayementsMonthlyStatistique = ({
             <Calendar className={`h-5 w-5 mr-2 ${text_color}`} />
             <select
               value={currentSchoolYear}
-              onChange={(e) => setCurrentSchoolYear(e.target.value)}
+              onChange={(e) => {
+                setCurrentSchoolYear(e.target.value);
+                handleOnlySchoolYearSystem(e.target.value);
+              }}
               className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
               {availableSchoolYears.map((year) => (
@@ -675,7 +715,9 @@ const PayementsMonthlyStatistique = ({
               onChange={(e) => setChartType(e.target.value)}
               className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
-              <option value="line">{translate("linear_chart", language)}</option>
+              <option value="line">
+                {translate("linear_chart", language)}
+              </option>
               <option value="bar">{translate("bar_chart", language)}</option>
             </select>
           </div>
@@ -788,7 +830,9 @@ const PayementsMonthlyStatistique = ({
                         <div className="p-2 rounded-full bg-green-100 mr-3">
                           <TrendingUp className="h-5 w-5 text-green-500" />
                         </div>
-                        <span className={`${textColorClass}`}>{translate("total_received", language)}</span>
+                        <span className={`${textColorClass}`}>
+                          {translate("total_received", language)}
+                        </span>
                       </div>
                       <span className="font-bold text-green-500">
                         {formatCurrency(
@@ -804,7 +848,9 @@ const PayementsMonthlyStatistique = ({
                         <div className="p-2 rounded-full bg-purple-100 mr-3">
                           <PieChart className="h-5 w-5 text-purple-500" />
                         </div>
-                        <span className={`${textColorClass}`}>{translate("average_rate", language)}</span>
+                        <span className={`${textColorClass}`}>
+                          {translate("average_rate", language)}
+                        </span>
                       </div>
                       <span className="font-bold text-purple-500">
                         {Math.round(

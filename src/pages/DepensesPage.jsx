@@ -60,9 +60,9 @@ const DepensesPageContent = ({
 
       // Initialize the expenses array in database if it doesn't exist
       if (!freshData.schoolYears) {
-        const updatedDb = { ...freshData, schoolYears: [], expenses: [] };
-        await window.electron.saveDatabase(updatedDb);
-        setDb(updatedDb);
+        // const updatedDb = { ...freshData, schoolYears: [], expenses: [] };
+        // await window.electron.saveDatabase(updatedDb);
+        // setDb(updatedDb);
         setSchoolYears([]);
         setExpenses([]);
       } else {
@@ -269,6 +269,7 @@ const DepensesPageContent = ({
           // app_bg_color={app_bg_color}
           text_color={form_text_color}
           theme={theme}
+          handleRefresh={handleRefresh}
         />
       );
     }

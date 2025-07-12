@@ -584,8 +584,8 @@ const PayementsYearlyClass = ({
                         {translate("total_expected_for", language)}{" "}
                         {currentYear}
                       </h3>
-                      <span className="bg-white bg-opacity-30 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-2xs sm:text-xs">
-                        {translate("niveau", language)} {data.level}
+                      <span className="bg-white text-center bg-opacity-30 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-2xs sm:text-xs">
+                        {translate("level_label", language)} : {data.level}
                       </span>
                     </div>
                     <div className="flex items-center mt-1 sm:mt-2">

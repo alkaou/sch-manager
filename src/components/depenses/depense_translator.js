@@ -4,97 +4,98 @@ const translations = {
   expenses_management: {
     Français: "Gestion des Dépenses",
     Anglais: "Expense Management",
-    Bambara: "Musaka kɛcogo",
+    Bambara: "Wari bɔli ɲɛnabɔli",
   },
   view_help: {
     Français: "Voir l'aide",
     Anglais: "View Help",
-    Bambara: "Dɛmɛ ɲɛfɔli lajɛ",
+    Bambara: "Dɛmɛ lajɛ",
   },
   refresh: {
     Français: "Rafraîchir",
     Anglais: "Refresh",
-    Bambara: "Kura don",
+    Bambara: "A kuraya",
   },
   data_refreshed: {
     Français: "Données rafraîchies avec succès !",
     Anglais: "Data refreshed successfully!",
-    Bambara: "Kunnafoniw kura donnen don ni ɲɛtaa ye!",
+    Bambara: "Kunnafoniw kuraya ka ɲɛ!",
   },
 
   // School years
   add_school_year: {
     Français: "Ajouter une année scolaire",
     Anglais: "Add School Year",
-    Bambara: "Kalansen san kura fara",
+    Bambara: "Kalan san kura labɛn",
   },
   add_school_year_tooltip: {
     Français: "Ajouter une nouvelle année scolaire",
     Anglais: "Add a new school year",
-    Bambara: "Kalansen san kura dɔ fara",
+    Bambara: "Kalan san kura dɔ labɛn",
   },
   edit_school_year: {
     Français: "Modifier l'année scolaire",
     Anglais: "Edit School Year",
-    Bambara: "Kalansen san yɛlɛma",
+    Bambara: "Kalan san ladilan",
   },
   school_year_expired: {
     Français: "Année scolaire expirée",
     Anglais: "Expired School Year",
-    Bambara: "Kalansen san tɛmɛnen",
+    Bambara: "Kalan san tɛmɛnen",
   },
   school_year_expired_readonly: {
     Français: "Les années scolaires expirées sont en lecture seule.",
     Anglais: "Expired school years are read-only.",
-    Bambara: "Kalansen san tɛmɛnew bɛ kalan dɔrɔn.",
+    Bambara: "Kalan san tɛmɛnen bɛ se ka kalan dɔrɔn.",
   },
   confirm_delete_year: {
     Français: "Confirmer la suppression",
     Anglais: "Confirm Deletion",
-    Bambara: "Jɔsili jɛtigi",
+    Bambara: "A jɔsili dafa",
   },
   confirm_delete_year_msg: {
     Français:
       "Êtes-vous sûr de vouloir supprimer cette année scolaire et toutes ses dépenses associées ?",
     Anglais:
       "Are you sure you want to delete this school year and all its associated expenses?",
-    Bambara: "I dalen don i bɛ nin kalansen san in ni a ka musaka bɛɛ jɔsi?",
+    Bambara:
+      "I kɔni dalen don i bɛ nin kalan san in ni a ka wari bɔli bɛɛ jɔsi wa?",
   },
   school_year_deleted: {
     Français: "Année scolaire supprimée avec succès !",
     Anglais: "School year deleted successfully!",
-    Bambara: "Kalansen san jɔsira ni ɲɛtaa ye!",
+    Bambara: "Kalan san jɔsira ka ɲɛ!",
   },
   school_year_updated: {
     Français: "Année scolaire mise à jour avec succès !",
     Anglais: "School year updated successfully!",
-    Bambara: "Kalansen san kɔnɔ kunnafoniw yɛlɛmana ni ɲɛtaa ye!",
+    Bambara: "Kalan san kɔnɔ kunnafoniw ladilanra ka ɲɛ!",
   },
   school_year_added: {
     Français: "Année scolaire ajoutée avec succès !",
     Anglais: "School year added successfully!",
-    Bambara: "Kalansen san fara ni ɲɛtaa ye!",
+    Bambara: "Kalan san dafara ka ɲɛ!",
   },
   view_school_year_description: {
     Français: "Voir la description",
     Anglais: "View Description",
-    Bambara: "Bayɛlɛmali lajɛ",
+    Bambara: "Ɲɛfɔli lajɛ",
   },
   school_year_description: {
     Français: "Description de l'année scolaire",
     Anglais: "School Year Description",
-    Bambara: "Kalansen san bayɛlɛmali",
+    Bambara: "Kalan san ɲɛfɔli",
   },
   close_description: {
     Français: "Fermer la description",
     Anglais: "Close Description",
-    Bambara: "Bayɛlɛmali datugu",
+    Bambara: "Ɲɛfɔli datugu",
   },
   year_already_exists: {
     Français:
       "Une année scolaire avec le même titre et les mêmes dates existe déjà",
     Anglais: "A school year with the same title and dates already exists",
-    Bambara: "Kalansen san kelen ani tuma kelen in bɛɛ kayi dalen don ka kɔn",
+    Bambara: "Kalan san kelen ni tɔgɔ kelen ani waati kelen bɛ yen ka ban",
   },
 
   // School year form fields
@@ -111,47 +112,47 @@ const translations = {
   title_length: {
     Français: "Le titre doit contenir entre 10 et 150 caractères",
     Anglais: "Title must be between 10 and 150 characters",
-    Bambara: "Tɔgɔ ka kan ka kɛ sira 10 ni 150 cɛ",
+    Bambara: "Tɔgɔ ka kan ka kɛ sɛbɛnni 10 ni 150 cɛ",
   },
   description: {
     Français: "Description",
     Anglais: "Description",
-    Bambara: "Bayɛlɛmali",
+    Bambara: "Ɲɛfɔli",
   },
   description_required: {
     Français: "La description est obligatoire",
     Anglais: "Description is required",
-    Bambara: "Bayɛlɛmali ka kan ka sɛbɛn",
+    Bambara: "Ɲɛfɔli ka kan ka sɛbɛn",
   },
   description_length: {
     Français: "La description doit contenir entre 30 et 10000 caractères",
     Anglais: "Description must be between 30 and 10000 characters",
-    Bambara: "Bayɛlɛmali ka kan ka kɛ sira 30 ni 10000 cɛ",
+    Bambara: "Ɲɛfɔli ka kan ka kɛ sɛbɛnni 30 ni sɛbɛnni 10000 cɛ",
   },
   start_date: {
     Français: "Date de début",
     Anglais: "Start Date",
-    Bambara: "Daminɛ don",
+    Bambara: "Waati daminɛ don",
   },
   start_date_required: {
     Français: "La date de début est obligatoire",
     Anglais: "Start date is required",
-    Bambara: "Daminɛ don ka kan ka sɛbɛn",
+    Bambara: "Waati daminɛ don ka kan ka sɛbɛn",
   },
   end_date: {
     Français: "Date de fin",
     Anglais: "End Date",
-    Bambara: "Laban don",
+    Bambara: "Waati laban don",
   },
   end_date_required: {
     Français: "La date de fin est obligatoire",
     Anglais: "End date is required",
-    Bambara: "Laban don ka kan ka sɛbɛn",
+    Bambara: "Waati laban don ka kan ka sɛbɛn",
   },
   date_range_invalid: {
     Français: "La date de fin doit être après la date de début",
     Anglais: "End date must be after start date",
-    Bambara: "Laban don ka kan ka kɛ daminɛ don kɔfɛ",
+    Bambara: "Waati laban don ka kan ka kɛ waati daminɛ don kɔfɛ",
   },
   date_range_limit: {
     Français:
@@ -159,288 +160,288 @@ const translations = {
     Anglais:
       "Dates are limited to one year before or after the current date for better management.",
     Bambara:
-      "Donw dalen dan san kelen kɔfɛ walima san kelen bi kɔfɛ walasa ladon cogo ka nɔgɔya.",
+      "Waatiw dalen don san kelen ɲɛfɛ walima san kelen kɔfɛ bi don na walasa ka baara ɲuman kɛ.",
   },
 
   // School years list
   all_years: {
     Français: "Toutes",
     Anglais: "All",
-    Bambara: "Bɛɛ",
+    Bambara: "A bɛɛ",
   },
   active_years: {
     Français: "Actives",
     Anglais: "Active",
-    Bambara: "Dabɔlenw",
+    Bambara: "Minnu bɛ baara la",
   },
   expired_years: {
     Français: "Expirées",
     Anglais: "Expired",
-    Bambara: "Tɛmɛnenw",
+    Bambara: "Minnu dalen banna",
   },
   search_year: {
     Français: "Rechercher une année...",
     Anglais: "Search for a year...",
-    Bambara: "San dɔ ɲini...",
+    Bambara: "Kalan san dɔ ɲini...",
   },
   no_years_title: {
     Français: "Aucune année scolaire",
     Anglais: "No School Years",
-    Bambara: "Kalansen san foyi tɛ",
+    Bambara: "Kalan san si tɛ yen",
   },
   no_years_message: {
     Français:
       "Vous n'avez pas encore créé d'année scolaire. Commencez par en ajouter une.",
     Anglais: "You haven't created any school years yet. Start by adding one.",
-    Bambara: "I ma kalansen san foyi da fɔlɔ. Daminɛ ni kura fara ye.",
+    Bambara: "I ma kalan san si da fɔlɔ. A daminɛ ni kelen dali ye.",
   },
   no_results_title: {
     Français: "Aucun résultat",
     Anglais: "No Results",
-    Bambara: "Foyi ma sɔrɔ",
+    Bambara: "Fɛn si ma sɔrɔ",
   },
   no_results_message: {
     Français: "Aucune année scolaire ne correspond à votre recherche.",
     Anglais: "No school years match your search.",
-    Bambara: "Kalansen san foyi ma kɛ i ka ɲinini jaabi ye.",
+    Bambara: "Kalan san si ma bɛn i ka ɲinini ma.",
   },
   clear_search: {
     Français: "Effacer la recherche",
     Anglais: "Clear Search",
-    Bambara: "Ɲinini foroko jɔsi",
+    Bambara: "Ɲinini jɔsi",
   },
   expenses_count: {
     Français: "Dépenses",
     Anglais: "Expenses",
-    Bambara: "Musakaw",
+    Bambara: "Wari bɔ yɔrɔw",
   },
   total_amount: {
     Français: "Montant total",
     Anglais: "Total Amount",
-    Bambara: "Hakɛ lajɛlen",
+    Bambara: "Wari bɛɛ lajɛlen",
   },
   view_details: {
     Français: "Voir les détails",
     Anglais: "View Details",
-    Bambara: "Kunnafoni lajɛ",
+    Bambara: "A kɔnɔkow lajɛ",
   },
   edit: {
     Français: "Modifier",
     Anglais: "Edit",
-    Bambara: "Yɛlɛma",
+    Bambara: "A yɛlɛma",
   },
   delete: {
     Français: "Supprimer",
     Anglais: "Delete",
-    Bambara: "Jɔsi",
+    Bambara: "A jɔsi",
   },
   active: {
     Français: "Active",
     Anglais: "Active",
-    Bambara: "Dabɔlen",
+    Bambara: "A bɛ baara la",
   },
   expired: {
     Français: "Expirée",
     Anglais: "Expired",
-    Bambara: "Tɛmɛnen",
+    Bambara: "A dalen banna",
   },
 
   // Expenses
   pay_employees: {
     Français: "Payer Des Emplyés",
     Anglais: "To Pay Employees",
-    Bambara: "Ka Baarakɛlaw Sara",
+    Bambara: "Ka baarakɛlaw ka sara di",
   },
   add_expense: {
     Français: "Ajouter une dépense",
     Anglais: "Add Expense",
-    Bambara: "Musaka dɔ fara",
+    Bambara: "Ka wari bɔ yɔrɔ dɔ fara a kan",
   },
   edit_expense: {
     Français: "Modifier la dépense",
     Anglais: "Edit Expense",
-    Bambara: "Musaka yɛlɛma",
+    Bambara: "Ka wari bɔ yɔrɔ yɛlɛma",
   },
   expense_created: {
     Français: "Dépense ajoutée avec succès !",
     Anglais: "Expense added successfully!",
-    Bambara: "Musaka fara ni ɲɛtaa ye!",
+    Bambara: "Wari bɔ yɔrɔ farala a kan ka ɲɛ!",
   },
   expense_updated: {
     Français: "Dépense mise à jour avec succès !",
     Anglais: "Expense updated successfully!",
-    Bambara: "Musaka kɔnɔ kunnafoniw yɛlɛmana ni ɲɛtaa ye!",
+    Bambara: "Wari bɔ yɔrɔ kɔnɔkow yɛlɛmana ka ɲɛ!",
   },
   expense_deleted: {
     Français: "Dépense supprimée avec succès !",
     Anglais: "Expense deleted successfully!",
-    Bambara: "Musaka jɔsira ni ɲɛtaa ye!",
+    Bambara: "Wari bɔ yɔrɔ jɔsira ka ɲɛ!",
   },
   confirm_delete_expense: {
     Français: "Confirmer la suppression",
     Anglais: "Confirm Deletion",
-    Bambara: "Jɔsili jɛtigi",
+    Bambara: "Ka jɔsili dafa",
   },
   confirm_delete_expense_msg: {
     Français: "Êtes-vous sûr de vouloir supprimer cette dépense ?",
     Anglais: "Are you sure you want to delete this expense?",
-    Bambara: "I dalen don i bɛ nin musaka in jɔsi?",
+    Bambara: "I kɔni dalen don i bɛ nin wari bɔ yɔrɔ in jɔsi wa?",
   },
   expired_year: {
     Français: "Année expirée",
     Anglais: "Expired Year",
-    Bambara: "San tɛmɛnen",
+    Bambara: "San min dalen banna",
   },
 
   // Expense form
   expense_name: {
     Français: "Nom de la dépense",
     Anglais: "Expense Name",
-    Bambara: "Musaka tɔgɔ",
+    Bambara: "Wari bɔ yɔrɔ tɔgɔ",
   },
   expense_name_placeholder: {
     Français: "Nom de la dépense",
     Anglais: "Expense name",
-    Bambara: "Musaka tɔgɔ",
+    Bambara: "Wari bɔ yɔrɔ tɔgɔ",
   },
   expense_name_required: {
     Français: "Le nom de la dépense est requis",
     Anglais: "Expense name is required",
-    Bambara: "Musaka tɔgɔ ka kan ka sɛbɛn",
+    Bambara: "Wari bɔ yɔrɔ tɔgɔ ka kan ka sɛbɛn",
   },
   expense_name_min_length: {
     Français: "Le nom doit contenir au moins 3 caractères",
     Anglais: "Name must contain at least 3 characters",
-    Bambara: "Tɔgɔ ka kan ka kɛ sira 3 duguma",
+    Bambara: "Tɔgɔ ka kan ka kɛ sɛbɛnni 3 walima o sanfɛ",
   },
   expense_name_max_length: {
     Français: "Le nom ne peut pas dépasser 50 caractères",
     Anglais: "Name cannot exceed 50 characters",
-    Bambara: "Tɔgɔ tɛ se ka tɛmɛ sira 50 kan",
+    Bambara: "Tɔgɔ tɛ se ka tɛmɛ sɛbɛnni 50 kan",
   },
   expense_description: {
     Français: "Description",
     Anglais: "Description",
-    Bambara: "Bayɛlɛmali",
+    Bambara: "Ɲɛfɔli",
   },
   expense_description_placeholder: {
     Français: "Description détaillée (30-10000 caractères)",
     Anglais: "Detailed description (30-10000 characters)",
-    Bambara: "Bayɛlɛmali dakɔrɔlen (sira 30-10000)",
+    Bambara: "Ɲɛfɔli dafalen (sɛbɛnni 30-10000)",
   },
   expense_description_required: {
     Français: "La description est requise",
     Anglais: "Description is required",
-    Bambara: "Bayɛlɛmali ka kan ka sɛbɛn",
+    Bambara: "Ɲɛfɔli ka kan ka sɛbɛn",
   },
   expense_description_min_length: {
     Français: "La description doit contenir au moins 30 caractères",
     Anglais: "Description must contain at least 30 characters",
-    Bambara: "Bayɛlɛmali ka kan ka kɛ sira 30 duguma",
+    Bambara: "Ɲɛfɔli ka kan ka kɛ sɛbɛnni 30 walima o sanfɛ",
   },
   expense_description_max_length: {
     Français: "La description ne peut pas dépasser 10 000 caractères",
     Anglais: "Description cannot exceed 10,000 characters",
-    Bambara: "Bayɛlɛmali tɛ se ka tɛmɛ sira 10 000 kan",
+    Bambara: "Ɲɛfɔli tɛ se ka tɛmɛ sɛbɛnni 10 000 kan",
   },
   expense_amount: {
     Français: "Montant",
     Anglais: "Amount",
-    Bambara: "Hakɛ",
+    Bambara: "Wari hakɛ",
   },
   expense_amount_required: {
     Français: "Le montant est requis",
     Anglais: "Amount is required",
-    Bambara: "Hakɛ ka kan ka sɛbɛn",
+    Bambara: "Wari hakɛ ka kan ka sɛbɛn",
   },
   expense_amount_positive: {
     Français: "Le montant doit être un nombre positif",
     Anglais: "Amount must be a positive number",
-    Bambara: "Hakɛ ka kan ka kɛ nimɔrɔ positifi ye",
+    Bambara: "Wari hakɛ ka kan ka kɛ jateda ye min ka bon ni zero ye",
   },
   expense_date: {
     Français: "Date",
     Anglais: "Date",
-    Bambara: "Don",
+    Bambara: "Waati",
   },
   expense_date_required: {
     Français: "La date est requise",
     Anglais: "Date is required",
-    Bambara: "Don ka kan ka sɛbɛn",
+    Bambara: "Waati ka kan ka sɛbɛn",
   },
   expense_date_outside_range: {
     Français:
       "La date doit être comprise entre le début et la fin de l'année scolaire",
     Anglais: "Date must be between the school year start and end dates",
-    Bambara: "Don ka kan ka kɛ kalansen san daminɛ don ni a laban don cɛ",
+    Bambara: "Waati ka kan ka kɛ kalan san daminɛ ni a laban cɛ",
   },
   expense_category: {
     Français: "Catégorie",
     Anglais: "Category",
-    Bambara: "Suguyali",
+    Bambara: "Sɛbɛn suguya",
   },
   expense_category_required: {
     Français: "La catégorie est requise",
     Anglais: "Category is required",
-    Bambara: "Suguyali ka kan ka sɛbɛn",
+    Bambara: "Sɛbɛn suguya ka kan ka sɛbɛn",
   },
 
   // Expense categories
   employee_payments: {
-    Français: "Détails des paiements employés",
-    Anglais: "Employee payment details",
-    Bambara: "Kalosara kunnafoniw",
+    Français: "Détails des paiements des Employés",
+    Anglais: "Payment details for Employees",
+    Bambara: "Baarakɛlaw ka sara kunnafoniw",
   },
   employee_name: {
     Français: "Employé",
     Anglais: "Employee",
-    Bambara: "Baarakɛla",
+    Bambara: "Baarakɛla tɔgɔ",
   },
   employee_post: {
     Français: "Postes",
     Anglais: "Jobs",
-    Bambara: "Baaraw",
+    Bambara: "Baara cogoyaw",
   },
   paid_amount: {
     Français: "Montant payé",
     Anglais: "Amount paid",
-    Bambara: "Sara min sɔrɔla",
+    Bambara: "Wari hakɛ min saraw",
   },
   // Les Categories des dépenses
   category_supplies: {
     Français: "Fournitures",
     Anglais: "Supplies",
-    Bambara: "Kalankɛ fɛnw",
+    Bambara: "Baara kɛminɛnw",
   },
   category_equipment: {
     Français: "Équipement",
     Anglais: "Equipment",
-    Bambara: "Kalankɛ minanw",
+    Bambara: "Minɛnw",
   },
   category_salary: {
     Français: "Salaires",
     Anglais: "Salary",
-    Bambara: "Baarakɛlaw Saraw",
+    Bambara: "Saraw",
   },
   category_rent: {
     Français: "Loyer",
     Anglais: "Rent",
-    Bambara: "So sara",
+    Bambara: "Luso sara",
   },
   category_utilities: {
     Français: "Services",
     Anglais: "Utilities",
-    Bambara: "Nafafɛnw",
+    Bambara: "Sèrivisuw",
   },
   category_maintenance: {
     Français: "Maintenance",
     Anglais: "Maintenance",
-    Bambara: "Labaarali",
+    Bambara: "Minɛnw labaara",
   },
   category_events: {
     Français: "Événements",
     Anglais: "Events",
-    Bambara: "Kunkanw",
+    Bambara: "Kɛwalew",
   },
   category_other: {
     Français: "Autres",
@@ -452,83 +453,83 @@ const translations = {
   search_expenses: {
     Français: "Rechercher une dépense...",
     Anglais: "Search expenses...",
-    Bambara: "Musaka dɔ ɲini...",
+    Bambara: "Wari bɔ yɔrɔw ɲini...",
   },
   filters: {
     Français: "Filtres",
     Anglais: "Filters",
-    Bambara: "Filateren",
+    Bambara: "Woloma cogo",
   },
   reset_filters: {
     Français: "Réinitialiser",
     Anglais: "Reset",
-    Bambara: "Segin daminɛ ma",
+    Bambara: "A daminɛ kura",
   },
   category: {
     Français: "Catégorie",
     Anglais: "Category",
-    Bambara: "Suguyali",
+    Bambara: "Sɛbɛn suguya",
   },
   all_categories: {
     Français: "Toutes les catégories",
     Anglais: "All categories",
-    Bambara: "Suguyali bɛɛ",
+    Bambara: "Sɛbɛn suguya bɛɛ",
   },
   expenses_found: {
     Français: "dépenses trouvées",
     Anglais: "expenses found",
-    Bambara: "musaka sɔrɔlen",
+    Bambara: "wari bɔ yɔrɔw sɔrɔlen",
   },
   filtered_from: {
     Français: "filtrées sur",
     Anglais: "filtered from",
-    Bambara: "filateren ka bɔ",
+    Bambara: "woloma ka bɔ",
   },
   total: {
     Français: "Total",
     Anglais: "Total",
-    Bambara: "Bɛɛ lajɛlen",
+    Bambara: "A bɛɛ lajɛlen",
   },
   date: {
     Français: "Date",
     Anglais: "Date",
-    Bambara: "Don",
+    Bambara: "Tile",
   },
   amount: {
     Français: "Montant",
     Anglais: "Amount",
-    Bambara: "Hakɛ",
+    Bambara: "Wari hakɛ",
   },
   created_at: {
     Français: "Créé le",
     Anglais: "Created on",
-    Bambara: "Da don",
+    Bambara: "A dilan don",
   },
   updated_at: {
     Français: "Modifié le",
     Anglais: "Updated on",
-    Bambara: "Yɛlɛma don",
+    Bambara: "A yɛlɛmana don",
   },
   no_matching_expenses: {
     Français: "Aucune dépense ne correspond à vos critères",
     Anglais: "No expenses match your criteria",
-    Bambara: "Musaka foyi ma kɛ i ka ɲinini jaabi ye",
+    Bambara: "Wari bɔ yɔrɔ si tɛ kɛɲɛ ni i ka ɲininiw ye",
   },
   no_expenses: {
     Français: "Aucune dépense enregistrée",
     Anglais: "No expenses recorded",
-    Bambara: "Musaka foyi ma sɛbɛn",
+    Bambara: "Wari bɔ yɔrɔ si ma sɛbɛn fɔlɔ",
   },
   try_different_filters: {
     Français: "Essayez différents filtres ou effacez votre recherche",
     Anglais: "Try different filters or clear your search",
-    Bambara: "Filateren wɛrɛw kɛ walima i ka ɲinini jɔsi",
+    Bambara: "Woloma cogo wɛrɛw kɛ walima i ka ɲinini jɔsi",
   },
   add_first_expense: {
     Français:
       "Ajoutez votre première dépense pour commencer à suivre vos finances",
     Anglais: "Add your first expense to start tracking your finances",
-    Bambara: "I ka musaka fɔlɔ fara walasa ka i ka wari kɔlɔsili daminɛ",
+    Bambara: "I ka wari bɔ yɔrɔ fɔlɔ sɛbɛn walasa ka i ka wari kɔlɔsili daminɛ",
   },
 
   // Form actions
@@ -540,57 +541,57 @@ const translations = {
   save: {
     Français: "Enregistrer",
     Anglais: "Save",
-    Bambara: "A maradon",
+    Bambara: "A mara",
   },
   saving: {
     Français: "Enregistrement...",
     Anglais: "Saving...",
-    Bambara: "A maradon...",
+    Bambara: "A marali la...",
   },
   update: {
     Français: "Mettre à jour",
     Anglais: "Update",
-    Bambara: "Kura don",
+    Bambara: "A kura don",
   },
   back: {
     Français: "Retour",
     Anglais: "Back",
-    Bambara: "Kɔsɛgin",
+    Bambara: "Kɔsegin",
   },
   cancel_tooltip: {
     Français: "Annuler et revenir à la liste",
     Anglais: "Cancel and return to list",
-    Bambara: "A dabila ka segin lisi ma",
+    Bambara: "A dabila ka segin sɛbɛn bɛɛ lajɛlen ma",
   },
   save_tooltip: {
     Français: "Enregistrer la nouvelle dépense",
     Anglais: "Save the new expense",
-    Bambara: "Musaka kura in maradon",
+    Bambara: "Wari bɔ yɔrɔ kura in mara",
   },
   update_tooltip: {
     Français: "Enregistrer les modifications",
     Anglais: "Save the changes",
-    Bambara: "Yɛlɛmali maradon",
+    Bambara: "Yɛlɛmaliw mara",
   },
   delete_error: {
     Français: "Erreur lors de la suppression",
     Anglais: "Error while deleting",
-    Bambara: "Jɔsili fili",
+    Bambara: "Fili kɛra ka a jɔsi tuma",
   },
   error_saving: {
     Français: "Erreur lors de l'enregistrement de la dépense",
     Anglais: "Error saving expense",
-    Bambara: "Musaka maradon fili",
+    Bambara: "Fili kɛra ka wari bɔ yɔrɔ mara tuma",
   },
   character_count: {
     Français: "Caractères",
     Anglais: "Characters",
-    Bambara: "Siraw",
+    Bambara: "Sɛbɛnni hakɛ",
   },
   min_max_chars: {
     Français: "Min: 30 / Max: 10000",
     Anglais: "Min: 30 / Max: 10000",
-    Bambara: "Fitini: 30 / Caman: 10000",
+    Bambara: "Dɔgɔman: 30 / Caman: 10000",
   },
 
   // Nouvelles traductions pour le texte de l'avertissement dans le formulaire d'année scolaire
@@ -600,7 +601,7 @@ const translations = {
     Anglais:
       "If you modify the title or dates, make sure there isn't already a school year with the same information.",
     Bambara:
-      "Ni i ye tɔgɔ walima donw yɛlɛma, i ka janto kalansen san wɛrɛ tɛ ni kunnafoni kelenw ye.",
+      "Ni i bɛ tɔgɔ walima donw yɛlɛma, i ka janto kalansen san wɛrɛ tɛ ni kunnafoni kelenw ye.",
   },
   school_year_duplicate_warning_create: {
     Français:
@@ -608,14 +609,14 @@ const translations = {
     Anglais:
       "You cannot create two school years with the same title, start date, and end date.",
     Bambara:
-      "I tɛ se ka kalansen san fila da min tɔgɔw, daminɛ donw, ani laban donw bɛɛ ye kelen ye.",
+      "I tɛ se ka kalansen san fila da ni tɔgɔ kelen, daminɛ don kelen ani laban don kelen ye.",
   },
 
   // Traductions des mois pour formatDate
   month_january: {
     Français: "janvier",
-    Anglais: "January",
-    Bambara: "zanwuyekalo",
+    Anglais: "January", 
+    Bambara: "Zanwuyekalo",
   },
   month_february: {
     Français: "février",
@@ -625,52 +626,52 @@ const translations = {
   month_march: {
     Français: "mars",
     Anglais: "March",
-    Bambara: "marisikalo",
+    Bambara: "Marisikalo",
   },
   month_april: {
     Français: "avril",
     Anglais: "April",
-    Bambara: "awirilikalo",
+    Bambara: "Awirilikalo",
   },
   month_may: {
     Français: "mai",
     Anglais: "May",
-    Bambara: "mɛkalo",
+    Bambara: "Mɛkalo",
   },
   month_june: {
     Français: "juin",
     Anglais: "June",
-    Bambara: "zuwɛnkalo",
+    Bambara: "Zuwɛnkalo",
   },
   month_july: {
     Français: "juillet",
     Anglais: "July",
-    Bambara: "zuluyekalo",
+    Bambara: "Zuyekalo",
   },
   month_august: {
     Français: "août",
     Anglais: "August",
-    Bambara: "utikalo",
+    Bambara: "Utikalo",
   },
   month_september: {
     Français: "septembre",
     Anglais: "September",
-    Bambara: "sɛtanburukalo",
+    Bambara: "Sɛtanburukalo",
   },
   month_october: {
     Français: "octobre",
     Anglais: "October",
-    Bambara: "ɔkitɔburukalo",
+    Bambara: "Ɔkutɔburukalo",
   },
   month_november: {
     Français: "novembre",
     Anglais: "November",
-    Bambara: "nowanburukalo",
+    Bambara: "Nowanburukalo",
   },
   month_december: {
     Français: "décembre",
     Anglais: "December",
-    Bambara: "desanburukalo",
+    Bambara: "Desanburukalo",
   },
 
   // Nouvelles traductions pour les textes manquants
@@ -682,29 +683,29 @@ const translations = {
   created_on: {
     Français: "Créé le",
     Anglais: "Created on",
-    Bambara: "Da don",
+    Bambara: "A dilan don",
   },
   updated_on: {
     Français: "Mis à jour le",
     Anglais: "Updated on",
-    Bambara: "Yɛlɛma don",
+    Bambara: "A kuraya don",
   },
   close: {
     Français: "Fermer",
     Anglais: "Close",
-    Bambara: "Datugu",
+    Bambara: "A datugu",
   },
   complete_guide: {
     Français: "Guide complet de gestion des dépenses",
     Anglais: "Complete Expense Management Guide",
-    Bambara: "Musaka kɛcogo dafalen ɲesin",
+    Bambara: "Wari bɔ cogoya bɛɛ lajɛlen ka ɲɛsin",
   },
 
   // InfoPopup - Sections principales
   overview: {
     Français: "Vue d'ensemble",
     Anglais: "Overview",
-    Bambara: "Jamana ɲɛfɔ",
+    Bambara: "A bɛɛ lajɛlen ɲɛfɔli",
   },
   guide_intro_content: {
     Français:
@@ -712,18 +713,18 @@ const translations = {
     Anglais:
       "The expense management system is designed to help you effectively track all expenses of your school. Organized by school years, it allows you to maintain accurate accounting and generate detailed reports on your finances.",
     Bambara:
-      "Musaka mara cogo in dabɔlen don walasa ka i dɛmɛ ka i ka lakɔli musaka bɛɛ tugun kosɛbɛ. A sigilen don kalansen sanw kɔnɔ, min b'a to i ka wari jate tilennen mara ani ka bayɛlɛmali dakɔrɔlen baara i ka wari kow kan.",
+      "Wari bɔ cogoya in dabɔlen don walasa ka i dɛmɛ ka i ka lakɔli wari bɔ yɔrɔw bɛɛ kɔlɔsi ka ɲɛ. A sigilen don kalansen sanw kɔnɔ, min b'a to i ka wari jate tilennen mara ani ka sɛbɛn dakɔrɔlenw bɔ i ka wari kow kan.",
   },
   system_structure: {
     Français: "Structure du système",
     Anglais: "System Structure",
-    Bambara: "Baara cogo sigilama",
+    Bambara: "Baara cogoya labɛnnen",
   },
   system_structured_levels: {
     Français:
       "Le système est structuré en deux niveaux hiérarchiques principaux :",
     Anglais: "The system is structured in two main hierarchical levels:",
-    Bambara: "Baara cogo sigilen don cɛ sira fila kɔnɔ:",
+    Bambara: "Baara cogoya in tilalen don fan fila ma:",
   },
   recommended_workflow: {
     Français: "Flux de travail recommandé",
@@ -733,7 +734,7 @@ const translations = {
   main_features: {
     Français: "Fonctionnalités principales",
     Anglais: "Main Features",
-    Bambara: "Baara kɛfɛnw kunbabaw",
+    Bambara: "Baara kɛcogo fanba fɔlɔw",
   },
   best_practices: {
     Français: "Bonnes pratiques",
@@ -743,7 +744,7 @@ const translations = {
   important_warnings: {
     Français: "Avertissements importants",
     Anglais: "Important Warnings",
-    Bambara: "Lasɔlimisɛn nafamaw",
+    Bambara: "Kɔlɔsili nafama minnu ka kan ka kɛ",
   },
   practical_tips: {
     Français: "Conseils pratiques",
@@ -763,14 +764,14 @@ const translations = {
     Anglais:
       "Each school year represents a time frame defined by a start date and an end date. These periods serve as containers for all your expenses.",
     Bambara:
-      "Kalansen san kelen o kelen bɛɛ ye waati daminɛ don ni a laban don cɛ waati ye. Nin waatiw ye i ka musaka bɛɛ mara yɔrɔw ye.",
+      "Kalansen san kelen o kelen bɛɛ ye waati dɔ ye min daminɛ don ni a laban don bɛ sɛbɛn. O waatiw bɛ kɛ i ka wari bɔ yɔrɔw bɛɛ mara cogoya ye.",
   },
 
   // Structure items - Expenses
   expenses_structure: {
     Français: "Dépenses",
     Anglais: "Expenses",
-    Bambara: "Musakaw",
+    Bambara: "Wari bɔ yɔrɔw",
   },
   expenses_desc: {
     Français:
@@ -778,7 +779,7 @@ const translations = {
     Anglais:
       "Individual expenses are associated with a specific school year. Each expense includes a name, amount, category, date, and detailed description.",
     Bambara:
-      "Musaka kelen kelen bɛɛ ye kalansen san kelen ta ye. Musaka kelen kelen bɛɛ kɔnɔ, tɔgɔ, hakɛ, suguyali, don ani bayɛlɛmali dakɔrɔlen bɛ sɔrɔ.",
+      "Wari bɔ yɔrɔ kelen kelen bɛɛ ye kalansen san kelen ta ye. Wari bɔ yɔrɔ kelen kelen bɛɛ kɔnɔ, tɔgɔ, wari hakɛ, sɛbɛn suguya, don ani bayɛlɛmali dakɔrɔlen bɛ sɔrɔ.",
   },
 
   // Workflow steps
@@ -788,14 +789,14 @@ const translations = {
     Anglais:
       "First, create a school year with precise dates covering your academic period.",
     Bambara:
-      "Fɔlɔ, kalansen san kura da min donw bɛ i ka kalansen waati bɛɛ minɛ.",
+      "Fɔlɔ, kalan san dɔ dabɔ ni don kɛrɛnkɛrɛnnenw ye minnu bɛ i ka kalan waati bɛɛ minɛ.",
   },
   workflow_step2: {
     Français:
       "Ajoutez progressivement vos dépenses dans l'ordre chronologique au fur et à mesure qu'elles surviennent.",
     Anglais:
       "Gradually add your expenses in chronological order as they occur.",
-    Bambara: "I ka musakaw fara ɲɔgɔn kan tuma ni tuma ka tugu donw waatiw ma.",
+    Bambara: "I ka musaka sɛbɛn ka tugu ɲɔgɔn kɔ ka kɛɲɛ ni u kɛ waati ye.",
   },
   workflow_step3: {
     Français:
@@ -803,14 +804,14 @@ const translations = {
     Anglais:
       "Use consistent categories to facilitate tracking and subsequent analysis.",
     Bambara:
-      "Suguyali kelenw kɛ walasa tugun kɔlɔsili ani sɛgɛsɛgɛli ka nɔgɔya.",
+      "Musaka suguya kelen-kelenw bila sen na walasa ka u kɔlɔsili ni u sɛgɛsɛgɛli nɔgɔya.",
   },
   workflow_step4: {
     Français:
       "Consultez régulièrement les totaux et les statistiques pour surveiller vos finances.",
     Anglais: "Regularly check totals and statistics to monitor your finances.",
     Bambara:
-      "Hakɛ lajɛlenw ani jabiɲɛfɔlaw lajɛ tuma ni tuma walasa ka i ka wari kɔlɔsi.",
+      "I ka wari hakɛw ni u jateminɛw lajɛ waati ni waati walasa ka i ka wari kɔlɔsi kosɛbɛ.",
   },
   workflow_step5: {
     Français:
@@ -818,14 +819,14 @@ const translations = {
     Anglais:
       "Automatically archive expired years while maintaining access for future reference.",
     Bambara:
-      "San tɛmɛnenw mara u yɛrɛ ma ka sɔrɔ ka u ladon ɲinini nɔfɛ waatiw kama.",
+      "San tɛmɛnenw mara u yɛrɛma ka sɔrɔ ka u ladon walasa ka se ka u lajɛ don nataw la.",
   },
 
   // Best practices
   strict_timeline: {
     Français: "Chronologie stricte",
     Anglais: "Strict Timeline",
-    Bambara: "Waati tugun jɔnjɔn",
+    Bambara: "Waati sariyaw",
   },
   strict_timeline_content: {
     Français:
@@ -833,12 +834,12 @@ const translations = {
     Anglais:
       "Record your expenses in chronological order to maintain accurate and consistent tracking. Avoid adding expenses out of order, which could complicate financial analysis.",
     Bambara:
-      "I ka musakaw sɛbɛn ka tugu donw cɛsiri ma walasa ka tugun kɔlɔsili jɔnjɔn ni tilennen kɛ. I kana musakaw sɛbɛn cɛsiri tilennen kɔfɛ, o bɛ se ka wari sɛgɛsɛgɛli gɛlɛya.",
+      "I ka musakaw sɛbɛn ka tugu ɲɔgɔn kɔ walasa ka u kɔlɔsili kɛ ka ɲɛ. I kana musakaw sɛbɛn ka ɲɔgɔn ɲagami, o bɛ se ka wari sɛgɛsɛgɛli gɛlɛya.",
   },
   consistent_categorization: {
     Français: "Catégorisation cohérente",
     Anglais: "Consistent Categorization",
-    Bambara: "Suguyali kɛcogo kelen",
+    Bambara: "Musaka suguya cogoya",
   },
   consistent_categorization_content: {
     Français:
@@ -846,12 +847,12 @@ const translations = {
     Anglais:
       "Consistently use the same categories for similar expenses to ensure accurate reports and analyses.",
     Bambara:
-      "Suguyali kelenw kɛ tuma bɛɛ musaka suguya kelenw kama walasa ka jabiɲɛfɔli ni sɛgɛsɛgɛli tilennen sɔrɔ.",
+      "Musaka suguya kelenw kɛ tuma bɛɛ musaka kɛrɛnkɛrɛnnenw ye walasa ka sɛbɛnni ni sɛgɛsɛgɛli ɲuman sɔrɔ.",
   },
   detailed_descriptions: {
     Français: "Descriptions détaillées",
     Anglais: "Detailed Descriptions",
-    Bambara: "Bayɛlɛmali dakɔrɔlen",
+    Bambara: "Ɲɛfɔli dafalen",
   },
   detailed_descriptions_content: {
     Français:
@@ -859,12 +860,12 @@ const translations = {
     Anglais:
       "Write complete descriptions for each expense (minimum 30 characters) including context, justification, and relevant stakeholders.",
     Bambara:
-      "Bayɛlɛmali dafalen sɛbɛn musaka kelen kelen bɛɛ kama (a fitini ka kan ka kɛ sira 30) min kɔnɔ a cogo, a kun ani a mɔgɔ ɲɛsinnenw bɛ fɔ.",
+      "Musaka kelen-kelen bɛɛ ɲɛfɔ ka ɲɛ (sɛbɛnni fitini ka kan ka kɛ 30) ka a kɛcogo, a kun ani a mɔgɔw bɛɛ fɔ.",
   },
   regular_verification: {
     Français: "Vérification régulière",
     Anglais: "Regular Verification",
-    Bambara: "Sɛgɛsɛgɛli tuma ni tuma",
+    Bambara: "Lajɛli kɛ waati ni waati",
   },
   regular_verification_content: {
     Français:
@@ -872,26 +873,26 @@ const translations = {
     Anglais:
       "Periodically review your expenses to identify trends and optimize your future budget.",
     Bambara:
-      "I ka musakaw sɛgɛsɛgɛ tuma ni tuma walasa ka kow taabolo dɔn ani ka i ka wari kɛcogo ɲɛfɔlen ɲɛnafacinya.",
+      "I ka musakaw lajɛ waati ni waati walasa ka u taabolow dɔn ani ka i ka wari kɛcogo ɲɛsin ɲɛfɛ.",
   },
   data_backup: {
     Français: "Sauvegarde des données",
     Anglais: "Data Backup",
-    Bambara: "Kunnafoni maracogo",
+    Bambara: "Kunnafoniw maracogo",
   },
   data_backup_content: {
     Français:
       "Effectuez régulièrement des sauvegardes de vos données financières pour éviter toute perte d'information.",
     Anglais:
       "Regularly back up your financial data to avoid any loss of information.",
-    Bambara: "I ka wari kunnafoniw mara tuma ni tuma walasa u kana tunun.",
+    Bambara: "I ka wari kunnafoniw mara waati ni waati walasa u kana tunun.",
   },
 
   // Features
   advanced_filtering: {
     Français: "Filtrage avancé",
     Anglais: "Advanced Filtering",
-    Bambara: "Filateren dakɔrɔlen",
+    Bambara: "Woloma cogo kofɔlen",
   },
   advanced_filtering_desc: {
     Français:
@@ -899,12 +900,12 @@ const translations = {
     Anglais:
       "Filter expenses by category, date, or keyword to quickly find what you're looking for.",
     Bambara:
-      "Musakaw filateren suguyali, don walima daɲɛ fɛ walasa ka i bɛ min ɲini o sɔrɔ joona.",
+      "Musakaw woloma u suguyaw, u donw, walima u tɔgɔw la walasa ka i bɛ min ɲini o ye joona.",
   },
   totals_visualization: {
     Français: "Visualisation des totaux",
     Anglais: "Totals Visualization",
-    Bambara: "Hakɛ lajɛlenw jirali",
+    Bambara: "Jatew lajɛlen jirali",
   },
   totals_visualization_desc: {
     Français:
@@ -912,12 +913,12 @@ const translations = {
     Anglais:
       "Instantly view the total expenses for each school year and category.",
     Bambara:
-      "Musaka hakɛ lajɛlen ye kalansen san kelen kelen ni suguyali bɛɛ kama sɔrɔ joona.",
+      "Kalansen san kelen kelen ni suguyali bɛɛ ka musaka hakɛ lajɛlen ye teliya la.",
   },
   data_protection: {
     Français: "Protection des données",
     Anglais: "Data Protection",
-    Bambara: "Kunnafoni lakana",
+    Bambara: "Kunnafoniw tangali",
   },
   data_protection_desc: {
     Français:
@@ -925,12 +926,12 @@ const translations = {
     Anglais:
       "Expired years are automatically locked to preserve the integrity of historical data.",
     Bambara:
-      "San tɛmɛnenw bɛ datugu u yɛrɛ ma walasa ka kɔfɛ kunnafoniw lakana.",
+      "San tɛmɛnenw bɛ datugu u yɛrɛma walasa ka kɔfɛ kunnafoniw lakana ka ɲɛ.",
   },
   responsive_interface: {
     Français: "Interface réactive",
     Anglais: "Responsive Interface",
-    Bambara: "Ɲɛjira teliman",
+    Bambara: "Ɲɛjira teliya man",
   },
   responsive_interface_desc: {
     Français:
@@ -938,7 +939,7 @@ const translations = {
     Anglais:
       "Enjoy a smooth user experience with animated transitions and responsive design.",
     Bambara:
-      "Baara mɔgɔ kɛcogo nɔgɔman sɔrɔ ni yɛlɛmali ɲɛfinnmaw ni ɲɛjira nɔgɔman cogo ye.",
+      "Ka baara kɛ ni nɔgɔya ye ni yɛlɛmali ɲumanw ni ɲɛjira nɔgɔman ye.",
   },
 
   // Warnings
@@ -953,12 +954,12 @@ const translations = {
     Anglais:
       "A school year automatically becomes read-only when its end date has passed. You will not be able to modify it, delete it, or add or modify its expenses. This restriction ensures the integrity of your historical data.",
     Bambara:
-      "Kalansen san bɛ kɛ kalan dɔrɔn ye a yɛrɛ ma n'a laban don tɛmɛna. I tɛ se k'a yɛlɛma, k'a jɔsi, walima ka musaka fara a kan walima k'a musaka yɛlɛma. Nin dansigi bɛ i ka kɔfɛ kunnafoniw lakana.",
+      "Ni kalansen san dɔ laban don tɛmɛna, a bɛ kɛ kalan dɔrɔn ye. I tɛna se ka fɛn yɛlɛma a la, k'a jɔsi, walima ka musaka fara a kan walima k'a musakaw yɛlɛma. O dansigi bɛ kɔfɛ kunnafoniw lakana ka ɲɛ.",
   },
   mandatory_descriptions_warning: {
     Français: "Descriptions obligatoires",
     Anglais: "Mandatory Descriptions",
-    Bambara: "Bayɛlɛmali wajibiw",
+    Bambara: "Ɲɛfɔli wajibiyanenw",
   },
   mandatory_descriptions_content: {
     Français:
@@ -966,12 +967,12 @@ const translations = {
     Anglais:
       "Each expense requires a detailed description between 30 and 10,000 characters. This requirement ensures complete documentation and promotes financial transparency.",
     Bambara:
-      "Musaka kelen kelen bɛɛ mako bɛ bayɛlɛmali dakɔrɔlen na min bɛ sira 30 ni 10 000 cɛ. Nin wajibiya bɛ kunnafoni dafalen ni wari fɛɛrɛ kɛnɛyali lakana.",
+      "Musaka bɛɛ ka kan ka ɲɛfɔ ka ɲɛ ni sɛbɛnni 30 ni 10 000 cɛ. O wajibiya bɛ kunnafoni dafalen di ani ka wari kow kɛ kɛnɛ kan.",
   },
   expense_dates_warning: {
     Français: "Dates des dépenses",
     Anglais: "Expense Dates",
-    Bambara: "Musaka donw",
+    Bambara: "Musaka kɛ donw",
   },
   expense_dates_content: {
     Français:
@@ -979,12 +980,12 @@ const translations = {
     Anglais:
       "The date of an expense must be between the start date and end date of its school year. Any date outside this range will be rejected.",
     Bambara:
-      "Musaka don ka kan ka kɛ a kalansen san daminɛ don ni a laban don cɛ. Don o don min tɛ nin cɛsiri kɔnɔ, o tɛna sɔn.",
+      "Musaka kɛ don ka kan ka kɛ kalansen san daminɛ don ni a laban don cɛ. Don min tɛ o waati kɔnɔ, o tɛna sɔn.",
   },
   duplicate_years_warning: {
     Français: "Années scolaires dupliquées",
     Anglais: "Duplicate School Years",
-    Bambara: "Kalansen san filananw",
+    Bambara: "Kalansen san ɲɔgɔnw",
   },
   duplicate_years_content: {
     Français:
@@ -992,14 +993,14 @@ const translations = {
     Anglais:
       "The system prevents the creation of duplicate school years. Two years cannot have the same title, start date, and end date simultaneously.",
     Bambara:
-      "Baara cogo tɛ sɔn kalansen san kelen fila ka da. San fila tɛ se ka kɛ ni tɔgɔ kelen, daminɛ don kelen ani laban don kelen ye.",
+      "Baara in tɛ sɔn kalansen san kelen ka kɛ siɲɛ fila ye. San fila tɛ se ka kɛ ni tɔgɔ kelen, daminɛ don kelen ani laban don kelen ye waati kelen na.",
   },
 
   // Tips
   advance_planning: {
     Français: "Planification préalable",
     Anglais: "Advance Planning",
-    Bambara: "Labɛnni jona",
+    Bambara: "Labɛnni kɔfɛ",
   },
   advance_planning_content: {
     Français:
@@ -1007,7 +1008,7 @@ const translations = {
     Anglais:
       "Create your new school year before the end of the current year to ensure a smooth transition.",
     Bambara:
-      "I ka kalansen san kura da sanni bi san ka ban walasa yɛlɛmali ka kɛ ni nɔgɔya ye.",
+      "I ka kalansen san kura da sani bi ta ka ban walasa yɛlɛmali ka kɛ ni nɔgɔya ye.",
   },
   consistent_naming: {
     Français: "Nomenclature cohérente",
@@ -1020,19 +1021,20 @@ const translations = {
     Anglais:
       "Use a uniform naming system for all your expenses to facilitate searches and sorting.",
     Bambara:
-      "Tɔgɔ dali cogo kelen kɛ i ka musaka bɛɛ kama walasa ɲinini ni woloma ka nɔgɔya.",
+      "Tɔgɔ dali cogo kelen kɛ i ka musaka bɛɛ la walasa ka ɲinini ni woloma nɔgɔya.",
   },
   monthly_check: {
     Français: "Vérification mensuelle",
     Anglais: "Monthly Check",
-    Bambara: "Kalo o kalo sɛgɛsɛgɛli",
+    Bambara: "Kalo kɔnɔ sɛgɛsɛgɛli",
   },
   monthly_check_content: {
     Français:
       "Réservez du temps chaque mois pour vérifier que toutes les dépenses ont été correctement enregistrées.",
     Anglais:
       "Set aside time each month to verify that all expenses have been correctly recorded.",
-    Bambara: "Waati bɔ kalo o kalo walasa ka lajɛ ni musaka bɛɛ sɛbɛnna ka ɲɛ.",
+    Bambara:
+      "Waati bɔ kalo o kalo ka musaka bɛɛ sɛgɛsɛgɛ k'a lajɛ ni u sɛbɛnna ka ɲɛ.",
   },
   quarterly_analysis: {
     Français: "Analyse trimestrielle",
@@ -1045,22 +1047,21 @@ const translations = {
     Anglais:
       "Analyze your expenses quarterly to identify trends and adjust your budget accordingly.",
     Bambara:
-      "I ka musakaw sɛgɛsɛgɛ kalo saba o saba walasa ka kow taabolo dɔn ani ka i ka wari kɛcogo ɲɛnafacinya.",
+      "I ka musakaw sɛgɛsɛgɛ kalo saba o saba walasa ka u taabolow dɔn ani ka wari kɛcogo ɲɛnabɔ o la.",
   },
 
   // Important chronological note
   chronological_order_title: {
     Français: "Ordre chronologique essentiel",
     Anglais: "Essential Chronological Order",
-    Bambara: "Waati cɛsirili nafama kosɛbɛ",
+    Bambara: "Waati tugu ɲɔgɔn kɔ nafama",
   },
   chronological_order_strong: {
     Français:
       "Il est fortement recommandé de créer vos dépenses dans l'ordre chronologique.",
     Anglais:
       "It is strongly recommended to create your expenses in chronological order.",
-    Bambara:
-      "A bɛ ɲini i fɛ kosɛbɛ ka i ka musakaw da ka tugu u waati cɛsiri ma.",
+    Bambara: "A ka kan kosɛbɛ i ka musakaw da ka tugu u kɛ waati ɲɔgɔn kɔ.",
   },
   chronological_order_content: {
     Français:
@@ -1068,7 +1069,7 @@ const translations = {
     Anglais:
       "This practice is crucial for maintaining accurate accounting and facilitating financial audits. Creating expenses out of order can lead to analysis errors and complicate budget management.",
     Bambara:
-      "Nin baara kɛcogo nafama kosɛbɛ walasa ka wari jate tilennen mara ani ka wari sɛgɛsɛgɛli nɔgɔya. Musaka dali min tɛ tugu cɛsiri ma, o bɛ se ka sɛgɛsɛgɛli filiw lase ani ka wari mara gɛlɛya.",
+      "O baara kɛcogo ka kan kosɛbɛ walasa ka wari jate tilennen mara ani ka wari sɛgɛsɛgɛli nɔgɔya. Ni musakaw ma da ka tugu u kɛ waati ɲɔgɔn kɔ, o bɛ se ka sɛgɛsɛgɛli fili ani ka wari mara gɛlɛya.",
   },
 
   // Footer note
@@ -1078,7 +1079,7 @@ const translations = {
     Anglais:
       "Rigorous expense management is essential to optimize your school budget and ensure the financial sustainability of your institution.",
     Bambara:
-      "Musaka mara jɔnjɔn nafama don walasa i ka kalansen wari kɛcogo ka ɲɛnafacinya ani ka i ka lakɔli wari sabatili lakana.",
+      "Musaka mara ɲuman ka kan kosɛbɛ walasa ka i ka kalansen wari kɛcogo ɲɛnabɔ ani ka i ka lakɔli wari sabati.",
   },
 
   // Nouvelles clés pour SchoolYearsList
@@ -1100,7 +1101,7 @@ const translations = {
   total_amount: {
     Français: "Montant total",
     Anglais: "Total Amount",
-    Bambara: "Hakɛ lajɛlen",
+    Bambara: "Wari hakɛ bɛɛ lajɛlen",
   },
 
   // School year form templates
@@ -1147,12 +1148,12 @@ const newTranslations = {
   pay_employees: {
     Français: "Payer les employés",
     Anglais: "Pay employees",
-    Bambara: "Baarakɛlaw sara",
+    Bambara: "Baarakɛlaw ka sara",
   },
   select_employees_to_pay: {
     Français: "Sélectionner les employés à payer",
     Anglais: "Select employees to pay",
-    Bambara: "Baarakɛlaw sugandi minnu ka kan ka sara",
+    Bambara: "Baarakɛlaw ɲanata ka sara",
   },
   select_employees_instruction: {
     Français:
@@ -1160,27 +1161,27 @@ const newTranslations = {
     Anglais:
       "Select the employees you want to pay. You can use filters to refine your search.",
     Bambara:
-      "Baarakɛlaw sugandi i b'a fɛ ka minnu sara. I bɛ se ka wolonkɛnanw kɛ walasa k'i ka ɲinini nɔgɔya.",
+      "I b'a fɛ ka baarakɛlaw minw sara, olu sugandi. I bɛ se ka taamasiɲɛw kɛ ka i ka ɲinini teliya.",
   },
   search_employees: {
     Français: "Rechercher des employés...",
     Anglais: "Search employees...",
-    Bambara: "Baarakɛlaw ɲini...",
+    Bambara: "Baarakɛlaw ɲinini...",
   },
   toggle_filters: {
     Français: "Afficher/masquer les filtres",
     Anglais: "Toggle filters",
-    Bambara: "Wolonkɛnanw jira/dogo",
+    Bambara: "Taamasiɲɛw yira/dogo",
   },
   filter_by_status: {
     Français: "Filtrer par statut",
     Anglais: "Filter by status",
-    Bambara: "Woloma ni cogoya ye",
+    Bambara: "Ka taamasiɲɛ kɛ ka kɛcogo kɔrɔbɔ",
   },
   filter_by_type: {
     Français: "Filtrer par type",
     Anglais: "Filter by type",
-    Bambara: "Woloma ni suguyaw ye",
+    Bambara: "Ka taamasiɲɛ kɛ ka suguya kɔrɔbɔ",
   },
   all_employees: {
     Français: "Tous les employés",
@@ -1190,17 +1191,17 @@ const newTranslations = {
   active_employees: {
     Français: "Employés actifs",
     Anglais: "Active employees",
-    Bambara: "Baarakɛlaw baara la",
+    Bambara: "Baarakɛlaw minw bɛ baara la",
   },
   inactive_employees: {
     Français: "Employés inactifs",
     Anglais: "Inactive employees",
-    Bambara: "Baarakɛlaw baara tɛ la",
+    Bambara: "Baarakɛlaw minw tɛ baara la",
   },
   all_positions: {
     Français: "Tous les postes",
     Anglais: "All positions",
-    Bambara: "Baara bɛɛ",
+    Bambara: "Baara cogoya bɛɛ",
   },
   professors_only: {
     Français: "Professeurs uniquement",
@@ -1210,7 +1211,7 @@ const newTranslations = {
   other_staff: {
     Français: "Autres personnels",
     Anglais: "Other staff",
-    Bambara: "Baarakɛla wɛrɛw",
+    Bambara: "Baarakɛla suguya wɛrɛw",
   },
   employees_found: {
     Français: "employés trouvés",
@@ -1225,22 +1226,22 @@ const newTranslations = {
   select_all: {
     Français: "Tout sélectionner",
     Anglais: "Select all",
-    Bambara: "Bɛɛ sugandi",
+    Bambara: "Ka bɛɛ sugandi",
   },
   deselect_all: {
     Français: "Tout désélectionner",
     Anglais: "Deselect all",
-    Bambara: "Bɛɛ sugandili bɔ",
+    Bambara: "Ka bɛɛ sugandili bɔ",
   },
   active_status: {
     Français: "Actif",
     Anglais: "Active",
-    Bambara: "Baara la",
+    Bambara: "A bɛ baara la",
   },
   inactive_status: {
     Français: "Inactif",
     Anglais: "Inactive",
-    Bambara: "Baara tɛ la",
+    Bambara: "A tɛ baara la",
   },
   no_employees_found: {
     Français: "Aucun employé trouvé",
@@ -1250,19 +1251,19 @@ const newTranslations = {
   try_different_filters: {
     Français: "Essayez différents filtres ou critères de recherche",
     Anglais: "Try different filters or search criteria",
-    Bambara: "Wolon kɛnan wɛrɛw walima ɲinini cogo wɛrɛw kɛ",
+    Bambara: "Taamasiɲɛ wɛrɛw walima ɲinini cogoya wɛrɛw kɛ",
   },
   select_at_least_one_employee: {
     Français: "Veuillez sélectionner au moins un employé",
     Anglais: "Please select at least one employee",
-    Bambara: "I ka kan ka baarakɛla kelen sugandi dɔɔni dɔɔni",
+    Bambara: "I ka kan ka baarakɛla kelen sugandi dɔɔni-dɔɔni",
   },
 
   // Payment configuration
   configure_payments: {
     Français: "Configurer les paiements",
     Anglais: "Configure payments",
-    Bambara: "Saraw ɲɛnabaara",
+    Bambara: "Ka saraw labɛn",
   },
   configure_payments_instruction: {
     Français:
@@ -1270,27 +1271,27 @@ const newTranslations = {
     Anglais:
       "For each employee, select the positions you want to pay for and set the amounts.",
     Bambara:
-      "Barakɛla kelen kelen bɛɛ kɔnɔ, baara minnu sugu i b'a fɛ ka minnu sara sugandi ani ka sara hakɛw sɛbɛn.",
+      "Baarakɛla kelen-kelen bɛɛ kama, i b'a fɛ ka baara minw sara, olu sugandi ani ka sara hakɛw sɛbɛn.",
   },
   select_positions_to_pay: {
     Français: "Sélectionner les postes à payer",
     Anglais: "Select positions to pay",
-    Bambara: "Baara suguyaw sugandi minnu bɛ sara",
+    Bambara: "Baara cogoya minw ka kan ka sara sugandi",
   },
   work_hours: {
     Français: "Heures de travail",
     Anglais: "Work hours",
-    Bambara: "Baara kɛ waatiw",
+    Bambara: "Baara waatiw",
   },
   hourly_rate: {
     Français: "Taux horaire",
     Anglais: "Hourly rate",
-    Bambara: "Lɛrɛ kelen sara",
+    Bambara: "Waati kelen sara",
   },
   hours: {
     Français: "heures",
     Anglais: "hours",
-    Bambara: "lɛrɛw",
+    Bambara: "waatiw",
   },
   minutes: {
     Français: "minutes",
@@ -1300,91 +1301,90 @@ const newTranslations = {
   total_salary_for_hours: {
     Français: "Salaire total pour les heures",
     Anglais: "Total salary for hours",
-    Bambara: "Sara bɛɛ lajɛlen lɛrɛw kama",
+    Bambara: "Waatiw bɛɛ lajɛlen sara",
   },
   payment_for: {
     Français: "Paiement pour",
     Anglais: "Payment for",
-    Bambara: "Sara kama",
+    Bambara: "Sara min bɛ di",
   },
   custom_amount: {
     Français: "Montant personnalisé",
     Anglais: "Custom amount",
-    Bambara: "Sɔngɔ kɛrɛnkɛrɛnnen",
+    Bambara: "Sara hakɛ kɛrɛnkɛrɛnnen",
   },
   percentage: {
     Français: "Pourcentage %",
     Anglais: "Percentage %",
-    Bambara: "Hakɛya kɛmɛkofoli la %",
+    Bambara: "Kɛmɛ kɔnɔ %",
   },
   switch_to_percentage: {
     Français: "Passer au pourcentage",
     Anglais: "Switch to percentage",
-    Bambara: "I tɛmɛ kɛmɛkofoli ma",
+    Bambara: "Kɛmɛ kɔnɔ jateli fɛ taa",
   },
   switch_to_custom_amount: {
     Français: "Passer au montant personnalisé",
     Anglais: "Switch to custom amount",
-    Bambara: "I tɛmɛ sɔngɔ kɛrɛnkɛrɛnnen ma",
+    Bambara: "Wari hakɛ sugandilen fɛ taa",
   },
   minimum_amount: {
     Français: "Montant minimum",
     Anglais: "Minimum amount",
-    Bambara: "Sɔngɔ fitini",
+    Bambara: "Wari hakɛ fitini",
   },
   base_salary: {
     Français: "Salaire de base",
     Anglais: "Base salary",
-    Bambara: "Sara dasɔgɔli",
+    Bambara: "Sariya kɔnɔ sara",
   },
   amount_to_pay: {
     Français: "Montant à payer",
     Anglais: "Amount to pay",
-    Bambara: "Sɔngɔ min bɛ sara",
+    Bambara: "Wari min ka kan ka sara",
   },
   select_at_least_one_position_per_employee: {
     Français: "Veuillez sélectionner au moins un poste pour chaque employé",
     Anglais: "Please select at least one position for each employee",
-    Bambara:
-      "I ka kan ka baarakɛla bɛɛ ka baara suguyaw kelen sugandi dɔɔni dɔɔni",
+    Bambara: "I ka baara kelen sugandi baarakɛla kelen kelen bɛɛ ye",
   },
 
   // Payment details
   payment_details: {
     Français: "Détails du paiement",
     Anglais: "Payment details",
-    Bambara: "Sara kunnafoniw",
+    Bambara: "Saralicogo ɲɛfɔli",
   },
   payment_details_instruction: {
     Français:
       "Veuillez fournir les informations générales concernant ce paiement.",
     Anglais: "Please provide general information about this payment.",
-    Bambara: "I ka sara in kunnafoni ɲumanw di.",
+    Bambara: "Sara in ka kunnafoni bɛɛ lajɛlen di.",
   },
   payment_summary: {
     Français: "Récapitulatif du paiement",
     Anglais: "Payment summary",
-    Bambara: "Sara kunnafoni surun",
+    Bambara: "Sara kunnafoni kunbabaw",
   },
   please_review_details: {
     Français: "Veuillez vérifier les détails avant de confirmer",
     Anglais: "Please review details before confirming",
-    Bambara: "I k'a jateminɛ sanni k'a dablali kɛ",
+    Bambara: "I ka kunnafoniw bɛɛ lajɛ ka ɲɛ sani ka son a ma",
   },
   original_amount: {
     Français: "Montant initial",
     Anglais: "Original amount",
-    Bambara: "Sara Yɛrɛ",
+    Bambara: "Fɔlɔ wari hakɛ",
   },
   total_to_pay: {
     Français: "Total à payer",
     Anglais: "Total to pay",
-    Bambara: "Sara bɛɛ lajɛlen",
+    Bambara: "Wari hakɛ min bɛɛ ka kan ka sara",
   },
   saving: {
     Français: "Économie",
     Anglais: "Saving",
-    Bambara: "Maralikɛ",
+    Bambara: "Wari mara",
   },
   payment_title: {
     Français: "Titre du paiement",
@@ -1394,12 +1394,12 @@ const newTranslations = {
   payment_title_placeholder: {
     Français: "Ex: Paiement des salaires - Mai 2024",
     Anglais: "Ex: Salary payment - May 2024",
-    Bambara: "Ex: Saraw saratali - Mɛ 2024",
+    Bambara: "Misali: Saraw saralicogo - Mɛkalo 2024",
   },
   payment_title_help: {
     Français: "Entre 10 et 150 caractères",
     Anglais: "Between 10 and 150 characters",
-    Bambara: "Taamasiyɛn 10 fo 150 cɛ",
+    Bambara: "Sɛbɛnni hakɛ ka kɛ 10 ni 150 cɛ",
   },
   payment_date: {
     Français: "Date du paiement",
@@ -1409,43 +1409,43 @@ const newTranslations = {
   payment_description: {
     Français: "Description du paiement",
     Anglais: "Payment description",
-    Bambara: "Sara bayɛlɛmali",
+    Bambara: "Sara ɲɛfɔli",
   },
   payment_description_placeholder: {
     Français:
       "Décrivez les détails de ce paiement (personnes concernées, raison, etc.)",
     Anglais:
       "Describe the details of this payment (people involved, reason, etc.)",
-    Bambara: "Sara in kumancogo ɲuman fɔ (a bɛ mɔgɔ minnu kɔrɔ, kun, etc.)",
+    Bambara: "Sara in kunnafoni bɛɛ ɲɛfɔ (mɔgɔ minnu bɛ a la, kun, ani tɔw)",
   },
   payment_description_help: {
     Français: "Entre 30 et 10000 caractères",
     Anglais: "Between 30 and 10000 characters",
-    Bambara: "Taamasiyɛn 30 fo 10000 cɛ",
+    Bambara: "Sɛbɛnni hakɛ ka kɛ 30 ni 10000 cɛ",
   },
 
   // Navigation
   previous: {
     Français: "Précédent",
     Anglais: "Previous",
-    Bambara: "Kɔsegi",
+    Bambara: "Kɔfɛ",
   },
   next: {
     Français: "Suivant",
     Anglais: "Next",
-    Bambara: "N'ɔgɔna",
+    Bambara: "Ɲɛfɛ",
   },
   saving: {
     Français: "Enregistrement...",
     Anglais: "Saving...",
-    Bambara: "Maralila...",
+    Bambara: "Bɛ mara...",
   },
 
   // Error messages
   add_error: {
     Français: "Erreur lors de l'ajout de la dépense",
     Anglais: "Error adding the expense",
-    Bambara: "Filɛli don na musaka farali la",
+    Bambara: "Fili kɛra musaka farali la",
   },
 };
 

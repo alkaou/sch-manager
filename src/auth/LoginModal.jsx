@@ -1,26 +1,26 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
-import { useAuth } from './AuthContext';
-import { useTheme } from '../components/contexts';
-import { useLanguage } from '../components/contexts';
-import translations from './auth_translator';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X } from "lucide-react";
+import { useAuth } from "./AuthContext";
+import { useTheme } from "../components/contexts";
+import { useLanguage } from "../components/contexts";
+import translations from "./auth_translator";
 
 const LoginModal = ({ isOpen, onClose }) => {
   const { login, loading, error } = useAuth();
   const { theme } = useTheme();
   const { language } = useLanguage();
-  
+
   // Translation helper function
   const t = (key) => {
     if (!translations[key]) return key;
     return translations[key][language] || translations[key]["Français"];
   };
-  
-  const bgColor = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
-  const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-800';
-  const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
-  
+
+  const bgColor = theme === "dark" ? "bg-gray-800" : "bg-white";
+  const textColor = theme === "dark" ? "text-gray-200" : "text-gray-800";
+  const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
+
   const handleGoogleSignIn = async () => {
     try {
       await login();
@@ -29,7 +29,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       console.error("Échec de la connexion:", err);
     }
   };
-  
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -44,35 +44,41 @@ const LoginModal = ({ isOpen, onClose }) => {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: 'spring', damping: 20 }}
+            transition={{ type: "spring", damping: 20 }}
             className={`${bgColor} rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative p-6 border-b border-gray-200 dark:border-gray-700">
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-red-600 dark:hover:bg-gray-700 transition-colors"
               >
                 <X size={20} className={textColor} />
               </button>
-              <h2 className={`text-2xl font-bold ${textColor}`}>{t('login_to_school_manager')}</h2>
-              <p className={`mt-2 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                {t('sign_in_to_access')}
+              <h2 className={`text-2xl font-bold ${textColor}`}>
+                {t("login_to_school_manager")}
+              </h2>
+              <p
+                className={`mt-2 ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {t("sign_in_to_access")}
               </p>
             </div>
-            
+
             <div className="p-6">
               {error && (
                 <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg">
                   {error}
                 </div>
               )}
-              
+
               <div className="space-y-4">
                 <button
                   onClick={handleGoogleSignIn}
                   disabled={loading}
-                  className={`w-full flex items-center justify-center gap-3 py-3 px-4 ${borderColor} border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${textColor}`}
+                  className={`w-full hover:scale-105 transition flex items-center justify-center gap-3 py-3 px-4 ${borderColor} border rounded-lg transition-colors ${textColor}`}
                 >
                   {/* Google Icon */}
                   <svg width="20" height="20" viewBox="0 0 24 24">
@@ -94,14 +100,18 @@ const LoginModal = ({ isOpen, onClose }) => {
                     />
                   </svg>
                   <span className="font-medium">
-                    {loading ? t('signing_in') : t('sign_in_with_google')}
+                    {loading ? t("signing_in") : t("sign_in_with_google")}
                   </span>
                 </button>
               </div>
-              
+
               <div className="mt-6 text-center">
-                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {t('terms_agreement')}
+                <p
+                  className={`text-sm ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-600"
+                  }`}
+                >
+                  {t("terms_agreement")}
                 </p>
               </div>
             </div>

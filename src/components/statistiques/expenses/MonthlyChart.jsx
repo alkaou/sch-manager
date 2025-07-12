@@ -14,7 +14,7 @@ import { useLanguage } from "../../contexts";
 import { translate } from "../statistique_translator";
 import { getBambaraMonth } from "../../../utils/helpers";
 
-const CustomTooltip = ({ active, payload, language, schoolYear }) => {
+const CustomTooltip = ({ active, payload, language }) => {
   if (active && payload && payload.length) {
     // Utiliser les données directement du payload pour obtenir les bonnes informations
     const dataPoint = payload[0].payload;
@@ -49,18 +49,19 @@ const CustomTooltip = ({ active, payload, language, schoolYear }) => {
   return null;
 };
 
-const MonthlyChart = ({ data, theme, schoolYear }) => {
+const MonthlyChart = ({ data, schoolYear }) => {
   const { language } = useLanguage();
   const t = (key) => translate(key, language);
-  const locale = language === 'Anglais' ? 'en-US' : 'fr-FR';
+  const locale = language === "Français" ? "fr-FR" : "en-US";
+  const long_or_short = language === "Bambara" ? "long" : "short";
 
   const chartData = data.map((item) => {
     // Utiliser les nouvelles données structurées
     const date = new Date(item.year, item.monthNumber - 1, 1);
-    const monthLabel = date.toLocaleString(
-      locale,
-      { month: "short" }
-    );
+    const _monthLabel = date.toLocaleString(locale, { month: long_or_short });
+
+    const monthLabel =
+      language === "Bambara" ? `${getBambaraMonth(_monthLabel).substr(0, 6)}.` : _monthLabel;
 
     return {
       ...item,
@@ -83,17 +84,10 @@ const MonthlyChart = ({ data, theme, schoolYear }) => {
           data={chartData}
           margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
         >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke={theme === "dark" ? "#4A5568" : "#E2E8F0"}
-          />
-          <XAxis
-            dataKey="monthLabel"
-            stroke={theme === "dark" ? "#A0AEC0" : "#4A5568"}
-            fontSize={12}
-          />
+          <CartesianGrid strokeDasharray="3 3" stroke={"#FFFFFF"} />
+          <XAxis dataKey="monthLabel" stroke={"#FFFFFF"} fontSize={12} />
           <YAxis
-            stroke={theme === "dark" ? "#A0AEC0" : "#4A5568"}
+            stroke={"#FFFFFF"}
             fontSize={12}
             tickFormatter={(value) =>
               new Intl.NumberFormat(locale, {

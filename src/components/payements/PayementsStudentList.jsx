@@ -1028,7 +1028,11 @@ const PayementsStudentList = ({
                                                 : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                                             }`}
                                           >
-                                            {month.name}
+                                            {language === "Français"
+                                              ? month.fr_name
+                                              : language === "Anglais"
+                                              ? month.en_name
+                                              : getBambaraMonth(month.en_name)}
                                           </span>
                                         ))}
                                       </div>
@@ -1329,7 +1333,7 @@ const PayementsStudentList = ({
                                         className={`text-xs sm:text-sm font-bold ${inputTextColor} mb-1 sm:mb-2`}
                                       >
                                         {translate(
-                                          "student_information",
+                                          "student_info",
                                           language
                                         )}
                                       </h4>
@@ -1337,7 +1341,7 @@ const PayementsStudentList = ({
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          {translate("full_name", language)}:
+                                          {translate("name", language)}:
                                         </span>{" "}
                                         {student.name_complet}
                                       </p>
@@ -1362,7 +1366,7 @@ const PayementsStudentList = ({
                                         className={`text-xs sm:text-sm ${inputTextColor}`}
                                       >
                                         <span className="font-medium">
-                                          {translate("gender", language)}:
+                                          {translate("sex", language)}:
                                         </span>{" "}
                                         {student.sexe === "M"
                                           ? translate("male", language)
@@ -1413,7 +1417,11 @@ const PayementsStudentList = ({
                                                 : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                                             }`}
                                           >
-                                            {month.name}
+                                            {language === "Français"
+                                              ? month.fr_name
+                                              : language === "Anglais"
+                                              ? month.en_name
+                                              : getBambaraMonth(month.en_name)}
                                           </span>
                                         ))}
                                       </div>
