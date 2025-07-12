@@ -5,8 +5,10 @@ import { useLanguage } from '../../contexts';
 import { translate } from '../statistique_translator';
 
 const YearlyTotals = ({ data, theme }) => {
-  const formatCurrency = (value) => new Intl.NumberFormat('fr-FR').format(value);
+
   const { language } = useLanguage();
+  const locale = language === 'Anglais' ? 'en-US' : 'fr-FR';
+  const formatCurrency = (value) => new Intl.NumberFormat(locale).format(value);
 
   const containerVariants = {
     hidden: { opacity: 0 },

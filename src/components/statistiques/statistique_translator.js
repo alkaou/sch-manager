@@ -63,7 +63,7 @@ const translations = {
   comparison_view: {
     Français: "Comparaison",
     Anglais: "Comparison",
-    Bambara: "Yɛlɛkan",
+    Bambara: "Suma ɲɔgɔnnali",
   },
   totals_view: {
     Français: "Totaux",
@@ -82,58 +82,58 @@ const translations = {
   },
   yearly_expense_comparison: {
     Français: "Comparaison des Dépenses Annuelles",
-    Anglais: "Yearly Expense Comparison",
-    Bambara: "San-San Musakaw Yɛlɛkan",
+    Anglais: "Yearly Expense Comparison", 
+    Bambara: "San kɔnɔ musaka suman ɲɔgɔnna",
   },
   yearly_comparison: {
     Français: "Comparaison Annuelle",
     Anglais: "Yearly Comparison",
-    Bambara: "San-San Yɛlɛkan",
+    Bambara: "San ni san suman ɲɔgɔnna",
   },
   last_two_years_comparison: {
     Français: "Comparaison des deux dernières années scolaires",
     Anglais: "Last Two Years Comparison",
-    Bambara: "San fila wajibiyalen yɛlɛkan",
+    Bambara: "San fila tɛmɛnen kalansɛbɛn suman ɲɔgɔnna",
   },
   total_expenses_last_year: {
     Français: "Total Dépenses Année N-1",
     Anglais: "Total Expenses Last Year",
-    Bambara: "Musaka bɛɛ lajɛlen san fila wajibiyalen",
+    Bambara: "San tɛmɛnen musaka bɛɛ lajɛlen",
   },
   total_expenses_previous_year: {
-    Français: "Total Dépenses Année N-2",
+    Français: "Total Dépenses Année N-2", 
     Anglais: "Total Expenses Previous Year",
-    Bambara: "Musaka bɛɛ lajɛlen san fila wajibiyalen fila",
+    Bambara: "San fila tɛmɛnen musaka bɛɛ lajɛlen",
   },
   difference: {
     Français: "Différence",
     Anglais: "Difference",
-    Bambara: "Hakɛya min b'u Cɛ",
+    Bambara: "Fara ɲɔgɔn kan",
   },
   growth_rate: {
     Français: "Taux de Croissance",
     Anglais: "Growth Rate",
-    Bambara: "Yiriwali Sɔsɔli",
+    Bambara: "Yiriwa hakɛ",
   },
   no_data_for_comparison: {
     Français: "Données insuffisantes pour la comparaison (2 années requises)",
     Anglais: "Not enough data for comparison (2 years required)",
-    Bambara: "Data man kan ka yɛlɛkan kɛ (san fila wajibiyalen)",
+    Bambara: "Kunnafoni tɛ ka se suman ɲɔgɔnna ma (san fila ka kan ka kɛ)",
   },
   no_expense_data_for_category: {
     Français: "Aucune dépense trouvée pour créer le graphique des catégories.",
     Anglais: "No expense found to create the category graph.",
-    Bambara: "Musaka si wɛrɛ tɛ ka cogoya jagoranci ye yan.",
+    Bambara: "Musaka si ma sɔrɔ ka sugandi cogoya ja kɛ.",
   },
   expenses_by_category_for: {
     Français: "Dépenses par catégorie pour",
     Anglais: "Expenses by Category for",
-    Bambara: "Musakaw cogoya lajɛlen ye",
+    Bambara: "Musaka sugandilen kelen kelen bɛɛ ye",
   },
   no_data_for_year: {
     Français: "Aucune donnée pour cette année",
     Anglais: "No data for this year",
-    Bambara: "Data tɛ san nin ye",
+    Bambara: "Kunnafoni si tɛ san in na",
   },
   expense_stats: {
     Français: "Dépenses",
@@ -143,12 +143,88 @@ const translations = {
   expense_stats_description: {
     Français: "Analyse détaillée des dépenses",
     Anglais: "Detailed analysis of expenses",
-    Bambara: "Musakaw ka jagoranci kunnafoniw",
+    Bambara: "Musaka kɔnɔ sɛgɛsɛgɛli",
   },
   finance_stats_and_expense_description: {
     Français: "Analyse détaillée et comparaison des dépenses aux revenus.",
     Anglais: "Detailed analysis and comparison of expenses to revenue.",
-    Bambara: "Musakaw ni nafolo sɔrɔ cogoyaw ka jagoranci ni yɛlɛkan.",
+    Bambara: "Musaka ni wari sɔrɔ sɛgɛsɛgɛli ni u suman ɲɔgɔnna.",
+  },
+  // Expense and Revenue Comparison
+  no_comparison_data_title: {
+    Français: "Données Insuffisantes",
+    Anglais: "Insufficient Data",
+    Bambara: "Kunnafoni man ca",
+  },
+  no_comparison_data_message: {
+    Français: "Des données sur les dépenses et les revenus sont nécessaires pour cette comparaison.",
+    Anglais: "Both expense and revenue data are required for this comparison.",
+    Bambara: "Musaka ni wari sɔrɔ kunnafoni bɛɛ ka kan ka kɛ suman ɲɔgɔnna in na.",
+  },
+  comparison_settings: {
+    Français: "Paramètres de Comparaison",
+    Anglais: "Comparison Settings",
+    Bambara: "Suman ɲɔgɔnna labɛnni",
+  },
+  select_expense_year: {
+    Français: "Année des Dépenses",
+    Anglais: "Expense Year",
+    Bambara: "Musaka san sugandi",
+  },
+  year: {
+    Français: "Année",
+    Anglais: "Year",
+    Bambara: "San",
+  },
+  select_revenue_year: {
+    Français: "Année des Revenus",
+    Anglais: "Revenue Year",
+    Bambara: "Wari sɔrɔ san sugandi",
+  },
+  total_expenses_for: {
+    Français: "Dépenses pour",
+    Anglais: "Expenses for",
+    Bambara: "Musaka bɛɛ lajɛlen",
+  },
+  total_revenue_for: {
+    Français: "Revenus pour",
+    Anglais: "Revenue for",
+    Bambara: "Wari sɔrɔ bɛɛ lajɛlen",
+  },
+  profit: {
+    Français: "Bénéfice",
+    Anglais: "Profit",
+    Bambara: "Tɔnɔ",
+  },
+  loss: {
+    Français: "Perte", 
+    Anglais: "Loss",
+    Bambara: "Bɔnɔ",
+  },
+  breakeven: {
+    Français: "Équilibre",
+    Anglais: "Breakeven",
+    Bambara: "Kelen ye",
+  },
+  expenses_vs_revenue_comparison: {
+    Français: "Comparaison Dépenses vs Revenus",
+    Anglais: "Expenses vs. Revenue Comparison",
+    Bambara: "Musaka ni wari sɔrɔ suman ɲɔgɔnna",
+  },
+  expenses: {
+    Français: "Dépenses",
+    Anglais: "Expenses",
+    Bambara: "Musakaw",
+  },
+  revenue: {
+    Français: "Revenus",
+    Anglais: "Revenue", 
+    Bambara: "Wari sɔrɔ",
+  },
+  comparison: {
+    Français: "Comparaison",
+    Anglais: "Comparison",
+    Bambara: "Suman ɲɔgɔnna",
   },
   welcome: {
     Français: "Bienvenue",

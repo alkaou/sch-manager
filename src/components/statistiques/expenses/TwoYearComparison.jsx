@@ -18,8 +18,9 @@ const TwoYearComparison = ({ data, theme }) => {
   }
 
   const { lastYear, previousYear, difference, growthRate } = data;
+  const locale = language === 'Anglais' ? 'en-US' : 'fr-FR';
 
-  const formatCurrency = (value) => new Intl.NumberFormat('fr-FR').format(value);
+  const formatCurrency = (value) => new Intl.NumberFormat(locale).format(value);
 
   return (
     <motion.div

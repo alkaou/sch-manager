@@ -1082,12 +1082,12 @@ const translations = {
   monthly_stats: {
     Français: "Statistique Mensuelle",
     Anglais: "Monthly Statistics",
-    Bambara: "Kalo kelen jateminɛ",
+    Bambara: "Kalow jateminɛ",
   },
   annual_stats: {
     Français: "Statistique Annuelle",
     Anglais: "Annual Statistics",
-    Bambara: "San kelen jateminɛ",
+    Bambara: "Sanw jateminɛ",
   },
   number_of_months: {
     Français: "Nombre de mois",

@@ -52,12 +52,13 @@ const CustomTooltip = ({ active, payload, language, schoolYear }) => {
 const MonthlyChart = ({ data, theme, schoolYear }) => {
   const { language } = useLanguage();
   const t = (key) => translate(key, language);
+  const locale = language === 'Anglais' ? 'en-US' : 'fr-FR';
 
   const chartData = data.map((item) => {
     // Utiliser les nouvelles données structurées
     const date = new Date(item.year, item.monthNumber - 1, 1);
     const monthLabel = date.toLocaleString(
-      language === "Anglais" ? "en-US" : "fr-FR",
+      locale,
       { month: "short" }
     );
 
@@ -95,7 +96,7 @@ const MonthlyChart = ({ data, theme, schoolYear }) => {
             stroke={theme === "dark" ? "#A0AEC0" : "#4A5568"}
             fontSize={12}
             tickFormatter={(value) =>
-              new Intl.NumberFormat("fr-FR", {
+              new Intl.NumberFormat(locale, {
                 notation: "compact",
                 compactDisplay: "short",
               }).format(value)

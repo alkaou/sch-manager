@@ -21,6 +21,7 @@ const YearlyComparisonChart = ({ data, theme }) => {
   const t = (key) => translate(key, language);
 
   const chartData = data.map(item => ({ name: item.title, total: item.total }));
+  const locale = language === 'Anglais' ? 'en-US' : 'fr-FR';
 
   return (
     <motion.div 
@@ -34,7 +35,7 @@ const YearlyComparisonChart = ({ data, theme }) => {
         <BarChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#4A5568' : '#E2E8F0'} />
           <XAxis dataKey="name" stroke={theme === 'dark' ? '#A0AEC0' : '#4A5568'} fontSize={12} />
-          <YAxis stroke={theme === 'dark' ? '#A0AEC0' : '#4A5568'} fontSize={12} tickFormatter={(value) => new Intl.NumberFormat('fr-FR', { notation: 'compact', compactDisplay: 'short' }).format(value)} />
+          <YAxis stroke={theme === 'dark' ? '#A0AEC0' : '#4A5568'} fontSize={12} tickFormatter={(value) => new Intl.NumberFormat(locale, { notation: 'compact', compactDisplay: 'short' }).format(value)} />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100, 116, 139, 0.1)' }} />
           <Legend formatter={(value) => <span className="text-white">{t(value)}</span>} />
           <Bar dataKey="total" name="total_expenses" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
