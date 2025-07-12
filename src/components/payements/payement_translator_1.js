@@ -12,7 +12,7 @@ const translations = {
   school_years: {
     Français: "Années scolaires",
     Anglais: "School Years",
-    Bambara: "Kalansunw",
+    Bambara: "Kalansanw",
   },
   select_at_least_one_year: {
     Français: "Veuillez sélectionner au moins une année",
@@ -47,7 +47,7 @@ const translations = {
   school_year: {
     Français: "Année scolaire",
     Anglais: "School Year",
-    Bambara: "Kalansun",
+    Bambara: "Kalansan",
   },
   financial_target: {
     Français: "Objectif financier pour",
@@ -77,7 +77,7 @@ const translations = {
   comparison_by_school_year: {
     Français: "Comparaison des {metric} par Année Scolaire",
     Anglais: "Comparison of {metric} by School Year",
-    Bambara: "{metric} sanga ɲɔgɔn ma kalansun o kalansun",
+    Bambara: "{metric} sanga ɲɔgɔn ma kalansan o kalansan",
   },
   monthly_payment_rate_evolution: {
     Français: "Évolution Mensuelle du Taux de Paiement",
@@ -117,7 +117,7 @@ const translations = {
   select_school_year: {
     Français: "Veuillez sélectionner au moins une année scolaire pour afficher les statistiques.",
     Anglais: "Please select at least one school year to display statistics.",
-    Bambara: "I ka kalansun kelen sugandi dɔrɔn walasa ka kunafoniw jira.",
+    Bambara: "I ka kalansan kelen sugandi dɔrɔn walasa ka kunafoniw jira.",
   },
   bar_chart: {
     Français: "Graphique à barres",

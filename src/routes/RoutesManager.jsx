@@ -17,6 +17,7 @@ import CommunityPage from "../pages/CommunityPage.jsx";
 import AboutPage from "../pages/AboutPage.jsx";
 import EmployesPage from "../pages/EmployesPage.jsx";
 import DepensesPage from "../pages/DepensesPage.jsx";
+import EventsPage from "../pages/EventsPage.jsx";
 
 
 import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
@@ -56,6 +57,7 @@ const RoutesManager = () => {
                     <Route path="/profile-auth" element={<UserProfile />} />
                     <Route path="/employes" element={<EmployesPage />} />
                     <Route path="/depenses" element={<DepensesPage />} />
+                    <Route path="/events" element={<EventsPage />} />
                   </Route>
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

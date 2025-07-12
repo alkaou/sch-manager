@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { saveStudent, updateStudent } from '../../utils/database_methods';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage, useFlashNotification } from '../contexts';
-import { gradients } from '../../utils/colors';
+import React, { useState, useEffect } from "react";
+import { saveStudent, updateStudent } from "../../utils/database_methods";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage, useFlashNotification } from "../contexts";
+import { gradients } from "../../utils/colors";
 import { getClasseName, getAge } from "../../utils/helpers";
-import { suggestNames, suggestLastNames, suggNameComplete, suggCitiesNames } from "../../utils/suggestionNames";
+import {
+  suggestNames,
+  suggestLastNames,
+  suggNameComplete,
+  suggCitiesNames,
+} from "../../utils/suggestionNames";
 import AutocompleteInput from "../partials/AutocompleteInput.jsx";
 import { translate } from "./students_translator.js";
 
@@ -20,17 +25,17 @@ const AddStudent = ({
 
   // Objet initial pour un élève
   const initialStudent = {
-    first_name: '',
-    sure_name: '',
-    last_name: '',
-    classe: '',
-    sexe: '',
-    birth_date: '',
-    birth_place: '',
-    matricule: '',
-    father_name: '',
-    mother_name: '',
-    parents_contact: ''
+    first_name: "",
+    sure_name: "",
+    last_name: "",
+    classe: "",
+    sexe: "",
+    birth_date: "",
+    birth_place: "",
+    matricule: "",
+    father_name: "",
+    mother_name: "",
+    parents_contact: "",
   };
 
   const [students, setStudents] = useState([initialStudent]);
@@ -55,11 +60,13 @@ const AddStudent = ({
   const formBgColor = theme === "dark" ? "bg-gray-800" : app_bg_color;
   const inputBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const selectInputTextColor = theme === "dark" ? text_color : "text-gray-600";
-  const inputBorderColor = theme === "dark" ? "border-gray-600" : "border-gray-300";
-  const buttonBgColor = app_bg_color === gradients[1] ? "bg-gray-600 hover:bg-gray-700" : "bg-blue-600 hover:bg-blue-700";
+  const inputBorderColor =
+    theme === "dark" ? "border-gray-600" : "border-gray-300";
+  const buttonBgColor = "bg-blue-600 hover:bg-blue-700";
   const buttonDeleteColor = "bg-red-600 hover:bg-red-700";
   const buttonAddColor = "bg-green-600 hover:bg-green-700";
-  const shinyBorderColor = theme === "dark" ? "border-blue-400" : "border-purple-400";
+  const shinyBorderColor =
+    theme === "dark" ? "border-blue-400" : "border-purple-400";
   const cardBgColor = theme === "dark" ? "bg-gray-700" : "bg-white";
   const tabActiveBgColor = theme === "dark" ? "bg-blue-600" : "bg-purple-500";
   const tabInactiveBgColor = theme === "dark" ? "bg-gray-700" : "bg-gray-500";
@@ -168,8 +175,14 @@ const AddStudent = ({
         const student_level = match ? parseInt(match[0], 10) : null;
         if (student_level + 3 > getAge(student.birth_date)) {
           const classeName = `${student.classe} ${student_level}`.trim();
-          err.birth_date = translate("student_too_young", language) + " " + getClasseName(classeName, language);
-          err.classe = translate("student_too_young", language) + " " + getClasseName(classeName, language);
+          err.birth_date =
+            translate("student_too_young", language) +
+            " " +
+            getClasseName(classeName, language);
+          err.classe =
+            translate("student_too_young", language) +
+            " " +
+            getClasseName(classeName, language);
           valid = false;
           st_id = index + 1;
         }
@@ -186,11 +199,18 @@ const AddStudent = ({
     e.preventDefault();
     const valid_response = await validateStudents();
     if (!valid_response.valid) {
-      const startParticuleErrorText = `${translate("check_student_info", language)} ${valid_response.st_id}`;
+      const startParticuleErrorText = `${translate(
+        "check_student_info",
+        language
+      )} ${
+        students.length > 1 || studentsForUpdate.length > 1
+          ? valid_response.st_id
+          : ""
+      }`.trim();
       // console.log(startParticuleErrorText);
       setParticuleError(startParticuleErrorText);
       return;
-    };
+    }
 
     setIsLoading(true);
     setSuccess(null);
@@ -202,7 +222,7 @@ const AddStudent = ({
         const student = students[i];
         const updatedData = {
           ...student,
-          birth_date: new Date(student.birth_date).getTime()
+          birth_date: new Date(student.birth_date).getTime(),
         };
         try {
           await updateStudent(student.id, updatedData, db, language);
@@ -211,12 +231,12 @@ const AddStudent = ({
           newErrors[i] = { ...newErrors[i], [err.field]: err.message };
         }
       }
-      if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
+      if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
         setSuccess(translate("students_updated_success", language));
         setFlashMessage({
           message: translate("students_updated_success", language),
           type: "success",
-          duration: 8000
+          duration: 8000,
         });
         setTimeout(() => setIsAddStudentActive(false), 2000);
       }
@@ -225,7 +245,7 @@ const AddStudent = ({
         const student = students[i];
         const studentData = {
           ...student,
-          birth_date: new Date(student.birth_date).getTime()
+          birth_date: new Date(student.birth_date).getTime(),
         };
         try {
           await saveStudent(studentData, db, language);
@@ -234,12 +254,12 @@ const AddStudent = ({
           newErrors[i] = { ...newErrors[i], [err.field]: err.message };
         }
       }
-      if (newErrors.every(errObj => Object.keys(errObj).length === 0)) {
+      if (newErrors.every((errObj) => Object.keys(errObj).length === 0)) {
         setSuccess(translate("students_added_success", language));
         setFlashMessage({
           message: translate("students_added_success", language),
           type: "success",
-          duration: 8000
+          duration: 8000,
         });
         setTimeout(() => setIsAddStudentActive(false), 2000);
       }
@@ -249,19 +269,21 @@ const AddStudent = ({
     setIsLoading(false);
   };
 
-  const classOptions = db && db.classes
-    ? [...db.classes]
-      .sort((a, b) => a.level - b.level)
-      .map(cls => ({
-        id: cls.id,
-        label: `${cls.level} ${cls.name}`.trim(),
-        value: `${cls.level} ${cls.name}`.trim()
-      }))
-    : [];
+  const classOptions =
+    db && db.classes
+      ? [...db.classes]
+          .sort((a, b) => a.level - b.level)
+          .map((cls) => ({
+            id: cls.id,
+            label: `${cls.level} ${cls.name}`.trim(),
+            value: `${cls.level} ${cls.name}`.trim(),
+          }))
+      : [];
 
   // Styles améliorés pour les inputs
-  const commonInputClass = `w-full px-3 py-2 text-sm rounded-lg transition-all duration-300 focus:ring-2 focus:ring-opacity-50 ${theme === "dark" ? "focus:ring-blue-500" : "focus:ring-purple-500"
-    } ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`;
+  const commonInputClass = `w-full px-3 py-2 text-sm rounded-lg transition-all duration-300 focus:ring-2 focus:ring-opacity-50 ${
+    theme === "dark" ? "focus:ring-blue-500" : "focus:ring-purple-500"
+  } ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`;
 
   // Animation variants pour les éléments
   const containerVariants = {
@@ -271,14 +293,14 @@ const AddStudent = ({
       y: 0,
       transition: {
         duration: 0.5,
-        staggerChildren: 0.1
-      }
+        staggerChildren: 0.1,
+      },
     },
     exit: {
       opacity: 0,
       y: -50,
-      transition: { duration: 0.3 }
-    }
+      transition: { duration: 0.3 },
+    },
   };
 
   const itemVariants = {
@@ -286,8 +308,8 @@ const AddStudent = ({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.3 }
-    }
+      transition: { duration: 0.3 },
+    },
   };
 
   const errorVariants = {
@@ -295,8 +317,8 @@ const AddStudent = ({
     visible: {
       opacity: 1,
       height: "auto",
-      transition: { duration: 0.3 }
-    }
+      transition: { duration: 0.3 },
+    },
   };
 
   // Rendu du formulaire pour un étudiant spécifique
@@ -313,15 +335,20 @@ const AddStudent = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Prénom */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("first_name", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("first_name", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggestNames}
               value={student.first_name}
               placeholder={translate("placeholder_first_name", language)}
               inputClass={commonInputClass}
-              onChange={(e) => handleInputChange(index, 'first_name', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "first_name", e.target.value)
+              }
             />
             <AnimatePresence>
               {errors[index]?.first_name && (
@@ -340,7 +367,9 @@ const AddStudent = ({
 
           {/* Surnom */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
               {translate("sure_name", language)}
             </label>
             <AutocompleteInput
@@ -348,7 +377,9 @@ const AddStudent = ({
               value={student.sure_name}
               placeholder={translate("placeholder_sure_name", language)}
               inputClass={commonInputClass}
-              onChange={(e) => handleInputChange(index, 'sure_name', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "sure_name", e.target.value)
+              }
             />
             <AnimatePresence>
               {errors[index]?.sure_name && (
@@ -367,15 +398,20 @@ const AddStudent = ({
 
           {/* Nom de famille */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("last_name", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("last_name", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggestLastNames}
               value={student.last_name}
               placeholder={translate("placeholder_last_name", language)}
               inputClass={commonInputClass}
-              onChange={(e) => handleInputChange(index, 'last_name', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "last_name", e.target.value)
+              }
             />
             <AnimatePresence>
               {errors[index]?.last_name && (
@@ -394,17 +430,26 @@ const AddStudent = ({
 
           {/* Classe */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("classe", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("classe", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <select
               value={student.classe}
-              onChange={(e) => handleInputChange(index, 'classe', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "classe", e.target.value)
+              }
               className={`${commonInputClass} cursor-pointer`}
             >
               <option value="">{translate("select_class", language)}</option>
-              {classOptions.map(option => (
-                <option key={option.id} value={option.value} style={{ fontWeight: "bold" }}>
+              {classOptions.map((option) => (
+                <option
+                  key={option.id}
+                  value={option.value}
+                  style={{ fontWeight: "bold" }}
+                >
                   {getClasseName(option.label, language)}
                 </option>
               ))}
@@ -426,12 +471,15 @@ const AddStudent = ({
 
           {/* Sexe */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("gender", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("gender", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <select
               value={student.sexe}
-              onChange={(e) => handleInputChange(index, 'sexe', e.target.value)}
+              onChange={(e) => handleInputChange(index, "sexe", e.target.value)}
               className={`${commonInputClass} cursor-pointer`}
             >
               <option value="">{translate("select", language)}</option>
@@ -455,8 +503,11 @@ const AddStudent = ({
 
           {/* Date de naissance */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("birth_date", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("birth_date", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <input
               type="date"
@@ -465,7 +516,9 @@ const AddStudent = ({
                   ? new Date(student.birth_date).toISOString().substring(0, 10)
                   : ""
               }
-              onChange={(e) => handleInputChange(index, 'birth_date', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "birth_date", e.target.value)
+              }
               className={commonInputClass}
             />
             <AnimatePresence>
@@ -485,15 +538,20 @@ const AddStudent = ({
 
           {/* Lieu de naissance - NOUVEAU CHAMP */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("birth_place", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("birth_place", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggCitiesNames}
-              value={student.birth_place || ''}
+              value={student.birth_place || ""}
               placeholder={translate("placeholder_birth_place", language)}
               inputClass={commonInputClass}
-              onChange={(e) => handleInputChange(index, 'birth_place', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "birth_place", e.target.value)
+              }
             />
             <AnimatePresence>
               {errors[index]?.birth_place && (
@@ -512,13 +570,17 @@ const AddStudent = ({
 
           {/* Matricule */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
               {translate("matricule", language)}
             </label>
             <input
               type="text"
-              value={student.matricule || ''}
-              onChange={(e) => handleInputChange(index, 'matricule', e.target.value)}
+              value={student.matricule || ""}
+              onChange={(e) =>
+                handleInputChange(index, "matricule", e.target.value)
+              }
               className={commonInputClass}
               placeholder={translate("placeholder_matricule", language)}
             />
@@ -539,15 +601,20 @@ const AddStudent = ({
 
           {/* Nom du père */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("father_name", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("father_name", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggNameComplete}
               value={student.father_name}
               placeholder={translate("placeholder_father_name", language)}
               inputClass={commonInputClass}
-              onChange={(e) => handleInputChange(index, 'father_name', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "father_name", e.target.value)
+              }
             />
             <AnimatePresence>
               {errors[index]?.father_name && (
@@ -566,15 +633,20 @@ const AddStudent = ({
 
           {/* Nom de la mère */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("mother_name", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("mother_name", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <AutocompleteInput
               suggestions={suggNameComplete}
               value={student.mother_name}
               placeholder={translate("placeholder_mother_name", language)}
               inputClass={commonInputClass}
-              onChange={(e) => handleInputChange(index, 'mother_name', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "mother_name", e.target.value)
+              }
             />
             <AnimatePresence>
               {errors[index]?.mother_name && (
@@ -593,13 +665,18 @@ const AddStudent = ({
 
           {/* Contact parents */}
           <motion.div className="mb-4" variants={itemVariants}>
-            <label className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}>
-              {translate("parents_contact", language)} <span className="text-red-500">*</span>
+            <label
+              className={`block mb-2 text-sm font-medium ${selectInputTextColor}`}
+            >
+              {translate("parents_contact", language)}{" "}
+              <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={student.parents_contact}
-              onChange={(e) => handleInputChange(index, 'parents_contact', e.target.value)}
+              onChange={(e) =>
+                handleInputChange(index, "parents_contact", e.target.value)
+              }
               className={commonInputClass}
               placeholder={translate("placeholder_parents_contact", language)}
             />
@@ -629,8 +706,19 @@ const AddStudent = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
               </svg>
               {translate("delete_this_student", language)}
             </motion.button>
@@ -649,9 +737,10 @@ const AddStudent = ({
       style={{
         marginTop: "2em",
         marginBottom: "2em",
-        boxShadow: theme === "dark"
-          ? "0 0 25px rgba(66, 153, 225, 0.6)"
-          : "0 0 25px rgba(159, 122, 234, 0.6)",
+        boxShadow:
+          theme === "dark"
+            ? "0 0 25px rgba(66, 153, 225, 0.6)"
+            : "0 0 25px rgba(159, 122, 234, 0.6)",
         width: "90%",
       }}
     >
@@ -662,7 +751,9 @@ const AddStudent = ({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {studentsForUpdate.length > 0 ? translate("edit_students", language) : translate("add_students", language)}
+          {studentsForUpdate.length > 0
+            ? translate("edit_students", language)
+            : translate("add_students", language)}
         </motion.h2>
         <motion.button
           onClick={() => setIsAddStudentActive(false)}
@@ -670,8 +761,19 @@ const AddStudent = ({
           whileHover={{ scale: 1.1, rotate: 90 }}
           whileTap={{ scale: 0.9 }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </motion.button>
       </div>
@@ -680,26 +782,49 @@ const AddStudent = ({
         {success || particuleError ? (
           <motion.div
             className={`
-              ${success ? "bg-green-100 border-l-4 border-green-500 text-green-700 " :
-                "bg-red-100 border-l-4 border-red-500 text-red-700 "
+              ${
+                success
+                  ? "bg-green-100 border-l-4 border-green-500 text-green-700 "
+                  : "bg-red-100 border-l-4 border-red-500 text-red-700 "
               }
-              p-4 mb-6 rounded-lg`
-            }
+              p-4 mb-6 rounded-lg`}
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
             <div className="flex items-center">
-              {particuleError ?
-                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              {particuleError ? (
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
-                :
-                <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              ) : (
+                <svg
+                  className="w-6 h-6 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
                 </svg>
-              }
+              )}
               {success ? success : particuleError}
             </div>
           </motion.div>
@@ -715,8 +840,9 @@ const AddStudent = ({
                 key={index}
                 type="button"
                 onClick={() => setActiveTab(index)}
-                className={`px-4 py-2 rounded-lg text-white font-medium transition-colors ${activeTab === index ? tabActiveBgColor : tabInactiveBgColor
-                  }`}
+                className={`px-4 py-2 rounded-lg text-white font-medium transition-colors ${
+                  activeTab === index ? tabActiveBgColor : tabInactiveBgColor
+                }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -754,8 +880,19 @@ const AddStudent = ({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             {translate("cancel", language)}
           </motion.button>
@@ -763,24 +900,55 @@ const AddStudent = ({
           <motion.button
             type="submit"
             disabled={isLoading}
-            className={`text-white px-6 py-3 rounded-lg font-medium flex items-center ${buttonBgColor} ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            className={`text-white px-6 py-3 rounded-lg font-medium flex items-center ${buttonBgColor} ${
+              isLoading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
             whileHover={!isLoading ? { scale: 1.05 } : {}}
             whileTap={!isLoading ? { scale: 0.95 } : {}}
           >
             {isLoading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 {translate("processing", language)}
               </>
             ) : (
               <>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
-                {studentsForUpdate.length > 0 ? translate("update", language) : translate("save", language)}
+                {studentsForUpdate.length > 0
+                  ? translate("update", language)
+                  : translate("save", language)}
               </>
             )}
           </motion.button>
@@ -794,13 +962,23 @@ const AddStudent = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
               </svg>
               {translate("add_another_student", language)}
             </motion.button>
           )}
-
         </div>
       </form>
     </motion.div>

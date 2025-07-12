@@ -99,7 +99,10 @@ const PayementsYearlyStatistique = ({
             key: schoolYearKey,
             startYear,
             endYear,
-            label: `Année scolaire ${startYear}-${endYear}`,
+            label: `${translate(
+              "school_year",
+              language
+            )} ${startYear}-${endYear}`,
             systems: [],
           });
         }
@@ -400,9 +403,11 @@ const PayementsYearlyStatistique = ({
     setIsLoading(false);
   };
 
+  const locale = language === "Anglais" ? "en-US": "fr-FR";
+
   // Format currency
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("fr-FR", {
+    return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: "XAF",
       minimumFractionDigits: 0,
@@ -530,7 +535,8 @@ const PayementsYearlyStatistique = ({
             "Nov",
             "Déc",
           ]
-        : [
+        : language === "Anglais"
+        ? [
             "Jan",
             "Feb",
             "Mar",
@@ -543,6 +549,20 @@ const PayementsYearlyStatistique = ({
             "Oct",
             "Nov",
             "Dec",
+          ]
+        : [
+            "Zan",
+            "Feb",
+            "Mar",
+            "Awi",
+            "Mɛk",
+            "Zuw",
+            "Juy",
+            "Uti",
+            "Sɛt",
+            "Ɔku",
+            "Now",
+            "Des",
           ];
 
     return {
@@ -800,7 +820,7 @@ const PayementsYearlyStatistique = ({
                     }
                   `}
                 >
-                  {year.label.replace(translate("school_year", language) + " ", "")}
+                  {year.label}
                   {selectedYears.includes(year.key) && (
                     <span className="ml-1.5 inline-flex items-center justify-center">
                       ✓
@@ -828,12 +848,24 @@ const PayementsYearlyStatistique = ({
               onChange={(e) => setComparisonMetric(e.target.value)}
               className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
-              <option value="totalRevenue">{translate("total_revenue", language)}</option>
-                <option value="expectedRevenue">{translate("expected_revenue", language)}</option>
-                <option value="paymentPercentage">{translate("payment_rate_percentage", language)}</option>
-                <option value="registrationFees">{translate("registration_fees", language)}</option>
-                <option value="monthlyFees">{translate("monthly_fees", language)}</option>
-                <option value="yearlyFees">{translate("yearly_fees", language)}</option>
+              <option value="totalRevenue">
+                {translate("total_revenue", language)}
+              </option>
+              <option value="expectedRevenue">
+                {translate("expected_revenue", language)}
+              </option>
+              <option value="paymentPercentage">
+                {translate("payment_rate_percentage", language)}
+              </option>
+              <option value="registrationFees">
+                {translate("registration_fees", language)}
+              </option>
+              <option value="monthlyFees">
+                {translate("monthly_fees", language)}
+              </option>
+              <option value="yearlyFees">
+                {translate("yearly_fees", language)}
+              </option>
             </select>
           </div>
 
@@ -845,8 +877,10 @@ const PayementsYearlyStatistique = ({
               className={`px-3 py-2 rounded ${selectBgColor} ${textColorClass} border ${borderColor} focus:outline-none focus:ring-2 focus:ring-blue-500`}
             >
               <option value="bar">{translate("bar_chart", language)}</option>
-                <option value="line">{translate("line_chart", language)}</option>
-                <option value="polar">{translate("polar_chart", language)}</option>
+              <option value="line">{translate("line_chart", language)}</option>
+              <option value="polar">
+                {translate("polar_chart", language)}
+              </option>
             </select>
           </div>
         </div>
@@ -858,27 +892,29 @@ const PayementsYearlyStatistique = ({
         </div>
       ) : yearlyData.length === 0 ? (
         <div
-            className={`${cardBgColor} rounded-lg shadow-lg p-8 text-center ${textColorClass}`}
+          className={`${cardBgColor} rounded-lg shadow-lg p-8 text-center ${textColorClass}`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-16 w-16 mx-auto mb-4 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-16 w-16 mx-auto mb-4 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-              />
-            </svg>
-            <h3 className="text-xl font-bold mb-2">{translate("no_data_available", language)}</h3>
-            <p className="text-gray-500">
-              {translate("select_school_year", language)}
-            </p>
-          </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+            />
+          </svg>
+          <h3 className="text-xl font-bold mb-2">
+            {translate("no_data_available", language)}
+          </h3>
+          <p className="text-gray-500">
+            {translate("select_school_year", language)}
+          </p>
+        </div>
       ) : (
         <motion.div
           variants={containerVariants}
@@ -943,7 +979,8 @@ const PayementsYearlyStatistique = ({
                     </p>
                   </div>
                   <p className={`text-xs ${textColorClass} opacity-60`}>
-                    {translate("financial_goal_for", language)} {yearlyData[0]?.label}
+                    {translate("financial_goal_for", language)}{" "}
+                    {yearlyData[0]?.label}
                   </p>
                 </div>
               </div>
@@ -1014,13 +1051,13 @@ const PayementsYearlyStatistique = ({
                 </div>
                 <div className="mt-2">
                   <p className={`text-xs ${textColorClass} opacity-60`}>
-                  {selectedYears.length > 1
+                    {selectedYears.length > 1
                       ? `${translate("compared_to", language)} ${
                           availableYears.find((y) => y.key === selectedYears[1])
                             ?.label
                         }`
                       : translate("select_previous_year", language)}
-                </p>
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -1034,7 +1071,10 @@ const PayementsYearlyStatistique = ({
             {/* Comparison Chart */}
             <div className={`${cardBgColor} rounded-lg shadow-lg p-6`}>
               <h3 className={`text-lg font-semibold mb-4 ${textColorClass}`}>
-                {translate("comparison_by_school_year", language).replace("{metric}", getComparisonMetricLabel())}
+                {translate("comparison_by_school_year", language).replace(
+                  "{metric}",
+                  getComparisonMetricLabel()
+                )}
               </h3>
               <div className="h-80">
                 {chartType === "bar" && (

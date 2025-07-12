@@ -51,7 +51,7 @@ const LoginModal = ({ isOpen, onClose }) => {
             <div className="relative p-6 border-b border-gray-200 dark:border-gray-700">
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-red-600 dark:hover:bg-gray-700 transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-red-600 hover:text-white dark:hover:bg-gray-700 transition-colors"
               >
                 <X size={20} className={textColor} />
               </button>

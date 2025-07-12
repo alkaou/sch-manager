@@ -19,12 +19,12 @@ const translations = {
   save: {
     Français: "Enregistrer",
     Anglais: "Save",
-    Bambara: "A marayɔrɔ",
+    Bambara: "A mara",
   },
   update: {
     Français: "Mettre à jour",
     Anglais: "Update",
-    Bambara: "A kɔnɔ kunnafoni kura",
+    Bambara: "A kɔnɔ kunafoni kuraya",
   },
   processing: {
     Français: "Traitement en cours...",
@@ -198,12 +198,12 @@ const translations = {
   check_student_info: {
     Français: "Veuillez Vérifier les informations de l'élève",
     Anglais: "Please check the student information",
-    Bambara: "Kalanden kunnafoni lajɛ",
+    Bambara: "Kalanden ka kunafoniw lajɛ",
   },
   students_updated_success: {
     Français: "Les élèves ont été mis à jour avec succès !",
     Anglais: "Students have been updated successfully!",
-    Bambara: "Kalandenw kunnafoni kɔnɔ kura kɛra ni ɲɛtaa ye!",
+    Bambara: "Kalandenw kunafoni kɔnɔ kura kɛra ni ɲɛtaa ye!",
   },
   students_added_success: {
     Français: "Les élèves ont été ajoutés avec succès!",
@@ -303,9 +303,9 @@ const translations = {
     Bambara: "Matirikili ka kan ka nimɔrɔw ni sɛbɛnni dɔrɔn kɔnɔ.",
   },
   matricule_length_error: {
-    Français: "Le matricule doit contenir entre 6 et 10 caractères.",
-    Anglais: "Matricule must contain between 6 and 10 characters.",
-    Bambara: "Matirikili ka kan ka sɛbɛnni 6 ni 10 cɛ kɔnɔ.",
+    Français: "Le matricule doit contenir entre 6 et 30 caractères.",
+    Anglais: "Matricule must contain between 6 and 30 characters.",
+    Bambara: "Matirikili ka kan ka sɛbɛnni 6 ni 30 cɛ kɔnɔ.",
   },
   matricule_already_used: {
     Français: "Le matricule est déjà utilisé.",
@@ -345,7 +345,7 @@ const translations = {
   error_updating_student: {
     Français: "Erreur lors de la mise à jour de l'étudiant :",
     Anglais: "Error updating student:",
-    Bambara: "Kalanden kunnafoni kɔnɔ kura laɲini kɛra ni fɔli ye:",
+    Bambara: "Kalanden kunafoni kɔnɔ kura laɲini kɛra ni fɔli ye:",
   },
   no_student_registered: {
     Français: "Aucun étudiant n'est enregistré.",
@@ -522,7 +522,7 @@ const translations = {
   birth_info: {
     Français: "Infos de naissance",
     Anglais: "Birth Info",
-    Bambara: "Bangeli kunnafoni",
+    Bambara: "Bangeli kunafoni",
   },
   age: {
     Français: "Âge",
@@ -542,7 +542,7 @@ const translations = {
   last_updated: {
     Français: "Dernière mise à jour",
     Anglais: "Last Updated",
-    Bambara: "Kunnafoni kura kɛra",
+    Bambara: "Kunafoni kura kɛra",
   },
   confirm_delete_title: {
     Français: "Confirmer la suppression",

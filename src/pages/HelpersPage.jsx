@@ -5,7 +5,7 @@ import { Search, ChevronDown, ChevronRight, ExternalLink, Mail, Github, ArrowLef
 import { useLanguage } from '../components/contexts';
 
 const HelpersPageContent = ({
-  app_bg_color,
+  // app_bg_color,
   text_color,
   theme,
 }) => {

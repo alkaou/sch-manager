@@ -29,10 +29,7 @@ const ManageClasses = ({
   const textClass = theme === "dark" ? text_color : "text-gray-600";
   const inputBorderColor =
     theme === "dark" ? "border-gray-600" : "border-gray-300";
-  const buttonPrimary =
-    app_bg_color === gradients[1]
-      ? "bg-gray-600 hover:bg-gray-700"
-      : "bg-blue-600 hover:bg-blue-700";
+  const buttonPrimary = "bg-blue-600 hover:bg-blue-700";
   const buttonDelete = "bg-red-600 hover:bg-red-700";
   const buttonAdd = "bg-green-600 hover:bg-green-700";
   const shinyBorderColor =
@@ -41,10 +38,10 @@ const ManageClasses = ({
     app_bg_color === gradients[1]
       ? "hover:bg-white hover:text-gray-700"
       : app_bg_color === gradients[2]
-        ? "hover:bg-gray-200 hover:text-gray-700"
-        : theme === "dark"
-          ? "hover:bg-gray-700 hover:text-white"
-          : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white";
+      ? "hover:bg-gray-200 hover:text-gray-700"
+      : theme === "dark"
+      ? "hover:bg-gray-700 hover:text-white"
+      : "hover:bg-gray-600 hover:bg-opacity-30 hover:text-white";
 
   const loadDatabase = async () => {
     try {

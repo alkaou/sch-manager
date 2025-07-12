@@ -19,6 +19,7 @@ import {
   ArrowBigLeft,
   Users2Icon,
   Receipt,
+  CalendarCheck2,
 } from "lucide-react";
 
 import { useTheme, useLanguage, useFlashNotification } from "../contexts";
@@ -215,6 +216,12 @@ const SideBar = ({
       path: "/read",
       index: 10,
     },
+    {
+      icon: <CalendarCheck2 size={20} />,
+      label: translate("event_texte", language),
+      path: "/events",
+      index: 13,
+    },
   ];
 
   // Dynamic colors based on theme
@@ -365,8 +372,8 @@ const SideBar = ({
         </div>
 
         {/* Navigation section */}
-        <div className="flex-1 overflow-y-auto scrollbar-custom scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 pr-0.5">
-          <nav className="space-y-0.5">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-custom scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 pr-0.5">
+          <nav className="pr-0.5">
             {navigationItems.map((item) => (
               <motion.button
                 key={item.index}

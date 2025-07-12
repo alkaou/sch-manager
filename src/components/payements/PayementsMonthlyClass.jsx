@@ -365,9 +365,10 @@ const PayementsMonthlyClass = ({ db, theme, text_color }) => {
   };
 
   // Formater la date pour l'affichage
+  const locale = language === "Anglais" ? "en-US": "fr-FR";
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("fr-FR", {
+    return date.toLocaleDateString(locale, {
       day: "numeric",
       month: "long",
       year: "numeric",

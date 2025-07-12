@@ -147,6 +147,11 @@ const translations = {
     Anglais: "Read",
     Bambara: "Gafe Kalan",
   },
+  event_texte: {
+    Français: "Evénements",
+    Anglais: "Events",
+    Bambara: "Wakati Kow",
+  },
   accueil_texte: {
     Français: "Accueil",
     Anglais: "Home",
@@ -175,7 +180,7 @@ const translations = {
   save_texte: {
     Français: "Save",
     Anglais: "Save",
-    Bambara: "A marayɔrɔ",
+    Bambara: "A mara",
   },
   cancel_texte: {
     Français: "Cancel",

@@ -347,7 +347,7 @@ const validateAndCleanStudentData = (studentData, requireAllFields = true, langu
         error.step = translateStudents("validation_matricule_format", language);
         throw error;
       }
-      if (matricule.length < 6 || matricule.length > 10) {
+      if (matricule.length < 6 || matricule.length > 30) {
         const error = new Error(
           translateStudents("matricule_length_error", language)
         );

@@ -521,8 +521,9 @@ const PayementsMonthlyStatistique = ({
               if (label) {
                 label += ": ";
               }
+              const locale = language === "Anglais" ? "en-US" : "fr-FR";
               if (context.parsed.y !== null) {
-                label += new Intl.NumberFormat("fr-FR", {
+                label += new Intl.NumberFormat(locale, {
                   style: "currency",
                   currency: "XAF",
                   minimumFractionDigits: 0,

@@ -10,7 +10,7 @@ const StatisticsLayout = ({
   app_bg_color,
   text_color,
 }) => {
-  const [activeStat, setActiveStat] = useState("finance_stats_and_expense"); // doit être vide par défaut.
+  const [activeStat, setActiveStat] = useState(""); // doit être vide par défaut.
 
   return (
     <div className="flex h-full">
