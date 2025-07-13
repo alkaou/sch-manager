@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { FaChevronLeft, FaChevronRight, FaTimes } from "react-icons/fa";
 import { format, addMonths, subMonths, addYears, subYears, startOfMonth, endOfMonth, startOfWeek, addDays, isSameDay } from "date-fns";
 import { useTheme, useLanguage } from '../contexts';
@@ -24,13 +25,34 @@ const AdvancedCalendar = ({ onClose }) => {
     day = addDays(day, 1);
   }
 
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { type: "spring", stiffness: 300, damping: 25 },
+    },
+    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className={`
-          bg-white p-6 rounded-lg shadow-xl w-96 animate-slideIn
-          ${theme === "light" ? "text-gray-600" : app_bg_color}
-          ${theme === "dark" ? text_color : ""}
-      `}>
+    <motion.div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        variants={modalVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className={`p-6 rounded-lg shadow-xl w-96 ${
+          theme === "dark"
+            ? "bg-gray-900 text-white"
+            : "bg-gray-100 text-gray-700"
+        }`}>
+
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold">{format(currentDate, "MMMM yyyy")}</h2>
           <button onClick={onClose} className="text-red-500">
@@ -72,8 +94,8 @@ const AdvancedCalendar = ({ onClose }) => {
             </button>
           ))}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
