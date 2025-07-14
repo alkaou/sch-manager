@@ -194,11 +194,7 @@ export const canValidateEvent = (event) => {
 
   // Un événement peut être validé s'il est passé ou en cours et pas encore validé
   const currentStatus = determineEventStatus(event);
-  return (
-    (currentStatus === EVENT_STATUS.PAST ||
-      currentStatus === EVENT_STATUS.ONGOING) &&
-    !event.validation
-  );
+  return currentStatus === EVENT_STATUS.PAST && !event.validation;
 };
 
 // Créer un nouvel événement

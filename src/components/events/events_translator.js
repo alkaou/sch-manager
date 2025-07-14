@@ -117,7 +117,7 @@ const translations = {
   football: {
     Français: "Football",
     Anglais: "Football",
-    Bambara: "Nɛgɛso",
+    Bambara: "Balon tan",
   },
   cultural_day: {
     Français: "Journée Culturelle",

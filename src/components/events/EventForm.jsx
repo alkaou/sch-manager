@@ -26,7 +26,7 @@ const EventForm = ({
   setFlashMessage,
   onEventSaved,
   theme,
-  app_bg_color,
+  // app_bg_color,
   text_color,
 }) => {
   const { language } = useLanguage();
