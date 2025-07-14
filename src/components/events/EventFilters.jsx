@@ -6,7 +6,6 @@ import {
   Calendar,
   Type,
   Clock,
-  X,
   ChevronDown,
   RotateCcw
 } from 'lucide-react';

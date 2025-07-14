@@ -11,7 +11,7 @@ import {
 import { useLanguage } from '../contexts';
 import { translate } from './events_translator';
 import EventCard from './EventCard.jsx';
-import { getEventStatistics } from './EventsMethodes';
+import { getEventStatistics, determineEventStatus } from './EventsMethodes';
 
 const EventsList = ({
   events,
@@ -20,7 +20,7 @@ const EventsList = ({
   onValidateEvent,
   onViewDetails,
   theme,
-  app_bg_color,
+  // app_bg_color,
   text_color,
   database,
   setFlashMessage
@@ -35,13 +35,22 @@ const EventsList = ({
     past: true
   });
 
-  // Grouper les événements par statut
+  // Grouper les événements par statut réel basé sur la date/heure actuelle
   const groupedEvents = {
     all: events,
-    pending: events.filter(event => event.currentStatus === 'pending'),
-    validated: events.filter(event => event.currentStatus === 'validated'),
-    ongoing: events.filter(event => event.currentStatus === 'ongoing'),
-    past: events.filter(event => event.currentStatus === 'past')
+    pending: events.filter(event => {
+      const currentStatus = determineEventStatus(event);
+      return currentStatus === 'pending' && !event.validation;
+    }),
+    validated: events.filter(event => event.validation),
+    ongoing: events.filter(event => {
+      const currentStatus = determineEventStatus(event);
+      return currentStatus === 'ongoing' && !event.validation;
+    }),
+    past: events.filter(event => {
+      const currentStatus = determineEventStatus(event);
+      return currentStatus === 'past' && !event.validation;
+    })
   };
 
   // Statistiques
@@ -128,7 +137,7 @@ const EventsList = ({
   };
 
   const renderEventSection = (sectionKey, sectionEvents, title) => {
-    if (sectionKey !== 'all' && sectionEvents.length === 0) return null;
+    // Afficher toutes les sections, même vides, pour informer l'utilisateur
 
     return (
       <motion.div
@@ -151,7 +160,7 @@ const EventsList = ({
         >
           <div className="flex items-center gap-3">
             {getStatusIcon(sectionKey === 'all' ? 'all' : sectionKey)}
-            <h3 className="text-lg font-semibold">{title}</h3>
+            <h3 className={`text-lg font-semibold ${text_color}`}>{title}</h3>
             <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
               sectionKey === 'all' 
                 ? 'bg-purple-100 text-purple-800 border-purple-200'
@@ -191,10 +200,20 @@ const EventsList = ({
                   >
                     <Calendar size={48} className="mx-auto mb-4 opacity-50" />
                     <p className="text-lg font-medium mb-2">
-                      {translate('no_events', language)}
+                      {sectionKey === 'all' ? translate('no_events', language) :
+                       sectionKey === 'pending' ? translate('no_pending_events', language) :
+                       sectionKey === 'ongoing' ? translate('no_ongoing_events', language) :
+                       sectionKey === 'past' ? translate('no_past_events', language) :
+                       sectionKey === 'validated' ? translate('no_validated_events', language) :
+                       translate('no_events', language)}
                     </p>
                     <p className="text-sm">
-                      {translate('no_events_description', language)}
+                      {sectionKey === 'all' ? translate('no_events_description', language) :
+                       sectionKey === 'pending' ? translate('no_pending_events_description', language) :
+                       sectionKey === 'ongoing' ? translate('no_ongoing_events_description', language) :
+                       sectionKey === 'past' ? translate('no_past_events_description', language) :
+                       sectionKey === 'validated' ? translate('no_validated_events_description', language) :
+                       translate('no_events_description', language)}
                     </p>
                   </motion.div>
                 ) : (
@@ -305,7 +324,7 @@ const EventsList = ({
               }`}>
                 {translate('pending', language)}
               </p>
-              <p className="text-xl font-bold">{stats.pending}</p>
+              <p className={`${text_color} text-xl font-bold`}>{stats.pending}</p>
             </div>
           </div>
         </motion.div>
