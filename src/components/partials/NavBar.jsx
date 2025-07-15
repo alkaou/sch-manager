@@ -318,7 +318,7 @@ const Navbar = ({
                         </div>
                       </div>
 
-                      <div className="max-h-60 sm:max-h-72 md:max-h-80 overflow-y-auto">
+                      <div className="max-h-60 sm:max-h-72 md:max-h-80 overflow-y-auto scrollbar-custom">
                         {notifications.length > 0 ? (
                           notifications.map((notification, index) => (
                             <div

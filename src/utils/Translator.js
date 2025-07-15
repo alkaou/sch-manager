@@ -81,7 +81,7 @@ const Translator = {
     week_days_name_array: ["Kar", "Tɛn", "Tar", "Ara", "Ala", "Jum", "Sib"],
 
     // NavBar translations
-    app_name: "Kalansoɲɛmɔgɔ",
+    app_name: "SchoolManager",
     premium_text: "Premium",
     notifications_text: "Kibaaruw",
     mark_all_read_text: "Bɛɛ ka kalan",
@@ -255,7 +255,7 @@ const Translator = {
     hero_description:
       "Sebennikela baara la kalanso kɔnɔ, a ka nɔgɔ ani a bɛ dɔnniya di. I bɛ se ka kalandenw, sɛbɛnw, ka jate bɛɛ kɛ teliya la.",
     students_management: "Kalandenw ɲɛmɔgɔya",
-    security_text: "Lakana cogo",
+    security_text: "Lakanali",
 
     // FeaturesSection translations
     features_title: "Baara Nafamaw",

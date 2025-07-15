@@ -93,7 +93,7 @@ class NotificationManager {
       // Traiter les événements séquentiellement pour éviter les conflits
       for (const event of events) {
         if (this.shouldNotifyForEvent(event, now)) {
-          console.log(`📅 Création de notification pour l'événement: ${event.title}`);
+          // console.log(`📅 Création de notification pour l'événement: ${event.title}`);
           await this.createEventNotification(event);
           notificationsCreated++;
         }
@@ -129,15 +129,15 @@ class NotificationManager {
   // Marquer un événement comme ayant envoyé sa notification
   async markEventNotificationSent(eventId) {
     try {
-      if (window.electron && window.electron.loadDatabase && window.electron.saveDatabase) {
-        const database = await window.electron.loadDatabase();
+      if (window.electron && window.electron.getDatabase && window.electron.saveDatabase) {
+        const database = await window.electron.getDatabase();
         
         if (database.events) {
           const eventIndex = database.events.findIndex(e => e.id === eventId);
           if (eventIndex !== -1) {
             database.events[eventIndex].notificationsIsSended = true;
             await window.electron.saveDatabase(database);
-            console.log(`✅ Événement ${eventId} marqué comme notification envoyée (Electron DB)`);
+            // console.log(`✅ Événement ${eventId} marqué comme notification envoyée (Electron DB)`);
           }
         }
       } else {

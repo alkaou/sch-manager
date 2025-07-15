@@ -115,6 +115,8 @@
         // Fonction pour créer des événements de test
         async function createTestEvents() {
             logMessage('🧪 Création d\'événements de test...', 'info');
+
+            console.log(window);
             
             const now = new Date();
             
@@ -169,8 +171,8 @@
             
             try {
                 // Sauvegarder dans la base de données Electron
-                if (window.electron && window.electron.loadDatabase && window.electron.saveDatabase) {
-                    const database = await window.electron.loadDatabase();
+                if (window.electron && window.electron.getDatabase && window.electron.saveDatabase) {
+                    const database = await window.electron.getDatabase();
                     
                     if (!database.events) {
                         database.events = [];
@@ -226,8 +228,8 @@
         // Fonction pour vérifier le statut des événements
         async function checkEventStatus() {
             try {
-                if (window.electron && window.electron.loadDatabase) {
-                    const database = await window.electron.loadDatabase();
+                if (window.electron && window.electron.getDatabase) {
+                    const database = await window.electron.getDatabase();
                     const testEvents = database.events?.filter(event => 
                         event.id.startsWith('test-event-')
                     ) || [];
@@ -254,8 +256,8 @@
         // Fonction pour nettoyer les événements de test
         async function cleanupTestEvents() {
             try {
-                if (window.electron && window.electron.loadDatabase && window.electron.saveDatabase) {
-                    const database = await window.electron.loadDatabase();
+                if (window.electron && window.electron.getDatabase && window.electron.saveDatabase) {
+                    const database = await window.electron.getDatabase();
                     
                     if (database.events) {
                         const originalCount = database.events.length;

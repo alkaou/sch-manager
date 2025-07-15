@@ -165,6 +165,7 @@ const AdvancedLayout = () => {
             school_name,
             school_short_name,
             school_zone_name,
+            setActiveSideBarBtn,
           }}
         />
       </div>

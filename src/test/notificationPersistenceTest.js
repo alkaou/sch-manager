@@ -1,6 +1,6 @@
 // Test de la persistance des notifications avec secureLocalStorage
 import { 
-  notificationManager, 
+  // notificationManager, 
   createSystemNotification,
   createExternalNotification,
   markAsRead,

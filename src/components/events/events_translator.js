@@ -524,9 +524,12 @@ const translations = {
     Bambara: "Ko kɛlenw ɲɛnabɔ siratigɛ",
   },
   events_system_description: {
-    Français: "Une solution complète pour organiser, suivre et gérer tous vos événements avec intelligence et efficacité.",
-    Anglais: "A comprehensive solution to organize, track and manage all your events with intelligence and efficiency.",
-    Bambara: "Fɛɛrɛ dafalen min bɛ i ka ko kɛlenw labɛn, kɔlɔsi ani ɲɛnabɔ ni hakili ni baarakɛcogo ye.",
+    Français:
+      "Une solution complète pour organiser, suivre et gérer tous vos événements avec intelligence et efficacité.",
+    Anglais:
+      "A comprehensive solution to organize, track and manage all your events with intelligence and efficiency.",
+    Bambara:
+      "Fɛɛrɛ dafalen min bɛ i ka ko kɛlenw labɛn, k'u kɔlɔsi ani k'u ɲɛnabɔ ni hakili ni baarakɛcogo ɲuman ye.",
   },
   events_management: {
     Français: "Gestion Complète",
@@ -534,19 +537,24 @@ const translations = {
     Bambara: "Ɲɛnabɔ dafalen",
   },
   events_management_desc: {
-    Français: "Créez, modifiez et organisez vos événements avec une interface intuitive et moderne.",
-    Anglais: "Create, edit and organize your events with an intuitive and modern interface.",
-    Bambara: "I ka ko kɛlenw dilan, ladamu ani labɛn ni ɲɛnabɔyɔrɔ nɔgɔman ni kɔrɔlen ye.",
+    Français:
+      "Créez, modifiez et organisez vos événements avec une interface intuitive et moderne.",
+    Anglais:
+      "Create, edit and organize your events with an intuitive and modern interface.",
+    Bambara:
+      "I ka ko kɛlenw dilan, k'u ladamu ani k'u labɛn ni ɲɛnabɔyɔrɔ nɔgɔman ye.",
   },
   smart_notifications: {
     Français: "Notifications Intelligentes",
     Anglais: "Smart Notifications",
-    Bambara: "Kunnafoni hakilitigiw",
+    Bambara: "Kunnafoni hakilijigiw",
   },
   smart_notifications_desc: {
-    Français: "Recevez des alertes automatiques 30 minutes avant le début de vos événements.",
+    Français:
+      "Recevez des alertes automatiques 30 minutes avant le début de vos événements.",
     Anglais: "Receive automatic alerts 30 minutes before your events start.",
-    Bambara: "Kunnafoni otomatiki sɔrɔ miniti 30 ka taa i ka ko kɛlenw daminɛ kɔn.",
+    Bambara:
+      "Kunnafoni otomatiki sɔrɔ miniti 30 ka taa i ka ko kɛlenw daminɛ kɔn.",
   },
   voice_alerts: {
     Français: "Alertes Vocales",
@@ -554,19 +562,22 @@ const translations = {
     Bambara: "Kumakan kunnafoniw",
   },
   voice_alerts_desc: {
-    Français: "Écoutez des annonces vocales personnalisées en français ou en anglais.",
+    Français:
+      "Écoutez des annonces vocales personnalisées en français ou en anglais.",
     Anglais: "Listen to personalized voice announcements in French or English.",
     Bambara: "Kumakan kunnafoni kɛlenw mɛn faransekan walima angilɛkan na.",
   },
   event_validation: {
     Français: "Validation d'Événements",
     Anglais: "Event Validation",
-    Bambara: "Ko kɛlenw tiɲɛni",
+    Bambara: "Ko Kɛlenw Dafali",
   },
   event_validation_desc: {
-    Français: "Validez la réalisation de vos événements pour un suivi précis et professionnel.",
-    Anglais: "Validate the completion of your events for accurate and professional tracking.",
-    Bambara: "I ka ko kɛlenw tiɲɛ walasa ka kɔlɔsili tiɲɛnen ni baarakɛla cogo kɛ.",
+    Français:
+      "Validez la réalisation de vos événements pour un suivi précis et professionnel.",
+    Anglais:
+      "Validate the completion of your events for accurate and professional tracking.",
+    Bambara: "I ka ko kɛlenw dafa walasa ka kɔlɔsili kɛ ka ɲɛn ani jateminɛw.",
   },
   key_features: {
     Français: "Fonctionnalités Clés",
@@ -579,9 +590,12 @@ const translations = {
     Bambara: "Labɛnni dafalen",
   },
   comprehensive_planning_desc: {
-    Français: "Organisez vos événements avec tous les détails nécessaires : date, heure, lieu, description et participants.",
-    Anglais: "Organize your events with all necessary details: date, time, location, description and participants.",
-    Bambara: "I ka ko kɛlenw labɛn ni kunnafoni bɛɛ ye: don, waati, yɔrɔ, ɲɛfɔli ani bɔlenw.",
+    Français:
+      "Organisez vos événements avec tous les détails nécessaires : nom, type, date, heure et description.",
+    Anglais:
+      "Organize your events with all necessary details: name, type, date, time, location, description.",
+    Bambara:
+      "I ka ko kɛlenw labɛn ni kunnafoni bɛɛ ye: tɔgɔ, suguya, don, waati, ani ɲɛfɔli.",
   },
   real_time_tracking: {
     Français: "Suivi en Temps Réel",
@@ -589,9 +603,12 @@ const translations = {
     Bambara: "Kɔlɔsili waati yɛrɛ la",
   },
   real_time_tracking_desc: {
-    Français: "Surveillez automatiquement le statut de vos événements : à venir, en cours, passés ou validés.",
-    Anglais: "Automatically monitor the status of your events: upcoming, ongoing, past or validated.",
-    Bambara: "I ka ko kɛlenw cogoya kɔlɔsi otomatikiman: nata, ka kɛ, tɛmɛnen walima tiɲɛnen.",
+    Français:
+      "Surveillez automatiquement le statut de vos événements : à venir, en cours, passés ou validés.",
+    Anglais:
+      "Automatically monitor the status of your events: upcoming, ongoing, past or validated.",
+    Bambara:
+      "I ka ko kɛlenw cogoya kɔlɔsi otomatikiman: nata, ka kɛ, tɛmɛnen walima dafalen.",
   },
   intelligent_reminders: {
     Français: "Rappels Intelligents",
@@ -599,19 +616,24 @@ const translations = {
     Bambara: "Hakamaw hakilitigiw",
   },
   intelligent_reminders_desc: {
-    Français: "Système de notifications avancé avec alertes vocales et messages personnalisés selon votre langue.",
-    Anglais: "Advanced notification system with voice alerts and personalized messages according to your language.",
-    Bambara: "Kunnafoni siratigɛ kɔrɔlen ni kumakan kunnafoniw ani bataki kɛlenw i ka kan kɔrɔ.",
+    Français:
+      "Système de notifications avancé avec alertes vocales et messages personnalisés selon votre langue.",
+    Anglais:
+      "Advanced notification system with voice alerts and personalized messages according to your language.",
+    Bambara:
+      "Kunnafoni siratigɛ kabakoman ni kumakan kunnafoniw ani bataki kɛlenw i ka kan sugandilen la.",
   },
   validation_system: {
     Français: "Système de Validation",
     Anglais: "Validation System",
-    Bambara: "Tiɲɛni siratigɛ",
+    Bambara: "Dafali siratigɛ",
   },
   validation_system_desc: {
-    Français: "Confirmez la réalisation de vos événements avec un système de validation professionnel et traçable.",
-    Anglais: "Confirm the completion of your events with a professional and traceable validation system.",
-    Bambara: "I ka ko kɛlenw dafali tiɲɛ ni tiɲɛni siratigɛ baarakɛla ani kɔlɔsibaga ye.",
+    Français:
+      "Confirmez la réalisation de vos événements avec un système de validation professionnel et traçable.",
+    Anglais:
+      "Confirm the completion of your events with a professional and traceable validation system.",
+    Bambara: "I ka ko kɛlenw baara bani dafa ni dafalikɛcogo ɲuman wasalen ye.",
   },
   event_workflow: {
     Français: "Flux de Travail",
@@ -624,9 +646,11 @@ const translations = {
     Bambara: "Ko kɛlen dilan",
   },
   create_event_desc: {
-    Français: "Commencez par créer votre événement avec tous les détails importants.",
+    Français:
+      "Commencez par créer votre événement avec tous les détails importants.",
     Anglais: "Start by creating your event with all the important details.",
-    Bambara: "A daminɛ ni i ka ko kɛlen dilanni ye ni kunnafoni nafamaw bɛɛ ye.",
+    Bambara:
+      "A daminɛ ni i ka ko kɛlen dilanni ye ni kunnafoni nafamaw bɛɛ ye.",
   },
   monitor_progress: {
     Français: "Surveiller le Progrès",
@@ -634,8 +658,10 @@ const translations = {
     Bambara: "Ɲɛtaa kɔlɔsi",
   },
   monitor_progress_desc: {
-    Français: "Suivez l'évolution de votre événement en temps réel selon son statut.",
-    Anglais: "Track your event's progress in real-time according to its status.",
+    Français:
+      "Suivez l'évolution de votre événement en temps réel selon son statut.",
+    Anglais:
+      "Track your event's progress in real-time according to its status.",
     Bambara: "I ka ko kɛlen ɲɛtaa kɔlɔsi waati yɛrɛ la a ka cogoya kɔrɔ.",
   },
   receive_notifications: {
@@ -644,19 +670,23 @@ const translations = {
     Bambara: "Kunnafoniw sɔrɔ",
   },
   receive_notifications_desc: {
-    Français: "Soyez alerté automatiquement 30 minutes avant le début de votre événement.",
+    Français:
+      "Soyez alerté automatiquement 30 minutes avant le début de votre événement.",
     Anglais: "Be automatically alerted 30 minutes before your event starts.",
-    Bambara: "Kunnafoni sɔrɔ otomatikiman miniti 30 ka taa i ka ko kɛlen daminɛ kɔn.",
+    Bambara:
+      "Kunnafoni sɔrɔ otomatikiman miniti 30 ka taa i ka ko kɛlen daminɛ kɔn.",
   },
   validate_completion: {
     Français: "Valider la Réalisation",
     Anglais: "Validate Completion",
-    Bambara: "Dafali tiɲɛ",
+    Bambara: "Dafali Waleyali",
   },
   validate_completion_desc: {
-    Français: "Confirmez que votre événement s'est bien déroulé avec le système de validation.",
+    Français:
+      "Confirmez que votre événement s'est bien déroulé avec le système de validation.",
     Anglais: "Confirm that your event went well with the validation system.",
-    Bambara: "I ka ko kɛlen kɛcogo ɲuman tiɲɛ ni tiɲɛni siratigɛ ye.",
+    Bambara:
+      "I ka ko kɛlen tɛmɛ cogo ɲɛfɔ, o bɛ tali kɛ min ɲɛna, min ma ɲɛ an i yɛrɛ ka jateminɛw.",
   },
   notification_system: {
     Français: "Système de Notifications",
@@ -669,9 +699,12 @@ const translations = {
     Bambara: "Hakamaw otomatikiw",
   },
   automatic_reminders_desc: {
-    Français: "Le système surveille automatiquement vos événements et vous envoie des notifications intelligentes.",
-    Anglais: "The system automatically monitors your events and sends you intelligent notifications.",
-    Bambara: "Siratigɛ bɛ i ka ko kɛlenw kɔlɔsi otomatikiman ka kunnafoni hakilitigiw ci i ma.",
+    Français:
+      "Le système surveille automatiquement vos événements et vous envoie des notifications intelligentes.",
+    Anglais:
+      "The system automatically monitors your events and sends you intelligent notifications.",
+    Bambara:
+      "Siratigɛ bɛ i ka ko kɛlenw kɔlɔsi otomatikiman ka kunnafoni hakilitigiw ci i ma.",
   },
   reminder_timing: {
     Français: "Notification 30 minutes avant le début",
@@ -684,9 +717,11 @@ const translations = {
     Bambara: "Kumakan kɔfɔliw",
   },
   voice_announcements_desc: {
-    Français: "Écoutez des messages vocaux personnalisés qui annoncent le début prochain de vos événements.",
-    Anglais: "Listen to personalized voice messages that announce the upcoming start of your events.",
-    Bambara: "Kumakan batakiw mɛn minnu bɛ i ka ko kɛlenw daminɛ nata kɔfɔ.",
+    Français:
+      "Écoutez des messages vocaux personnalisés qui annoncent le début prochain de vos événements.",
+    Anglais:
+      "Listen to personalized voice messages that announce the upcoming start of your events.",
+    Bambara: "Kumakan batakiw lamɛn minnu bɛ i ka ko kɛlenw daminɛ nata kɔfɔ.",
   },
   voice_languages: {
     Français: "Disponible en français et anglais uniquement",
@@ -699,9 +734,12 @@ const translations = {
     Bambara: "Kunnafoni yɛlɛmaniw",
   },
   dynamic_notifications_desc: {
-    Français: "Recevez des notifications depuis l'application ou des messages externes envoyés par l'administrateur.",
-    Anglais: "Receive notifications from the application or external messages sent by the administrator.",
-    Bambara: "Kunnafoniw sɔrɔ porogaramu kɔnɔ walima kɛnɛma batakiw minnu bɛ ci ka bɔ ɲɛnabɔla fɛ.",
+    Français:
+      "Recevez des notifications depuis l'application ou des messages externes envoyés par l'administrateur.",
+    Anglais:
+      "Receive notifications from the application or external messages sent by the administrator.",
+    Bambara:
+      "Kunnafoniw sɔrɔ porogaramu kɔnɔ walima kɛnɛma batakiw minnu bɛ ci ka bɔ ɲɛnabɔla fɛ.",
   },
   expert_tips: {
     Français: "Conseils d'Expert",
@@ -714,9 +752,12 @@ const translations = {
     Bambara: "Labɛnni ɲuman",
   },
   tip_planning_desc: {
-    Français: "Créez vos événements à l'avance et définissez des heures précises pour optimiser votre organisation.",
-    Anglais: "Create your events in advance and set precise times to optimize your organization.",
-    Bambara: "I ka ko kɛlenw dilan ka taa a ɲɛ ka waatiw tiɲɛ walasa ka i ka labɛnni ɲɛ.",
+    Français:
+      "Créez vos événements à l'avance et définissez des heures précises pour optimiser votre organisation.",
+    Anglais:
+      "Create your events in advance and set precise times to optimize your organization.",
+    Bambara:
+      "I ka ko kɛlenw dilan ka taa a ɲɛ ka waatiw tiɲɛ walasa ka i ka labɛnni ɲɛ.",
   },
   tip_notifications: {
     Français: "Gestion des Notifications",
@@ -724,19 +765,36 @@ const translations = {
     Bambara: "Kunnafoniw ɲɛnabɔ",
   },
   tip_notifications_desc: {
-    Français: "Activez les notifications pour ne jamais manquer un événement important et restez toujours informé.",
-    Anglais: "Enable notifications to never miss an important event and stay always informed.",
-    Bambara: "Kunnafoniw baara la walasa ko kɛlen nafama kana bɔnɛ ka to kunnafoni sɔrɔla tuma bɛɛ.",
+    Français:
+      "Activez les notifications pour ne jamais manquer un événement important et restez toujours informé.",
+    Anglais:
+      "Enable notifications to never miss an important event and stay always informed.",
+    Bambara:
+      "Kunnafoniw baara la walasa ko kɛlen nafama kana bɔnɛ ka to kunnafoni sɔrɔla tuma bɛɛ.",
+  },
+  delete_information: {
+    Français: "Modification et Suppression",
+    Anglais: "Update and Delete",
+    Bambara: "Yɛlɛmali ani Jɔsili",
+  },
+  delete_information_desc: {
+    Français:
+      "Les événements validés ne peuvent pas être ni modifiés ni supprimés.",
+    Anglais: "The events validated can't to be update or delete.",
+    Bambara: "Ko kɛlen minnu dafala, u tɛ se tugun ka yɛlɛma walima ka jɔsi.",
   },
   tip_validation: {
     Français: "Validation Systématique",
     Anglais: "Systematic Validation",
-    Bambara: "Tiɲɛni siratigɛla",
+    Bambara: "Dafali siratigɛla",
   },
   tip_validation_desc: {
-    Français: "Validez toujours vos événements terminés pour maintenir un historique précis et professionnel.",
-    Anglais: "Always validate your completed events to maintain an accurate and professional history.",
-    Bambara: "I ka ko kɛlen bannenw tiɲɛ tuma bɛɛ walasa ka tariku tiɲɛnen ni baarakɛla marala.",
+    Français:
+      "Validez toujours vos événements terminés pour maintenir un historique précis et professionnel.",
+    Anglais:
+      "Always validate your completed events to maintain an accurate and professional history.",
+    Bambara:
+      "I ka ko kɛlen bannenw tiɲɛ tuma bɛɛ walasa ka tariku tiɲɛnen ni baarakɛla marala.",
   },
   events_help_center: {
     Français: "Centre d'Aide - Événements",
@@ -1069,62 +1127,69 @@ const translations = {
   event_reminder_title: {
     Français: "Rappel d'événement",
     Anglais: "Event Reminder",
-    Bambara: "Wakati hakili"
+    Bambara: "Wakati hakili",
   },
   view_event: {
     Français: "Voir l'événement",
     Anglais: "View Event",
-    Bambara: "Wakati lajɛ"
+    Bambara: "Wakati lajɛ",
   },
   dismiss: {
     Français: "Ignorer",
     Anglais: "Dismiss",
-    Bambara: "Bɔ"
+    Bambara: "Bɔ",
   },
   notification_system_title: {
     Français: "Système de notifications",
     Anglais: "Notification System",
-    Bambara: "Kunnafoni sira"
+    Bambara: "Kunnafoni sira",
   },
   notification_system_desc: {
-    Français: "Recevez des alertes intelligentes pour vos événements et activités importantes.",
+    Français:
+      "Recevez des alertes intelligentes pour vos événements et activités importantes.",
     Anglais: "Receive smart alerts for your events and important activities.",
-    Bambara: "I bɛ kunnafoni ɲuman sɔrɔ i ka wakatiw ni baara kunba ye."
+    Bambara: "I bɛ kunnafoni ɲuman sɔrɔ i ka wakatiw ni baara kunba ye.",
   },
   voice_alerts_title: {
     Français: "Alertes vocales",
     Anglais: "Voice Alerts",
-    Bambara: "Kumakan kunnafoniw"
+    Bambara: "Kumakan kunnafoniw",
   },
   voice_alerts_desc: {
-    Français: "Messages vocaux automatiques 30 minutes avant vos événements (français/anglais).",
-    Anglais: "Automatic voice messages 30 minutes before your events (French/English).",
-    Bambara: "Kumakan kunnafoniw bɛ kɛ miniti 30 sisan i ka wakatiw la."
+    Français:
+      "Messages vocaux automatiques 30 minutes avant vos événements (français/anglais).",
+    Anglais:
+      "Automatic voice messages 30 minutes before your events (French/English).",
+    Bambara: "Kumakan kunnafoniw bɛ kɛ miniti 30 sisan i ka wakatiw la.",
   },
   smart_notifications_title: {
     Français: "Notifications intelligentes",
     Anglais: "Smart Notifications",
-    Bambara: "Kunnafoni hakilitigiw"
+    Bambara: "Kunnafoni hakilitigiw",
   },
   smart_notifications_desc: {
-    Français: "Rappels automatiques basés sur la date et l'heure réelles de vos événements.",
-    Anglais: "Automatic reminders based on the actual date and time of your events.",
-    Bambara: "Hakili kunnafoniw bɛ kɛ i ka wakatiw waati ni don ma."
+    Français:
+      "Rappels automatiques basés sur la date et l'heure réelles de vos événements.",
+    Anglais:
+      "Automatic reminders based on the actual date and time of your events.",
+    Bambara:
+      "Hakilijigi kunnafoniw sinsinen do i ka kɛlenw wakati yɛrɛ de kan.",
   },
   external_notifications: {
     Français: "Notifications externes",
     Anglais: "External Notifications",
-    Bambara: "Kunnafoni kɛnɛmaw"
+    Bambara: "Kunnafoni kɛnɛmaw",
   },
   external_notifications_desc: {
-    Français: "Recevez des notifications importantes de l'administration via URL.",
+    Français:
+      "Recevez des notifications importantes de l'administration via URL.",
     Anglais: "Receive important notifications from administration via URL.",
-    Bambara: "I bɛ kunnafoni kunba sɔrɔ marali la URL fɛ."
+    Bambara: "I bɛ kunnafoni kunba sɔrɔ marali la URL fɛ.",
   },
   admin_integration: {
     Français: "Intégration administrative",
     Anglais: "Administrative integration",
-    Bambara: "Marali ka jɛkafɔ"
+    Bambara: "Marali ka jɛkafɔ",
   },
 };
 

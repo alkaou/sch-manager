@@ -26,6 +26,7 @@ export default function EventsPage() {
     database,
     loadingData,
     refreshData,
+    setActiveSideBarBtn,
   } = useOutletContext();
 
   const { language } = useLanguage();
@@ -98,6 +99,7 @@ export default function EventsPage() {
 
   // Charger les événements au montage
   useEffect(() => {
+    setActiveSideBarBtn(13);
     if (database) {
       loadEvents();
     }
