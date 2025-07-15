@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { saveStudent, updateStudent } from "../../utils/database_methods";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage, useFlashNotification } from "../contexts";
-import { gradients } from "../../utils/colors";
 import { getClasseName, getAge } from "../../utils/helpers";
 import {
   suggestNames,
@@ -21,7 +20,7 @@ const AddStudent = ({
   studentsForUpdate,
 }) => {
   const [db, setDb] = useState(null);
-  const { live_language, language } = useLanguage();
+  const { language } = useLanguage();
 
   // Objet initial pour un élève
   const initialStudent = {
@@ -202,11 +201,10 @@ const AddStudent = ({
       const startParticuleErrorText = `${translate(
         "check_student_info",
         language
-      )} ${
-        students.length > 1 || studentsForUpdate.length > 1
+      )} ${students.length > 1 || studentsForUpdate.length > 1
           ? valid_response.st_id
           : ""
-      }`.trim();
+        }`.trim();
       // console.log(startParticuleErrorText);
       setParticuleError(startParticuleErrorText);
       return;
@@ -272,18 +270,17 @@ const AddStudent = ({
   const classOptions =
     db && db.classes
       ? [...db.classes]
-          .sort((a, b) => a.level - b.level)
-          .map((cls) => ({
-            id: cls.id,
-            label: `${cls.level} ${cls.name}`.trim(),
-            value: `${cls.level} ${cls.name}`.trim(),
-          }))
+        .sort((a, b) => a.level - b.level)
+        .map((cls) => ({
+          id: cls.id,
+          label: `${cls.level} ${cls.name}`.trim(),
+          value: `${cls.level} ${cls.name}`.trim(),
+        }))
       : [];
 
   // Styles améliorés pour les inputs
-  const commonInputClass = `w-full px-3 py-2 text-sm rounded-lg transition-all duration-300 focus:ring-2 focus:ring-opacity-50 ${
-    theme === "dark" ? "focus:ring-blue-500" : "focus:ring-purple-500"
-  } ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`;
+  const commonInputClass = `w-full px-3 py-2 text-sm rounded-lg transition-all duration-300 focus:ring-2 focus:ring-opacity-50 ${theme === "dark" ? "focus:ring-blue-500" : "focus:ring-purple-500"
+    } ${inputBgColor} ${inputBorderColor} ${selectInputTextColor}`;
 
   // Animation variants pour les éléments
   const containerVariants = {
@@ -782,10 +779,9 @@ const AddStudent = ({
         {success || particuleError ? (
           <motion.div
             className={`
-              ${
-                success
-                  ? "bg-green-100 border-l-4 border-green-500 text-green-700 "
-                  : "bg-red-100 border-l-4 border-red-500 text-red-700 "
+              ${success
+                ? "bg-green-100 border-l-4 border-green-500 text-green-700 "
+                : "bg-red-100 border-l-4 border-red-500 text-red-700 "
               }
               p-4 mb-6 rounded-lg`}
             initial={{ opacity: 0, y: -20 }}
@@ -840,9 +836,8 @@ const AddStudent = ({
                 key={index}
                 type="button"
                 onClick={() => setActiveTab(index)}
-                className={`px-4 py-2 rounded-lg text-white font-medium transition-colors ${
-                  activeTab === index ? tabActiveBgColor : tabInactiveBgColor
-                }`}
+                className={`px-4 py-2 rounded-lg text-white font-medium transition-colors ${activeTab === index ? tabActiveBgColor : tabInactiveBgColor
+                  }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -900,9 +895,8 @@ const AddStudent = ({
           <motion.button
             type="submit"
             disabled={isLoading}
-            className={`text-white px-6 py-3 rounded-lg font-medium flex items-center ${buttonBgColor} ${
-              isLoading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
+            className={`text-white px-6 py-3 rounded-lg font-medium flex items-center ${buttonBgColor} ${isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             whileHover={!isLoading ? { scale: 1.05 } : {}}
             whileTap={!isLoading ? { scale: 0.95 } : {}}
           >
