@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Surveillance des Événements</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background: #0056b3;
+        }
+        .button.danger {
+            background: #dc3545;
+        }
+        .button.danger:hover {
+            background: #c82333;
+        }
+        .button.success {
+            background: #28a745;
+        }
+        .button.success:hover {
+            background: #218838;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .event-item {
+            background: #e9ecef;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 4px solid #007bff;
+        }
+        .event-item.warning {
+            border-left-color: #ffc107;
+        }
+        .event-item.success {
+            border-left-color: #28a745;
+        }
+        .event-item.danger {
+            border-left-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 Test de Surveillance des Événements</h1>
+        <p>Cette page permet de tester le système de surveillance automatique des événements.</p>
+        
+        <div>
+            <h3>Actions de Test</h3>
+            <button class="button success" onclick="createTestEvents()">Créer des Événements de Test</button>
+            <button class="button" onclick="checkEventStatus()">Vérifier le Statut</button>
+            <button class="button danger" onclick="cleanupTestEvents()">Nettoyer les Tests</button>
+            <button class="button" onclick="clearLog()">Effacer le Log</button>
+        </div>
+        
+        <div>
+            <h3>Événements de Test Créés</h3>
+            <div id="events-list"></div>
+        </div>
+        
+        <div>
+            <h3>Log de Surveillance</h3>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour logger les messages
+        function logMessage(message, type = 'info') {
+            const log = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logEntry.style.color = type === 'error' ? 'red' : type === 'success' ? 'green' : type === 'warning' ? 'orange' : 'black';
+            log.appendChild(logEntry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Fonction pour effacer le log
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // Fonction pour créer des événements de test
+        async function createTestEvents() {
+            logMessage('🧪 Création d\'événements de test...', 'info');
+            
+            const now = new Date();
+            
+            // Événements de test avec différents délais
+            const testEvents = [
+                {
+                    id: 'test-event-25min',
+                    title: 'Réunion importante dans 25 min',
+                    description: 'Réunion avec l\'équipe de développement',
+                    type: 'conference',
+                    startDate: new Date(now.getTime() + 25 * 60 * 1000).toISOString().split('T')[0],
+                    startTime: new Date(now.getTime() + 25 * 60 * 1000).toTimeString().slice(0, 5),
+                    endDate: new Date(now.getTime() + 85 * 60 * 1000).toISOString().split('T')[0],
+                    endTime: new Date(now.getTime() + 85 * 60 * 1000).toTimeString().slice(0, 5),
+                    status: 'pending',
+                    notificationsIsSended: false,
+                    createdAt: now.toISOString(),
+                    updatedAt: now.toISOString(),
+                    validation: null
+                },
+                {
+                    id: 'test-event-15min',
+                    title: 'Cours de mathématiques dans 15 min',
+                    description: 'Cours de mathématiques avancées',
+                    type: 'exam_period',
+                    startDate: new Date(now.getTime() + 15 * 60 * 1000).toISOString().split('T')[0],
+                    startTime: new Date(now.getTime() + 15 * 60 * 1000).toTimeString().slice(0, 5),
+                    endDate: new Date(now.getTime() + 75 * 60 * 1000).toISOString().split('T')[0],
+                    endTime: new Date(now.getTime() + 75 * 60 * 1000).toTimeString().slice(0, 5),
+                    status: 'pending',
+                    notificationsIsSended: false,
+                    createdAt: now.toISOString(),
+                    updatedAt: now.toISOString(),
+                    validation: null
+                },
+                {
+                    id: 'test-event-5min',
+                    title: 'Événement urgent dans 5 min',
+                    description: 'Événement qui doit notifier immédiatement',
+                    type: 'workshop',
+                    startDate: new Date(now.getTime() + 5 * 60 * 1000).toISOString().split('T')[0],
+                    startTime: new Date(now.getTime() + 5 * 60 * 1000).toTimeString().slice(0, 5),
+                    endDate: new Date(now.getTime() + 65 * 60 * 1000).toISOString().split('T')[0],
+                    endTime: new Date(now.getTime() + 65 * 60 * 1000).toTimeString().slice(0, 5),
+                    status: 'pending',
+                    notificationsIsSended: false,
+                    createdAt: now.toISOString(),
+                    updatedAt: now.toISOString(),
+                    validation: null
+                }
+            ];
+            
+            try {
+                // Sauvegarder dans la base de données Electron
+                if (window.electron && window.electron.loadDatabase && window.electron.saveDatabase) {
+                    const database = await window.electron.loadDatabase();
+                    
+                    if (!database.events) {
+                        database.events = [];
+                    }
+                    
+                    // Supprimer les anciens événements de test
+                    database.events = database.events.filter(event => 
+                        !event.id.startsWith('test-event-')
+                    );
+                    
+                    // Ajouter les nouveaux événements de test
+                    database.events.push(...testEvents);
+                    
+                    await window.electron.saveDatabase(database);
+                    logMessage('✅ Événements de test sauvegardés dans la base de données', 'success');
+                } else {
+                    logMessage('⚠️ API Electron non disponible', 'warning');
+                }
+                
+                // Afficher les événements créés
+                displayEvents(testEvents);
+                
+            } catch (error) {
+                logMessage(`❌ Erreur lors de la création des événements: ${error.message}`, 'error');
+            }
+        }
+
+        // Fonction pour afficher les événements
+        function displayEvents(events) {
+            const eventsList = document.getElementById('events-list');
+            eventsList.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventTime = new Date(`${event.startDate}T${event.startTime}`);
+                const now = new Date();
+                const minutesDiff = Math.floor((eventTime.getTime() - now.getTime()) / (1000 * 60));
+                
+                const eventDiv = document.createElement('div');
+                eventDiv.className = 'event-item';
+                if (minutesDiff <= 5) eventDiv.className += ' danger';
+                else if (minutesDiff <= 30) eventDiv.className += ' warning';
+                else eventDiv.className += ' success';
+                
+                eventDiv.innerHTML = `
+                    <strong>${event.title}</strong><br>
+                    <small>Dans ${minutesDiff} minutes | Notification envoyée: ${event.notificationsIsSended ? 'Oui' : 'Non'}</small>
+                `;
+                
+                eventsList.appendChild(eventDiv);
+            });
+        }
+
+        // Fonction pour vérifier le statut des événements
+        async function checkEventStatus() {
+            try {
+                if (window.electron && window.electron.loadDatabase) {
+                    const database = await window.electron.loadDatabase();
+                    const testEvents = database.events?.filter(event => 
+                        event.id.startsWith('test-event-')
+                    ) || [];
+                    
+                    logMessage(`📊 ${testEvents.length} événement(s) de test trouvé(s)`, 'info');
+                    
+                    testEvents.forEach(event => {
+                        const eventTime = new Date(`${event.startDate}T${event.startTime}`);
+                        const now = new Date();
+                        const minutesDiff = Math.floor((eventTime.getTime() - now.getTime()) / (1000 * 60));
+                        
+                        logMessage(`  - ${event.title}: dans ${minutesDiff} min (notif: ${event.notificationsIsSended ? 'envoyée' : 'en attente'})`, 'info');
+                    });
+                    
+                    displayEvents(testEvents);
+                } else {
+                    logMessage('⚠️ API Electron non disponible', 'warning');
+                }
+            } catch (error) {
+                logMessage(`❌ Erreur lors de la vérification: ${error.message}`, 'error');
+            }
+        }
+
+        // Fonction pour nettoyer les événements de test
+        async function cleanupTestEvents() {
+            try {
+                if (window.electron && window.electron.loadDatabase && window.electron.saveDatabase) {
+                    const database = await window.electron.loadDatabase();
+                    
+                    if (database.events) {
+                        const originalCount = database.events.length;
+                        database.events = database.events.filter(event => 
+                            !event.id.startsWith('test-event-')
+                        );
+                        
+                        await window.electron.saveDatabase(database);
+                        const removedCount = originalCount - database.events.length;
+                        logMessage(`🧹 ${removedCount} événement(s) de test supprimé(s)`, 'success');
+                        
+                        document.getElementById('events-list').innerHTML = '';
+                    }
+                } else {
+                    logMessage('⚠️ API Electron non disponible', 'warning');
+                }
+            } catch (error) {
+                logMessage(`❌ Erreur lors du nettoyage: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            logMessage('🚀 Page de test de surveillance des événements chargée', 'success');
+            logMessage('ℹ️ Le système de surveillance vérifie automatiquement les événements chaque minute', 'info');
+            logMessage('ℹ️ Créez des événements de test et surveillez les notifications dans l\'application principale', 'info');
+        });
+    </script>
+</body>
+</html>

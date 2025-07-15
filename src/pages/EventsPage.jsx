@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useOutletContext } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Calendar, Loader, RefreshCw } from "lucide-react";
+import { Plus, Calendar, Loader, RefreshCw, InfoIcon } from "lucide-react";
 import { useLanguage, useFlashNotification } from "../components/contexts";
 import { translate } from "../components/events/events_translator";
 import {
@@ -15,6 +15,7 @@ import EventFilters from "../components/events/EventFilters.jsx";
 import EventForm from "../components/events/EventForm.jsx";
 import EventValidationForm from "../components/events/EventValidationForm.jsx";
 import EventDetails from "../components/events/EventDetails.jsx";
+import EventsInfoPopup from "../components/events/EventsInfoPopup.jsx";
 import ActionConfirmePopup from "../components/popups/ActionConfirmePopup.jsx";
 
 export default function EventsPage() {
@@ -43,6 +44,7 @@ export default function EventsPage() {
   const [showValidationForm, setShowValidationForm] = useState(false);
   const [showEventDetails, setShowEventDetails] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showInfoPopup, setShowInfoPopup] = useState(false);
 
   // États pour les événements sélectionnés
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -256,6 +258,14 @@ export default function EventsPage() {
             <div>
               <h1 className="text-3xl font-bold">
                 {translate("events_manager", language)}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="ml-2"
+                  onClick={() => setShowInfoPopup(true)}
+                >
+                  <InfoIcon size={20} className="text-blue-400" />
+                </motion.button>
               </h1>
               <p
                 className={`text-sm ${
@@ -395,6 +405,13 @@ export default function EventsPage() {
               onValidate={handleValidateEvent}
               theme={theme}
               text_color={events_text_color}
+            />
+
+            {/* Popup d'information */}
+            <EventsInfoPopup
+              isOpen={showInfoPopup}
+              onClose={() => setShowInfoPopup(false)}
+              theme={theme}
             />
 
             {/* Confirmation de suppression */}

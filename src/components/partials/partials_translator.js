@@ -96,6 +96,11 @@ const translations = {
     Anglais: "Yesterday",
     Bambara: "Kunu",
   },
+  just_now: {
+    Français: "À l'instant",
+    Anglais: "Just now",
+    Bambara: "Sisan",
+  },
   // SideBar navigation items
   dashboard_texte: {
     Français: "Dashboard",
@@ -186,6 +191,11 @@ const translations = {
     Français: "Cancel",
     Anglais: "Cancel",
     Bambara: "A dabila",
+  },
+  clear_all: {
+    Français: "Nettoyer tout",
+    Anglais: "Clear all",
+    Bambara: "A bɛɛ jɔsi",
   },
 
   // PositionForm translations

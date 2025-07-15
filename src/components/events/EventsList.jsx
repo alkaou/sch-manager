@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar,
   AlertCircle,
@@ -7,11 +7,11 @@ import {
   PlayCircle,
   XCircle,
   ChevronRight,
-} from 'lucide-react';
-import { useLanguage } from '../contexts';
-import { translate } from './events_translator';
-import EventCard from './EventCard.jsx';
-import { getEventStatistics, determineEventStatus } from './EventsMethodes';
+} from "lucide-react";
+import { useLanguage } from "../contexts";
+import { translate } from "./events_translator";
+import EventCard from "./EventCard.jsx";
+import { getEventStatistics, determineEventStatus } from "./EventsMethodes";
 
 const EventsList = ({
   events,
@@ -23,55 +23,55 @@ const EventsList = ({
   // app_bg_color,
   text_color,
   database,
-  setFlashMessage
+  setFlashMessage,
 }) => {
   const { language } = useLanguage();
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState("all");
   const [expandedSections, setExpandedSections] = useState({
     all: true,
     pending: true,
     validated: true,
     ongoing: true,
-    past: true
+    past: true,
   });
 
   // Grouper les événements par statut réel basé sur la date/heure actuelle
   const groupedEvents = {
     all: events,
-    pending: events.filter(event => {
+    pending: events.filter((event) => {
       const currentStatus = determineEventStatus(event);
-      return currentStatus === 'pending' && !event.validation;
+      return currentStatus === "pending" && !event.validation;
     }),
-    validated: events.filter(event => event.validation),
-    ongoing: events.filter(event => {
+    validated: events.filter((event) => event.validation),
+    ongoing: events.filter((event) => {
       const currentStatus = determineEventStatus(event);
-      return currentStatus === 'ongoing' && !event.validation;
+      return currentStatus === "ongoing" && !event.validation;
     }),
-    past: events.filter(event => {
+    past: events.filter((event) => {
       const currentStatus = determineEventStatus(event);
-      return currentStatus === 'past' && !event.validation;
-    })
+      return currentStatus === "past" && !event.validation;
+    }),
   };
 
   // Statistiques
   const stats = getEventStatistics(events);
 
   const toggleSection = (section) => {
-    setExpandedSections(prev => ({
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
-      case 'pending':
+      case "pending":
         return <AlertCircle className="text-yellow-500" size={20} />;
-      case 'validated':
+      case "validated":
         return <CheckCircle className="text-green-500" size={20} />;
-      case 'ongoing':
+      case "ongoing":
         return <PlayCircle className="text-blue-500" size={20} />;
-      case 'past':
+      case "past":
         return <XCircle className="text-gray-500" size={20} />;
       default:
         return <Calendar className="text-purple-500" size={20} />;
@@ -80,25 +80,41 @@ const EventsList = ({
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'validated':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'ongoing':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'past':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+      case "pending":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "validated":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "ongoing":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "past":
+        return "bg-gray-100 text-gray-800 border-gray-200";
       default:
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return "bg-purple-100 text-purple-800 border-purple-200";
     }
   };
 
   const tabs = [
-    { key: 'all', label: translate('all_events', language), count: stats.total },
-    { key: 'pending', label: translate('pending', language), count: stats.pending },
-    { key: 'validated', label: translate('validated', language), count: stats.validated },
-    { key: 'ongoing', label: translate('ongoing', language), count: stats.ongoing },
-    { key: 'past', label: translate('past', language), count: stats.past }
+    {
+      key: "all",
+      label: translate("all_events", language),
+      count: stats.total,
+    },
+    {
+      key: "pending",
+      label: translate("pending", language),
+      count: stats.pending,
+    },
+    {
+      key: "validated",
+      label: translate("validated", language),
+      count: stats.validated,
+    },
+    {
+      key: "ongoing",
+      label: translate("ongoing", language),
+      count: stats.ongoing,
+    },
+    { key: "past", label: translate("past", language), count: stats.past },
   ];
 
   const containerVariants = {
@@ -106,34 +122,34 @@ const EventsList = ({
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 }
+    visible: { y: 0, opacity: 1 },
   };
 
   const sectionVariants = {
     hidden: { height: 0, opacity: 0 },
-    visible: { 
-      height: 'auto', 
+    visible: {
+      height: "auto",
       opacity: 1,
       transition: {
         height: { duration: 0.3 },
-        opacity: { duration: 0.2, delay: 0.1 }
-      }
+        opacity: { duration: 0.2, delay: 0.1 },
+      },
     },
-    exit: { 
-      height: 0, 
+    exit: {
+      height: 0,
       opacity: 0,
       transition: {
         opacity: { duration: 0.1 },
-        height: { duration: 0.2, delay: 0.1 }
-      }
-    }
+        height: { duration: 0.2, delay: 0.1 },
+      },
+    },
   };
 
   const renderEventSection = (sectionKey, sectionEvents, title) => {
@@ -144,9 +160,9 @@ const EventsList = ({
         key={sectionKey}
         variants={itemVariants}
         className={`rounded-xl shadow-lg border ${
-          theme === 'dark' 
-            ? 'bg-gray-800 border-gray-700' 
-            : 'bg-white border-gray-200'
+          theme === "dark"
+            ? "bg-gray-800 border-gray-700"
+            : "bg-white border-gray-200"
         }`}
       >
         {/* En-tête de section */}
@@ -155,17 +171,19 @@ const EventsList = ({
           whileTap={{ scale: 0.98 }}
           onClick={() => toggleSection(sectionKey)}
           className={`w-full p-4 flex items-center justify-between transition-colors ${
-            theme === 'dark' ? 'hover:bg-gray-750' : 'hover:bg-gray-50'
+            theme === "dark" ? "hover:bg-gray-750" : "hover:bg-gray-50"
           }`}
         >
           <div className="flex items-center gap-3">
-            {getStatusIcon(sectionKey === 'all' ? 'all' : sectionKey)}
+            {getStatusIcon(sectionKey === "all" ? "all" : sectionKey)}
             <h3 className={`text-lg font-semibold ${text_color}`}>{title}</h3>
-            <span className={`px-3 py-1 rounded-full text-sm font-medium border ${
-              sectionKey === 'all' 
-                ? 'bg-purple-100 text-purple-800 border-purple-200'
-                : getStatusColor(sectionKey)
-            }`}>
+            <span
+              className={`px-3 py-1 rounded-full text-sm font-medium border ${
+                sectionKey === "all"
+                  ? "bg-purple-100 text-purple-800 border-purple-200"
+                  : getStatusColor(sectionKey)
+              }`}
+            >
               {sectionEvents.length}
             </span>
           </div>
@@ -187,33 +205,45 @@ const EventsList = ({
               exit="exit"
               className="overflow-hidden"
             >
-              <div className={`p-4 border-t ${
-                theme === 'dark' ? 'border-gray-700' : 'border-gray-200'
-              }`}>
+              <div
+                className={`p-4 border-t ${
+                  theme === "dark" ? "border-gray-700" : "border-gray-200"
+                }`}
+              >
                 {sectionEvents.length === 0 ? (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     className={`text-center py-8 ${
-                      theme === 'dark' ? 'text-gray-400' : 'text-gray-500'
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
                     }`}
                   >
                     <Calendar size={48} className="mx-auto mb-4 opacity-50" />
                     <p className="text-lg font-medium mb-2">
-                      {sectionKey === 'all' ? translate('no_events', language) :
-                       sectionKey === 'pending' ? translate('no_pending_events', language) :
-                       sectionKey === 'ongoing' ? translate('no_ongoing_events', language) :
-                       sectionKey === 'past' ? translate('no_past_events', language) :
-                       sectionKey === 'validated' ? translate('no_validated_events', language) :
-                       translate('no_events', language)}
+                      {sectionKey === "all"
+                        ? translate("no_events", language)
+                        : sectionKey === "pending"
+                        ? translate("no_pending_events", language)
+                        : sectionKey === "ongoing"
+                        ? translate("no_ongoing_events", language)
+                        : sectionKey === "past"
+                        ? translate("no_past_events", language)
+                        : sectionKey === "validated"
+                        ? translate("no_validated_events", language)
+                        : translate("no_events", language)}
                     </p>
                     <p className="text-sm">
-                      {sectionKey === 'all' ? translate('no_events_description', language) :
-                       sectionKey === 'pending' ? translate('no_pending_events_description', language) :
-                       sectionKey === 'ongoing' ? translate('no_ongoing_events_description', language) :
-                       sectionKey === 'past' ? translate('no_past_events_description', language) :
-                       sectionKey === 'validated' ? translate('no_validated_events_description', language) :
-                       translate('no_events_description', language)}
+                      {sectionKey === "all"
+                        ? translate("no_events_description", language)
+                        : sectionKey === "pending"
+                        ? translate("no_pending_events_description", language)
+                        : sectionKey === "ongoing"
+                        ? translate("no_ongoing_events_description", language)
+                        : sectionKey === "past"
+                        ? translate("no_past_events_description", language)
+                        : sectionKey === "validated"
+                        ? translate("no_validated_events_description", language)
+                        : translate("no_events_description", language)}
                     </p>
                   </motion.div>
                 ) : (
@@ -263,9 +293,9 @@ const EventsList = ({
         <motion.div
           whileHover={{ scale: 1.05 }}
           className={`p-4 rounded-xl shadow-lg border ${
-            theme === 'dark' 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'
+            theme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
           } ${text_color}`}
         >
           <div className="flex items-center gap-3">
@@ -273,10 +303,12 @@ const EventsList = ({
               <Calendar className="text-purple-600" size={20} />
             </div>
             <div>
-              <p className={`text-sm ${
-                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-              }`}>
-                {translate('total_events', language)}
+              <p
+                className={`text-sm ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {translate("total_events", language)}
               </p>
               <p className="text-xl font-bold">{stats.total}</p>
             </div>
@@ -286,9 +318,9 @@ const EventsList = ({
         <motion.div
           whileHover={{ scale: 1.05 }}
           className={`p-4 rounded-xl shadow-lg border ${
-            theme === 'dark' 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'
+            theme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
           } ${text_color}`}
         >
           <div className="flex items-center gap-3">
@@ -296,10 +328,12 @@ const EventsList = ({
               <PlayCircle className="text-blue-600" size={20} />
             </div>
             <div>
-              <p className={`text-sm ${
-                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-              }`}>
-                {translate('ongoing', language)}
+              <p
+                className={`text-sm ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {translate("ongoing", language)}
               </p>
               <p className="text-xl font-bold">{stats.ongoing}</p>
             </div>
@@ -309,9 +343,9 @@ const EventsList = ({
         <motion.div
           whileHover={{ scale: 1.05 }}
           className={`p-4 rounded-xl shadow-lg border ${
-            theme === 'dark' 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'
+            theme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
           } ${text_color}`}
         >
           <div className="flex items-center gap-3">
@@ -319,12 +353,16 @@ const EventsList = ({
               <AlertCircle className="text-yellow-600" size={20} />
             </div>
             <div>
-              <p className={`text-sm ${
-                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-              }`}>
-                {translate('pending', language)}
+              <p
+                className={`text-sm ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {translate("pending", language)}
               </p>
-              <p className={`${text_color} text-xl font-bold`}>{stats.pending}</p>
+              <p className={`${text_color} text-xl font-bold`}>
+                {stats.pending}
+              </p>
             </div>
           </div>
         </motion.div>
@@ -332,9 +370,9 @@ const EventsList = ({
         <motion.div
           whileHover={{ scale: 1.05 }}
           className={`p-4 rounded-xl shadow-lg border ${
-            theme === 'dark' 
-              ? 'bg-gray-800 border-gray-700' 
-              : 'bg-white border-gray-200'
+            theme === "dark"
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
           } ${text_color}`}
         >
           <div className="flex items-center gap-3">
@@ -342,10 +380,12 @@ const EventsList = ({
               <CheckCircle className="text-green-600" size={20} />
             </div>
             <div>
-              <p className={`text-sm ${
-                theme === 'dark' ? 'text-gray-400' : 'text-gray-600'
-              }`}>
-                {translate('validated', language)}
+              <p
+                className={`text-sm ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {translate("validated", language)}
               </p>
               <p className="text-xl font-bold">{stats.validated}</p>
             </div>
@@ -358,10 +398,10 @@ const EventsList = ({
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         className={`flex flex-wrap gap-2 p-2 rounded-xl ${
-          theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'
+          theme === "dark" ? "bg-gray-800" : "bg-gray-100"
         }`}
       >
-        {tabs.map(tab => (
+        {tabs.map((tab) => (
           <motion.button
             key={tab.key}
             whileHover={{ scale: 1.05 }}
@@ -369,20 +409,22 @@ const EventsList = ({
             onClick={() => setActiveTab(tab.key)}
             className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
               activeTab === tab.key
-                ? 'bg-blue-500 text-white shadow-lg'
-                : theme === 'dark'
-                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                ? "bg-blue-500 text-white shadow-lg"
+                : theme === "dark"
+                ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+                : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
             {tab.label}
-            <span className={`px-2 py-1 rounded-full text-xs ${
-              activeTab === tab.key
-                ? 'bg-white bg-opacity-20'
-                : theme === 'dark'
-                  ? 'bg-gray-600'
-                  : 'bg-gray-200'
-            }`}>
+            <span
+              className={`px-2 py-1 rounded-full text-xs ${
+                activeTab === tab.key
+                  ? "bg-white bg-opacity-20"
+                  : theme === "dark"
+                  ? "bg-gray-600"
+                  : "bg-gray-200"
+              }`}
+            >
               {tab.count}
             </span>
           </motion.button>
@@ -396,17 +438,37 @@ const EventsList = ({
         animate="visible"
         className="space-y-4"
       >
-        {activeTab === 'all' ? (
+        {activeTab === "all" ? (
           // Afficher toutes les sections
           <>
-            {renderEventSection('pending', groupedEvents.pending, translate('pending_events', language))}
-            {renderEventSection('ongoing', groupedEvents.ongoing, translate('ongoing_events', language))}
-            {renderEventSection('validated', groupedEvents.validated, translate('validated_events', language))}
-            {renderEventSection('past', groupedEvents.past, translate('past_events', language))}
+            {renderEventSection(
+              "pending",
+              groupedEvents.pending,
+              translate("pending_events", language)
+            )}
+            {renderEventSection(
+              "ongoing",
+              groupedEvents.ongoing,
+              translate("ongoing_events", language)
+            )}
+            {renderEventSection(
+              "validated",
+              groupedEvents.validated,
+              translate("validated_events", language)
+            )}
+            {renderEventSection(
+              "past",
+              groupedEvents.past,
+              translate("past_events", language)
+            )}
           </>
         ) : (
           // Afficher seulement la section sélectionnée
-          renderEventSection(activeTab, groupedEvents[activeTab], tabs.find(t => t.key === activeTab)?.label)
+          renderEventSection(
+            activeTab,
+            groupedEvents[activeTab],
+            tabs.find((t) => t.key === activeTab)?.label
+          )
         )}
       </motion.div>
     </div>

@@ -491,6 +491,268 @@ const translations = {
     Anglais: "All events",
     Bambara: "Wakati bɛɛ",
   },
+
+  // Events Info Popup translations
+  events_overview: {
+    Français: "Vue d'ensemble",
+    Anglais: "Overview",
+    Bambara: "Kɔlɔsili",
+  },
+  events_features: {
+    Français: "Fonctionnalités",
+    Anglais: "Features",
+    Bambara: "Baarakɛcogo",
+  },
+  events_workflow: {
+    Français: "Processus",
+    Anglais: "Workflow",
+    Bambara: "Baara taabolo",
+  },
+  events_notifications: {
+    Français: "Notifications",
+    Anglais: "Notifications",
+    Bambara: "Kunnafoniw",
+  },
+  events_tips: {
+    Français: "Conseils",
+    Anglais: "Tips",
+    Bambara: "Ladilikanw",
+  },
+  events_system_title: {
+    Français: "Système de Gestion d'Événements",
+    Anglais: "Event Management System",
+    Bambara: "Ko kɛlenw ɲɛnabɔ siratigɛ",
+  },
+  events_system_description: {
+    Français: "Une solution complète pour organiser, suivre et gérer tous vos événements avec intelligence et efficacité.",
+    Anglais: "A comprehensive solution to organize, track and manage all your events with intelligence and efficiency.",
+    Bambara: "Fɛɛrɛ dafalen min bɛ i ka ko kɛlenw labɛn, kɔlɔsi ani ɲɛnabɔ ni hakili ni baarakɛcogo ye.",
+  },
+  events_management: {
+    Français: "Gestion Complète",
+    Anglais: "Complete Management",
+    Bambara: "Ɲɛnabɔ dafalen",
+  },
+  events_management_desc: {
+    Français: "Créez, modifiez et organisez vos événements avec une interface intuitive et moderne.",
+    Anglais: "Create, edit and organize your events with an intuitive and modern interface.",
+    Bambara: "I ka ko kɛlenw dilan, ladamu ani labɛn ni ɲɛnabɔyɔrɔ nɔgɔman ni kɔrɔlen ye.",
+  },
+  smart_notifications: {
+    Français: "Notifications Intelligentes",
+    Anglais: "Smart Notifications",
+    Bambara: "Kunnafoni hakilitigiw",
+  },
+  smart_notifications_desc: {
+    Français: "Recevez des alertes automatiques 30 minutes avant le début de vos événements.",
+    Anglais: "Receive automatic alerts 30 minutes before your events start.",
+    Bambara: "Kunnafoni otomatiki sɔrɔ miniti 30 ka taa i ka ko kɛlenw daminɛ kɔn.",
+  },
+  voice_alerts: {
+    Français: "Alertes Vocales",
+    Anglais: "Voice Alerts",
+    Bambara: "Kumakan kunnafoniw",
+  },
+  voice_alerts_desc: {
+    Français: "Écoutez des annonces vocales personnalisées en français ou en anglais.",
+    Anglais: "Listen to personalized voice announcements in French or English.",
+    Bambara: "Kumakan kunnafoni kɛlenw mɛn faransekan walima angilɛkan na.",
+  },
+  event_validation: {
+    Français: "Validation d'Événements",
+    Anglais: "Event Validation",
+    Bambara: "Ko kɛlenw tiɲɛni",
+  },
+  event_validation_desc: {
+    Français: "Validez la réalisation de vos événements pour un suivi précis et professionnel.",
+    Anglais: "Validate the completion of your events for accurate and professional tracking.",
+    Bambara: "I ka ko kɛlenw tiɲɛ walasa ka kɔlɔsili tiɲɛnen ni baarakɛla cogo kɛ.",
+  },
+  key_features: {
+    Français: "Fonctionnalités Clés",
+    Anglais: "Key Features",
+    Bambara: "Baarakɛcogo kunba",
+  },
+  comprehensive_planning: {
+    Français: "Planification Complète",
+    Anglais: "Comprehensive Planning",
+    Bambara: "Labɛnni dafalen",
+  },
+  comprehensive_planning_desc: {
+    Français: "Organisez vos événements avec tous les détails nécessaires : date, heure, lieu, description et participants.",
+    Anglais: "Organize your events with all necessary details: date, time, location, description and participants.",
+    Bambara: "I ka ko kɛlenw labɛn ni kunnafoni bɛɛ ye: don, waati, yɔrɔ, ɲɛfɔli ani bɔlenw.",
+  },
+  real_time_tracking: {
+    Français: "Suivi en Temps Réel",
+    Anglais: "Real-time Tracking",
+    Bambara: "Kɔlɔsili waati yɛrɛ la",
+  },
+  real_time_tracking_desc: {
+    Français: "Surveillez automatiquement le statut de vos événements : à venir, en cours, passés ou validés.",
+    Anglais: "Automatically monitor the status of your events: upcoming, ongoing, past or validated.",
+    Bambara: "I ka ko kɛlenw cogoya kɔlɔsi otomatikiman: nata, ka kɛ, tɛmɛnen walima tiɲɛnen.",
+  },
+  intelligent_reminders: {
+    Français: "Rappels Intelligents",
+    Anglais: "Intelligent Reminders",
+    Bambara: "Hakamaw hakilitigiw",
+  },
+  intelligent_reminders_desc: {
+    Français: "Système de notifications avancé avec alertes vocales et messages personnalisés selon votre langue.",
+    Anglais: "Advanced notification system with voice alerts and personalized messages according to your language.",
+    Bambara: "Kunnafoni siratigɛ kɔrɔlen ni kumakan kunnafoniw ani bataki kɛlenw i ka kan kɔrɔ.",
+  },
+  validation_system: {
+    Français: "Système de Validation",
+    Anglais: "Validation System",
+    Bambara: "Tiɲɛni siratigɛ",
+  },
+  validation_system_desc: {
+    Français: "Confirmez la réalisation de vos événements avec un système de validation professionnel et traçable.",
+    Anglais: "Confirm the completion of your events with a professional and traceable validation system.",
+    Bambara: "I ka ko kɛlenw dafali tiɲɛ ni tiɲɛni siratigɛ baarakɛla ani kɔlɔsibaga ye.",
+  },
+  event_workflow: {
+    Français: "Flux de Travail",
+    Anglais: "Event Workflow",
+    Bambara: "Baara taabolo",
+  },
+  create_event: {
+    Français: "Créer un Événement",
+    Anglais: "Create Event",
+    Bambara: "Ko kɛlen dilan",
+  },
+  create_event_desc: {
+    Français: "Commencez par créer votre événement avec tous les détails importants.",
+    Anglais: "Start by creating your event with all the important details.",
+    Bambara: "A daminɛ ni i ka ko kɛlen dilanni ye ni kunnafoni nafamaw bɛɛ ye.",
+  },
+  monitor_progress: {
+    Français: "Surveiller le Progrès",
+    Anglais: "Monitor Progress",
+    Bambara: "Ɲɛtaa kɔlɔsi",
+  },
+  monitor_progress_desc: {
+    Français: "Suivez l'évolution de votre événement en temps réel selon son statut.",
+    Anglais: "Track your event's progress in real-time according to its status.",
+    Bambara: "I ka ko kɛlen ɲɛtaa kɔlɔsi waati yɛrɛ la a ka cogoya kɔrɔ.",
+  },
+  receive_notifications: {
+    Français: "Recevoir les Notifications",
+    Anglais: "Receive Notifications",
+    Bambara: "Kunnafoniw sɔrɔ",
+  },
+  receive_notifications_desc: {
+    Français: "Soyez alerté automatiquement 30 minutes avant le début de votre événement.",
+    Anglais: "Be automatically alerted 30 minutes before your event starts.",
+    Bambara: "Kunnafoni sɔrɔ otomatikiman miniti 30 ka taa i ka ko kɛlen daminɛ kɔn.",
+  },
+  validate_completion: {
+    Français: "Valider la Réalisation",
+    Anglais: "Validate Completion",
+    Bambara: "Dafali tiɲɛ",
+  },
+  validate_completion_desc: {
+    Français: "Confirmez que votre événement s'est bien déroulé avec le système de validation.",
+    Anglais: "Confirm that your event went well with the validation system.",
+    Bambara: "I ka ko kɛlen kɛcogo ɲuman tiɲɛ ni tiɲɛni siratigɛ ye.",
+  },
+  notification_system: {
+    Français: "Système de Notifications",
+    Anglais: "Notification System",
+    Bambara: "Kunnafoni siratigɛ",
+  },
+  automatic_reminders: {
+    Français: "Rappels Automatiques",
+    Anglais: "Automatic Reminders",
+    Bambara: "Hakamaw otomatikiw",
+  },
+  automatic_reminders_desc: {
+    Français: "Le système surveille automatiquement vos événements et vous envoie des notifications intelligentes.",
+    Anglais: "The system automatically monitors your events and sends you intelligent notifications.",
+    Bambara: "Siratigɛ bɛ i ka ko kɛlenw kɔlɔsi otomatikiman ka kunnafoni hakilitigiw ci i ma.",
+  },
+  reminder_timing: {
+    Français: "Notification 30 minutes avant le début",
+    Anglais: "Notification 30 minutes before start",
+    Bambara: "Kunnafoni miniti 30 ka taa daminɛ kɔn",
+  },
+  voice_announcements: {
+    Français: "Annonces Vocales",
+    Anglais: "Voice Announcements",
+    Bambara: "Kumakan kɔfɔliw",
+  },
+  voice_announcements_desc: {
+    Français: "Écoutez des messages vocaux personnalisés qui annoncent le début prochain de vos événements.",
+    Anglais: "Listen to personalized voice messages that announce the upcoming start of your events.",
+    Bambara: "Kumakan batakiw mɛn minnu bɛ i ka ko kɛlenw daminɛ nata kɔfɔ.",
+  },
+  voice_languages: {
+    Français: "Disponible en français et anglais uniquement",
+    Anglais: "Available in French and English only",
+    Bambara: "A bɛ sɔrɔ faransekan ni angilɛkan dɔrɔn na",
+  },
+  dynamic_notifications: {
+    Français: "Notifications Dynamiques",
+    Anglais: "Dynamic Notifications",
+    Bambara: "Kunnafoni yɛlɛmaniw",
+  },
+  dynamic_notifications_desc: {
+    Français: "Recevez des notifications depuis l'application ou des messages externes envoyés par l'administrateur.",
+    Anglais: "Receive notifications from the application or external messages sent by the administrator.",
+    Bambara: "Kunnafoniw sɔrɔ porogaramu kɔnɔ walima kɛnɛma batakiw minnu bɛ ci ka bɔ ɲɛnabɔla fɛ.",
+  },
+  expert_tips: {
+    Français: "Conseils d'Expert",
+    Anglais: "Expert Tips",
+    Bambara: "Dɔnnikɛla ladilikanw",
+  },
+  tip_planning: {
+    Français: "Planification Efficace",
+    Anglais: "Effective Planning",
+    Bambara: "Labɛnni ɲuman",
+  },
+  tip_planning_desc: {
+    Français: "Créez vos événements à l'avance et définissez des heures précises pour optimiser votre organisation.",
+    Anglais: "Create your events in advance and set precise times to optimize your organization.",
+    Bambara: "I ka ko kɛlenw dilan ka taa a ɲɛ ka waatiw tiɲɛ walasa ka i ka labɛnni ɲɛ.",
+  },
+  tip_notifications: {
+    Français: "Gestion des Notifications",
+    Anglais: "Notification Management",
+    Bambara: "Kunnafoniw ɲɛnabɔ",
+  },
+  tip_notifications_desc: {
+    Français: "Activez les notifications pour ne jamais manquer un événement important et restez toujours informé.",
+    Anglais: "Enable notifications to never miss an important event and stay always informed.",
+    Bambara: "Kunnafoniw baara la walasa ko kɛlen nafama kana bɔnɛ ka to kunnafoni sɔrɔla tuma bɛɛ.",
+  },
+  tip_validation: {
+    Français: "Validation Systématique",
+    Anglais: "Systematic Validation",
+    Bambara: "Tiɲɛni siratigɛla",
+  },
+  tip_validation_desc: {
+    Français: "Validez toujours vos événements terminés pour maintenir un historique précis et professionnel.",
+    Anglais: "Always validate your completed events to maintain an accurate and professional history.",
+    Bambara: "I ka ko kɛlen bannenw tiɲɛ tuma bɛɛ walasa ka tariku tiɲɛnen ni baarakɛla marala.",
+  },
+  events_help_center: {
+    Français: "Centre d'Aide - Événements",
+    Anglais: "Help Center - Events",
+    Bambara: "Dɛmɛ yɔrɔ - Ko kɛlenw",
+  },
+  events_help_subtitle: {
+    Français: "Tout ce que vous devez savoir sur la gestion d'événements",
+    Anglais: "Everything you need to know about event management",
+    Bambara: "Fɛn bɛɛ min ka kan ka dɔn ko kɛlenw ɲɛnabɔ kan",
+  },
+  sections: {
+    Français: "Sections",
+    Anglais: "Sections",
+    Bambara: "Yɔrɔw",
+  },
   validation_indication_message: {
     Français:
       'Cliquez sur "Voir détails" pour consulter le rapport de validation.',
@@ -801,6 +1063,68 @@ const translations = {
     Français: "Modifier les messages de validation",
     Anglais: "Edit validation messages",
     Bambara: "Dafali cikanw yɛlɛma",
+  },
+
+  // Notifications
+  event_reminder_title: {
+    Français: "Rappel d'événement",
+    Anglais: "Event Reminder",
+    Bambara: "Wakati hakili"
+  },
+  view_event: {
+    Français: "Voir l'événement",
+    Anglais: "View Event",
+    Bambara: "Wakati lajɛ"
+  },
+  dismiss: {
+    Français: "Ignorer",
+    Anglais: "Dismiss",
+    Bambara: "Bɔ"
+  },
+  notification_system_title: {
+    Français: "Système de notifications",
+    Anglais: "Notification System",
+    Bambara: "Kunnafoni sira"
+  },
+  notification_system_desc: {
+    Français: "Recevez des alertes intelligentes pour vos événements et activités importantes.",
+    Anglais: "Receive smart alerts for your events and important activities.",
+    Bambara: "I bɛ kunnafoni ɲuman sɔrɔ i ka wakatiw ni baara kunba ye."
+  },
+  voice_alerts_title: {
+    Français: "Alertes vocales",
+    Anglais: "Voice Alerts",
+    Bambara: "Kumakan kunnafoniw"
+  },
+  voice_alerts_desc: {
+    Français: "Messages vocaux automatiques 30 minutes avant vos événements (français/anglais).",
+    Anglais: "Automatic voice messages 30 minutes before your events (French/English).",
+    Bambara: "Kumakan kunnafoniw bɛ kɛ miniti 30 sisan i ka wakatiw la."
+  },
+  smart_notifications_title: {
+    Français: "Notifications intelligentes",
+    Anglais: "Smart Notifications",
+    Bambara: "Kunnafoni hakilitigiw"
+  },
+  smart_notifications_desc: {
+    Français: "Rappels automatiques basés sur la date et l'heure réelles de vos événements.",
+    Anglais: "Automatic reminders based on the actual date and time of your events.",
+    Bambara: "Hakili kunnafoniw bɛ kɛ i ka wakatiw waati ni don ma."
+  },
+  external_notifications: {
+    Français: "Notifications externes",
+    Anglais: "External Notifications",
+    Bambara: "Kunnafoni kɛnɛmaw"
+  },
+  external_notifications_desc: {
+    Français: "Recevez des notifications importantes de l'administration via URL.",
+    Anglais: "Receive important notifications from administration via URL.",
+    Bambara: "I bɛ kunnafoni kunba sɔrɔ marali la URL fɛ."
+  },
+  admin_integration: {
+    Français: "Intégration administrative",
+    Anglais: "Administrative integration",
+    Bambara: "Marali ka jɛkafɔ"
   },
 };
 
