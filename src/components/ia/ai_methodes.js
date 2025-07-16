@@ -1,9 +1,9 @@
 /**
  * Fichier ai_methodes.js - Méthodes utilitaires pour le système IA Fatoumata
- * 
+ *
  * Ce fichier contient toutes les méthodes et fonctionnalités du système IA
  * pour éviter la confusion et faciliter la lecture, les modifications et les réutilisations.
- * 
+ *
  * Développé par Alkaou Dembélé pour SchoolManager (Entreprise Malienne)
  */
 
@@ -13,7 +13,7 @@ import secureLocalStorage from "react-secure-storage";
 // Configuration de l'API
 const API_CONFIG = {
   development: "http://127.0.0.1:5000/chat",
-  production: "https://api.schoolmanager.com/chat"
+  production: "https://api.schoolmanager.com/chat",
 };
 
 /**
@@ -21,7 +21,9 @@ const API_CONFIG = {
  * @returns {string} URL de l'API
  */
 export const getApiUrl = () => {
-  const isDevelopment = process.env.NODE_ENV === 'development' || window.location.hostname === 'localhost';
+  const isDevelopment =
+    process.env.NODE_ENV === "development" ||
+    window.location.hostname === "localhost";
   return isDevelopment ? API_CONFIG.development : API_CONFIG.production;
 };
 
@@ -40,33 +42,34 @@ export const generateUniqueId = () => {
 export const saveChatToStorage = (chat) => {
   try {
     // Ne pas sauvegarder si le chat n'a pas de messages utilisateur
-    const userMessages = chat.messages?.filter(msg => msg.type === 'user') || [];
+    const userMessages =
+      chat.messages?.filter((msg) => msg.type === "user") || [];
     if (userMessages.length === 0) {
       return; // Ne pas sauvegarder les conversations vides
     }
-    
+
     const existingChats = secureLocalStorage.getItem("fatoumata_chats") || [];
-    const chatIndex = existingChats.findIndex(c => c.id === chat.id);
-    
+    const chatIndex = existingChats.findIndex((c) => c.id === chat.id);
+
     // Ajouter la date de création si elle n'existe pas
     if (!chat.createdAt) {
       chat.createdAt = new Date().toISOString();
     }
-    
+
     // Ajouter la date de dernière modification
     chat.updatedAt = new Date().toISOString();
-    
+
     if (chatIndex >= 0) {
       existingChats[chatIndex] = chat;
     } else {
       existingChats.unshift(chat); // Ajouter au début
     }
-    
+
     // Limiter à 50 chats maximum
     if (existingChats.length > 50) {
       existingChats.splice(50);
     }
-    
+
     secureLocalStorage.setItem("fatoumata_chats", existingChats);
   } catch (error) {
     console.error("Erreur lors de la sauvegarde du chat:", error);
@@ -93,7 +96,7 @@ export const getChatsFromStorage = () => {
 export const deleteChatFromStorage = (chatId) => {
   try {
     const existingChats = secureLocalStorage.getItem("fatoumata_chats") || [];
-    const filteredChats = existingChats.filter(chat => chat.id !== chatId);
+    const filteredChats = existingChats.filter((chat) => chat.id !== chatId);
     secureLocalStorage.setItem("fatoumata_chats", filteredChats);
   } catch (error) {
     console.error("Erreur lors de la suppression du chat:", error);
@@ -112,79 +115,39 @@ export const deleteAllChatsFromStorage = () => {
 };
 
 /**
- * Crée le prompt système personnalisé pour Fatoumata
- * @returns {string} Prompt système
+ * Crée le prompt système initial pour Fatoumata (première interaction seulement)
+ * @returns {string} Prompt système initial
  */
-export const createSystemPrompt = () => {
+export const createInitialSystemPrompt = () => {
   return `Tu es Fatoumata, une assistante IA spécialisée dans la gestion d'établissements scolaires, développée par et pour l'entreprise SchoolManager (une entreprise malienne) avec le développeur principal Alkaou Dembélé.
 
 Ton rôle est d'aider les utilisateurs dans la gestion de leur établissement de manière très pertinente et professionnelle.
 
-CAPACITÉS SPÉCIALES :
-- Tu peux accéder aux données de la base de données de l'établissement en utilisant des commandes spécifiques
-- Tu peux analyser des documents (PDF, DOCX, images) fournis par l'utilisateur
+CAPACITÉS :
+- Tu as accès aux données complètes de l'établissement
+- Tu peux analyser des documents fournis par l'utilisateur
 - Tu fournis des conseils experts en gestion scolaire
 
-COMMANDES DISPONIBLES :
-Pour accéder aux données de l'établissement, utilise ces commandes dans tes réponses :
-- [COMMAND:GET_SCHOOL_INFO] - Informations générales sur l'établissement
-- [COMMAND:GET_STUDENTS_LIST {"classe":"6ème","sexe":"M"}] - Liste des étudiants (avec filtres optionnels)
-- [COMMAND:GET_STUDENTS_STATS_BY_CLASS] - Statistiques des étudiants par classe
-- [COMMAND:GET_EMPLOYEES_LIST {"poste":"Professeur"}] - Liste des employés (avec filtres optionnels)
-- [COMMAND:GET_CLASSES_LIST] - Liste des classes
-- [COMMAND:GET_PAYMENTS_INFO {"year":2024}] - Informations sur les paiements (avec filtres optionnels)
-- [COMMAND:GET_BULLETINS_INFO {"classe":"6ème","periode":"1er trimestre"}] - Informations sur les bulletins
-- [COMMAND:SEARCH_STUDENT "nom ou matricule"] - Rechercher un étudiant spécifique
-- [COMMAND:GET_GENERAL_STATS] - Statistiques générales de l'établissement
-- [COMMAND:GET_EXPENSES_INFO {"year":2024}] - Informations sur les dépenses
+COMPORTEMENT :
+- Présente-toi brièvement lors du premier message uniquement
+- Sois toujours professionnel, bienveillant et expert
+- Adapte tes réponses au contexte malien
+- Fournis des conseils pratiques et actionables
+- Utilise un langage clair et accessible
+- Réponds directement aux questions sans révéler les détails techniques
 
-INSTRUCTIONS IMPORTANTES :
-1. Utilise les commandes UNIQUEMENT quand tu as besoin de données spécifiques de l'établissement
-2. Place les commandes dans tes réponses là où tu as besoin des données
-3. Continue ta réponse normalement après les commandes
-4. Sois toujours professionnel, bienveillant et expert
-5. Adapte tes réponses au contexte malien et aux spécificités locales
-6. Fournis des conseils pratiques et actionables
-7. Utilise un langage clair et accessible
-
-EXEMPLE D'UTILISATION :
-"Pour vous donner des statistiques précises sur votre établissement, laissez-moi consulter les données.
-
-[COMMAND:GET_GENERAL_STATS]
-
-Basé sur ces informations, je peux vous conseiller..."
-
-Tu es une experte en gestion scolaire et tu aides avec passion les établissements à améliorer leur fonctionnement.`;
+Tu es une experte en gestion scolaire passionnée par l'amélioration des établissements.`;
 };
 
 /**
- * Parse les commandes dans la réponse de l'IA
- * @param {string} response - Réponse de l'IA
- * @returns {Array} Liste des commandes détectées
+ * Crée le prompt système pour les interactions suivantes (sans présentation)
+ * @returns {string} Prompt système de continuation
  */
-const parseAICommands = (response) => {
-  const commandRegex = /\[COMMAND:([A-Z_]+)(?:\s+([^\]]+))?\]/g;
-  const commands = [];
-  let match;
-  
-  while ((match = commandRegex.exec(response)) !== null) {
-    const commandName = match[1];
-    let params = {};
-    
-    if (match[2]) {
-      try {
-        params = JSON.parse(match[2]);
-      } catch (e) {
-        // Si ce n'est pas du JSON, traiter comme une chaîne simple
-        params = { query: match[2].replace(/"/g, '') };
-      }
-    }
-    
-    commands.push({ commandName, params });
-  }
-  
-  return commands;
+export const createContinuationPrompt = () => {
+  return `Tu es Fatoumata, assistante IA spécialisée en gestion scolaire. Continue la conversation de manière naturelle sans te représenter. Réponds directement aux questions avec expertise et professionnalisme.`;
 };
+
+// Fonctions de commandes supprimées - remplacées par getContextualData()
 
 /**
  * Exécute une commande spécifique
@@ -195,164 +158,177 @@ const parseAICommands = (response) => {
 const executeCommand = async (commandName, params = {}) => {
   try {
     const database = await window.electron.getDatabase();
-    
+
     switch (commandName) {
-      case 'GET_SCHOOL_INFO':
+      case "GET_SCHOOL_INFO":
         return {
           success: true,
           data: {
-            name: database.name || 'Non défini',
-            short_name: database.short_name || 'Non défini',
-            version: database.version || 'Non défini',
-            created_at: database.created_at || 'Non défini',
-            updated_at: database.updated_at || 'Non défini'
-          }
+            name: database.name || "Non défini",
+            short_name: database.short_name || "Non défini",
+            version: database.version || "Non défini",
+            created_at: database.created_at || "Non défini",
+            updated_at: database.updated_at || "Non défini",
+          },
         };
-        
-      case 'GET_STUDENTS_LIST':
+
+      case "GET_STUDENTS_LIST":
         const students = database.students || [];
         let filteredStudents = students;
-        
+
         if (params.classe) {
-          filteredStudents = filteredStudents.filter(s => s.classe === params.classe);
+          filteredStudents = filteredStudents.filter(
+            (s) => s.classe === params.classe
+          );
         }
         if (params.sexe) {
-          filteredStudents = filteredStudents.filter(s => s.sexe === params.sexe);
+          filteredStudents = filteredStudents.filter(
+            (s) => s.sexe === params.sexe
+          );
         }
-        
+
         return {
           success: true,
           data: {
             total: filteredStudents.length,
-            students: filteredStudents.map(s => ({
+            students: filteredStudents.map((s) => ({
               id: s.id,
               first_name: s.first_name,
               last_name: s.last_name,
               classe: s.classe,
               sexe: s.sexe,
-              matricule: s.matricule
-            }))
-          }
+              matricule: s.matricule,
+            })),
+          },
         };
-        
-      case 'GET_STUDENTS_STATS_BY_CLASS':
+
+      case "GET_STUDENTS_STATS_BY_CLASS":
         const allStudents = database.students || [];
         const statsByClass = {};
-        
-        allStudents.forEach(student => {
-          const classe = student.classe || 'Non défini';
+
+        allStudents.forEach((student) => {
+          const classe = student.classe || "Non défini";
           if (!statsByClass[classe]) {
             statsByClass[classe] = { total: 0, garcons: 0, filles: 0 };
           }
           statsByClass[classe].total++;
-          if (student.sexe === 'M') statsByClass[classe].garcons++;
-          if (student.sexe === 'F') statsByClass[classe].filles++;
+          if (student.sexe === "M") statsByClass[classe].garcons++;
+          if (student.sexe === "F") statsByClass[classe].filles++;
         });
-        
+
         return {
           success: true,
-          data: statsByClass
+          data: statsByClass,
         };
-        
-      case 'GET_EMPLOYEES_LIST':
+
+      case "GET_EMPLOYEES_LIST":
         const employees = database.employees || [];
         let filteredEmployees = employees;
-        
+
         if (params.poste) {
-          filteredEmployees = filteredEmployees.filter(e => e.poste === params.poste);
+          filteredEmployees = filteredEmployees.filter(
+            (e) => e.poste === params.poste
+          );
         }
-        
+
         return {
           success: true,
           data: {
             total: filteredEmployees.length,
-            employees: filteredEmployees.map(e => ({
+            employees: filteredEmployees.map((e) => ({
               id: e.id,
               first_name: e.first_name,
               last_name: e.last_name,
               poste: e.poste,
-              contact: e.contact
-            }))
-          }
+              contact: e.contact,
+            })),
+          },
         };
-        
-      case 'GET_CLASSES_LIST':
+
+      case "GET_CLASSES_LIST":
         const classes = database.classes || [];
         return {
           success: true,
           data: {
             total: classes.length,
-            classes: classes.map(c => ({
+            classes: classes.map((c) => ({
               id: c.id,
               name: c.name,
               niveau: c.niveau,
-              effectif: c.effectif || 0
-            }))
-          }
+              effectif: c.effectif || 0,
+            })),
+          },
         };
-        
-      case 'GET_PAYMENTS_INFO':
+
+      case "GET_PAYMENTS_INFO":
         const payments = database.payments || [];
         let filteredPayments = payments;
-        
+
         if (params.year) {
-          filteredPayments = filteredPayments.filter(p => {
+          filteredPayments = filteredPayments.filter((p) => {
             const paymentYear = new Date(p.date).getFullYear();
             return paymentYear === params.year;
           });
         }
-        
-        const totalAmount = filteredPayments.reduce((sum, p) => sum + (parseInt(p.amount) || 0), 0);
-        
+
+        const totalAmount = filteredPayments.reduce(
+          (sum, p) => sum + (parseInt(p.amount) || 0),
+          0
+        );
+
         return {
           success: true,
           data: {
             total_payments: filteredPayments.length,
             total_amount: totalAmount,
-            payments: filteredPayments.slice(0, 10) // Limiter à 10 pour éviter trop de données
-          }
+            payments: filteredPayments.slice(0, 10), // Limiter à 10 pour éviter trop de données
+          },
         };
-        
-      case 'GET_EXPENSES_INFO':
+
+      case "GET_EXPENSES_INFO":
         const expenses = database.expenses || [];
         let filteredExpenses = expenses;
-        
+
         if (params.year) {
-          filteredExpenses = filteredExpenses.filter(e => {
+          filteredExpenses = filteredExpenses.filter((e) => {
             const expenseYear = new Date(e.date).getFullYear();
             return expenseYear === params.year;
           });
         }
-        
-        const totalExpenseAmount = filteredExpenses.reduce((sum, e) => sum + (parseInt(e.amount) || 0), 0);
-        
+
+        const totalExpenseAmount = filteredExpenses.reduce(
+          (sum, e) => sum + (parseInt(e.amount) || 0),
+          0
+        );
+
         return {
           success: true,
           data: {
             total_expenses: filteredExpenses.length,
             total_amount: totalExpenseAmount,
-            expenses: filteredExpenses.slice(0, 10)
-          }
+            expenses: filteredExpenses.slice(0, 10),
+          },
         };
-        
-      case 'SEARCH_STUDENT':
-        const searchQuery = params.query || '';
-        const searchResults = (database.students || []).filter(s => 
-          s.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          s.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          s.matricule?.toLowerCase().includes(searchQuery.toLowerCase())
+
+      case "SEARCH_STUDENT":
+        const searchQuery = params.query || "";
+        const searchResults = (database.students || []).filter(
+          (s) =>
+            s.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            s.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            s.matricule?.toLowerCase().includes(searchQuery.toLowerCase())
         );
-        
+
         return {
           success: true,
           data: {
             query: searchQuery,
             results: searchResults.length,
-            students: searchResults.slice(0, 5)
-          }
+            students: searchResults.slice(0, 5),
+          },
         };
-        
-      case 'GET_GENERAL_STATS':
+
+      case "GET_GENERAL_STATS":
         return {
           success: true,
           data: {
@@ -361,125 +337,161 @@ const executeCommand = async (commandName, params = {}) => {
             total_classes: (database.classes || []).length,
             total_payments: (database.payments || []).length,
             total_expenses: (database.expenses || []).length,
-            school_name: database.name || 'Non défini'
-          }
+            school_name: database.name || "Non défini",
+          },
         };
-        
+
       default:
         return {
           success: false,
-          error: `Commande inconnue: ${commandName}`
+          error: `Commande inconnue: ${commandName}`,
         };
     }
   } catch (error) {
-    console.error(`Erreur lors de l'exécution de la commande ${commandName}:`, error);
+    console.error(
+      `Erreur lors de l'exécution de la commande ${commandName}:`,
+      error
+    );
     return {
       success: false,
-      error: `Erreur lors de l'exécution: ${error.message}`
+      error: `Erreur lors de l'exécution: ${error.message}`,
     };
   }
 };
 
+
 /**
- * Traite la réponse de l'IA en exécutant les commandes détectées
- * @param {string} aiResponse - Réponse brute de l'IA
- * @returns {Object} Réponse traitée avec données
+ * Analyse intelligemment la question et récupère les données pertinentes
+ * @param {string} userMessage - Message de l'utilisateur
+ * @returns {Promise<Object>} Données contextuelles
  */
-export const processAIResponse = async (aiResponse) => {
+export const getContextualData = async (userMessage) => {
+  const lowerMessage = userMessage.toLowerCase();
+  const contextData = {};
+
   try {
-    // Détecter les commandes dans la réponse
-    const commands = parseAICommands(aiResponse);
-    let processedResponse = aiResponse;
-    const executedCommands = [];
-    
-    // Exécuter chaque commande détectée
-    for (const { commandName, params } of commands) {
-      const result = await executeCommand(commandName, params);
-      executedCommands.push({ command: commandName, result });
-      
-      // Remplacer la commande par les données dans la réponse
-      const commandPattern = new RegExp(`\\[COMMAND:${commandName}(?:\\s+[^\\]]+)?\\]`, 'g');
-      const dataText = result.success ? JSON.stringify(result.data, null, 2) : `Erreur: ${result.error}`;
-      processedResponse = processedResponse.replace(commandPattern, `\n\n**Données récupérées:**\n\`\`\`json\n${dataText}\n\`\`\`\n`);
+    // Analyser le type de question et récupérer les données appropriées
+    if (lowerMessage.includes('école') || lowerMessage.includes('établissement') || lowerMessage.includes('nom')) {
+      const schoolInfo = await executeCommand('GET_SCHOOL_INFO', {});
+      if (schoolInfo.success) contextData.schoolInfo = schoolInfo.data;
     }
-    
-    return {
-      originalResponse: aiResponse,
-      processedResponse,
-      executedCommands,
-      hasCommands: commands.length > 0
-    };
+
+    if (lowerMessage.includes('étudiant') || lowerMessage.includes('élève') || lowerMessage.includes('classe')) {
+      const students = await executeCommand('GET_STUDENTS_LIST', {});
+      if (students.success) contextData.students = students.data;
+      
+      const statsClass = await executeCommand('GET_STUDENTS_STATS_BY_CLASS', {});
+      if (statsClass.success) contextData.studentStats = statsClass.data;
+    }
+
+    if (lowerMessage.includes('employé') || lowerMessage.includes('professeur') || lowerMessage.includes('personnel')) {
+      const employees = await executeCommand('GET_EMPLOYEES_LIST', {});
+      if (employees.success) contextData.employees = employees.data;
+    }
+
+    if (lowerMessage.includes('paiement') || lowerMessage.includes('finance') || lowerMessage.includes('argent')) {
+      const payments = await executeCommand('GET_PAYMENTS_INFO', {});
+      if (payments.success) contextData.payments = payments.data;
+    }
+
+    if (lowerMessage.includes('dépense') || lowerMessage.includes('coût')) {
+      const expenses = await executeCommand('GET_EXPENSES_INFO', {});
+      if (expenses.success) contextData.expenses = expenses.data;
+    }
+
+    if (lowerMessage.includes('statistique') || lowerMessage.includes('général') || lowerMessage.includes('total')) {
+      const generalStats = await executeCommand('GET_GENERAL_STATS', {});
+      if (generalStats.success) contextData.generalStats = generalStats.data;
+    }
+
+    if (lowerMessage.includes('classe')) {
+      const classes = await executeCommand('GET_CLASSES_LIST', {});
+      if (classes.success) contextData.classes = classes.data;
+    }
+
+    return contextData;
   } catch (error) {
-    console.error("Erreur lors du traitement de la réponse IA:", error);
-    return {
-      originalResponse: aiResponse,
-      processedResponse: aiResponse,
-      executedCommands: [],
-      hasCommands: false,
-      error: error.message
-    };
+    console.error('Erreur lors de la récupération des données contextuelles:', error);
+    return {};
   }
 };
 
 /**
- * Envoie un message à l'API IA avec gestion des fichiers
+ * Envoie un message à l'API IA avec gestion intelligente du contexte
  * @param {string} message - Message à envoyer
  * @param {File|null} file - Fichier joint (optionnel)
- * @param {Object} config - Configuration additionnelle
+ * @param {Array} conversationHistory - Historique de la conversation
+ * @param {boolean} isFirstMessage - Si c'est le premier message de la conversation
  * @returns {Promise<Object>} Réponse de l'API
  */
-export const sendMessageToAI = async (message, file = null, config = {}) => {
+export const sendMessageToAI = async (
+  message,
+  file = null,
+  conversationHistory = [],
+  isFirstMessage = false
+) => {
   try {
     const apiUrl = getApiUrl();
     const formData = new FormData();
-    
-    // Ajouter le prompt système au message
-    const systemPrompt = createSystemPrompt();
-    const fullMessage = `${systemPrompt}\n\nUtilisateur: ${message}`;
-    
-    formData.append('message', fullMessage);
-    formData.append('user_id', config.userId || 'default_user');
-    
-    if (file) {
-      formData.append('file', file);
+
+    // Récupérer les données contextuelles basées sur la question
+    const contextData = await getContextualData(message);
+
+    // Choisir le prompt approprié
+    const systemPrompt = isFirstMessage ? createInitialSystemPrompt() : createContinuationPrompt();
+
+    // Construire le contexte de conversation
+    let conversationContext = '';
+    if (conversationHistory.length > 0) {
+      conversationContext = '\n\nCONTEXTE DE LA CONVERSATION:\n';
+      conversationHistory.slice(-6).forEach((msg, index) => {
+        conversationContext += `${msg.type === 'user' ? 'Utilisateur' : 'Fatoumata'}: ${msg.content}\n`;
+      });
     }
-    
+
+    // Construire le contexte des données
+    let dataContext = '';
+    if (Object.keys(contextData).length > 0) {
+      dataContext = '\n\nDONNÉES DISPONIBLES:\n' + JSON.stringify(contextData, null, 2);
+    }
+
+    // Message complet avec contexte
+    const fullMessage = `${systemPrompt}${conversationContext}${dataContext}\n\nQUESTION ACTUELLE: ${message}\n\nINSTRUCTIONS:\n- Réponds directement à la question en utilisant les données disponibles\n- Ne mentionne jamais les détails techniques ou la structure des données\n- Sois naturel et conversationnel\n- ${isFirstMessage ? 'Présente-toi brièvement' : 'Continue la conversation naturellement'}`;
+
+    formData.append("message", fullMessage);
+    formData.append("user_id", "school_manager_user");
+
+    if (file) {
+      formData.append("file", file);
+    }
+
     const response = await fetch(apiUrl, {
-      method: 'POST',
+      method: "POST",
       body: formData,
-      mode: 'cors',
+      mode: "cors",
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Erreur HTTP: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
+
     if (data.error) {
       throw new Error(data.error);
     }
-    
-    // Extraire la réponse du format retourné par le serveur Python
-    console.log(data);
-    const aiResponse = data.reply || data.response || data.message || '';
-    console.log(aiResponse);
-    
-    // Traiter la réponse pour exécuter les commandes
-    const processedData = await processAIResponse(aiResponse);
 
-    console.log(processedData);
-    
+    // Extraire la réponse du format retourné par le serveur Python
+    const aiResponse = data.reply || data.response || data.message || "";
+
     return {
       success: true,
-      response: processedData.processedResponse,
-      originalResponse: processedData.originalResponse,
-      executedCommands: processedData.executedCommands,
-      hasCommands: processedData.hasCommands,
-      usage: data.usage // Inclure les informations d'usage si disponibles
+      response: aiResponse,
+      contextData: contextData,
+      usage: data.usage
     };
   } catch (error) {
     console.error("Erreur lors de l'envoi du message à l'IA:", error);
@@ -499,32 +511,32 @@ export const sendMessageToAI = async (message, file = null, config = {}) => {
 export const validateFile = (file) => {
   const maxSize = 10 * 1024 * 1024; // 10MB
   const allowedTypes = [
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword',
-    'text/plain',
-    'image/png',
-    'image/jpeg',
-    'image/jpg'
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/msword",
+    "text/plain",
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
   ];
-  
+
   if (file.size > maxSize) {
     return {
       valid: false,
-      error: 'file_too_large'
+      error: "file_too_large",
     };
   }
-  
+
   if (!allowedTypes.includes(file.type)) {
     return {
       valid: false,
-      error: 'unsupported_file'
+      error: "unsupported_file",
     };
   }
-  
+
   return {
     valid: true,
-    error: null
+    error: null,
   };
 };
 
@@ -540,20 +552,20 @@ export const copyToClipboard = async (text) => {
       return true;
     } else {
       // Fallback pour les navigateurs plus anciens
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
-      const result = document.execCommand('copy');
+      const result = document.execCommand("copy");
       textArea.remove();
       return result;
     }
   } catch (error) {
-    console.error('Erreur lors de la copie:', error);
+    console.error("Erreur lors de la copie:", error);
     return false;
   }
 };
@@ -563,24 +575,29 @@ export const copyToClipboard = async (text) => {
  * @param {string} text - Texte à lire
  * @param {string} language - Langue (fr, en, etc.)
  */
-export const readTextAloud = (text, language = 'fr') => {
+export const readTextAloud = (text, language = "fr") => {
   try {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       // Arrêter toute lecture en cours
       window.speechSynthesis.cancel();
-      
+
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = language === 'Français' ? 'fr-FR' : language === 'Anglais' ? 'en-US' : 'fr-FR';
+      utterance.lang =
+        language === "Français"
+          ? "fr-FR"
+          : language === "Anglais"
+          ? "en-US"
+          : "fr-FR";
       utterance.rate = 0.8;
       utterance.pitch = 1;
       utterance.volume = 1;
-      
+
       window.speechSynthesis.speak(utterance);
       return true;
     }
     return false;
   } catch (error) {
-    console.error('Erreur lors de la lecture:', error);
+    console.error("Erreur lors de la lecture:", error);
     return false;
   }
 };
@@ -590,11 +607,11 @@ export const readTextAloud = (text, language = 'fr') => {
  */
 export const stopReading = () => {
   try {
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
   } catch (error) {
-    console.error('Erreur lors de l\'arrêt de la lecture:', error);
+    console.error("Erreur lors de l'arrêt de la lecture:", error);
   }
 };
 
@@ -604,14 +621,14 @@ export const stopReading = () => {
  * @returns {string} Texte formaté
  */
 export const formatMessage = (text) => {
-  if (!text) return '';
-  
+  if (!text) return "";
+
   // Nettoyer le texte des commandes restantes
-  let cleanText = text.replace(/\[COMMAND:[^\]]+\]/g, '');
-  
+  let cleanText = text.replace(/\[COMMAND:[^\]]+\]/g, "");
+
   // Nettoyer les espaces multiples
-  cleanText = cleanText.replace(/\n\s*\n\s*\n/g, '\n\n');
-  
+  cleanText = cleanText.replace(/\n\s*\n\s*\n/g, "\n\n");
+
   return cleanText.trim();
 };
 
@@ -621,17 +638,17 @@ export const formatMessage = (text) => {
  * @returns {string} Titre généré
  */
 export const generateChatTitle = (message) => {
-  if (!message) return 'Nouveau chat';
-  
+  if (!message) return "Nouveau chat";
+
   // Prendre les premiers mots et limiter la longueur
-  const words = message.trim().split(' ').slice(0, 6);
-  let title = words.join(' ');
-  
+  const words = message.trim().split(" ").slice(0, 6);
+  let title = words.join(" ");
+
   if (title.length > 50) {
-    title = title.substring(0, 47) + '...';
+    title = title.substring(0, 47) + "...";
   }
-  
-  return title || 'Nouveau chat';
+
+  return title || "Nouveau chat";
 };
 
 /**
@@ -641,10 +658,10 @@ export const generateChatTitle = (message) => {
  */
 export const handleKeyboardShortcuts = (event, handlers) => {
   // Échap pour fermer les popups
-  if (event.key === 'Escape' && handlers.onEscape) {
+  if (event.key === "Escape" && handlers.onEscape) {
     handlers.onEscape();
   }
-  
+
   // Ctrl+Enter pour nouvelle ligne (géré dans le composant input)
   // Enter pour envoyer (géré dans le composant input)
 };
@@ -652,18 +669,31 @@ export const handleKeyboardShortcuts = (event, handlers) => {
 /**
  * Utilitaires pour la gestion des animations de typing
  */
-export const createTypingAnimation = (text, callback, speed = 30) => {
-  let index = 0;
-  const interval = setInterval(() => {
-    if (index < text.length) {
-      callback(text.substring(0, index + 1));
-      index++;
-    } else {
-      clearInterval(interval);
+export const createTypingAnimation = (
+  text,
+  callback,
+  onComplete,
+  speed = 30
+) => {
+  return new Promise((resolve) => {
+    if (!text || typeof text !== "string") {
+      if (onComplete) onComplete();
+      resolve();
+      return;
     }
-  }, speed);
-  
-  return interval;
+
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < text.length) {
+        callback(text.substring(0, index + 1));
+        index++;
+      } else {
+        clearInterval(interval);
+        if (onComplete) onComplete();
+        resolve();
+      }
+    }, speed);
+  });
 };
 
 export default {
@@ -673,8 +703,6 @@ export default {
   getChatsFromStorage,
   deleteChatFromStorage,
   deleteAllChatsFromStorage,
-  createSystemPrompt,
-  processAIResponse,
   sendMessageToAI,
   validateFile,
   copyToClipboard,
@@ -683,5 +711,5 @@ export default {
   formatMessage,
   generateChatTitle,
   handleKeyboardShortcuts,
-  createTypingAnimation
+  createTypingAnimation,
 };

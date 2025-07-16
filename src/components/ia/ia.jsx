@@ -10,7 +10,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minimize2, Maximize2, Info } from "lucide-react";
+import { X, Info } from "lucide-react";
 import { useTheme, useLanguage, useFlashNotification } from "../contexts";
 import { translate } from "./ia_translator.js";
 import {
@@ -18,7 +18,7 @@ import {
   // getChatsFromStorage,
   saveChatToStorage,
   sendMessageToAI,
-  processAIResponse,
+  // processAIResponse,
   createTypingAnimation,
   generateChatTitle,
 } from "./ai_methodes.js";
@@ -158,21 +158,32 @@ const IA = ({ isOpen, onClose }) => {
     setAbortController(controller);
 
     try {
-      // Envoyer à l'API
-      const response = await sendMessageToAI(content, file, controller.signal);
+      // Déterminer si c'est le premier message de la conversation
+      const isFirstMessage = messages.filter(msg => msg.type === 'user').length === 0;
+      
+      // Préparer l'historique de conversation (exclure le message temporaire AI)
+      const conversationHistory = messages.filter(msg => !msg.isTyping);
+      
+      // Envoyer à l'API avec le nouveau système intelligent
+      const response = await sendMessageToAI(
+        content,
+        file,
+        conversationHistory,
+        isFirstMessage
+      );
 
       if (controller.signal.aborted) {
         return;
       }
 
-      // Traiter la réponse et exécuter les commandes si nécessaire
-      const processedResponse = await processAIResponse(response);
-      console.log("-----------processedResponse----------------");
-      console.log(processedResponse);
+      // Extraire la réponse
+      const aiResponseText = response.response || "";
+      // console.log("Réponse de l'IA:", aiResponseText);
+      // console.log("Données contextuelles utilisées:", response.contextData);
 
       // Animation de frappe pour la réponse
       await createTypingAnimation(
-        processedResponse,
+        aiResponseText,
         (partialContent) => {
           setMessages((prev) =>
             prev.map((msg) =>
@@ -187,14 +198,15 @@ const IA = ({ isOpen, onClose }) => {
           setMessages((prev) =>
             prev.map((msg) =>
               msg.id === aiMessageId
-                ? { ...msg, content: processedResponse, isTyping: false }
+                ? { ...msg, content: aiResponseText, isTyping: false }
                 : msg
             )
           );
           setIsGenerating(false);
           setTypingMessageId(null);
           setAbortController(null);
-        }
+        },
+        30
       );
 
       // Sauvegarder le chat mis à jour
@@ -202,13 +214,13 @@ const IA = ({ isOpen, onClose }) => {
         const finalMessages = [...newMessages];
         finalMessages[finalMessages.length - 1] = {
           ...aiMessage,
-          content: processedResponse,
+          content: aiResponseText,
           isTyping: false,
         };
 
         // Générer un titre automatiquement pour le premier message
         const isFirstMessage = currentChat.messages.length === 0;
-        const chatTitle = isFirstMessage 
+        const chatTitle = isFirstMessage
           ? await generateChatTitle(content)
           : currentChat.title;
 
