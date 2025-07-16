@@ -90,7 +90,7 @@ const LanguageSelector = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className={`absolute ${
+            className={`absolute language-dropdown ${
               isParams ? "-left-20" : "left-0"
             } mt-2 w-32 ${panel_bg_color} text-white dark:bg-gray-800 shadow-md rounded-md`}
           >

@@ -148,7 +148,7 @@ const TutorialsSection = ({ isOthersBGColors }) => {
   const _texts_color = isOthersBGColors ? "text-gray-700" : text_color;
 
   return (
-    <section id="tutorials" className="py-20 relative overflow-hidden">
+    <section id="tutorials" className="py-2 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-blue-50 to-transparent dark:from-blue-900/10 dark:to-transparent"></div>

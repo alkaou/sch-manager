@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, Moon, Sun, LogIn, User, Settings, Bell, ChevronDown, LogOut, HelpCircle, Crown } from 'lucide-react';
+import { Menu, X, Moon, Sun, LogIn, User, Settings, ChevronDown, LogOut, HelpCircle, Crown, Info } from 'lucide-react';
 import LanguageSelector from '../partials/LanguageSelector.jsx';
 import { useTheme, useLanguage } from '../contexts';
 import { useAuth } from '../../auth/AuthContext';
@@ -15,22 +15,14 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme, app_bg_color, text_color } = useTheme();
-  const { live_language } = useLanguage();
+  const { live_language, language } = useLanguage();
   const { isAuthenticated, currentUser, logout } = useAuth();
   const navigate = useNavigate();
 
   const [showPanel, setShowPanel] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [premiumModalOpen, setPremiumModalOpen] = useState(false);
-
-  // Mock notifications for demo
-  const [notifications, setNotifications] = useState([
-    { id: 1, message: live_language.new_student_notification || "New student registration", time: live_language.time_ago_text || "5 min ago", read: false },
-    { id: 2, message: live_language.report_notification || "Report generated successfully", time: live_language.hour_ago_text || "1 hour ago", read: false },
-    { id: 3, message: live_language.system_update_notification || "System update available", time: live_language.yesterday_text || "Yesterday", read: true }
-  ]);
 
   const showLangPanel = () => setShowPanel(!showPanel);
 
@@ -56,22 +48,15 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
       if (dropdownOpen && !event.target.closest(".user-dropdown")) {
         setDropdownOpen(false);
       }
-      if (notificationsOpen && !event.target.closest(".notifications-dropdown")) {
-        setNotificationsOpen(false);
+      if (showPanel && !event.target.closest(".language-dropdown")) {
+        setShowPanel(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dropdownOpen, notificationsOpen]);
+  }, [dropdownOpen, showPanel]);
 
-  // Mark all notifications as read
-  const markAllAsRead = () => {
-    setNotifications(notifications.map(notif => ({ ...notif, read: true })));
-  };
-
-  // Count unread notifications
-  const unreadCount = notifications.filter(n => !n.read).length;
 
   // Naviguer vers le profile
   const navigate_to_profile = () => {
@@ -129,7 +114,6 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
   const hoverBg = theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-100";
   const dropdownBg = theme === "dark" ? "bg-gray-800" : "bg-white";
   const borderColor = theme === "dark" ? "border-gray-700" : "border-gray-200";
-  const notificationUnreadBg = theme === "dark" ? "bg-blue-900/20" : "bg-blue-50";
 
   return (
     <>
@@ -198,79 +182,16 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                 <span>{live_language.premium_text || "Premium"}</span>
               </motion.button>
 
-              {/* Notifications */}
-              {isAuthenticated && (
-                <div className="relative notifications-dropdown">
-                  <motion.button
-                    variants={linkVariants}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setNotificationsOpen(!notificationsOpen)}
-                    className={`p-1.5 sm:p-2 rounded-full ${hoverBg} transition-colors relative`}
-                    aria-label="Notifications"
-                  >
-                    <Bell className={`${text_color} w-5 h-5 sm:w-5 sm:h-5 md:w-6 md:h-6`} />
-                    {unreadCount > 0 && (
-                      <span className="absolute top-0 right-0 h-3 w-3 sm:h-4 sm:w-4 bg-red-500 rounded-full flex items-center justify-center text-white text-xs">
-                        {unreadCount}
-                      </span>
-                    )}
-                  </motion.button>
-
-                  <AnimatePresence>
-                    {notificationsOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                        className={`absolute right-0 mt-2 w-64 sm:w-72 md:w-80 ${dropdownBg} ${borderColor} border rounded-lg shadow-lg overflow-hidden z-50`}
-                      >
-                        <div className="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                          <h3 className="font-medium text-sm sm:text-base">{live_language.notifications_text || "Notifications"}</h3>
-                          {unreadCount > 0 && (
-                            <button
-                              onClick={markAllAsRead}
-                              className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                            >
-                              {live_language.mark_all_read_text || "Mark all as read"}
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="max-h-60 sm:max-h-72 md:max-h-80 overflow-y-auto">
-                          {notifications.length > 0 ? (
-                            notifications.map(notification => (
-                              <div
-                                key={notification.id}
-                                className={`p-2 sm:p-3 border-b ${borderColor} last:border-0 ${!notification.read ? notificationUnreadBg : ''}`}
-                              >
-                                <div className="flex justify-between">
-                                  <p className={`${text_color} text-xs sm:text-sm`}>{notification.message}</p>
-                                  {!notification.read && (
-                                    <span className="h-2 w-2 bg-blue-600 rounded-full"></span>
-                                  )}
-                                </div>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{notification.time}</p>
-                              </div>
-                            ))
-                          ) : (
-                            <div className="p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-                              {live_language.no_notifications_text || "No notifications"}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="p-2 border-t border-gray-200 dark:border-gray-700 text-center">
-                          <button className="text-xs sm:text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
-                            {live_language.view_all || "View all notifications"}
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              )}
+              <motion.button
+                variants={linkVariants}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => { /* TODO: Implement action */ }}
+                className="flex items-center px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-sm font-medium shadow-sm transition-colors"
+              >
+                <Info size={14} className="mr-1.5 sm:w-4 sm:h-4" />
+                <span>{language === "Bambara" ? "Kunafoniw" : "Informations"}</span>
+              </motion.button>
 
               {/* User Profile / Login Button */}
               {isAuthenticated ? (

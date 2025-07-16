@@ -26,7 +26,7 @@ import {
   copyToClipboard,
   readTextAloud,
   stopReading,
-  formatMessage,
+  // formatMessage,
   createTypingAnimation
 } from "./ai_methodes.js";
 

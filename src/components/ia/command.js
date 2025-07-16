@@ -410,5 +410,5 @@ export default {
   getExpensesInfo,
   AVAILABLE_COMMANDS,
   executeCommand,
-  parseAICommands
+  // parseAICommands
 };

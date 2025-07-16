@@ -24,16 +24,15 @@ import {
   getChatsFromStorage,
   deleteChatFromStorage,
   deleteAllChatsFromStorage,
-  generateChatTitle
+  // generateChatTitle
 } from "./ai_methodes.js";
 
 const Sidebar = ({
-  currentChatId,
+  currentChat,
   onChatSelect,
   onNewChat,
-  onEphemeralChat,
-  isCollapsed,
-  onToggleCollapse
+  onNewEphemeralChat,
+  isMinimized
 }) => {
   const { theme } = useTheme();
   const { language } = useLanguage();
@@ -70,7 +69,7 @@ const Sidebar = ({
     setShowDeleteConfirm(null);
     
     // Si le chat supprimé était le chat actuel, créer un nouveau chat
-    if (chatId === currentChatId) {
+    if (chatId === currentChat?.id) {
       onNewChat();
     }
   };
@@ -145,12 +144,12 @@ const Sidebar = ({
             : "bg-white border-gray-200"
         }`}
         variants={sidebarVariants}
-        animate={isCollapsed ? "collapsed" : "expanded"}
+        animate={isMinimized ? "collapsed" : "expanded"}
       >
         {/* Header avec boutons principaux */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <AnimatePresence mode="wait">
-            {!isCollapsed && (
+            {!isMinimized && (
               <motion.div
                 variants={contentVariants}
                 initial="hidden"
@@ -178,7 +177,7 @@ const Sidebar = ({
 
                 {/* Bouton Chat Éphémère */}
                 <motion.button
-                  onClick={onEphemeralChat}
+                  onClick={onNewEphemeralChat}
                   className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                     isDark
                       ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
@@ -197,7 +196,7 @@ const Sidebar = ({
             )}
           </AnimatePresence>
 
-          {isCollapsed && (
+          {isMinimized && (
             <div className="space-y-3">
               <motion.button
                 onClick={onNewChat}
@@ -214,7 +213,7 @@ const Sidebar = ({
               </motion.button>
 
               <motion.button
-                onClick={onEphemeralChat}
+                onClick={onNewEphemeralChat}
                 className={`w-full flex items-center justify-center p-2 rounded-lg transition-all duration-200 ${
                   isDark
                     ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
@@ -232,7 +231,7 @@ const Sidebar = ({
 
         {/* Barre de recherche */}
         <AnimatePresence>
-          {!isCollapsed && (
+          {!isMinimized && (
             <motion.div
               variants={contentVariants}
               initial="hidden"
@@ -276,7 +275,7 @@ const Sidebar = ({
         {/* Liste des chats */}
         <div className="flex-1 overflow-y-auto">
           <AnimatePresence>
-            {!isCollapsed && (
+            {!isMinimized && (
               <motion.div
                 variants={contentVariants}
                 initial="hidden"
@@ -301,7 +300,7 @@ const Sidebar = ({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         className={`group relative flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200 ${
-                          currentChatId === chat.id
+                          currentChat?.id === chat.id
                             ? isDark
                               ? "bg-blue-600/20 border border-blue-500/30"
                               : "bg-blue-50 border border-blue-200"
@@ -309,14 +308,14 @@ const Sidebar = ({
                             ? "hover:bg-gray-800 border border-transparent"
                             : "hover:bg-gray-50 border border-transparent"
                         }`}
-                        onClick={() => onChatSelect(chat.id)}
+                        onClick={() => onChatSelect(chat)}
                         onMouseEnter={() => setHoveredChat(chat.id)}
                         onMouseLeave={() => setHoveredChat(null)}
                       >
                         <MessageSquare
                           size={16}
                           className={`flex-shrink-0 ${
-                            currentChatId === chat.id
+                            currentChat?.id === chat.id
                               ? "text-blue-500"
                               : isDark
                               ? "text-gray-400"
@@ -326,7 +325,7 @@ const Sidebar = ({
                         
                         <div className="flex-1 min-w-0">
                           <p className={`text-sm font-medium truncate ${
-                            currentChatId === chat.id
+                            currentChat?.id === chat.id
                               ? "text-blue-600 dark:text-blue-400"
                               : isDark
                               ? "text-white"
@@ -343,7 +342,7 @@ const Sidebar = ({
 
                         {/* Menu d'actions */}
                         <AnimatePresence>
-                          {(hoveredChat === chat.id || currentChatId === chat.id) && (
+                          {(hoveredChat === chat.id || currentChat?.id === chat.id) && (
                             <motion.button
                               initial={{ opacity: 0, scale: 0.8 }}
                               animate={{ opacity: 1, scale: 1 }}

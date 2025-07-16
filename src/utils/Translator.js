@@ -303,12 +303,12 @@ const Translator = {
     learn_more: "A lajɛ ka fara a kan",
 
     // TutorialsSection translations
-    tutorials_title: "Kalan demɛli sɛbɛnw",
+    tutorials_title: "Kalan dɛmɛli sɛbɛnw",
     tutorials_subtitle:
-      "Aw ye kalannin sɔrɔ SchoolManager ka baraka baaracogoya bɛɛ la ni an ka videw sira lakelen ye.",
+      "Aw ye kalannin sɔrɔ SchoolManager ka baraka baaracogoya bɛɛ la ni an ka jaw sira lakelen ye.",
     getting_started: "Daminɛli",
     students_text: "Kalandenw",
-    search_tutorials: "Kalan demɛli ɲinin...",
+    search_tutorials: "Kalan dɛmɛli ɲinin...",
     tutorial_1_title: "Aw ka fɔlɔfɔlɔ database labɛn",
     tutorial_1_desc: "Aw ka kalanso labɛnni kalan miniti damadɔw dɔrɔn kɔnɔ",
     tutorial_2_title: "Kalandenw ani kalansosiraw mara ka ɲɛ",

@@ -167,6 +167,8 @@ const IA = ({ isOpen, onClose }) => {
 
       // Traiter la réponse et exécuter les commandes si nécessaire
       const processedResponse = await processAIResponse(response);
+      console.log("-----------processedResponse----------------");
+      console.log(processedResponse);
 
       // Animation de frappe pour la réponse
       await createTypingAnimation(

@@ -126,7 +126,7 @@ const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors, refreshData }) =>
             </motion.p>
 
             <motion.div
-              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-2 sm:gap-3 md:gap-4"
+              className="flex flex-col sm:flex-row justify-center lg:justify-start gap-2 sm:gap-3 md:gap-4 mt-8"
               variants={container}
               initial="hidden"
               animate="show"
@@ -134,7 +134,7 @@ const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors, refreshData }) =>
               <motion.button
                 variants={item}
                 onClick={handleCreateDb}
-                className="px-3 sm:px-4 md:px-5 lg:px-6 py-1.5 sm:py-2 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm"
+                className="py-1.5 sm:py-2 md:py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm px-4 min-w-max"
               >
                 <Database className="mr-1.5 sm:mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5" />
                 {db_is_existing ? update_db_text : create_db_text}
@@ -144,7 +144,7 @@ const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors, refreshData }) =>
                 <motion.button
                   variants={item}
                   onClick={navigateToStartedPage}
-                  className="px-3 sm:px-4 md:px-5 lg:px-6 py-1.5 sm:py-2 md:py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm"
+                  className="py-1.5 sm:py-2 md:py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm px-4 min-w-max"
                 >
                   <BookOpen className="mr-1.5 sm:mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5" />
                   {live_language.dashboard_text || "TABLEAU DE BORD"}
@@ -154,7 +154,7 @@ const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors, refreshData }) =>
               <motion.button
                 variants={item}
                 onClick={togglePalletteColor}
-                className="uppercase px-3 sm:px-4 md:px-5 lg:px-6 py-1.5 sm:py-2 md:py-2.5 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm"
+                className="uppercase py-1.5 sm:py-2 md:py-2.5 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm px-4 min-w-max"
               >
                 <Palette className="mr-1.5 sm:mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5" />
                 {live_language.theme_text || "THEME"}
@@ -163,7 +163,7 @@ const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors, refreshData }) =>
               <motion.button
                 variants={item}
                 onClick={toggleSecurityPopup}
-                className="uppercase px-3 sm:px-4 md:px-5 lg:px-6 py-1.5 sm:py-2 md:py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm"
+                className="uppercase py-1.5 sm:py-2 md:py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center justify-center text-xs sm:text-sm px-4 min-w-max"
               >
                 <ShieldCheck className="mr-1.5 sm:mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5" />
                 {live_language.security_text || "SECURITE"}

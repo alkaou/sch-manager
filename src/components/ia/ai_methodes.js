@@ -8,7 +8,7 @@
  */
 
 import secureLocalStorage from "react-secure-storage";
-import { executeCommand, parseAICommands } from "./command.js";
+// import { executeCommand, parseAICommands } from "./command.js";
 
 // Configuration de l'API
 const API_CONFIG = {
@@ -158,6 +158,229 @@ Tu es une experte en gestion scolaire et tu aides avec passion les établissemen
 };
 
 /**
+ * Parse les commandes dans la réponse de l'IA
+ * @param {string} response - Réponse de l'IA
+ * @returns {Array} Liste des commandes détectées
+ */
+const parseAICommands = (response) => {
+  const commandRegex = /\[COMMAND:([A-Z_]+)(?:\s+([^\]]+))?\]/g;
+  const commands = [];
+  let match;
+  
+  while ((match = commandRegex.exec(response)) !== null) {
+    const commandName = match[1];
+    let params = {};
+    
+    if (match[2]) {
+      try {
+        params = JSON.parse(match[2]);
+      } catch (e) {
+        // Si ce n'est pas du JSON, traiter comme une chaîne simple
+        params = { query: match[2].replace(/"/g, '') };
+      }
+    }
+    
+    commands.push({ commandName, params });
+  }
+  
+  return commands;
+};
+
+/**
+ * Exécute une commande spécifique
+ * @param {string} commandName - Nom de la commande
+ * @param {Object} params - Paramètres de la commande
+ * @returns {Object} Résultat de l'exécution
+ */
+const executeCommand = async (commandName, params = {}) => {
+  try {
+    const database = await window.electron.getDatabase();
+    
+    switch (commandName) {
+      case 'GET_SCHOOL_INFO':
+        return {
+          success: true,
+          data: {
+            name: database.name || 'Non défini',
+            short_name: database.short_name || 'Non défini',
+            version: database.version || 'Non défini',
+            created_at: database.created_at || 'Non défini',
+            updated_at: database.updated_at || 'Non défini'
+          }
+        };
+        
+      case 'GET_STUDENTS_LIST':
+        const students = database.students || [];
+        let filteredStudents = students;
+        
+        if (params.classe) {
+          filteredStudents = filteredStudents.filter(s => s.classe === params.classe);
+        }
+        if (params.sexe) {
+          filteredStudents = filteredStudents.filter(s => s.sexe === params.sexe);
+        }
+        
+        return {
+          success: true,
+          data: {
+            total: filteredStudents.length,
+            students: filteredStudents.map(s => ({
+              id: s.id,
+              first_name: s.first_name,
+              last_name: s.last_name,
+              classe: s.classe,
+              sexe: s.sexe,
+              matricule: s.matricule
+            }))
+          }
+        };
+        
+      case 'GET_STUDENTS_STATS_BY_CLASS':
+        const allStudents = database.students || [];
+        const statsByClass = {};
+        
+        allStudents.forEach(student => {
+          const classe = student.classe || 'Non défini';
+          if (!statsByClass[classe]) {
+            statsByClass[classe] = { total: 0, garcons: 0, filles: 0 };
+          }
+          statsByClass[classe].total++;
+          if (student.sexe === 'M') statsByClass[classe].garcons++;
+          if (student.sexe === 'F') statsByClass[classe].filles++;
+        });
+        
+        return {
+          success: true,
+          data: statsByClass
+        };
+        
+      case 'GET_EMPLOYEES_LIST':
+        const employees = database.employees || [];
+        let filteredEmployees = employees;
+        
+        if (params.poste) {
+          filteredEmployees = filteredEmployees.filter(e => e.poste === params.poste);
+        }
+        
+        return {
+          success: true,
+          data: {
+            total: filteredEmployees.length,
+            employees: filteredEmployees.map(e => ({
+              id: e.id,
+              first_name: e.first_name,
+              last_name: e.last_name,
+              poste: e.poste,
+              contact: e.contact
+            }))
+          }
+        };
+        
+      case 'GET_CLASSES_LIST':
+        const classes = database.classes || [];
+        return {
+          success: true,
+          data: {
+            total: classes.length,
+            classes: classes.map(c => ({
+              id: c.id,
+              name: c.name,
+              niveau: c.niveau,
+              effectif: c.effectif || 0
+            }))
+          }
+        };
+        
+      case 'GET_PAYMENTS_INFO':
+        const payments = database.payments || [];
+        let filteredPayments = payments;
+        
+        if (params.year) {
+          filteredPayments = filteredPayments.filter(p => {
+            const paymentYear = new Date(p.date).getFullYear();
+            return paymentYear === params.year;
+          });
+        }
+        
+        const totalAmount = filteredPayments.reduce((sum, p) => sum + (parseInt(p.amount) || 0), 0);
+        
+        return {
+          success: true,
+          data: {
+            total_payments: filteredPayments.length,
+            total_amount: totalAmount,
+            payments: filteredPayments.slice(0, 10) // Limiter à 10 pour éviter trop de données
+          }
+        };
+        
+      case 'GET_EXPENSES_INFO':
+        const expenses = database.expenses || [];
+        let filteredExpenses = expenses;
+        
+        if (params.year) {
+          filteredExpenses = filteredExpenses.filter(e => {
+            const expenseYear = new Date(e.date).getFullYear();
+            return expenseYear === params.year;
+          });
+        }
+        
+        const totalExpenseAmount = filteredExpenses.reduce((sum, e) => sum + (parseInt(e.amount) || 0), 0);
+        
+        return {
+          success: true,
+          data: {
+            total_expenses: filteredExpenses.length,
+            total_amount: totalExpenseAmount,
+            expenses: filteredExpenses.slice(0, 10)
+          }
+        };
+        
+      case 'SEARCH_STUDENT':
+        const searchQuery = params.query || '';
+        const searchResults = (database.students || []).filter(s => 
+          s.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          s.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          s.matricule?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+        
+        return {
+          success: true,
+          data: {
+            query: searchQuery,
+            results: searchResults.length,
+            students: searchResults.slice(0, 5)
+          }
+        };
+        
+      case 'GET_GENERAL_STATS':
+        return {
+          success: true,
+          data: {
+            total_students: (database.students || []).length,
+            total_employees: (database.employees || []).length,
+            total_classes: (database.classes || []).length,
+            total_payments: (database.payments || []).length,
+            total_expenses: (database.expenses || []).length,
+            school_name: database.name || 'Non défini'
+          }
+        };
+        
+      default:
+        return {
+          success: false,
+          error: `Commande inconnue: ${commandName}`
+        };
+    }
+  } catch (error) {
+    console.error(`Erreur lors de l'exécution de la commande ${commandName}:`, error);
+    return {
+      success: false,
+      error: `Erreur lors de l'exécution: ${error.message}`
+    };
+  }
+};
+
+/**
  * Traite la réponse de l'IA en exécutant les commandes détectées
  * @param {string} aiResponse - Réponse brute de l'IA
  * @returns {Object} Réponse traitée avec données
@@ -171,12 +394,12 @@ export const processAIResponse = async (aiResponse) => {
     
     // Exécuter chaque commande détectée
     for (const { commandName, params } of commands) {
-      const result = executeCommand(commandName, params);
+      const result = await executeCommand(commandName, params);
       executedCommands.push({ command: commandName, result });
       
       // Remplacer la commande par les données dans la réponse
       const commandPattern = new RegExp(`\\[COMMAND:${commandName}(?:\\s+[^\\]]+)?\\]`, 'g');
-      const dataText = result.error ? `Erreur: ${result.error}` : JSON.stringify(result.data, null, 2);
+      const dataText = result.success ? JSON.stringify(result.data, null, 2) : `Erreur: ${result.error}`;
       processedResponse = processedResponse.replace(commandPattern, `\n\n**Données récupérées:**\n\`\`\`json\n${dataText}\n\`\`\`\n`);
     }
     
@@ -224,6 +447,10 @@ export const sendMessageToAI = async (message, file = null, config = {}) => {
     const response = await fetch(apiUrl, {
       method: 'POST',
       body: formData,
+      mode: 'cors',
+      headers: {
+        'Accept': 'application/json',
+      },
     });
     
     if (!response.ok) {
@@ -237,10 +464,14 @@ export const sendMessageToAI = async (message, file = null, config = {}) => {
     }
     
     // Extraire la réponse du format retourné par le serveur Python
+    console.log(data);
     const aiResponse = data.reply || data.response || data.message || '';
+    console.log(aiResponse);
     
     // Traiter la réponse pour exécuter les commandes
     const processedData = await processAIResponse(aiResponse);
+
+    console.log(processedData);
     
     return {
       success: true,
