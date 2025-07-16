@@ -39,8 +39,22 @@ export const generateUniqueId = () => {
  */
 export const saveChatToStorage = (chat) => {
   try {
+    // Ne pas sauvegarder si le chat n'a pas de messages utilisateur
+    const userMessages = chat.messages?.filter(msg => msg.type === 'user') || [];
+    if (userMessages.length === 0) {
+      return; // Ne pas sauvegarder les conversations vides
+    }
+    
     const existingChats = secureLocalStorage.getItem("fatoumata_chats") || [];
     const chatIndex = existingChats.findIndex(c => c.id === chat.id);
+    
+    // Ajouter la date de création si elle n'existe pas
+    if (!chat.createdAt) {
+      chat.createdAt = new Date().toISOString();
+    }
+    
+    // Ajouter la date de dernière modification
+    chat.updatedAt = new Date().toISOString();
     
     if (chatIndex >= 0) {
       existingChats[chatIndex] = chat;
@@ -222,15 +236,19 @@ export const sendMessageToAI = async (message, file = null, config = {}) => {
       throw new Error(data.error);
     }
     
+    // Extraire la réponse du format retourné par le serveur Python
+    const aiResponse = data.reply || data.response || data.message || '';
+    
     // Traiter la réponse pour exécuter les commandes
-    const processedData = await processAIResponse(data.response || data.message || '');
+    const processedData = await processAIResponse(aiResponse);
     
     return {
       success: true,
       response: processedData.processedResponse,
       originalResponse: processedData.originalResponse,
       executedCommands: processedData.executedCommands,
-      hasCommands: processedData.hasCommands
+      hasCommands: processedData.hasCommands,
+      usage: data.usage // Inclure les informations d'usage si disponibles
     };
   } catch (error) {
     console.error("Erreur lors de l'envoi du message à l'IA:", error);

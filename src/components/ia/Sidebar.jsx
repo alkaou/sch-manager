@@ -14,7 +14,6 @@ import {
   MessageSquare,
   Clock,
   Trash2,
-  MoreVertical,
   Search,
   X,
   AlertTriangle
@@ -60,6 +59,7 @@ const Sidebar = ({
   const filteredChats = chats.filter(chat =>
     chat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     chat.messages.some(msg => 
+      msg.content && typeof msg.content === 'string' && 
       msg.content.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
@@ -83,15 +83,25 @@ const Sidebar = ({
   };
 
   const formatChatDate = (timestamp) => {
+    if (!timestamp) return '';
+    
     const date = new Date(timestamp);
     const now = new Date();
     const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+    const diffMinutes = Math.floor(diffTime / (1000 * 60));
 
-    if (diffDays === 1) {
+    if (diffMinutes < 60) {
+      return language === "Français" ? "À l'instant" : 
+             language === "Anglais" ? "Just now" : "Sisan";
+    } else if (diffHours < 24) {
+      return language === "Français" ? `Il y a ${diffHours}h` : 
+             language === "Anglais" ? `${diffHours}h ago` : `${diffHours}h tɛmɛnen`;
+    } else if (diffDays === 0) {
       return language === "Français" ? "Aujourd'hui" : 
              language === "Anglais" ? "Today" : "Bi";
-    } else if (diffDays === 2) {
+    } else if (diffDays === 1) {
       return language === "Français" ? "Hier" : 
              language === "Anglais" ? "Yesterday" : "Kunu";
     } else if (diffDays <= 7) {
@@ -327,7 +337,7 @@ const Sidebar = ({
                           <p className={`text-xs truncate ${
                             isDark ? "text-gray-400" : "text-gray-500"
                           }`}>
-                            {formatChatDate(chat.updatedAt)}
+                            {formatChatDate(chat.createdAt || chat.updatedAt)}
                           </p>
                         </div>
 

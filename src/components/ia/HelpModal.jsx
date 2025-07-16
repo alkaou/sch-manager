@@ -126,13 +126,28 @@ const HelpModal = ({ isOpen, onClose }) => {
   const supportedFiles = [
     {
       icon: FileText,
-      types: ["PDF", "DOCX", "DOC", "TXT"],
-      description: translate("help_file_documents", language)
+      title: translate("help_file_pdf", language),
+      types: ["PDF"]
+    },
+    {
+      icon: FileText,
+      title: translate("help_file_docx", language),
+      types: ["DOCX", "DOC"]
     },
     {
       icon: ImageIcon,
-      types: ["PNG", "JPG", "JPEG"],
-      description: translate("help_file_images", language)
+      title: translate("help_file_images", language),
+      types: ["PNG", "JPG", "JPEG"]
+    },
+    {
+      icon: FileText,
+      title: translate("help_file_data", language),
+      types: ["JSON", "CSV"]
+    },
+    {
+      icon: FileText,
+      title: translate("help_file_text", language),
+      types: ["TXT"]
     }
   ];
 
@@ -431,7 +446,12 @@ const HelpModal = ({ isOpen, onClose }) => {
               </div>
               
               <div className="flex-1">
-                <div className="flex flex-wrap gap-2 mb-2">
+                <h5 className={`font-medium mb-2 ${
+                  isDark ? "text-white" : "text-gray-900"
+                }`}>
+                  {fileType.title}
+                </h5>
+                <div className="flex flex-wrap gap-2">
                   {fileType.types.map((type, typeIndex) => (
                     <span
                       key={typeIndex}
@@ -445,11 +465,6 @@ const HelpModal = ({ isOpen, onClose }) => {
                     </span>
                   ))}
                 </div>
-                <p className={`text-sm ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}>
-                  {fileType.description}
-                </p>
               </div>
             </div>
           </motion.div>

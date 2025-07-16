@@ -15,7 +15,7 @@ import { useTheme, useLanguage, useFlashNotification } from "../contexts";
 import { translate } from "./ia_translator.js";
 import {
   generateUniqueId,
-  getChatsFromStorage,
+  // getChatsFromStorage,
   saveChatToStorage,
   sendMessageToAI,
   processAIResponse,
@@ -107,10 +107,25 @@ const IA = ({ isOpen, onClose }) => {
     if (!content.trim() && !file) return;
     if (isGenerating) return;
 
+    // Si c'est le premier message et qu'il n'y a pas de chat actuel, créer un nouveau chat
+    if (!currentChat || (currentChat && messages.length === 0)) {
+      const newChatId = generateUniqueId();
+      const newChat = {
+        id: newChatId,
+        title: translate("new_chat", language),
+        messages: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        isEphemeral: false,
+      };
+      setCurrentChat(newChat);
+    }
+
     // Message utilisateur
     const userMessage = {
       id: generateUniqueId(),
       type: "user",
+      role: "user",
       content: content.trim(),
       file: file
         ? {
@@ -127,6 +142,7 @@ const IA = ({ isOpen, onClose }) => {
     const aiMessage = {
       id: aiMessageId,
       type: "ai",
+      role: "assistant",
       content: "",
       timestamp: new Date().toISOString(),
       isTyping: true,
@@ -188,13 +204,16 @@ const IA = ({ isOpen, onClose }) => {
           isTyping: false,
         };
 
+        // Générer un titre automatiquement pour le premier message
+        const isFirstMessage = currentChat.messages.length === 0;
+        const chatTitle = isFirstMessage 
+          ? await generateChatTitle(content)
+          : currentChat.title;
+
         const updatedChat = {
           ...currentChat,
           messages: finalMessages,
-          title:
-            currentChat.title === translate("new_chat", language)
-              ? await generateChatTitle(content)
-              : currentChat.title,
+          title: chatTitle,
           updatedAt: new Date().toISOString(),
         };
 
@@ -357,26 +376,6 @@ const IA = ({ isOpen, onClose }) => {
                   title={translate("help", language)}
                 >
                   <Info size={20} />
-                </button>
-
-                <button
-                  onClick={() => setIsMinimized(!isMinimized)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    isDark
-                      ? "hover:bg-gray-800 text-gray-400 hover:text-white"
-                      : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
-                  }`}
-                  title={
-                    isMinimized
-                      ? translate("maximize", language)
-                      : translate("minimize", language)
-                  }
-                >
-                  {isMinimized ? (
-                    <Maximize2 size={20} />
-                  ) : (
-                    <Minimize2 size={20} />
-                  )}
                 </button>
 
                 <button

@@ -16,7 +16,7 @@ import {
   RotateCcw,
   User,
   Bot,
-  Check,
+  // Check,
   FileText,
   Image as ImageIcon
 } from "lucide-react";
@@ -185,11 +185,11 @@ const ChatMessage = ({
         <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
           isUser
             ? isDark
-              ? "bg-blue-600"
-              : "bg-blue-500"
+              ? "bg-green-600"
+              : "bg-green-500"
             : isDark
-            ? "bg-purple-600"
-            : "bg-purple-500"
+            ? "bg-blue-600"
+            : "bg-blue-500"
         }`}>
           {isUser ? (
             <User size={16} className="text-white" />
@@ -204,11 +204,11 @@ const ChatMessage = ({
           <div className={`inline-block max-w-full p-4 rounded-2xl ${
             isUser
               ? isDark
-                ? "bg-blue-600 text-white"
-                : "bg-blue-500 text-white"
+                ? "bg-green-600 text-white"
+                : "bg-green-500 text-white"
               : isDark
               ? "bg-gray-800 text-gray-100 border border-gray-700"
-              : "bg-white text-gray-900 border border-gray-200 shadow-sm"
+              : "bg-gray-50 text-gray-900 border border-gray-200 shadow-sm"
           } ${isUser ? "rounded-br-md" : "rounded-bl-md"}`}>
             
             {/* Fichier joint (si présent) */}

@@ -5,10 +5,45 @@ const translations = {
         Anglais: "Fatoumata - AI Assistant",
         Bambara: "Fatoumata - IA Dɛmɛbaga",
     },
+    ai_subtitle: {
+        Français: "Assistante IA pour la gestion scolaire",
+        Anglais: "AI Assistant for school management",
+        Bambara: "IA dɛmɛbaga lakɔli ɲɛnabɔli kama",
+    },
     welcome_message: {
         Français: "Bonjour ! Je suis Fatoumata, votre assistante IA spécialisée dans la gestion d'établissements scolaires. Comment puis-je vous aider aujourd'hui ?",
         Anglais: "Hello! I'm Fatoumata, your AI assistant specialized in school management. How can I help you today?",
         Bambara: "I ni ce! N ye Fatoumata ye, i ka IA dɛmɛbaga min bɛ lakɔli jɔyɔrɔ ɲɛnabɔli la. N bɛ se ka i dɛmɛ cogo min na bi?",
+    },
+    "search...": {
+        Français: "Rechercher...",
+        Anglais: "Search...",
+        Bambara: "Ɲinini...",
+    },
+    maximize: {
+        Français: "Agrandir",
+        Anglais: "Maximize",
+        Bambara: "Bonya",
+    },
+    minimize: {
+        Français: "Réduire",
+        Anglais: "Minimize",
+        Bambara: "Dɔgɔya",
+    },
+    error_message: {
+        Français: "Désolé, une erreur s'est produite. Veuillez réessayer.",
+        Anglais: "Sorry, an error occurred. Please try again.",
+        Bambara: "Hakɛto, fili dɔ kɛra. Aw ye a lajɛ kokura.",
+    },
+    error_sending_message: {
+        Français: "Erreur lors de l'envoi du message",
+        Anglais: "Error sending message",
+        Bambara: "Fili bataki ci waati",
+    },
+    drop_file_here: {
+        Français: "Déposer le fichier ici",
+        Anglais: "Drop file here",
+        Bambara: "Sɛbɛn bila yan",
     },
     
     // Sidebar
@@ -138,46 +173,154 @@ const translations = {
         Bambara: "Dɛmɛ",
     },
     help_title: {
-        Français: "Comment utiliser Fatoumata ?",
-        Anglais: "How to use Fatoumata?",
-        Bambara: "Fatoumata bɛ baara kɛ cogo min na?",
+        Français: "Guide d'utilisation de Fatoumata",
+        Anglais: "Fatoumata User Guide",
+        Bambara: "Fatoumata baara kɛcogo",
+    },
+    help_subtitle: {
+        Français: "Découvrez toutes les fonctionnalités de votre assistante IA",
+        Anglais: "Discover all the features of your AI assistant",
+        Bambara: "I ka IA dɛmɛbaga baara bɛɛ dɔn",
+    },
+    help_overview: {
+        Français: "Vue d'ensemble",
+        Anglais: "Overview",
+        Bambara: "Kɔlɔlɔ",
+    },
+    help_features: {
+        Français: "Fonctionnalités",
+        Anglais: "Features",
+        Bambara: "Baaraw",
+    },
+    help_shortcuts: {
+        Français: "Raccourcis",
+        Anglais: "Shortcuts",
+        Bambara: "Surunw",
+    },
+    help_files: {
+        Français: "Fichiers",
+        Anglais: "Files",
+        Bambara: "Sɛbɛnw",
+    },
+    help_welcome_title: {
+        Français: "Bienvenue dans Fatoumata IA",
+        Anglais: "Welcome to Fatoumata AI",
+        Bambara: "Bisimila Fatoumata IA la",
+    },
+    help_welcome_subtitle: {
+        Français: "Votre assistante intelligente pour la gestion scolaire",
+        Anglais: "Your intelligent assistant for school management",
+        Bambara: "I ka hakili dɛmɛbaga lakɔli ɲɛnabɔli kama",
+    },
+    help_what_can_do: {
+        Français: "Que puis-je faire pour vous ?",
+        Anglais: "What can I do for you?",
+        Bambara: "Mun bɛ se ka kɛ i ye?",
+    },
+    help_capability_data: {
+        Français: "Analyse des données",
+        Anglais: "Data Analysis",
+        Bambara: "Kunnafoniw sɛgɛsɛgɛli",
+    },
+    help_capability_data_desc: {
+        Français: "Analyser les données de votre établissement",
+        Anglais: "Analyze your institution's data",
+        Bambara: "I ka jɔyɔrɔ kunnafoniw sɛgɛsɛgɛ",
+    },
+    help_capability_students: {
+        Français: "Gestion des étudiants",
+        Anglais: "Student Management",
+        Bambara: "Kalandenw ɲɛnabɔli",
+    },
+    help_capability_students_desc: {
+        Français: "Gérer les informations des étudiants",
+        Anglais: "Manage student information",
+        Bambara: "Kalandenw ka kunnafoniw ɲɛnabɔ",
+    },
+    help_capability_reports: {
+        Français: "Rapports et statistiques",
+        Anglais: "Reports and Statistics",
+        Bambara: "Rapɔrw ni jatebɔsɛbɛnw",
+    },
+    help_capability_reports_desc: {
+        Français: "Générer des rapports détaillés",
+        Anglais: "Generate detailed reports",
+        Bambara: "Rapɔr kɔrɔlenw dabɔ",
+    },
+    help_capability_chat: {
+        Français: "Conversation intelligente",
+        Anglais: "Intelligent Conversation",
+        Bambara: "Hakili kuma",
+    },
+    help_capability_chat_desc: {
+        Français: "Discuter naturellement avec l'IA",
+        Anglais: "Chat naturally with AI",
+        Bambara: "IA fɛ kuma cogoya la",
     },
     help_intro: {
         Français: "Fatoumata est votre assistante IA spécialisée dans la gestion d'établissements scolaires. Elle peut vous aider avec :",
         Anglais: "Fatoumata is your AI assistant specialized in school management. She can help you with:",
         Bambara: "Fatoumata ye i ka IA dɛmɛbaga ye min bɛ lakɔli jɔyɔrɔ ɲɛnabɔli la. A bɛ se ka i dɛmɛ ninnu na:",
     },
-    help_features: {
-        Français: [
-            "📊 Analyse des données de votre établissement",
-            "👥 Gestion des étudiants et du personnel",
-            "📈 Statistiques et rapports",
-            "💰 Suivi des paiements et finances",
-            "📋 Création de listes et bulletins",
-            "📁 Analyse de documents (PDF, DOCX, images)",
-            "🔍 Recherche d'informations spécifiques",
-            "💡 Conseils et recommandations"
-        ],
-        Anglais: [
-            "📊 Analysis of your institution's data",
-            "👥 Student and staff management",
-            "📈 Statistics and reports",
-            "💰 Payment and finance tracking",
-            "📋 Creating lists and bulletins",
-            "📁 Document analysis (PDF, DOCX, images)",
-            "🔍 Searching for specific information",
-            "💡 Tips and recommendations"
-        ],
-        Bambara: [
-            "📊 I ka jɔyɔrɔ kunnafoniw sɛgɛsɛgɛli",
-            "👥 Kalandenw ni baarakɛlaw ɲɛnabɔli",
-            "📈 Jatebɔsɛbɛnw ni rapɔrw",
-            "💰 Sarali ni wariko nɔfɛkɔlɔli",
-            "📋 Lisɛriw ni bɔlɛtɛnw dabɔli",
-            "📁 Sɛbɛnw sɛgɛsɛgɛli (PDF, DOCX, ja)",
-            "🔍 Kunnafoni kɛrɛnkɛrɛnnenw ɲinini",
-            "💡 Ladilikanw ni laadilikanw"
-        ],
+    help_feature_database: {
+        Français: "Accès aux données",
+        Anglais: "Database Access",
+        Bambara: "Kunnafoni yɔrɔ sɔrɔli",
+    },
+    help_feature_database_desc: {
+        Français: "Accéder et analyser les données de votre établissement",
+        Anglais: "Access and analyze your institution's data",
+        Bambara: "I ka jɔyɔrɔ kunnafoniw sɔrɔ ani k'u sɛgɛsɛgɛ",
+    },
+    help_feature_students: {
+        Français: "Gestion des étudiants",
+        Anglais: "Student Management",
+        Bambara: "Kalandenw ɲɛnabɔli",
+    },
+    help_feature_students_desc: {
+        Français: "Gérer les informations et statistiques des étudiants",
+        Anglais: "Manage student information and statistics",
+        Bambara: "Kalandenw ka kunnafoniw ni jatebɔsɛbɛnw ɲɛnabɔ",
+    },
+    help_feature_management: {
+        Français: "Gestion administrative",
+        Anglais: "Administrative Management",
+        Bambara: "Baarakɛcogo ɲɛnabɔli",
+    },
+    help_feature_management_desc: {
+        Français: "Gérer les classes, employés et opérations administratives",
+        Anglais: "Manage classes, employees and administrative operations",
+        Bambara: "Kalasw, baarakɛlaw ani baarakɛcogo ɲɛnabɔ",
+    },
+    help_feature_copy: {
+        Français: "Copie de texte",
+        Anglais: "Text Copy",
+        Bambara: "Sɛbɛn kopi",
+    },
+    help_feature_copy_desc: {
+        Français: "Copier facilement les réponses dans le presse-papiers",
+        Anglais: "Easily copy responses to clipboard",
+        Bambara: "Jaabiw kopi kɛ nɔgɔya la",
+    },
+    help_feature_audio: {
+        Français: "Lecture vocale",
+        Anglais: "Text-to-Speech",
+        Bambara: "Kalan ka kɔrɔ",
+    },
+    help_feature_audio_desc: {
+        Français: "Écouter les réponses lues à haute voix",
+        Anglais: "Listen to responses read aloud",
+        Bambara: "Jaabiw lamɛn ka kɔrɔ",
+    },
+    help_feature_regenerate: {
+        Français: "Régénération",
+        Anglais: "Regeneration",
+        Bambara: "Kokura dabɔli",
+    },
+    help_feature_regenerate_desc: {
+        Français: "Régénérer une réponse pour obtenir une version différente",
+        Anglais: "Regenerate a response to get a different version",
+        Bambara: "Jaabi kokura dabɔ walasa ka suguya wɛrɛ sɔrɔ",
     },
     help_shortcuts: {
         Français: "Raccourcis clavier :",
@@ -200,6 +343,61 @@ const translations = {
             "Ctrl + Enter: Layini kura",
             "Escape: Popup datugu"
         ],
+    },
+    help_file_upload_title: {
+        Français: "Types de fichiers supportés",
+        Anglais: "Supported File Types",
+        Bambara: "Fayili suguw minnu bɛ dɛmɛ",
+    },
+    help_file_pdf: {
+        Français: "📄 PDF - Documents et rapports",
+        Anglais: "📄 PDF - Documents and reports",
+        Bambara: "📄 PDF - Sɛbɛnw ni rapɔrw",
+    },
+    help_file_docx: {
+        Français: "📝 DOCX - Documents Word",
+        Anglais: "📝 DOCX - Word documents",
+        Bambara: "📝 DOCX - Word sɛbɛnw",
+    },
+    help_file_images: {
+        Français: "🖼️ Images - PNG, JPG, JPEG",
+        Anglais: "🖼️ Images - PNG, JPG, JPEG",
+        Bambara: "🖼️ Jaw - PNG, JPG, JPEG",
+    },
+    help_file_data: {
+        Français: "📊 Données - JSON, CSV",
+        Anglais: "📊 Data - JSON, CSV",
+        Bambara: "📊 Kunnafoniw - JSON, CSV",
+    },
+    help_file_text: {
+        Français: "📋 Texte - TXT",
+        Anglais: "📋 Text - TXT",
+        Bambara: "📋 Sɛbɛn - TXT",
+    },
+    help_shortcut_send: {
+        Français: "Envoyer le message",
+        Anglais: "Send message",
+        Bambara: "Bataki ci",
+    },
+    help_shortcut_newline: {
+        Français: "Nouvelle ligne",
+        Anglais: "New line",
+        Bambara: "Layini kura",
+    },
+    help_shortcut_copy: {
+        Français: "Copier le texte sélectionné",
+        Anglais: "Copy selected text",
+        Bambara: "Sɛbɛn sugandi kopi",
+    },
+    help_shortcut_close: {
+        Français: "Fermer les popups",
+        Anglais: "Close popups",
+        Bambara: "Popup datugu",
+    },
+    help_file_upload_desc: {
+        Français: "Glissez-déposez vos fichiers ou cliquez pour les sélectionner",
+        Anglais: "Drag and drop your files or click to select them",
+        Bambara: "I ka fayiliw sama walima digi ka u sugandi",
     },
     close: {
         Français: "Fermer",
