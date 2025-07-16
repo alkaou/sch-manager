@@ -106,9 +106,9 @@ const FloatingMenu = () => {
         {showCalendar && (
           <AdvancedCalendar onClose={() => setShowCalendar(false)} />
         )}
-        
+
         {/* Modale pour IA */}
-        {showIA && <IA onClose={() => setShowIA(false)} />}
+        {showIA && <IA isOpen={showIA} onClose={() => setShowIA(false)} />}
       </AnimatePresence>
     </div>
   );

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getClasseName } from "../../utils/helpers";
-import { useLanguage } from "../contexts";
+import { useLanguage, useFlashNotification } from "../contexts";
 import { translate } from "./payement_translator";
-import { useFlashNotification } from "../contexts";
 import { X } from "lucide-react";
 import ActionConfirmePopup from "../popups/ActionConfirmePopup.jsx";
 import { gradients } from "../../utils/colors";

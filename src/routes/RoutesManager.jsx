@@ -1,6 +1,11 @@
 // RoutesManager.jsx
 import React from "react";
-import { HashRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import HomePage from "../pages/HomePage.jsx";
 import StartedPage from "../pages/StartedPage.jsx";
 import CompositionsPage from "../pages/CompositionsPage.jsx";
@@ -19,7 +24,6 @@ import EmployesPage from "../pages/EmployesPage.jsx";
 import DepensesPage from "../pages/DepensesPage.jsx";
 import EventsPage from "../pages/EventsPage.jsx";
 
-
 import AdvancedLayout from "../layouts/AdvancedLayout.jsx";
 import ThemeProvider from "../providers/ThemeProvider.jsx";
 import FlashNotificationProvider from "../providers/FlashNotificationProvider.jsx";
@@ -30,10 +34,10 @@ import { AuthProvider, UserProfile } from "../auth";
 const RoutesManager = () => {
   return (
     <Router>
-      <ThemeProvider>
-        <FlashNotificationProvider>
-          <ProtectionsProvider>
-            <LanguageProvider>
+      <FlashNotificationProvider>
+        <ThemeProvider>
+          <LanguageProvider>
+            <ProtectionsProvider>
               <AuthProvider>
                 <Routes>
                   <Route path="/" element={<HomePage />} />
@@ -42,15 +46,24 @@ const RoutesManager = () => {
                   <Route path="/tuto_helpers" element={<HelpersPage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/community" element={<CommunityPage />} />
-                  <Route path="/no_data_profile-auth" element={<UserProfile />} />
+                  <Route
+                    path="/no_data_profile-auth"
+                    element={<UserProfile />}
+                  />
                   {/* Route parent pour le layout avancé */}
                   <Route element={<AdvancedLayout />}>
                     <Route path="/started_page" element={<StartedPage />} />
-                    <Route path="/compositions" element={<CompositionsPage />} />
+                    <Route
+                      path="/compositions"
+                      element={<CompositionsPage />}
+                    />
                     <Route path="/bulletins" element={<BulletinsPage />} />
                     <Route path="/liste_eleves" element={<ListesPage />} />
                     <Route path="/payements" element={<PayementsPage />} />
-                    <Route path="/statistiques" element={<StatistiquesPage />} />
+                    <Route
+                      path="/statistiques"
+                      element={<StatistiquesPage />}
+                    />
                     <Route path="/database" element={<DatabasePage />} />
                     <Route path="/read" element={<ReadPage />} />
                     <Route path="/helpers" element={<HelpersPage />} />
@@ -62,10 +75,10 @@ const RoutesManager = () => {
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </AuthProvider>
-            </LanguageProvider>
-          </ProtectionsProvider>
-        </FlashNotificationProvider>
-      </ThemeProvider>
+            </ProtectionsProvider>
+          </LanguageProvider>
+        </ThemeProvider>
+      </FlashNotificationProvider>
     </Router>
   );
 };

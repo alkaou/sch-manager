@@ -13,9 +13,9 @@ import {
 
 import { useLanguage, useTheme, useProtections } from "../contexts";
 
-const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors }) => {
+const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors, refreshData }) => {
   const { live_language } = useLanguage();
-  const { isShowSecurityPopup, setIsShowSecurityPopup } = useProtections();
+  const { openPasswordPoupAndPastAction } = useProtections();
   const navigate = useNavigate();
 
   const { text_color, app_bg_color, gradients } = useTheme();
@@ -39,12 +39,14 @@ const HeroSection = ({ setIsOpenPopup, data, isOthersBGColors }) => {
   };
 
   const toggleSecurityPopup = () => {
-    setIsShowSecurityPopup(!isShowSecurityPopup);
+    refreshData();
+    openPasswordPoupAndPastAction();
   };
 
   const navigateToStartedPage = () => {
-    if(db_is_existing && data.security && data.security !== ""){
-      toggleSecurityPopup();
+    refreshData();
+    if (db_is_existing && data.security && data.security.password) {
+      openPasswordPoupAndPastAction("navigateToStartedPage");
       return;
     }
     navigate("/started_page");

@@ -52,7 +52,8 @@ const getIcon = (type) => {
 const FlashNotification = ({ flash }) => {
   return (
     <div
-      className={`fixed bottom-5 right-5 z-50 transition-all duration-700 ease-in-out transform 
+      style={{ zIndex: 999999 }}
+      className={`fixed bottom-5 right-5 transition-all duration-700 ease-in-out transform 
         ${
           flash.visible
             ? "opacity-100 translate-y-0"

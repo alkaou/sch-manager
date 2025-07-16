@@ -1,46 +1,440 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { useTheme } from "../contexts";
+/**
+ * Composant IA - Interface principale pour l'assistant Fatoumata
+ *
+ * Interface complète de chat IA avec sidebar, historique, upload de fichiers,
+ * et toutes les fonctionnalités modernes d'un chatbot avancé.
+ * Fatoumata est l'assistante IA spécialisée dans la gestion d'établissements scolaires.
+ *
+ * Développé par Alkaou Dembélé pour SchoolManager (Entreprise Malienne)
+ */
 
-export default function IA({ onClose }) {
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Minimize2, Maximize2, Info } from "lucide-react";
+import { useTheme, useLanguage, useFlashNotification } from "../contexts";
+import { translate } from "./ia_translator.js";
+import {
+  generateUniqueId,
+  getChatsFromStorage,
+  saveChatToStorage,
+  sendMessageToAI,
+  processAIResponse,
+  createTypingAnimation,
+  generateChatTitle,
+} from "./ai_methodes.js";
+import Sidebar from "./Sidebar.jsx";
+import ChatMessage from "./ChatMessage.jsx";
+import ChatInput from "./ChatInput.jsx";
+import HelpModal from "./HelpModal.jsx";
+
+const IA = ({ isOpen, onClose }) => {
   const { theme } = useTheme();
+  const { language } = useLanguage();
+  const { setFlashMessage } = useFlashNotification();
+  const isDark = theme === "dark";
 
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { type: "spring", stiffness: 300, damping: 25 },
-    },
-    exit: { opacity: 0, scale: 0.8, transition: { duration: 0.2 } },
+  // États principaux
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [typingMessageId, setTypingMessageId] = useState(null);
+  const [abortController, setAbortController] = useState(null);
+
+  // Références
+  const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
+
+  // Initialisation du chat par défaut
+  useEffect(() => {
+    if (isOpen && !currentChat) {
+      startNewChat();
+    }
+  }, [isOpen]);
+
+  // Auto-scroll vers le bas
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Démarrer un nouveau chat
+  const startNewChat = (isEphemeral = false) => {
+    const newChat = {
+      id: generateUniqueId(),
+      title: translate("new_chat", language),
+      messages: [],
+      createdAt: new Date().toISOString(),
+      isEphemeral,
+    };
+
+    setCurrentChat(newChat);
+    setMessages([]);
+    setIsGenerating(false);
+    setTypingMessageId(null);
+
+    // Message de bienvenue
+    const welcomeMessage = {
+      id: generateUniqueId(),
+      type: "ai",
+      content: translate("welcome_message", language),
+      timestamp: new Date().toISOString(),
+    };
+
+    setMessages([welcomeMessage]);
+
+    if (!isEphemeral) {
+      const updatedChat = { ...newChat, messages: [welcomeMessage] };
+      saveChatToStorage(updatedChat);
+      setCurrentChat(updatedChat);
+    }
+  };
+
+  // Charger un chat existant
+  const loadChat = (chat) => {
+    setCurrentChat(chat);
+    setMessages(chat.messages || []);
+    setIsGenerating(false);
+    setTypingMessageId(null);
+  };
+
+  // Envoyer un message
+  const handleSendMessage = async (content, file = null) => {
+    if (!content.trim() && !file) return;
+    if (isGenerating) return;
+
+    // Message utilisateur
+    const userMessage = {
+      id: generateUniqueId(),
+      type: "user",
+      content: content.trim(),
+      file: file
+        ? {
+            name: file.name,
+            size: file.size,
+            type: file.type,
+          }
+        : null,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Message IA temporaire avec animation de frappe
+    const aiMessageId = generateUniqueId();
+    const aiMessage = {
+      id: aiMessageId,
+      type: "ai",
+      content: "",
+      timestamp: new Date().toISOString(),
+      isTyping: true,
+    };
+
+    const newMessages = [...messages, userMessage, aiMessage];
+    setMessages(newMessages);
+    setIsGenerating(true);
+    setTypingMessageId(aiMessageId);
+
+    // Créer un AbortController pour pouvoir annuler la requête
+    const controller = new AbortController();
+    setAbortController(controller);
+
+    try {
+      // Envoyer à l'API
+      const response = await sendMessageToAI(content, file, controller.signal);
+
+      if (controller.signal.aborted) {
+        return;
+      }
+
+      // Traiter la réponse et exécuter les commandes si nécessaire
+      const processedResponse = await processAIResponse(response);
+
+      // Animation de frappe pour la réponse
+      await createTypingAnimation(
+        processedResponse,
+        (partialContent) => {
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === aiMessageId
+                ? { ...msg, content: partialContent, isTyping: true }
+                : msg
+            )
+          );
+        },
+        () => {
+          // Animation terminée
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === aiMessageId
+                ? { ...msg, content: processedResponse, isTyping: false }
+                : msg
+            )
+          );
+          setIsGenerating(false);
+          setTypingMessageId(null);
+          setAbortController(null);
+        }
+      );
+
+      // Sauvegarder le chat mis à jour
+      if (currentChat && !currentChat.isEphemeral) {
+        const finalMessages = [...newMessages];
+        finalMessages[finalMessages.length - 1] = {
+          ...aiMessage,
+          content: processedResponse,
+          isTyping: false,
+        };
+
+        const updatedChat = {
+          ...currentChat,
+          messages: finalMessages,
+          title:
+            currentChat.title === translate("new_chat", language)
+              ? await generateChatTitle(content)
+              : currentChat.title,
+          updatedAt: new Date().toISOString(),
+        };
+
+        saveChatToStorage(updatedChat);
+        setCurrentChat(updatedChat);
+      }
+    } catch (error) {
+      if (error.name === "AbortError") {
+        // Requête annulée
+        setMessages((prev) => prev.slice(0, -1)); // Supprimer le message IA temporaire
+      } else {
+        console.error("Erreur lors de l'envoi du message:", error);
+
+        // Message d'erreur
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === aiMessageId
+              ? {
+                  ...msg,
+                  content: translate("error_message", language),
+                  isTyping: false,
+                  isError: true,
+                }
+              : msg
+          )
+        );
+
+        setFlashMessage({
+          message: translate("error_sending_message", language),
+          type: "error",
+          duration: 3000,
+        });
+      }
+
+      setIsGenerating(false);
+      setTypingMessageId(null);
+      setAbortController(null);
+    }
+  };
+
+  // Arrêter la génération
+  const handleStopGeneration = () => {
+    if (abortController) {
+      abortController.abort();
+      setAbortController(null);
+    }
+    setIsGenerating(false);
+    setTypingMessageId(null);
+
+    // Supprimer le message IA en cours de génération
+    setMessages((prev) => prev.filter((msg) => !msg.isTyping));
+  };
+
+  // Régénérer la dernière réponse
+  const handleRegenerateResponse = async () => {
+    if (messages.length < 2) return;
+
+    const lastUserMessage = [...messages]
+      .reverse()
+      .find((msg) => msg.type === "user");
+    if (!lastUserMessage) return;
+
+    // Supprimer la dernière réponse IA
+    const messagesWithoutLastAI = messages.filter((msg, index) => {
+      if (msg.type === "ai" && index === messages.length - 1) return false;
+      return true;
+    });
+
+    setMessages(messagesWithoutLastAI);
+
+    // Renvoyer le dernier message utilisateur
+    await handleSendMessage(lastUserMessage.content, lastUserMessage.file);
+  };
+
+  // Gestion des raccourcis clavier
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!isOpen) return;
+
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
   return (
-    <motion.div
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <AnimatePresence>
       <motion.div
-        className={`p-6 rounded-lg shadow-xl w-80 ${
-          theme === "dark"
-            ? "bg-gray-900 text-white"
-            : "bg-gray-100 text-gray-700"
-        }`}
-        variants={modalVariants}
-        initial="hidden"
-        animate="visible"
-        exit="exit"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
       >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Fatoumata IA</h2>
-          <button onClick={onClose} className="text-red-500 hover:text-red-700">
-            Fermer
-          </button>
-        </div>
-        <p>Bonjour ! Comment puis-je vous aider aujourd'hui ?</p>
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{
+            scale: isMinimized ? 0.3 : 1,
+            opacity: 1,
+            y: isMinimized ? "40vh" : 0,
+          }}
+          exit={{ scale: 0.9, opacity: 0 }}
+          transition={{ type: "spring", duration: 0.5 }}
+          className={`w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex ${
+            isDark ? "bg-gray-900" : "bg-white"
+          } ${isMinimized ? "pointer-events-none" : ""}`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Sidebar */}
+          <Sidebar
+            currentChat={currentChat}
+            onChatSelect={loadChat}
+            onNewChat={() => startNewChat(false)}
+            onNewEphemeralChat={() => startNewChat(true)}
+            isMinimized={isMinimized}
+          />
+
+          {/* Zone de chat principale */}
+          <div className="flex-1 flex flex-col">
+            {/* Header */}
+            <div
+              className={`flex items-center justify-between p-4 border-b ${
+                isDark ? "border-gray-700" : "border-gray-200"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">F</span>
+                </div>
+                <div>
+                  <h2
+                    className={`text-xl font-bold ${
+                      isDark ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    Fatoumata
+                  </h2>
+                  <p
+                    className={`text-sm ${
+                      isDark ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    {translate("ai_subtitle", language)}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setShowHelp(true)}
+                  className={`p-2 rounded-lg transition-colors ${
+                    isDark
+                      ? "hover:bg-gray-800 text-gray-400 hover:text-white"
+                      : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+                  }`}
+                  title={translate("help", language)}
+                >
+                  <Info size={20} />
+                </button>
+
+                <button
+                  onClick={() => setIsMinimized(!isMinimized)}
+                  className={`p-2 rounded-lg transition-colors ${
+                    isDark
+                      ? "hover:bg-gray-800 text-gray-400 hover:text-white"
+                      : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+                  }`}
+                  title={
+                    isMinimized
+                      ? translate("maximize", language)
+                      : translate("minimize", language)
+                  }
+                >
+                  {isMinimized ? (
+                    <Maximize2 size={20} />
+                  ) : (
+                    <Minimize2 size={20} />
+                  )}
+                </button>
+
+                <button
+                  onClick={onClose}
+                  className={`p-2 rounded-lg transition-colors ${
+                    isDark
+                      ? "hover:bg-gray-800 text-gray-400 hover:text-white"
+                      : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
+                  }`}
+                  title={translate("close", language)}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Zone des messages */}
+            <div
+              ref={chatContainerRef}
+              className={`flex-1 overflow-y-auto p-4 space-y-4 ${
+                isDark ? "bg-gray-900" : "bg-gray-50"
+              }`}
+            >
+              <AnimatePresence>
+                {messages.map((message) => (
+                  <ChatMessage
+                    key={message.id}
+                    message={message}
+                    onRegenerate={
+                      message.type === "ai" &&
+                      messages[messages.length - 1]?.id === message.id
+                        ? handleRegenerateResponse
+                        : null
+                    }
+                    isGenerating={
+                      isGenerating && message.id === typingMessageId
+                    }
+                  />
+                ))}
+              </AnimatePresence>
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Zone de saisie */}
+            <ChatInput
+              onSendMessage={handleSendMessage}
+              onStopGeneration={handleStopGeneration}
+              isGenerating={isGenerating}
+              disabled={isMinimized}
+            />
+          </div>
+        </motion.div>
+
+        {/* Modal d'aide */}
+        <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
       </motion.div>
-    </motion.div>
+    </AnimatePresence>
   );
-}
+};
+
+export default IA;

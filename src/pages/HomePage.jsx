@@ -24,14 +24,19 @@ const HomePage = () => {
 
   const data_exist = data && data?.version ? true : false;
 
-  useEffect(() => {
+  const refreshData = () => {
     window.electron.getDatabase().then((data) => {
       setData(data);
     });
+  };
+  
+  useEffect(() => {
+    refreshData();
   }, []);
 
   // Handle popup content switching
   const OpenThePopup = () => {
+    refreshData();
     const popup_bool = isOpenPopup === true ? false : isOpenPopup === false ? true : false;
     setIsOpenPopup(popup_bool);
   };
@@ -50,6 +55,7 @@ const HomePage = () => {
           setIsOpenPopup={setIsOpenPopup}
           data={data}
           isOthersBGColors={isOthersBGColors}
+          refreshData={refreshData}
         />
         <FeaturesSection
           isOthersBGColors={isOthersBGColors}

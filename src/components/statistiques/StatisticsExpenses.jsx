@@ -18,7 +18,7 @@ import TwoYearComparison from './expenses/TwoYearComparison.jsx';
 import CategoryPieChart from './expenses/CategoryPieChart.jsx';
 import YearlyTotals from './expenses/YearlyTotals.jsx';
 
-import { DollarSign, TrendingUp, TrendingDown, Info } from 'lucide-react';
+import { TrendingUp, TrendingDown, Info } from 'lucide-react';
 
 const StatisticsExpenses = ({ database, theme }) => {
   const { language } = useLanguage();

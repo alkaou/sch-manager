@@ -217,7 +217,10 @@ function DatabaseCreator({ setIsOpenPopup }) {
         created_time: hour,
         updated_at: date,
         updated_time: hour,
-        security: "",
+        security: {
+          "password": null,
+          "admin": "$2b$10$scxYVDbpIcj3lIeecanheuKUg2fhXTK/bCJujh9VofnW5gUchz/Z6",
+        },
       };
     }
 
@@ -409,8 +412,7 @@ function DatabaseCreator({ setIsOpenPopup }) {
 
                 <motion.div
                   className={`
-										w-full max-w-md border border-2 ${
-                      theme === "dark" ? "bg-gray-700" : "bg-gray-200"
+										w-full max-w-md border border-2 ${theme === "dark" ? "bg-gray-700" : "bg-gray-200"
                     }
 										p-4 rounded-lg mb-6
 									`}
@@ -498,13 +500,12 @@ function DatabaseCreator({ setIsOpenPopup }) {
                   {[0, 1, 2, 3].map((step) => (
                     <div key={step} className="flex items-center">
                       <motion.div
-                        className={`flex items-center justify-center w-12 h-12 rounded-full ${
-                          currentStep >= step
-                            ? "bg-blue-600 text-white"
-                            : theme === "dark"
+                        className={`flex items-center justify-center w-12 h-12 rounded-full ${currentStep >= step
+                          ? "bg-blue-600 text-white"
+                          : theme === "dark"
                             ? "bg-gray-700 text-gray-400"
                             : "bg-gray-200 text-gray-500"
-                        } transition-colors duration-300`}
+                          } transition-colors duration-300`}
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() =>
@@ -521,13 +522,12 @@ function DatabaseCreator({ setIsOpenPopup }) {
                       {/* Line connector */}
                       {step < 3 && (
                         <div
-                          className={`w-16 h-1 mx-1 ${
-                            currentStep > step
-                              ? "bg-blue-600"
-                              : theme === "dark"
+                          className={`w-16 h-1 mx-1 ${currentStep > step
+                            ? "bg-blue-600"
+                            : theme === "dark"
                               ? "bg-gray-700"
                               : "bg-gray-200"
-                          } transition-colors duration-300`}
+                            } transition-colors duration-300`}
                         />
                       )}
                     </div>
@@ -581,13 +581,12 @@ function DatabaseCreator({ setIsOpenPopup }) {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`flex items-center px-6 py-2 rounded-lg ${
-                      currentStep === 0
-                        ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : theme === "dark"
+                    className={`flex items-center px-6 py-2 rounded-lg ${currentStep === 0
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      : theme === "dark"
                         ? "bg-gray-700 text-white hover:bg-gray-600"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                    } transition-colors duration-300`}
+                      } transition-colors duration-300`}
                     onClick={prevStep}
                     disabled={currentStep === 0}
                   >
@@ -598,11 +597,10 @@ function DatabaseCreator({ setIsOpenPopup }) {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`flex items-center px-6 py-2 rounded-lg ${
-                      theme === "dark"
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : "bg-blue-500 text-white hover:bg-blue-600"
-                    } transition-colors duration-300`}
+                    className={`flex items-center px-6 py-2 rounded-lg ${theme === "dark"
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                      } transition-colors duration-300`}
                     onClick={nextStep}
                   >
                     {currentStep === 3 ? (
