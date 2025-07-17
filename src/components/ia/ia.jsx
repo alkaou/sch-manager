@@ -42,6 +42,8 @@ const IA = ({ isOpen, onClose }) => {
   const [typingMessageId, setTypingMessageId] = useState(null);
   const [abortController, setAbortController] = useState(null);
 
+  const [isThinking, setIsThinking] = useState(false);
+
   // Références
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
@@ -50,8 +52,9 @@ const IA = ({ isOpen, onClose }) => {
   useEffect(() => {
     if (isOpen && !currentChat) {
       startNewChat();
+      setIsMinimized(false);
     }
-  }, [isOpen]);
+  }, [isOpen, currentChat]);
 
   // Auto-scroll vers le bas
   const scrollToBottom = () => {
@@ -159,12 +162,14 @@ const IA = ({ isOpen, onClose }) => {
 
     try {
       // Déterminer si c'est le premier message de la conversation
-      const isFirstMessage = messages.filter(msg => msg.type === 'user').length === 0;
-      
+      const isFirstMessage =
+        messages.filter((msg) => msg.type === "user").length === 0;
+
       // Préparer l'historique de conversation (exclure le message temporaire AI)
-      const conversationHistory = messages.filter(msg => !msg.isTyping);
-      
+      const conversationHistory = messages.filter((msg) => !msg.isTyping);
+
       // Envoyer à l'API avec le nouveau système intelligent
+      setIsThinking(true);
       const response = await sendMessageToAI(
         content,
         file,
@@ -173,6 +178,7 @@ const IA = ({ isOpen, onClose }) => {
       );
 
       if (controller.signal.aborted) {
+        setIsThinking(false);
         return;
       }
 
@@ -180,6 +186,8 @@ const IA = ({ isOpen, onClose }) => {
       const aiResponseText = response.response || "";
       // console.log("Réponse de l'IA:", aiResponseText);
       // console.log("Données contextuelles utilisées:", response.contextData);
+
+      setIsThinking(false);
 
       // Animation de frappe pour la réponse
       await createTypingAnimation(
@@ -206,7 +214,7 @@ const IA = ({ isOpen, onClose }) => {
           setTypingMessageId(null);
           setAbortController(null);
         },
-        30
+        5
       );
 
       // Sauvegarder le chat mis à jour
@@ -235,6 +243,8 @@ const IA = ({ isOpen, onClose }) => {
         setCurrentChat(updatedChat);
       }
     } catch (error) {
+      setIsThinking(false);
+
       if (error.name === "AbortError") {
         // Requête annulée
         setMessages((prev) => prev.slice(0, -1)); // Supprimer le message IA temporaire
@@ -418,6 +428,7 @@ const IA = ({ isOpen, onClose }) => {
                   <ChatMessage
                     key={message.id}
                     message={message}
+                    isThinking={isThinking}
                     onRegenerate={
                       message.type === "ai" &&
                       messages[messages.length - 1]?.id === message.id

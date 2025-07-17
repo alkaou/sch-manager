@@ -10,7 +10,6 @@
 import secureLocalStorage from "react-secure-storage";
 import { getRevenuePerSchoolYear } from "../statistiques/expenses_and_revenu/analysticsExpensesAndRevenuMethod";
 import { getTotalExpensesPerYear } from "../statistiques/expenses/analysticsExpensesMethod";
-// import { executeCommand, parseAICommands } from "./command.js";
 
 // Configuration de l'API
 const API_CONFIG = {
@@ -138,6 +137,8 @@ export const createInitialSystemPrompt = (defaultData = {}) => {
     totalBulletins = 0,
   } = defaultData;
 
+  // console.log(totalExpenses);
+
   return `Tu es Fatoumata, une assistante IA spécialisée dans la gestion d'établissements scolaires, développée par et pour l'entreprise SchoolManager (une entreprise malienne) avec le développeur principal Alkaou Dembélé.
 
 ÉTABLISSEMENT : ${schoolInfo.name || "Non défini"} (${
@@ -148,7 +149,7 @@ INFORMATIONS GÉNÉRALES DISPONIBLES :
 • ÉLÈVES : ${totalStudents} au total (${totalBoys} garçons, ${totalGirls} filles)
 • PERSONNEL : ${totalEmployees} employés (${totalMaleEmployees} hommes, ${totalFemaleEmployees} femmes)
 • CLASSES : ${totalClasses} classes disponibles
-• FINANCES : ${totalRevenue.toLocaleString()} FCFA de revenus, ${totalExpenses.toLocaleString()} FCFA de dépenses
+• FINANCES : Les revenus totaux pour chaque année avec toutes les informations : ${totalRevenue}. Sommes FCFA de revenus, Les dépenses totales pour chaque année avec toutes les informations : ${totalExpenses}. Sommes en FCFA de dépenses
 • ACTIVITÉS : ${totalEvents} événements, ${totalCompositions} compositions, ${totalBulletins} bulletins
 
 CAPACITÉS :
@@ -462,7 +463,7 @@ export const getDefaultDatabaseInfo = async () => {
     const students = database.students || [];
     const employees = database.employees || [];
     const classes = database.classes || [];
-    const payments = database.paymentSystems || [];
+    // const payments = database.paymentSystems || [];
     const expenses = database.expenses || [];
     const events = database.events || [];
     const compositions = database.compositions || [];
@@ -476,14 +477,31 @@ export const getDefaultDatabaseInfo = async () => {
     const totalMaleEmployees = employees.filter((e) => e.sexe === "M").length;
     const totalFemaleEmployees = employees.filter((e) => e.sexe === "F").length;
     const totalClasses = classes.length;
-    const totalRevenue = getRevenuePerSchoolYear(database).totalRevenue;
-    const totalExpenses = getTotalExpensesPerYear(
-      expenses,
-      database.schoolYears
-    ).total;
+    const totalRevenue = getRevenuePerSchoolYear(database);
     const totalEvents = events.length;
     const totalCompositions = compositions.length;
     const totalBulletins = bulletins.length;
+    // console.log(getRevenuePerSchoolYear(database));
+
+    const Expensestableau = getTotalExpensesPerYear(
+      expenses,
+      database.schoolYears
+    );
+    const depenseArray = Expensestableau.map((item) => ({
+      schoolYear: `${item.start_date} - ${item.end_date}`,
+      depenseTotal: item.total,
+    }));
+
+    const totalExpenses =
+      "Voici le résumé des dépenses par année scolaire : " +
+      depenseArray
+        .map(
+          (item) =>
+            `Pour l'année scolaire ${item.schoolYear}, la dépense totale est de ${item.depenseTotal} FCFA.`
+        )
+        .join(" ");
+
+    // console.log(totalExpenses);
 
     return {
       schoolInfo: {
@@ -934,7 +952,7 @@ export const createTypingAnimation = (
   text,
   callback,
   onComplete,
-  speed = 30
+  speed = 0.1
 ) => {
   return new Promise((resolve) => {
     if (!text || typeof text !== "string") {

@@ -20,7 +20,8 @@ const DatabaseList = ({ databases, onSelect, theme, textColor }) => {
     if (!timestamp) return unknow_date;
     
     const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return new Intl.DateTimeFormat("fr-FR", {
+    const locale = language === "Anglais" ? "en-US" : "fr-FR";
+    return new Intl.DateTimeFormat(locale, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
@@ -71,7 +72,7 @@ const DatabaseList = ({ databases, onSelect, theme, textColor }) => {
       animate="show"
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
     >
-      {databases.map((database) => (
+      {databases.sort((a, b) => b.createdAt - a.createdAt).map((database) => (
         <motion.div
           key={database.id}
           variants={item}

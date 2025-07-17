@@ -494,7 +494,7 @@ const Sidebar = ({
               <p className={`mb-6 ${
                 isDark ? "text-gray-300" : "text-gray-600"
               }`}>
-                Tous les chats seront définitivement supprimés. Cette action est irréversible.
+                {translate("delete_all_chats_confirm", language)}
               </p>
               
               <div className="flex gap-3 justify-end">

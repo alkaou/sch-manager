@@ -26,7 +26,6 @@ import {
   copyToClipboard,
   readTextAloud,
   stopReading,
-  // formatMessage,
   createTypingAnimation,
 } from "./ai_methodes.js";
 
@@ -111,7 +110,8 @@ const ChatMessage = ({
   isTyping = false,
   onRegenerate,
   canRegenerate = false,
-  typingSpeed = 30,
+  typingSpeed = 0.1,
+  isThinking,
 }) => {
   const { theme } = useTheme();
   const { language } = useLanguage();
@@ -121,11 +121,54 @@ const ChatMessage = ({
   const [displayedContent, setDisplayedContent] = useState("");
   const [isReading, setIsReading] = useState(false);
   const [showActions, setShowActions] = useState(false);
-  // const typingIntervalRef = useRef(null);
+  const [thinkingMessage, setThinkingMessage] = useState("");
   const messageRef = useRef(null);
+  const thinkingIntervalRef = useRef(null);
+
+  // Messages de réflexion rotatifs
+  const thinkingMessages = [
+    translate("loading_checking_database", language),
+    translate("loading_please_wait", language),
+    translate("loading_searching_responses", language),
+    translate("loading_sorting_information", language),
+    translate("loading_analyzing_request", language),
+    translate("loading_preparing_response", language),
+    translate("loading_calculating_stats", language),
+    translate("loading_cross_referencing", language),
+    translate("loading_generating_report", language),
+    translate("loading_validating_data", language),
+    translate("loading_organizing_results", language),
+    translate("loading_finalizing_answer", language),
+    translate("loading_double_checking", language),
+    translate("loading_almost_ready", language),
+  ];
 
   const isUser = message.role === "user";
   const isAI = message.role === "assistant";
+
+  // Gestion des messages de réflexion rotatifs
+  useEffect(() => {
+    if (isAI && isThinking && !displayedContent) {
+      let currentIndex = 0;
+      setThinkingMessage(thinkingMessages[0]);
+
+      thinkingIntervalRef.current = setInterval(() => {
+        currentIndex = (currentIndex + 1) % thinkingMessages.length;
+        setThinkingMessage(thinkingMessages[currentIndex]);
+      }, 4000); // Change toutes les 4 secondes
+
+      return () => {
+        if (thinkingIntervalRef.current) {
+          clearInterval(thinkingIntervalRef.current);
+        }
+      };
+    } else {
+      if (thinkingIntervalRef.current) {
+        clearInterval(thinkingIntervalRef.current);
+        thinkingIntervalRef.current = null;
+      }
+    }
+  }, [isThinking, displayedContent, isAI]);
 
   // Animation de typing pour les messages IA
   useEffect(() => {
@@ -231,7 +274,7 @@ const ChatMessage = ({
         </div>
 
         {/* Contenu du message */}
-        <div className={`flex-1 ${isUser ? "text-right" : "text-left"}`}>
+        <div className={`flex-1 text-left`}>
           {/* Bulle de message */}
           <div
             className={`inline-block max-w-full p-4 rounded-2xl ${
@@ -273,7 +316,16 @@ const ChatMessage = ({
             {/* Contenu du message */}
             <div className="prose prose-sm max-w-none">
               {isAI ? (
-                <MarkdownRenderer content={displayedContent} isDark={isDark} />
+                <>
+                  {isThinking && !displayedContent ? (
+                    <span className="italic">{thinkingMessage}</span>
+                  ) : (
+                    <MarkdownRenderer
+                      content={displayedContent}
+                      isDark={isDark}
+                    />
+                  )}
+                </>
               ) : (
                 <p
                   className={`whitespace-pre-wrap break-words ${
@@ -378,7 +430,7 @@ const ChatMessage = ({
           <div
             className={`text-xs mt-1 ${
               isDark ? "text-gray-500" : "text-gray-400"
-            } ${isUser ? "text-right" : "text-left"}`}
+            } text-left`}
           >
             {new Date(message.timestamp).toLocaleTimeString([], {
               hour: "2-digit",

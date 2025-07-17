@@ -19,9 +19,9 @@ const translations = {
       "I ni ce! N ye Fatoumata ye, i ka IA dɛmɛbaga min bɛ lakɔli jɔyɔrɔ ɲɛnabɔli la. N bɛ se ka i dɛmɛ cogo min na bi?",
   },
   search: {
-    Français: "Rechercher...",
-    Anglais: "Search...",
-    Bambara: "Ɲinini...",
+    Français: "Rechercher",
+    Anglais: "Search",
+    Bambara: "Ɲinini",
   },
   maximize: {
     Français: "Agrandir",
@@ -74,6 +74,11 @@ const translations = {
     Français: "Supprimer tous les chats",
     Anglais: "Delete all chats",
     Bambara: "Kuma bɛɛ bɔ",
+  },
+  delete_all_chats_confirm: {
+    Français: "Tous les chats seront définitivement supprimés. Cette action est irréversible.",
+    Anglais: "All chats will be permanently deleted. This action is irreversible.",
+    Bambara: "Aw ka kuma bɛɛ bɛna jɔsi pewu. Nin baara tɛ se ka segin kɔ.",
   },
   confirm_delete: {
     Français: "Êtes-vous sûr de vouloir supprimer ?",
@@ -147,6 +152,83 @@ const translations = {
     Français: "Traitement de votre demande...",
     Anglais: "Processing your request...",
     Bambara: "I ka ɲinini bɛ baara la...",
+  },
+
+  // Messages de chargement avancés
+  loading_checking_database: {
+    Français: "Je vérifie les informations dans la base de données...",
+    Anglais: "I'm checking information in the database...",
+    Bambara: "N bɛ kunnafoniw lajɛ kunnafonidilan kɔnɔ...",
+  },
+  loading_please_wait: {
+    Français: "Veuillez patienter, je reviens vers vous s'il vous plaît...",
+    Anglais: "Please wait, I'll get back to you...",
+    Bambara: "Aw ye muɲu, n bɛ segin i fɛ...",
+  },
+  loading_searching_responses: {
+    Français: "Je repère vos réponses dans la base de données...",
+    Anglais: "I'm locating your responses in the database...",
+    Bambara: "N bɛ i ka jaabiw ɲini kunnafonidilan kɔnɔ...",
+  },
+  loading_sorting_information: {
+    Français: "Je trie les informations...",
+    Anglais: "I'm sorting the information...",
+    Bambara: "N bɛ kunnafoniw labɛn...",
+  },
+  loading_analyzing_request: {
+    Français: "J'analyse votre demande en détail...",
+    Anglais: "I'm analyzing your request in detail...",
+    Bambara: "N bɛ i ka ɲinini sɛgɛsɛgɛ ka ɲɛ...",
+  },
+  loading_preparing_response: {
+    Français: "Je prépare une réponse personnalisée...",
+    Anglais: "I'm preparing a personalized response...",
+    Bambara: "N bɛ jaabi kɛrɛnkɛrɛnnen labɛn...",
+  },
+  loading_accessing_files: {
+    Français: "J'accède aux fichiers de l'établissement...",
+    Anglais: "I'm accessing the institution's files...",
+    Bambara: "N bɛ don jɔyɔrɔ ka sɛbɛnw la...",
+  },
+  loading_calculating_stats: {
+    Français: "Je calcule les statistiques demandées...",
+    Anglais: "I'm calculating the requested statistics...",
+    Bambara: "N bɛ jatebɔsɛbɛn ɲininen jate...",
+  },
+  loading_cross_referencing: {
+    Français: "Je croise les données pour plus de précision...",
+    Anglais: "I'm cross-referencing data for accuracy...",
+    Bambara: "N bɛ kunnafoniw suma ɲɔgɔn na walasa ka tiɲɛ...",
+  },
+  loading_generating_report: {
+    Français: "Je génère un rapport détaillé...",
+    Anglais: "I'm generating a detailed report...",
+    Bambara: "N bɛ rapɔr kɔrɔlen dɔ dabɔ...",
+  },
+  loading_validating_data: {
+    Français: "Je valide les données trouvées...",
+    Anglais: "I'm validating the found data...",
+    Bambara: "N bɛ kunnafoni sɔrɔlenw tiɲɛ...",
+  },
+  loading_organizing_results: {
+    Français: "J'organise les résultats pour vous...",
+    Anglais: "I'm organizing the results for you...",
+    Bambara: "N bɛ jaabiw labɛn i ye...",
+  },
+  loading_finalizing_answer: {
+    Français: "Je finalise ma réponse...",
+    Anglais: "I'm finalizing my answer...",
+    Bambara: "N bɛ n ka jaabi laban...",
+  },
+  loading_double_checking: {
+    Français: "Je vérifie une dernière fois les informations...",
+    Anglais: "I'm double-checking the information...",
+    Bambara: "N bɛ kunnafoniw lajɛ kokura...",
+  },
+  loading_almost_ready: {
+    Français: "Presque terminé, encore un instant...",
+    Anglais: "Almost done, just a moment more...",
+    Bambara: "A ka ban, waati fitinin dɔrɔn...",
   },
 
   // Erreurs

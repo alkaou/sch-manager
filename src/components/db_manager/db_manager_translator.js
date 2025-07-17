@@ -30,14 +30,14 @@ const translations = {
     "Bambara": "I ka dɔnniya marayɔrɔ fɔlɔ dilan walasa ka i ka kunnafoniw mara"
   },
   "updated_on": {
-    "Français": "Mis à jour:",
-    "Anglais": "Updated on:",
-    "Bambara": "A kura kɛra:"
+    "Français": "Mis à jour",
+    "Anglais": "Updated on",
+    "Bambara": "A kura kɛra"
   },
   "created_on": {
-    "Français": "Créé le:",
-    "Anglais": "Created on:",
-    "Bambara": "A dilanna:"
+    "Français": "Créé le",
+    "Anglais": "Created on",
+    "Bambara": "A dilanna"
   },
   "unknown_date": {
     "Français": "Date inconnue",

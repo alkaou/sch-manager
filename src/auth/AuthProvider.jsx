@@ -1,15 +1,15 @@
 // AuthProvider.jsx
-import React, { useState, useEffect } from 'react';
-import AuthContext from './AuthContext';
+import React, { useState, useEffect } from "react";
+import AuthContext from "./AuthContext";
 import {
   subscribeToAuthChanges,
   signInWithGoogle,
   logoutUser,
-} from './firebaseService';
-import { getUserPremiumData, createOrUpdateUser } from './firebaseFirestore';
-import secureLocalStorage from 'react-secure-storage';
-import { useLanguage } from '../components/contexts';
-import translations from './auth_translator';
+} from "./firebaseService";
+import { getUserPremiumData, createOrUpdateUser } from "./firebaseFirestore";
+import secureLocalStorage from "react-secure-storage";
+import { useLanguage } from "../components/contexts";
+import translations from "./auth_translator";
 
 const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isOnline, setIsOnline] = useState(false);
   const { language } = useLanguage();
-  
+
   // Translation helper function
   const t = (key) => {
     if (!translations[key]) return key;
@@ -33,16 +33,18 @@ const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch('https://example.com', {
-        method: 'GET',
+      const response = await fetch("https://example.com", {
+        method: "GET",
         // Décommentez le mode suivant si vous rencontrez des problèmes de CORS
         mode: "no-cors",
       });
 
+      // console.log(response);
+      // console.log("---------------");
       // console.log(response.status);
 
       // On considère que la connexion est bonne si le status est dans la plage 200-299
-      if (response && response.status === 0) {
+      if (response && (response.status === 0 || response.status === 200)) {
         setIsOnline(true);
         return true;
       } else {
@@ -52,6 +54,7 @@ const AuthProvider = ({ children }) => {
     } catch (err) {
       // L'erreur est normale si l'internet est coupé, évitant ainsi des logs trop verbeux en prod.
       // console.error('Erreur lors de la vérification de la connexion Internet :', err);
+      console.log(err);
       setIsOnline(false);
       return false;
     }
@@ -70,7 +73,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Vérification du cache local (optionnel)
-    const cachedUser = secureLocalStorage.getItem('authUser');
+    const cachedUser = secureLocalStorage.getItem("authUser");
     if (cachedUser) {
       setCurrentUser(cachedUser);
     }
@@ -97,10 +100,10 @@ const AuthProvider = ({ children }) => {
             payment_endedAt: firestoreUserData?.payment_endedAt || null,
           };
           setCurrentUser(userData);
-          secureLocalStorage.setItem('authUser', userData);
+          secureLocalStorage.setItem("authUser", userData);
         } else {
           setCurrentUser(null);
-          secureLocalStorage.removeItem('authUser');
+          secureLocalStorage.removeItem("authUser");
         }
         setLoading(false);
       });
@@ -112,8 +115,8 @@ const AuthProvider = ({ children }) => {
   const login = async () => {
     const isInternet = await checkInternetConnection();
     // console.log("internet est : " + isInternet);
-    if(!isInternet) {
-      alert(t('connection_error'));
+    if (!isInternet) {
+      alert(t("connection_error"));
       return;
     }
     try {
@@ -122,7 +125,7 @@ const AuthProvider = ({ children }) => {
       await signInWithGoogle();
     } catch (err) {
       setError(err.message);
-      alert(t('login_error'));
+      alert(t("login_error"));
       // console.error('Erreur lors de la connexion:', err);
     } finally {
       setLoading(false);
@@ -133,15 +136,15 @@ const AuthProvider = ({ children }) => {
   const logout = async () => {
     // const isInternet = await checkInternetConnection();
     // if(!isInternet) {
-      // alert("Veuillez s'il vous plaît vérifier votre connexion internet !");
-      // return;
+    // alert("Veuillez s'il vous plaît vérifier votre connexion internet !");
+    // return;
     // }
     try {
       setLoading(true);
       await logoutUser();
     } catch (err) {
       setError(err.message);
-      alert(t('logout_error'));
+      alert(t("logout_error"));
       // console.error('Erreur lors de la déconnexion:', err);
     } finally {
       setLoading(false);
