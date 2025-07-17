@@ -8,6 +8,8 @@
  */
 
 import secureLocalStorage from "react-secure-storage";
+import { getRevenuePerSchoolYear } from "../statistiques/expenses_and_revenu/analysticsExpensesAndRevenuMethod";
+import { getTotalExpensesPerYear } from "../statistiques/expenses/analysticsExpensesMethod";
 // import { executeCommand, parseAICommands } from "./command.js";
 
 // Configuration de l'API
@@ -115,36 +117,81 @@ export const deleteAllChatsFromStorage = () => {
 };
 
 /**
- * Crée le prompt système initial pour Fatoumata (première interaction seulement)
+ * Crée le prompt système initial pour Fatoumata avec informations par défaut
+ * @param {Object} defaultData - Données par défaut de la base de données
  * @returns {string} Prompt système initial
  */
-export const createInitialSystemPrompt = () => {
+export const createInitialSystemPrompt = (defaultData = {}) => {
+  const {
+    schoolInfo = {},
+    totalStudents = 0,
+    totalBoys = 0,
+    totalGirls = 0,
+    totalEmployees = 0,
+    totalMaleEmployees = 0,
+    totalFemaleEmployees = 0,
+    totalClasses = 0,
+    totalRevenue = 0,
+    totalExpenses = 0,
+    totalEvents = 0,
+    totalCompositions = 0,
+    totalBulletins = 0,
+  } = defaultData;
+
   return `Tu es Fatoumata, une assistante IA spécialisée dans la gestion d'établissements scolaires, développée par et pour l'entreprise SchoolManager (une entreprise malienne) avec le développeur principal Alkaou Dembélé.
 
-Ton rôle est d'aider les utilisateurs dans la gestion de leur établissement de manière très pertinente et professionnelle.
+ÉTABLISSEMENT : ${schoolInfo.name || "Non défini"} (${
+    schoolInfo.short_name || "N/A"
+  })
+
+INFORMATIONS GÉNÉRALES DISPONIBLES :
+• ÉLÈVES : ${totalStudents} au total (${totalBoys} garçons, ${totalGirls} filles)
+• PERSONNEL : ${totalEmployees} employés (${totalMaleEmployees} hommes, ${totalFemaleEmployees} femmes)
+• CLASSES : ${totalClasses} classes disponibles
+• FINANCES : ${totalRevenue.toLocaleString()} FCFA de revenus, ${totalExpenses.toLocaleString()} FCFA de dépenses
+• ACTIVITÉS : ${totalEvents} événements, ${totalCompositions} compositions, ${totalBulletins} bulletins
 
 CAPACITÉS :
-- Tu as accès aux données complètes de l'établissement
-- Tu peux analyser des documents fournis par l'utilisateur
-- Tu fournis des conseils experts en gestion scolaire
+- Accès complet aux données de l'établissement (élèves, employés, finances, etc.)
+- Analyse de documents fournis par l'utilisateur
+- Conseils experts en gestion scolaire adaptés au contexte malien
+- Réponses en français, anglais ou avec tolérance aux fautes d'orthographe
 
 COMPORTEMENT :
 - Présente-toi brièvement lors du premier message uniquement
-- Sois toujours professionnel, bienveillant et expert
-- Adapte tes réponses au contexte malien
-- Fournis des conseils pratiques et actionables
-- Utilise un langage clair et accessible
+- Sois professionnel, bienveillant et expert
 - Réponds directement aux questions sans révéler les détails techniques
+- Si une demande nécessite des informations très spécifiques non disponibles, informe poliment que tu n'as pas accès à toutes les ressources mais peux aider si l'utilisateur fournit les données
 
-Tu es une experte en gestion scolaire passionnée par l'amélioration des établissements.`;
+Tu es une experte passionnée par l'amélioration des établissements scolaires.`;
 };
 
 /**
- * Crée le prompt système pour les interactions suivantes (sans présentation)
+ * Crée le prompt système pour les interactions suivantes avec informations par défaut
+ * @param {Object} defaultData - Données par défaut de la base de données
  * @returns {string} Prompt système de continuation
  */
-export const createContinuationPrompt = () => {
-  return `Tu es Fatoumata, assistante IA spécialisée en gestion scolaire. Continue la conversation de manière naturelle sans te représenter. Réponds directement aux questions avec expertise et professionnalisme.`;
+export const createContinuationPrompt = (defaultData = {}) => {
+  const {
+    schoolInfo = {},
+    totalStudents = 0,
+    totalBoys = 0,
+    totalGirls = 0,
+    totalEmployees = 0,
+    totalMaleEmployees = 0,
+    totalFemaleEmployees = 0,
+    totalClasses = 0,
+    totalRevenue = 0,
+    totalExpenses = 0,
+  } = defaultData;
+
+  return `Tu es Fatoumata, assistante IA de ${
+    schoolInfo.name || "l'établissement"
+  }. Continue naturellement la conversation.
+
+DONNÉES ACTUELLES : ${totalStudents} élèves (${totalBoys}♂ ${totalGirls}♀), ${totalEmployees} employés, ${totalClasses} classes, ${totalRevenue.toLocaleString()} FCFA revenus, ${totalExpenses.toLocaleString()} FCFA dépenses.
+
+Réponds directement avec expertise, en français/anglais, avec tolérance aux fautes.`;
 };
 
 // Fonctions de commandes supprimées - remplacées par getContextualData()
@@ -261,27 +308,16 @@ const executeCommand = async (commandName, params = {}) => {
         };
 
       case "GET_PAYMENTS_INFO":
-        const payments = database.payments || [];
-        let filteredPayments = payments;
+        const revenuData = getRevenuePerSchoolYear(database);
 
-        if (params.year) {
-          filteredPayments = filteredPayments.filter((p) => {
-            const paymentYear = new Date(p.date).getFullYear();
-            return paymentYear === params.year;
-          });
-        }
-
-        const totalAmount = filteredPayments.reduce(
-          (sum, p) => sum + (parseInt(p.amount) || 0),
-          0
-        );
+        const totalAmount = revenuData.totalRevenue;
 
         return {
           success: true,
           data: {
-            total_payments: filteredPayments.length,
+            total_payments: database.paymentSystems?.length || 0,
             total_amount: totalAmount,
-            payments: filteredPayments.slice(0, 10), // Limiter à 10 pour éviter trop de données
+            payments: revenuData,
           },
         };
 
@@ -296,10 +332,10 @@ const executeCommand = async (commandName, params = {}) => {
           });
         }
 
-        const totalExpenseAmount = filteredExpenses.reduce(
-          (sum, e) => sum + (parseInt(e.amount) || 0),
-          0
-        );
+        const totalExpenseAmount = getTotalExpensesPerYear(
+          expenses,
+          database.schoolYears
+        ).total;
 
         return {
           success: true,
@@ -335,9 +371,66 @@ const executeCommand = async (commandName, params = {}) => {
             total_students: (database.students || []).length,
             total_employees: (database.employees || []).length,
             total_classes: (database.classes || []).length,
-            total_payments: (database.payments || []).length,
+            total_payments: (database.paymentSystems || []).length,
             total_expenses: (database.expenses || []).length,
+            total_events: (database.events || []).length,
+            total_compositions: (database.compositions || []).length,
+            total_bulletins: (database.bulletins || []).length,
             school_name: database.name || "Non défini",
+            school_short_name: database.short_name || "Non défini",
+            school_academie: database.academie || "Non défini",
+            school_cap: database.zone || "Non défini",
+          },
+        };
+
+      case "GET_EVENTS_INFO":
+        const events = database.events || [];
+        return {
+          success: true,
+          data: {
+            total_events: events.length,
+            events: events.slice(0, 10).map((e) => ({
+              id: e.id,
+              title: e.title,
+              description: e.description,
+              date: e.date,
+              type: e.type,
+              status: e.status,
+            })),
+          },
+        };
+
+      case "GET_COMPOSITIONS_INFO":
+        const compositions = database.compositions || [];
+        return {
+          success: true,
+          data: {
+            total_compositions: compositions.length,
+            compositions: compositions.slice(0, 10).map((c) => ({
+              id: c.id,
+              title: c.title,
+              subject: c.subject,
+              classe: c.classe,
+              date: c.date,
+              total_points: c.total_points,
+            })),
+          },
+        };
+
+      case "GET_BULLETINS_INFO":
+        const bulletins = database.bulletins || [];
+        return {
+          success: true,
+          data: {
+            total_bulletins: bulletins.length,
+            bulletins: bulletins.slice(0, 10).map((b) => ({
+              id: b.id,
+              student_id: b.student_id,
+              classe: b.classe,
+              period: b.period,
+              year: b.year,
+              average: b.average,
+            })),
           },
         };
 
@@ -359,6 +452,66 @@ const executeCommand = async (commandName, params = {}) => {
   }
 };
 
+/**
+ * Récupère les données par défaut de la base de données
+ * @returns {Promise<Object>} Données par défaut
+ */
+export const getDefaultDatabaseInfo = async () => {
+  try {
+    const database = await window.electron.getDatabase();
+    const students = database.students || [];
+    const employees = database.employees || [];
+    const classes = database.classes || [];
+    const payments = database.paymentSystems || [];
+    const expenses = database.expenses || [];
+    const events = database.events || [];
+    const compositions = database.compositions || [];
+    const bulletins = database.bulletins || [];
+
+    // Calculs des statistiques
+    const totalStudents = students.length;
+    const totalBoys = students.filter((s) => s.sexe === "M").length;
+    const totalGirls = students.filter((s) => s.sexe === "F").length;
+    const totalEmployees = employees.length;
+    const totalMaleEmployees = employees.filter((e) => e.sexe === "M").length;
+    const totalFemaleEmployees = employees.filter((e) => e.sexe === "F").length;
+    const totalClasses = classes.length;
+    const totalRevenue = getRevenuePerSchoolYear(database).totalRevenue;
+    const totalExpenses = getTotalExpensesPerYear(
+      expenses,
+      database.schoolYears
+    ).total;
+    const totalEvents = events.length;
+    const totalCompositions = compositions.length;
+    const totalBulletins = bulletins.length;
+
+    return {
+      schoolInfo: {
+        name: database.name || "Non défini",
+        short_name: database.short_name || "N/A",
+        version: database.version || "N/A",
+      },
+      totalStudents,
+      totalBoys,
+      totalGirls,
+      totalEmployees,
+      totalMaleEmployees,
+      totalFemaleEmployees,
+      totalClasses,
+      totalRevenue,
+      totalExpenses,
+      totalEvents,
+      totalCompositions,
+      totalBulletins,
+    };
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des données par défaut:",
+      error
+    );
+    return {};
+  }
+};
 
 /**
  * Analyse intelligemment la question et récupère les données pertinentes
@@ -366,52 +519,148 @@ const executeCommand = async (commandName, params = {}) => {
  * @returns {Promise<Object>} Données contextuelles
  */
 export const getContextualData = async (userMessage) => {
-  const lowerMessage = userMessage.toLowerCase();
+  // Normalisation du message pour gérer les variations linguistiques
+  const normalizedMessage = userMessage
+    .toLowerCase()
+    .replace(/[àáâãäå]/g, "a")
+    .replace(/[èéêë]/g, "e")
+    .replace(/[ìíîï]/g, "i")
+    .replace(/[òóôõö]/g, "o")
+    .replace(/[ùúûü]/g, "u")
+    .replace(/[ç]/g, "c")
+    .replace(/[ñ]/g, "n");
+
   const contextData = {};
 
   try {
-    // Analyser le type de question et récupérer les données appropriées
-    if (lowerMessage.includes('école') || lowerMessage.includes('établissement') || lowerMessage.includes('nom')) {
-      const schoolInfo = await executeCommand('GET_SCHOOL_INFO', {});
+    // Mots-clés étendus pour une meilleure détection
+    const schoolKeywords = [
+      "ecole",
+      "etablissement",
+      "nom",
+      "school",
+      "name",
+      "institution",
+    ];
+    const studentKeywords = [
+      "etudiant",
+      "eleve",
+      "student",
+      "pupil",
+      "apprenant",
+      "classe",
+      "class",
+    ];
+    const employeeKeywords = [
+      "employe",
+      "employee",
+      "professeur",
+      "teacher",
+      "personnel",
+      "staff",
+      "enseignant",
+    ];
+    const financeKeywords = [
+      "paiement",
+      "payment",
+      "finance",
+      "argent",
+      "money",
+      "budget",
+      "revenu",
+      "revenue",
+    ];
+    const expenseKeywords = ["depense", "expense", "cout", "cost", "charge"];
+    const statsKeywords = [
+      "statistique",
+      "statistic",
+      "general",
+      "total",
+      "nombre",
+      "number",
+      "combien",
+      "how many",
+    ];
+    const classKeywords = ["classe", "class", "niveau", "level"];
+    const eventKeywords = ["evenement", "event", "activite", "activity"];
+    const compositionKeywords = [
+      "composition",
+      "examen",
+      "exam",
+      "test",
+      "evaluation",
+    ];
+    const bulletinKeywords = ["bulletin", "note", "grade", "rapport", "report"];
+
+    // Fonction helper pour vérifier la présence de mots-clés
+    const containsKeywords = (keywords) => {
+      return keywords.some((keyword) => normalizedMessage.includes(keyword));
+    };
+
+    // Récupération des données selon les mots-clés détectés
+    if (containsKeywords(schoolKeywords)) {
+      const schoolInfo = await executeCommand("GET_SCHOOL_INFO", {});
       if (schoolInfo.success) contextData.schoolInfo = schoolInfo.data;
     }
 
-    if (lowerMessage.includes('étudiant') || lowerMessage.includes('élève') || lowerMessage.includes('classe')) {
-      const students = await executeCommand('GET_STUDENTS_LIST', {});
+    if (containsKeywords(studentKeywords)) {
+      const students = await executeCommand("GET_STUDENTS_LIST", {});
       if (students.success) contextData.students = students.data;
-      
-      const statsClass = await executeCommand('GET_STUDENTS_STATS_BY_CLASS', {});
+
+      const statsClass = await executeCommand(
+        "GET_STUDENTS_STATS_BY_CLASS",
+        {}
+      );
       if (statsClass.success) contextData.studentStats = statsClass.data;
     }
 
-    if (lowerMessage.includes('employé') || lowerMessage.includes('professeur') || lowerMessage.includes('personnel')) {
-      const employees = await executeCommand('GET_EMPLOYEES_LIST', {});
+    if (containsKeywords(employeeKeywords)) {
+      const employees = await executeCommand("GET_EMPLOYEES_LIST", {});
       if (employees.success) contextData.employees = employees.data;
     }
 
-    if (lowerMessage.includes('paiement') || lowerMessage.includes('finance') || lowerMessage.includes('argent')) {
-      const payments = await executeCommand('GET_PAYMENTS_INFO', {});
+    if (containsKeywords(financeKeywords)) {
+      const payments = await executeCommand("GET_PAYMENTS_INFO", {});
       if (payments.success) contextData.payments = payments.data;
     }
 
-    if (lowerMessage.includes('dépense') || lowerMessage.includes('coût')) {
-      const expenses = await executeCommand('GET_EXPENSES_INFO', {});
+    if (containsKeywords(expenseKeywords)) {
+      const expenses = await executeCommand("GET_EXPENSES_INFO", {});
       if (expenses.success) contextData.expenses = expenses.data;
     }
 
-    if (lowerMessage.includes('statistique') || lowerMessage.includes('général') || lowerMessage.includes('total')) {
-      const generalStats = await executeCommand('GET_GENERAL_STATS', {});
+    if (containsKeywords(statsKeywords)) {
+      const generalStats = await executeCommand("GET_GENERAL_STATS", {});
       if (generalStats.success) contextData.generalStats = generalStats.data;
     }
 
-    if (lowerMessage.includes('classe')) {
-      const classes = await executeCommand('GET_CLASSES_LIST', {});
+    if (containsKeywords(classKeywords)) {
+      const classes = await executeCommand("GET_CLASSES_LIST", {});
       if (classes.success) contextData.classes = classes.data;
+    }
+
+    // Nouvelles détections pour événements, compositions et bulletins
+    if (containsKeywords(eventKeywords)) {
+      const events = await executeCommand("GET_EVENTS_INFO", {});
+      if (events.success) contextData.events = events.data;
+    }
+
+    if (containsKeywords(compositionKeywords)) {
+      const compositions = await executeCommand("GET_COMPOSITIONS_INFO", {});
+      if (compositions.success) contextData.compositions = compositions.data;
+    }
+
+    if (containsKeywords(bulletinKeywords)) {
+      const bulletins = await executeCommand("GET_BULLETINS_INFO", {});
+      if (bulletins.success) contextData.bulletins = bulletins.data;
     }
 
     return contextData;
   } catch (error) {
-    console.error('Erreur lors de la récupération des données contextuelles:', error);
+    console.error(
+      "Erreur lors de la récupération des données contextuelles:",
+      error
+    );
     return {};
   }
 };
@@ -434,29 +683,40 @@ export const sendMessageToAI = async (
     const apiUrl = getApiUrl();
     const formData = new FormData();
 
-    // Récupérer les données contextuelles basées sur la question
+    // Récupérer les données par défaut et contextuelles
+    const defaultData = await getDefaultDatabaseInfo();
     const contextData = await getContextualData(message);
 
-    // Choisir le prompt approprié
-    const systemPrompt = isFirstMessage ? createInitialSystemPrompt() : createContinuationPrompt();
+    // Choisir le prompt approprié avec les données par défaut
+    const systemPrompt = isFirstMessage
+      ? createInitialSystemPrompt(defaultData)
+      : createContinuationPrompt(defaultData);
 
     // Construire le contexte de conversation
-    let conversationContext = '';
+    let conversationContext = "";
     if (conversationHistory.length > 0) {
-      conversationContext = '\n\nCONTEXTE DE LA CONVERSATION:\n';
+      conversationContext = "\n\nCONTEXTE DE LA CONVERSATION:\n";
       conversationHistory.slice(-6).forEach((msg, index) => {
-        conversationContext += `${msg.type === 'user' ? 'Utilisateur' : 'Fatoumata'}: ${msg.content}\n`;
+        conversationContext += `${
+          msg.type === "user" ? "Utilisateur" : "Fatoumata"
+        }: ${msg.content}\n`;
       });
     }
 
-    // Construire le contexte des données
-    let dataContext = '';
+    // Construire le contexte des données spécifiques
+    let dataContext = "";
     if (Object.keys(contextData).length > 0) {
-      dataContext = '\n\nDONNÉES DISPONIBLES:\n' + JSON.stringify(contextData, null, 2);
+      dataContext =
+        "\n\nDONNÉES SPÉCIFIQUES À LA QUESTION:\n" +
+        JSON.stringify(contextData, null, 2);
     }
 
-    // Message complet avec contexte
-    const fullMessage = `${systemPrompt}${conversationContext}${dataContext}\n\nQUESTION ACTUELLE: ${message}\n\nINSTRUCTIONS:\n- Réponds directement à la question en utilisant les données disponibles\n- Ne mentionne jamais les détails techniques ou la structure des données\n- Sois naturel et conversationnel\n- ${isFirstMessage ? 'Présente-toi brièvement' : 'Continue la conversation naturellement'}`;
+    // Message complet avec contexte amélioré
+    const fullMessage = `${systemPrompt}${conversationContext}${dataContext}\n\nQUESTION ACTUELLE: ${message}\n\nINSTRUCTIONS:\n- Réponds directement à la question en utilisant les données disponibles\n- Ne mentionne jamais les détails techniques ou la structure des données\n- Sois naturel et conversationnel\n- Accepte les messages en français, anglais ou avec des fautes d'orthographe\n- Si la demande nécessite des informations très spécifiques non disponibles, informe poliment que tu n'as pas accès à toutes les ressources\n- ${
+      isFirstMessage
+        ? "Présente-toi brièvement"
+        : "Continue la conversation naturellement"
+    }`;
 
     formData.append("message", fullMessage);
     formData.append("user_id", "school_manager_user");
@@ -491,14 +751,15 @@ export const sendMessageToAI = async (
       success: true,
       response: aiResponse,
       contextData: contextData,
-      usage: data.usage
+      defaultData: defaultData,
+      usage: data.usage,
     };
   } catch (error) {
     console.error("Erreur lors de l'envoi du message à l'IA:", error);
     return {
       success: false,
       error: error.message,
-      response: null
+      response: null,
     };
   }
 };

@@ -14,14 +14,14 @@ import {
   MessageCircle,
   Upload,
   Keyboard,
-  History,
+  // History,
   Copy,
   Volume2,
   RotateCcw,
   FileText,
   Image as ImageIcon,
   ChevronRight,
-  ChevronDown,
+  // ChevronDown,
   Sparkles,
   Database,
   Users,
@@ -545,7 +545,7 @@ const HelpModal = ({ isOpen, onClose }) => {
 
           <div className="flex h-[calc(90vh-120px)]">
             {/* Sidebar */}
-            <div className={`w-64 border-r overflow-y-auto ${
+            <div className={`w-64 border-r overflow-y-auto scrollbar-custom ${
               isDark ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-gray-50"
             }`}>
               <div className="p-4 space-y-2">

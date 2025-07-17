@@ -74,7 +74,8 @@ export const getRevenuePerSchoolYear = (database) => {
   return Object.entries(groupedSystems).map(([yearKey, systems]) => {
     const [startDate, endDate] = yearKey.split('_');
     // Utiliser le nom du premier système comme nom représentatif pour l'année
-    const yearName = systems[0]?.name || `Année ${startDate} - ${endDate}`;
+    let systemsNames = systems.map(system => system.name).join(', ');
+    const yearName = `${systemsNames}` || `Année ${startDate} - ${endDate}`;
     const createdAt = systems[0]?.createdAt;
 
 

@@ -273,7 +273,7 @@ const Sidebar = ({
         </AnimatePresence>
 
         {/* Liste des chats */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto scrollbar-custom">
           <AnimatePresence>
             {!isMinimized && (
               <motion.div

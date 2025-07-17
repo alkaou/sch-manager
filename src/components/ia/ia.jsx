@@ -324,7 +324,7 @@ const IA = ({ isOpen, onClose }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center"
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
@@ -335,7 +335,7 @@ const IA = ({ isOpen, onClose }) => {
           }}
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ type: "spring", duration: 0.5 }}
-          className={`w-full max-w-7xl h-[90vh] rounded-2xl shadow-2xl overflow-hidden flex ${
+          className={`w-full max-w-7xl h-[100vh] rounded-2xl shadow-2xl overflow-hidden flex ${
             isDark ? "bg-gray-900" : "bg-white"
           } ${isMinimized ? "pointer-events-none" : ""}`}
           onClick={(e) => e.stopPropagation()}
@@ -409,7 +409,7 @@ const IA = ({ isOpen, onClose }) => {
             {/* Zone des messages */}
             <div
               ref={chatContainerRef}
-              className={`flex-1 overflow-y-auto p-4 space-y-4 ${
+              className={`flex-1 overflow-y-auto scrollbar-custom p-4 space-y-4 ${
                 isDark ? "bg-gray-900" : "bg-gray-50"
               }`}
             >
