@@ -862,7 +862,7 @@ const Translator = {
 
     // FooterSection translations
     footer_description:
-      "A complete solution for managing your school. Simple, efficient, and adapted to the needs of schools of all sizes.",
+      "Une solution complète pour gérer votre établissement scolaire. Simple, efficace et adaptée aux besoins des écoles de toutes tailles.",
     product: "Produit",
     features_text: "Fonctionnalités",
     pricing: "Tarifs",
@@ -878,7 +878,7 @@ const Translator = {
     legal: "Mentions légales",
     newsletter: "Newsletter",
     newsletter_desc:
-      "Receive our latest news and updates directly in your inbox.",
+      "Recevez nos dernières actualités et mises à jour directement dans votre boîte de réception.",
     email_placeholder: "Votre adresse email",
     subscription_success: "Merci de votre inscription!",
     available_languages: "Langues disponibles",

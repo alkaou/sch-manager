@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Règles pour la collection users (existantes)
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Autorise l'écriture pour l'utilisateur sur son propre document
+      allow write: if request.auth != null
+         && request.auth.uid == userId
+         && (
+              // Cas autorisé : l'utilisateur n'essaie pas de modifier les champs premium
+              !request.resource.data.keys().hasAny(['isPremium', 'buyed_times', 'payment_startedAt', 'payment_endedAt'])
+              // OU le cas autorisé : l'utilisateur met ces champs à false ou valeurs initiales
+              || (request.resource.data.isPremium == false &&
+                  !('buyed_times' in request.resource.data) &&
+                  !('payment_startedAt' in request.resource.data) &&
+                  !('payment_endedAt' in request.resource.data))
+            );
+      
+      // Allow access to subcollections
+      match /databases/{databaseId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // Nouvelles règles pour la collection contacts_emails
+    match /contacts_emails/{emailId} {
+      // Permettre la lecture et l'écriture pour tous les utilisateurs authentifiés
+      // (pour le formulaire de contact public)
+      allow read, write: if true;
+      
+      // Alternative plus sécurisée : seulement pour les utilisateurs authentifiés
+      // allow read, write: if request.auth != null;
+      
+      // Règles pour les sous-collections de messages
+      match /messages/{messageId} {
+        allow read, write: if true;
+        // Alternative plus sécurisée : seulement pour les utilisateurs authentifiés
+        // allow read, write: if request.auth != null;
+      }
+    }
+    
+    // Règles pour la collection newsletter (accès public pour les inscriptions)
+    match /newsletter/{document} {
+      allow read, write: if true;
+    }
+    
+    // Règles pour l'administration des contacts (optionnel, pour une future interface admin)
+    match /admin_contacts/{document=**} {
+      // Seulement pour les administrateurs (à personnaliser selon vos besoins)
+      allow read, write: if request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}
