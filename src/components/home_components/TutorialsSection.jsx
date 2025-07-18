@@ -213,11 +213,11 @@ const TutorialsSection = ({ isOthersBGColors }) => {
         {/* Tutorials grid */}
         {filteredTutorials.length > 0 ? (
           <motion.div
+            key={`${activeCategory}-${searchTerm}`}
             className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ${_texts_color}`}
             variants={containerVariants}
             initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-100px" }}
+            animate="show"
           >
             {filteredTutorials.map(tutorial => {
               const TutorialIcon = tutorial.icon;
@@ -330,4 +330,4 @@ const TutorialsSection = ({ isOthersBGColors }) => {
   );
 };
 
-export default TutorialsSection; 
+export default TutorialsSection;
