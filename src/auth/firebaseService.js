@@ -11,7 +11,7 @@ import {
   getFirestore
 } from 'firebase/firestore';
 import firebaseConfig from './firebaseConfig';
-import { useLanguage } from '../components/contexts';
+// import { useLanguage } from '../components/contexts';
 import translations from './auth_translator';
 
 // Initialiser Firebase

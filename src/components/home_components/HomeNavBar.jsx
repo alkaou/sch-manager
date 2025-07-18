@@ -1,17 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, Moon, Sun, LogIn, User, Settings, ChevronDown, LogOut, HelpCircle, Crown, Info } from 'lucide-react';
-import LanguageSelector from '../partials/LanguageSelector.jsx';
-import { useTheme, useLanguage } from '../contexts';
-import { useAuth } from '../../auth/AuthContext';
-import LoginModal from '../../auth/LoginModal.jsx';
-import PremiumModal from '../../auth/PremiumModal.jsx';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Menu,
+  X,
+  Moon,
+  Sun,
+  LogIn,
+  User,
+  Settings,
+  ChevronDown,
+  LogOut,
+  HelpCircle,
+  Crown,
+  Info,
+} from "lucide-react";
+import LanguageSelector from "../partials/LanguageSelector.jsx";
+import { useTheme, useLanguage } from "../contexts";
+import { useAuth } from "../../auth/AuthContext";
+import LoginModal from "../../auth/LoginModal.jsx";
+import PremiumModal from "../../auth/PremiumModal.jsx";
 
 // En haut de votre fichier React
 import { LogoSVG } from "../partials/Logo.svg.jsx";
 
-const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
+const HomeNavBar = ({ setIsOpenPopup, data_exist, setShowInformationPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme, app_bg_color, text_color } = useTheme();
@@ -36,9 +49,9 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -57,13 +70,12 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dropdownOpen, showPanel]);
 
-
   // Naviguer vers le profile
   const navigate_to_profile = () => {
     const path = data_exist ? "/profile-auth" : "/no_data_profile-auth";
     navigate(path);
     setDropdownOpen(false);
-  }
+  };
 
   // Handle help button click
   const handleHelpClick = () => {
@@ -100,14 +112,14 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
       y: 0,
       transition: {
         duration: 0.5,
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const linkVariants = {
     hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   };
 
   // Dynamic colors based on theme
@@ -123,11 +135,9 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
         variants={navVariants}
         className={`fixed top-0 w-full z-50 transition-all duration-300 
           border-b-2 border-white
-          ${scrolled ? `${app_bg_color} shadow-lg` :
-            'bg-transparent'
-          }
-      `}>
-
+          ${scrolled ? `${app_bg_color} shadow-lg` : "bg-transparent"}
+      `}
+      >
         <div className="container mx-auto px-3 sm:px-4 lg:px-6">
           <div className="flex items-center justify-between h-14 sm:h-16 md:h-20">
             {/* Logo */}
@@ -135,7 +145,11 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
               className="flex-shrink-0 flex items-center"
               variants={linkVariants}
             >
-              <Link to="/" className="flex items-center space-x-1 sm:space-x-2">
+              <Link
+                onClick={() => setShowInformationPage(false)}
+                to="/"
+                className="flex items-center space-x-1 sm:space-x-2"
+              >
                 <div className="relative h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 overflow-hidden">
                   <LogoSVG
                     className={"h-full w-full object-contain"}
@@ -144,8 +158,16 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                   <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-transparent mix-blend-overlay rounded-full"></div>
                 </div>
                 <div className="flex flex-col">
-                  <span className={`font-bold text-sm sm:text-base md:text-xl tracking-tight ${text_color} bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600`}>{live_language.app_name || "SchoolManager"}</span>
-                  <span className={`text-xs font-medium ${text_color} hidden sm:inline`}>{live_language.excellent_edu}</span>
+                  <span
+                    className={`font-bold text-sm sm:text-base md:text-xl tracking-tight ${text_color} bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600`}
+                  >
+                    {live_language.app_name || "SchoolManager"}
+                  </span>
+                  <span
+                    className={`text-xs font-medium ${text_color} hidden sm:inline`}
+                  >
+                    {live_language.excellent_edu}
+                  </span>
                 </div>
               </Link>
             </motion.div>
@@ -167,7 +189,11 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                 className={`p-1.5 sm:p-2 rounded-full ${text_color} hover:bg-green-200/80 dark:hover:bg-green-700/80`}
                 aria-label="Toggle theme"
               >
-                {theme === 'dark' ? <Sun size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" /> : <Moon size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />}
+                {theme === "dark" ? (
+                  <Sun size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                ) : (
+                  <Moon size={20} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                )}
               </motion.button>
 
               {/* Premium Button */}
@@ -178,7 +204,10 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                 onClick={handlePremiumClick}
                 className="flex items-center px-2 py-1 sm:px-3 sm:py-1.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-full text-xs sm:text-sm font-medium shadow-sm"
               >
-                <Crown size={14} className="mr-1 sm:mr-1.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
+                <Crown
+                  size={14}
+                  className="mr-1 sm:mr-1.5 sm:w-4 sm:h-4 md:w-5 md:h-5"
+                />
                 <span>{live_language.premium_text || "Premium"}</span>
               </motion.button>
 
@@ -186,11 +215,13 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                 variants={linkVariants}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => { /* TODO: Implement action */ }}
+                onClick={() => setShowInformationPage(true)}
                 className="flex items-center px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-sm font-medium shadow-sm transition-colors"
               >
                 <Info size={14} className="mr-1.5 sm:w-4 sm:h-4" />
-                <span>{language === "Bambara" ? "Kunafoniw" : "Informations"}</span>
+                <span>
+                  {language === "Bambara" ? "Kunafoniw" : "Informations"}
+                </span>
               </motion.button>
 
               {/* User Profile / Login Button */}
@@ -212,14 +243,23 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}>
-                          <User size={16} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                        <div
+                          className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}
+                        >
+                          <User
+                            size={16}
+                            className="sm:w-5 sm:h-5 md:w-6 md:h-6"
+                          />
                         </div>
                       )}
                     </div>
                     <div className="hidden md:flex items-center">
-                      <span className={`text-xs sm:text-sm font-medium ${text_color}`}>
-                        {currentUser?.displayName || live_language.user_text || "User"}
+                      <span
+                        className={`text-xs sm:text-sm font-medium ${text_color}`}
+                      >
+                        {currentUser?.displayName ||
+                          live_language.user_text ||
+                          "User"}
                       </span>
                       <ChevronDown size={14} className="ml-1" />
                     </div>
@@ -231,7 +271,11 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 350,
+                          damping: 25,
+                        }}
                         className={`absolute right-0 mt-2 w-48 sm:w-52 md:w-56 ${dropdownBg} ${borderColor} border rounded-lg shadow-lg overflow-hidden z-50`}
                       >
                         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
@@ -244,14 +288,23 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                                   className="h-full w-full object-cover"
                                 />
                               ) : (
-                                <div className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}>
-                                  <User size={16} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                                <div
+                                  className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}
+                                >
+                                  <User
+                                    size={16}
+                                    className="sm:w-5 sm:h-5 md:w-6 md:h-6"
+                                  />
                                 </div>
                               )}
                             </div>
                             <div>
-                              <p className={`text-xs sm:text-sm font-medium ${text_color}`}>
-                                {currentUser?.displayName || live_language.user_text || "User"}
+                              <p
+                                className={`text-xs sm:text-sm font-medium ${text_color}`}
+                              >
+                                {currentUser?.displayName ||
+                                  live_language.user_text ||
+                                  "User"}
                               </p>
                               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                                 {currentUser?.email || ""}
@@ -308,7 +361,7 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                 onClick={toggleTheme}
                 className={`p-1.5 rounded-full ${text_color} hover:bg-gray-200 dark:hover:bg-gray-700`}
               >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
               </motion.button>
 
               <motion.button
@@ -326,7 +379,7 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{
-            height: isMenuOpen ? 'auto' : 0,
+            height: isMenuOpen ? "auto" : 0,
             opacity: isMenuOpen ? 1 : 0,
           }}
           transition={{ duration: 0.3 }}
@@ -351,14 +404,18 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}>
+                        <div
+                          className={`h-full w-full flex items-center justify-center bg-blue-100 text-blue-600`}
+                        >
                           <User size={18} />
                         </div>
                       )}
                     </div>
                     <div>
                       <p className={`text-sm font-medium ${text_color}`}>
-                        {currentUser?.displayName || live_language.user_text || "User"}
+                        {currentUser?.displayName ||
+                          live_language.user_text ||
+                          "User"}
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
                         {currentUser?.email || ""}
@@ -433,10 +490,16 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist }) => {
       </motion.header>
 
       {/* Modals */}
-      <LoginModal isOpen={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
-      <PremiumModal isOpen={premiumModalOpen} onClose={() => setPremiumModalOpen(false)} />
+      <LoginModal
+        isOpen={loginModalOpen}
+        onClose={() => setLoginModalOpen(false)}
+      />
+      <PremiumModal
+        isOpen={premiumModalOpen}
+        onClose={() => setPremiumModalOpen(false)}
+      />
     </>
   );
 };
 
-export default HomeNavBar; 
+export default HomeNavBar;

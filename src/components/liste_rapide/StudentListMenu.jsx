@@ -117,7 +117,8 @@ const StudentListMenu = ({
       .replace("semaine", "dɔgɔkun")
       .replace("mois", "kalo")
       .replace("années", "san")
-      .replace("année", "san");
+      .replace("année", "san")
+      .replace("environ", "");
 
     const realTimeBambara = replacerNombreFin(timeBambara);
     return realTimeBambara;

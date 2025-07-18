@@ -40,7 +40,7 @@ const suggestNames = [
 
 // Tableau de noms de famille (environ 50 entrées)
 const suggestLastNames = [
-  "Mallé", "Dé", "Haïdara", "Sokanda", "Dianè", "Diané", "N'Diané", "N'Dianè", "Maïga", "Tall", "Wologuème", "Tessougé",
+  "Mallé", "Dé", "Haïdara", "Sokanda", "Dianè", "Diané", "N'Dianè", "Maïga", "Tall", "Wologuème", "Tessougé",
   "Traoré", "Keïta", "Sissoko", "Tounkara", "Camara", "Sidibé", "Touré", "Bagayoko", "Seck", "Ndiaye", "Doucouré",
   "Fall", "Mbaye", "Guindo", "Barry", "Sow", "Kaba", "Koné", "Diarra", "Cissé", "Diallo", "Diabaté", "Diassana", "Togola",
   "Coulibaly", "Ballo", "Demba", "Dembélé", "Fofana", "Kouyaté", "Goulamaly", "Sangaré", "Maiga", "Sy", "Goïta", "Togo",
