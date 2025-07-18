@@ -20,6 +20,7 @@ import { useTheme, useLanguage } from "../contexts";
 import { useAuth } from "../../auth/AuthContext";
 import LoginModal from "../../auth/LoginModal.jsx";
 import PremiumModal from "../../auth/PremiumModal.jsx";
+import NotificationBadge from "../informations/NotificationBadge.jsx";
 
 // En haut de votre fichier React
 import { LogoSVG } from "../partials/Logo.svg.jsx";
@@ -211,18 +212,21 @@ const HomeNavBar = ({ setIsOpenPopup, data_exist, setShowInformationPage }) => {
                 <span>{live_language.premium_text || "Premium"}</span>
               </motion.button>
 
-              <motion.button
-                variants={linkVariants}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowInformationPage(true)}
-                className="flex items-center px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-sm font-medium shadow-sm transition-colors"
-              >
-                <Info size={14} className="mr-1.5 sm:w-4 sm:h-4" />
-                <span>
-                  {language === "Bambara" ? "Kunafoniw" : "Informations"}
-                </span>
-              </motion.button>
+              <div className="relative">
+                <motion.button
+                  variants={linkVariants}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowInformationPage(true)}
+                  className="flex items-center px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-sm font-medium shadow-sm transition-colors"
+                >
+                  <Info size={14} className="mr-1.5 sm:w-4 sm:h-4" />
+                  <span>
+                    {language === "Bambara" ? "Kunafoniw" : "Informations"}
+                  </span>
+                </motion.button>
+                <NotificationBadge onNotificationClick={() => setShowInformationPage(true)} />
+              </div>
 
               {/* User Profile / Login Button */}
               {isAuthenticated ? (
